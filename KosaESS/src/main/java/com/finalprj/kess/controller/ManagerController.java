@@ -1,14 +1,10 @@
-//package com.finalprj.kess.controller;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//
+package com.finalprj.kess.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 //@Controller
-//public class ManagerController {
+public class ManagerController {
 //	@Autowired
-//	???
-//			
-//			
-//			@RequestMapping
-//}
+}
