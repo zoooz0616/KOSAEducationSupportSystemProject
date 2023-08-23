@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class PostVO {
 	private String postId; //게시글id
-	private String masterIdS;//메인게시글id
+	private String masterId;//메인게시글id
 	private String postTitle;//게시글제목
 	private String postContent;//게시글내용
 	private int postHit;//조회수
