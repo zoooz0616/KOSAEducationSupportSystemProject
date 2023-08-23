@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.finalprj.kess.repository">
+<mapper namespace="com.finalprj.kess.repository.IManagerRepository">
 
-
+	<select id="getClassList" parameterType="string" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+	SELECT
+		clss_nm AS clssNm,
+		NVL(clss_start_dd, sysdate) as clssStartDd,
+		NVL(clss_end_dd, sysdate) as clssEndDd,
+		NVL(clss_adr, '미정') as clssAdr,
+		limit_cnt as limitCnt,
+		clss_cd as clssCd
+	FROM
+		clss
+	WHERE
+		mngr_id = #{mngrId}
+	ORDER BY
+		clss_id
+	]]>
+	</select>
 
 </mapper>

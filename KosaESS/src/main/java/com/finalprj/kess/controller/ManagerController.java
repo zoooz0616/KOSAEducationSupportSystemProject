@@ -5,9 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.finalprj.kess.service.IManagerService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ManagerController {
@@ -16,7 +17,11 @@ public class ManagerController {
 
 //	담당 교육 목록 조회
 	@GetMapping("/manager/class")
-	public String getClassList(Model model) {
+	public String getClassList(Model model, HttpSession session) {
+		session.setAttribute("role", "GRP0004003");//삭제 예정
+		session.setAttribute("id", "MNG0000001");//삭제 예정
+		model.addAttribute("classList", managerService.getClassList((String) session.getAttribute("id")));
+		//session의 key-value쌍을 set 할 때 value는 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것 
 		return "managerClassList";
 	}
 
