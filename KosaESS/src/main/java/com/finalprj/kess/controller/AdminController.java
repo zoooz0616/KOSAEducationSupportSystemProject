@@ -58,6 +58,6 @@ public class AdminController {
 		//만족도 조사 등록 대기 개수 가져오기
 		//추후 구현
 		//
-		return "mainmanager";
+		return "main_manager";
 	}
 }

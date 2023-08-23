@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Manager MainPage</title>
-
-<!-- Custom styles for this template-->
-<link th:href="@{/css/admin.css}" rel="stylesheet">
 </head>
-<body id="page-top">
+<body th:fragment="subbar" id="page-top">
 	<div class="sidebar">
 		<div class="logo-details">
 			<i class='bx bxl-c-plus-plus icon'></i>
@@ -18,8 +15,7 @@
 				th:src="@{/img/open.png}"></i>
 		</div>
 		<ul class="nav-list">
-			<li><a href="#">
-			<i class='bx bx-grid-alt'> <img
+			<li><a href="#"> <i class='bx bx-grid-alt'> <img
 						th:src="@{/img/main_white.png}">
 				</i> <span class="links_name">메인</span>
 			</a> <span class="tooltip">메인</span></li>
@@ -40,12 +36,12 @@
 						관리</span>
 			</a> <span class="tooltip">기업 관리</span></li>
 			<li><a href="#"> <i class='bx bx-pie-chart-alt-2'><img
-						th:src="@{/img/professor_white.png}"></i> <span class="links_name">강사
-						관리</span>
+						th:src="@{/img/professor_white.png}"></i> <span
+					class="links_name">강사 관리</span>
 			</a> <span class="tooltip">강사 관리</span></li>
 			<li><a href="#"> <i class='bx bx-folder'><img
-						th:src="@{/img/commoncode_white.png}"></i> <span class="links_name">기준
-						정보 관리</span>
+						th:src="@{/img/commoncode_white.png}"></i> <span
+					class="links_name">기준 정보 관리</span>
 			</a> <span class="tooltip">기준 정보 관리</span></li>
 			<li><a href="#"> <i class='bx bx-cart-alt'><img
 						th:src="@{/img/class_white.png}"></i> <span class="links_name">교육과정
@@ -65,7 +61,7 @@
 			-->
 			<li class="profile">
 				<div class="profile-details">
-					<img th:src="@{/img/manager.png}" alt="profileImg">
+					<img th:src="@{/img/manager_navy.png}" alt="profileImg">
 					<div class="name_job">
 						<div class="name">Admin</div>
 						<div class="job">System Master</div>
@@ -74,24 +70,42 @@
 			</li>
 		</ul>
 	</div>
-	<section class="home-section">
-		<div class="text">Dashboard</div>
-	</section>
 	<script>
-  let sidebar = document.querySelector(".sidebar");
-  let closeBtn = document.querySelector("#btn");
-  closeBtn.addEventListener("click", ()=>{
-    sidebar.classList.toggle("open");
-    menuBtnChange();//calling the function(optional)
-  });
-  // following are the code to change sidebar button(optional)
-  function menuBtnChange() {
-   if(sidebar.classList.contains("open")){
-     closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-   }else {
-     closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-   }
-  }
+  		let sidebar = document.querySelector(".sidebar");
+  		let closeBtn = document.querySelector("#btn");
+  		closeBtn.addEventListener("click", ()=>{
+    		sidebar.classList.toggle("open");
+    		menuBtnChange();//calling the function(optional)
+  		});
+  		// following are the code to change sidebar button(optional)
+  		function menuBtnChange() {
+   			if(sidebar.classList.contains("open")){
+     			closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+   			}else {
+     			closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+   			}
+  		}
+  
+		//JavaScript to change the image on hover
+		const listItem = document.querySelectorAll('.nav-list li a');//모든 li안의 있는 a태그
+		
+		listItem.forEach(item => {
+			//한 a태그의 자식 img객체를 얻어와야됨.
+			const img = item.querySelector('i img');
+			
+			item.addEventListener('mouseenter', () => {
+				const img = item.querySelector('i img');
+      			const originalSrc = img.getAttribute('src');
+      			const newSrc = originalSrc.replace('_white', '_navy'); // Assuming you have separate hover images 
+      			img.setAttribute('src', newSrc);
+    		});
+
+			item.addEventListener('mouseleave', () => {
+      			const originalSrc = img.getAttribute('src');
+      			const newSrc = originalSrc.replace('_navy', '_white');
+      			img.setAttribute('src', newSrc);
+    		});
+  		});
   </script>
 </body>
 </html>
