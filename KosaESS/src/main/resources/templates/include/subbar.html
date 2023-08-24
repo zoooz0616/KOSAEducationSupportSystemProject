@@ -63,8 +63,8 @@
 				<div class="profile-details">
 					<img th:src="@{/img/manager_navy.png}" alt="profileImg">
 					<div class="name_job">
-						<div class="name">Admin</div>
-						<div class="job">System Master</div>
+						<div class="name" th:text="${session.id}">Id</div>
+						<div class="job" th:text="${session.role}">Role</div>
 					</div>
 				</div> <i class='bx bx-log-out' id="log_out"></i>
 			</li>

@@ -3,12 +3,41 @@
 <head th:replace="~{/include/header :: header}">
 <meta charset="UTF-8">
 <title>Main</title>
+</head>
+<head>
 <link th:href="@{/css/admin.css}" rel="stylesheet">
 </head>
 <body>
 	<div th:replace="~{/include/subbar :: subbar}"></div>
 	<div class="home-section">
-		<div class="text">board</div>
+		<!-- title -->
+		<div class="title" th:text="${title}" >Title</div>
+		
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<!-- box wrap -->
+			<div class="bx_wrap">
+			
+			
+				<!-- for문으로 받은만큼 돌리기 -->
+				<!-- box -->
+				<div class="bx" th:each="data: ${dataMap}"> 
+					<!-- box sub title -->
+					<div class="bx_sub_title" th:text="${data.key}">subTitle</div>
+					<!-- box content -->
+					<div class="bx_content">
+						<!-- total count -->
+						<div class="total_cnt">
+							<span class="cnt" th:text="${data.value}">count</span>
+							<span class="cnt_txt">건</span>
+						</div>
+					</div>
+				</div>
+				
+			<!-- End box wrap -->
+			</div>
+		<!-- End content wrap -->
+		</div>
 	</div>
 </body>
 </html>
