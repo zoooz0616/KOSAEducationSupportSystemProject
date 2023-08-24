@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/header :: header}">
+<meta charset="UTF-8">
+<title>Main</title>
+</head>
+<head>
+<link th:href="@{/css/inquiry_manager.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/subbar :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title" th:text="${title}">Title</div>
+
+		<!-- content wrap-->
+		<div class="content_wrap">
+
+			<!-- 검색 필터 부분 -->
+			<div class="search_filter_wrap">
+				<!-- 아이콘 삽임 부분 -->
+				<div class="search_filter_icon">
+					<img class="search_filter_icon_img" th:src="@{/img/filter.png}">
+				</div>
+				<!-- 아이콘 삽임 부분 -->
+
+				<!-- 검색 필터 테이블 -->
+				<div class="search_filter_table_wrap">
+					<table class="search_filter_table">
+						<tr>
+							<td>제목</td>
+							<td><input type="text"></td>
+							<td>등록일</td>
+							<td><input type="date"> <span> ~ </span> <input
+								type="date"></td>
+						</tr>
+						<tr>
+							<td>작성자</td>
+							<td><input type="text"></td>
+							<td>상태</td>
+							<td><input type="radio" name="inquiry_status" value="전체"
+								checked="checked">전체 <input type="radio"
+								name="inquiry_status" value="답변대기">답변대기 <input
+								type="radio" name="inquiry_status" value="답변완료">답변완료</td>
+						</tr>
+					</table>
+				</div>
+				<!-- 검색 필터 테이블 -->
+
+				<!-- 검색 버튼 -->
+				<div class="search_filter_btn_wrap">
+					<button class="search_filter_btn">검색</button>
+				</div>
+				<!-- End 검색 버튼 -->
+
+			</div>
+			<!-- End 검색 필터 부분 -->
+
+			<!-- 문의 리스트 -->
+			<div>
+				<!-- 총 문의글 개수와 선택삭제 버튼 -->
+				<div></div>
+				<!-- End 총 문의글 개수와 선택삭제 버튼 -->
+
+				<!-- 문의글 리스트 -->
+				<div></div>
+				<!-- End 문의글 리스트 -->
+
+				<!-- 페이지당 목록 수 -->
+				<div></div>
+				<!-- End 페이지당 목록 수 -->
+
+				<!-- 페이지 -->
+				<div></div>
+				<!-- End 페이지 -->
+			</div>
+			<!-- End 문의 리스트 -->
+
+			<!-- End content wrap -->
+		</div>
+	</div>
+	<!-- End 컨텐츠 부분 -->
+
+	<script>
+	</script>
+</body>
+</html>

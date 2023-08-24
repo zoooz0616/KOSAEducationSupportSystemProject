@@ -5,7 +5,7 @@
 <title>Main</title>
 </head>
 <head>
-<link th:href="@{/css/admin.css}" rel="stylesheet">
+<link th:href="@{/css/main_manager.css}" rel="stylesheet">
 </head>
 <body>
 	<div th:replace="~{/include/subbar :: subbar}"></div>
@@ -16,19 +16,19 @@
 		<!-- content wrap-->
 		<div class="content_wrap">
 			<!-- box wrap -->
-			<div class="bx_wrap">
+			<div class="bx_wait_wrap">
 			
 			
 				<!-- for문으로 받은만큼 돌리기 -->
 				<!-- box -->
-				<div class="bx" th:each="data: ${dataMap}"> 
+				<div class="bx_wait" th:each="data: ${dataMap}"> 
 					<!-- box sub title -->
-					<div class="bx_sub_title" th:text="${data.key}">subTitle</div>
+					<div class="bx_wait_sub_title" th:text="${data.key}">subTitle</div>
 					<!-- box content -->
-					<div class="bx_content">
+					<div class="bx_wait_content">
 						<!-- total count -->
 						<div class="total_cnt">
-							<span class="cnt" th:text="${data.value}">count</span>
+							<a th:href="@{#}" ><span class="cnt" th:text="${data.value}">count</span></a>
 							<span class="cnt_txt">건</span>
 						</div>
 					</div>
