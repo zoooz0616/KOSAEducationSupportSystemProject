@@ -47,8 +47,8 @@ public class AdminController {
 	@RequestMapping("/admin/main")
 	public String main(HttpSession session, Model model) {
 		//로그인 정보 저장
-		session.setAttribute("id", "Admin");
-		session.setAttribute("role", "System master");
+		session.setAttribute("role", "admin");
+		session.setAttribute("id", "admin");
 
 		//화면 상단 타이틀 값 전달.
 		String title = "메인";
@@ -69,27 +69,37 @@ public class AdminController {
 		/*만족도 조사 등록 대기 개수 가져오기
 		--추후 구현
 		 */
-		
+
 		//subTitle 리스트로 전달하기
-//		List<String> subTitleList = new ArrayList<>();
-//		subTitleList.add("교육과정 접수중");
-//		subTitleList.add("문의 답변 대기");
-//		subTitleList.add("이수완료 대기");
-//		model.addAttribute("subTitleList", subTitleList);
+		//		List<String> subTitleList = new ArrayList<>();
+		//		subTitleList.add("교육과정 접수중");
+		//		subTitleList.add("문의 답변 대기");
+		//		subTitleList.add("이수완료 대기");
+		//		model.addAttribute("subTitleList", subTitleList);
 
 		//Count 리스트로 전달하기
-//		List<Integer> cntList = new ArrayList<>();
-//		cntList.add(waitClassCnt);
-//		cntList.add(waitInquiryCnt);
-//		cntList.add(completeClassCnt);
-//		model.addAttribute("cntList", cntList);
-	
+		//		List<Integer> cntList = new ArrayList<>();
+		//		cntList.add(waitClassCnt);
+		//		cntList.add(waitInquiryCnt);
+		//		cntList.add(completeClassCnt);
+		//		model.addAttribute("cntList", cntList);
+
 		Map<String, Integer> dataMap = new HashMap<String, Integer>();
 		dataMap.put("교육과정 접수중", waitClassCnt);
-		dataMap.put("문의 답변 대기", waitInquiryCnt);
+		dataMap.put("문의답변 대기", waitInquiryCnt);
 		dataMap.put("이수완료 대기", completeClassCnt);
+		logger.warn("map: "+dataMap.toString());
 		model.addAttribute("dataMap", dataMap);
-		
+
 		return "main_manager";
+	}
+
+	@RequestMapping("/admin/inquiry")
+	public String inquiry(HttpSession session, Model model) {
+		String title ="문의관리";
+		model.addAttribute("title", title);
+
+
+		return "inquiry_manager";
 	}
 }
