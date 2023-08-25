@@ -46,4 +46,12 @@
 	WHERE tpcd_id = 'GRP0002'
 	]]>
 	</select>
+	
+	<select id="getClassDetail" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
+	<![CDATA[
+	select
+	*
+	from clss where clss_id=#{clssId};
+	]]>
+	</select>
 </mapper>
