@@ -1,11 +1,14 @@
 package com.finalprj.kess.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.service.IManagerService;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,8 +22,13 @@ public class ManagerController {
 	@GetMapping("/manager/class")
 	public String getClassList(Model model, HttpSession session) {
 		session.setAttribute("role", "GRP0004003");//삭제 예정
-		session.setAttribute("id", "MNG0000001");//삭제 예정
-		model.addAttribute("classList", managerService.getClassList((String) session.getAttribute("id")));
+		session.setAttribute("id", "MNG0000005");//삭제 예정
+		List<ClassVO> classList = managerService.getClassList((String) session.getAttribute("id"));
+		for (ClassVO vo : classList) {
+			vo.setAplyCnt(managerService.getApplyCount(vo.getClssId()));
+//			vo.setClssCd(managerService.getClassCodeName(vo.getClssId()));
+ 		}
+		model.addAttribute("classList", classList);
 		//session의 key-value쌍을 set 할 때 value는 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것 
 		return "managerClassList";
 	}

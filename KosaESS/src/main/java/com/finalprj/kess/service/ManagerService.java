@@ -17,4 +17,14 @@ public class ManagerService implements IManagerService {
 	public List<ClassVO> getClassList(String mngrId) {
 		return managerRepository.getClassList(mngrId);
 	}
+
+	@Override
+	public int getApplyCount(String clssCd) {
+		return managerRepository.getApplyCount(clssCd);
+	}
+
+	@Override
+	public String getClassCodeName(String clssCd) {
+		return managerRepository.getClassCodeName(clssCd);
+	}
 }

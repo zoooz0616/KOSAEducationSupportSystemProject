@@ -12,4 +12,6 @@ import com.finalprj.kess.model.ClassVO;
 public interface IManagerRepository {
 
 	public List<ClassVO> getClassList(String mngrId);
+	public int getApplyCount(String clssCd);
+	public String getClassCodeName(String clssCd);
 }
