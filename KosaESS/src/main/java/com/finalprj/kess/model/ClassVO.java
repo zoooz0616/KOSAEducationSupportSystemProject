@@ -27,4 +27,5 @@ public class ClassVO {
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
+	private String rgstDtString;//등록일시(날짜)
 }
