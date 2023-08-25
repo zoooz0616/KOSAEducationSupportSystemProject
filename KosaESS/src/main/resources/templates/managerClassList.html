@@ -6,14 +6,15 @@
 <link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
 </head>
 <body>
-	2순위 : 교육상태[전체, 교육 시작 전, 교육중, 교육완료, 취소, 폐강]에 따른 분류
 	<form>
 		<input type="text">
 		<input type="button" value="검색">
 	</form>
 	<form>
-		<input type="checkbox" value="전체">
-		<input type="checkbox">
+		<label>전체<input type="checkbox"></label>
+		<div th:each="classCodeName:${classCodeNameList}">
+		<label>[[${classCodeName}]] <input type="checkbox"> </label>
+		</div>
 	</form>
 
 	<table>

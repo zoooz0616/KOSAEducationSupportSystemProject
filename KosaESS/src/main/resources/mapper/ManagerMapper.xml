@@ -33,9 +33,17 @@
 	
 	<select id="getClassCodeName" parameterType="string" resultType="string">
 	<![CDATA[
-	SELECT cmcd_nm AS clssCd
+	SELECT cmcd_nm
 	FROM cmcd
 	WHERE tpcd_id = 'GRP0002' AND cmcd_id = #{clss_cd}
+	]]>
+	</select>
+	
+	<select id="getClassCodeNameList" resultType="string">
+	<![CDATA[
+	SELECT cmcd_nm
+	FROM cmcd
+	WHERE tpcd_id = 'GRP0002'
 	]]>
 	</select>
 </mapper>

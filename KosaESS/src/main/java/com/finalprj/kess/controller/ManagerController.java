@@ -26,9 +26,11 @@ public class ManagerController {
 		List<ClassVO> classList = managerService.getClassList((String) session.getAttribute("id"));
 		for (ClassVO vo : classList) {
 			vo.setAplyCnt(managerService.getApplyCount(vo.getClssId()));
-//			vo.setClssCd(managerService.getClassCodeName(vo.getClssId()));
+			vo.setClssCd(managerService.getClassCodeName(vo.getClssCd()));
  		}
 		model.addAttribute("classList", classList);
+		List<String> classCodeNameList = managerService.getClassCodeNameList();
+		model.addAttribute("classCodeNameList", classCodeNameList);
 		//session의 key-value쌍을 set 할 때 value는 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것 
 		return "managerClassList";
 	}
