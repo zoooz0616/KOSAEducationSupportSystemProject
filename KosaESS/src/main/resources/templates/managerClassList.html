@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Manager Class List</title>
+<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
+</head>
+<body>
+	<form>
+		<input type="text">
+		<input type="button" value="검색">
+	</form>
+	<form>
+		<label>전체<input type="checkbox"></label>
+		<div th:each="classCodeName:${classCodeNameList}">
+		<label>[[${classCodeName}]] <input type="checkbox"> </label>
+		</div>
+	</form>
+
+	<table>
+		<tr>
+			<th><input type="checkbox"></th>
+			<th>번호</th>
+			<th>프로그램명</th>
+			<th>교육기간</th>
+			<th>교육 장소</th>
+			<th>신청/최대</th>
+			<th>교육상태</th>
+		</tr>
+		<tr th:each="class:${classList}">
+			<td><input type="checkbox"></td>
+			<td th:text="${classStat.count}">row number</td>
+			<td><a th:href="@{/manager/class/__${class.clssId}__}">[[${class.clssNm}]]</a></td>
+			<td>[[${class.clssStartDd}]]<br>~<br>
+				[[${class.clssEndDd}]]
+			</td>
+			<td th:text="${class.clssAdr}">class address</td>
+			<td>[[${class.aplyCnt}]] / [[${class.limitCnt}]]</td>
+			<td th:text="${class.clssCd}">status</td>
+		</tr>
+	</table>
+</body>
+</html>
