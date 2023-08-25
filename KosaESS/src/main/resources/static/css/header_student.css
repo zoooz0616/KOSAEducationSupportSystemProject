@@ -1,0 +1,46 @@
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center; /* 로고와 메뉴 항목을 수직으로 가운데 정렬합니다. */
+	height: 100px;
+	background-color: #ffffff; /* 헤더 배경색 지정 */
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	padding-left: 5%;
+	padding-right: 5%;
+	position: fixed;
+	top: 0;
+	width: 90%;
+}
+
+header .container {
+	display: contents;
+	height: 100%;
+}
+
+header ul.barlist {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+header ul.barlist li {
+	display: inline-block;
+	font-size: 18px;
+	margin-left: 30px;
+}
+
+header nav {
+	text-align: right;
+	margin-left: auto;
+}
+
+header a {
+	text-decoration: none;
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.mypage {
+	margin-left: 10px;
+	color: #3E799A;
+}
