@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.finalprj.kess.repository.IAdminRepository">
-
-	<select id="getCommonCode" parameterType="string"
-		resultType="string">
-	<![CDATA[
-		(select tpcd_id||cmcd_id as "CommonCodeId"
-		from cmcd
-		where cmcd_nm=#{commonCodeName})
-	]]>
-	</select>
-
 	<select id="getWaitInquiryCnt" resultType="int">
 	<![CDATA[
 		select count(post_id) as "waitInquiryCnt"
@@ -44,4 +34,24 @@
 	]]>
 	</select>
 
+	<select id="getPostVOList" parameterType="string" 
+	resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select
+			post.post_id		as "postId",
+			post.master_id		as "masterId",
+			post.post_title		as "postTitle",
+			post.post_content	as "postContent",
+			post.post_hit		as "postHit",
+			cmcd.cmcd_nm		as "postCd",
+			post.rgst_dt		as "rgstDt",
+			post.rgster_id		as "rgsterId",
+			post.updt_dt		as "updtDt",
+			post.updter_id		as "updterId"
+		from post
+		join cmcd on cmcd.tpcd_id||cmcd.cmcd_id = post.post_cd
+		where post_id like CONCAT(#{postValue}, '%') and master_id is null
+	]]>
+	</select>
+	
 </mapper>
