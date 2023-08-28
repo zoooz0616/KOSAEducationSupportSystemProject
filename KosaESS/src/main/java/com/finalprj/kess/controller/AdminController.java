@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.javassist.compiler.ast.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.service.IAdminService;
 
 import jakarta.servlet.http.HttpSession;
@@ -88,7 +88,7 @@ public class AdminController {
 		dataMap.put("교육과정 접수중", waitClassCnt);
 		dataMap.put("문의답변 대기", waitInquiryCnt);
 		dataMap.put("이수완료 대기", completeClassCnt);
-		logger.warn("map: "+dataMap.toString());
+		//logger.warn("map: "+dataMap.toString());
 		model.addAttribute("dataMap", dataMap);
 
 		return "main_manager";
@@ -96,10 +96,47 @@ public class AdminController {
 
 	@RequestMapping("/admin/inquiry")
 	public String inquiry(HttpSession session, Model model) {
-		String title ="문의관리";
+		//로그인 정보 저장
+		session.setAttribute("role", "admin");
+		session.setAttribute("id", "admin");
+
+		String title ="문의사항 관리";
 		model.addAttribute("title", title);
 
+		//문의사항 리스트 객체 생성
+		List<PostVO> postVOList = new ArrayList<PostVO>();
 
-		return "inquiry_manager";
+		//service로부터 문의사항 전체 리스트 가져오기
+		//id가 INQ-----인것만
+		String postValue = "INQ";
+		postVOList = adminService.getPostVOList(postValue);
+		//logger.warn(postVOList.toString());
+		model.addAttribute("postVOList", postVOList);
+
+
+		return "manager_post_list";
+	}
+
+	@RequestMapping("/admin/notice")
+	public String notice(HttpSession session, Model model) {
+		//로그인 정보 저장
+		session.setAttribute("role", "admin");
+		session.setAttribute("id", "admin");
+		
+		String title ="공지사항 관리";
+		model.addAttribute("title", title);
+
+		//공지사항 리스트 객체 생성
+		List<PostVO> postVOList = new ArrayList<PostVO>();
+
+		//service로부터 문의사항 전체 리스트 가져오기
+		//id가 INQ-----인것만
+		String postValue = "NTC";
+		postVOList = adminService.getPostVOList(postValue);
+		//logger.warn(postVOList.toString());
+		model.addAttribute("postVOList", postVOList);
+		
+		
+		return "manager_post_list";
 	}
 }

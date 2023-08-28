@@ -5,7 +5,7 @@
 <title>Main</title>
 </head>
 <head>
-<link th:href="@{/css/inquiry_manager.css}" rel="stylesheet">
+<link th:href="@{/css/managerpostlist.css}" rel="stylesheet">
 </head>
 <body>
 	<!-- 서브바 부분 -->
@@ -39,13 +39,21 @@
 								type="date"></td>
 						</tr>
 						<tr>
-							<td>작성자</td>
+							<td th:switch="${#strings.toString(title)}"><span
+								th:case="'공지사항 관리'">내용</span> <span th:case="'문의사항 관리'">작성자</span>
+								<span th:case="*">기본값</span> <!-- 이외의 값에 대한 처리 --></td>
 							<td><input type="text"></td>
 							<td>상태</td>
 							<td><input type="radio" name="inquiry_status" value="전체"
-								checked="checked">전체 <input type="radio"
-								name="inquiry_status" value="답변대기">답변대기 <input
-								type="radio" name="inquiry_status" value="답변완료">답변완료</td>
+								checked="checked"> <span>전체</span>
+								<span th:switch="${#strings.toString(title)}">
+									<input type="radio" name="inquiry_status" value="답변대기">
+									<span th:case="'공지사항 관리'">공개</span> <span th:case="'문의사항 관리'">답변대기</span>
+								</span>
+								<span th:switch="${#strings.toString(title)}">
+									<input type="radio" name="inquiry_status" value="답변완료">
+									<span th:case="'공지사항 관리'">비공개</span> <span th:case="'문의사항 관리'">답변완료</span>
+								</span></td>
 						</tr>
 					</table>
 				</div>
@@ -63,11 +71,44 @@
 			<!-- 문의 리스트 -->
 			<div>
 				<!-- 총 문의글 개수와 선택삭제 버튼 -->
-				<div></div>
+				<div>
+					<!-- 총 문의글 -->
+					<div>
+						<span>총 문의글 </span> <span th:text="${#lists.size(postVOList)}">0</span>
+						<span>개</span>
+					</div>
+
+					<!-- 선택삭제 버튼 -->
+					<div>
+						<button>선택삭제</button>
+					</div>
+				</div>
 				<!-- End 총 문의글 개수와 선택삭제 버튼 -->
 
 				<!-- 문의글 리스트 -->
-				<div></div>
+				<div>
+					<table>
+						<tr>
+							<th><input type="checkbox"></th>
+							<th>postId</th>
+							<th>문의사항 제목</th>
+							<th>작성자</th>
+							<th>등록일자</th>
+							<th>조회수</th>
+							<th>상태</th>
+						</tr>
+						<tr th:each="postVO : ${postVOList}">
+							<td><input type="checkbox"></td>
+							<td th:text="${postVO.postId}">postId</td>
+							<td><a th:text="${postVO.postTitle}"
+								th:href="@{/admin/inquiry/__${postVO.postTitle}__}">문의사항 제목</a></td>
+							<td th:text="${postVO.rgsterId}">작성자</td>
+							<td th:text="${postVO.rgstDt}">등록일자</td>
+							<td th:text="${postVO.postHit}">조회수</td>
+							<td th:text="${postVO.postCd}">상태</td>
+						</tr>
+					</table>
+				</div>
 				<!-- End 문의글 리스트 -->
 
 				<!-- 페이지당 목록 수 -->
@@ -86,6 +127,7 @@
 	<!-- End 컨텐츠 부분 -->
 
 	<script>
+		
 	</script>
 </body>
 </html>

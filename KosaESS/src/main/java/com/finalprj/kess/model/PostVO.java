@@ -1,5 +1,6 @@
 package com.finalprj.kess.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import lombok.Data;
@@ -12,7 +13,7 @@ public class PostVO {
 	private String postContent;//게시글내용
 	private int postHit;//조회수
 	private String postCd;//게시상태
-	private Timestamp rgstDt;//등록일시
+	private Date rgstDt;//등록일시
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
