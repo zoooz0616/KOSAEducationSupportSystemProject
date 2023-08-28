@@ -38,6 +38,9 @@ public class ManagerController {
 //	교육 상세 조회
 	@GetMapping("/manager/class/{classId}")
 	public String getClassDetail(Model model, @PathVariable String classId) {
+		ClassVO thisClass = new ClassVO();
+		thisClass = managerService.getClassDetail(classId);
+		model.addAttribute("class", thisClass);
 		return "managerClassDetail";
 	}
 

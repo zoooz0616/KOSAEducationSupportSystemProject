@@ -32,4 +32,9 @@ public class ManagerService implements IManagerService {
 	public List<String> getClassCodeNameList() {
 		return managerRepository.getClassCodeNameList();
 	}
+
+	@Override
+	public ClassVO getClassDetail(String classId) {
+		return managerRepository.getClassDetail();
+	}
 }
