@@ -9,4 +9,5 @@ public interface IManagerService {
 	public int getApplyCount(String clssId);
 	public String getClassCodeName(String clssCd);
 	public List<String> getClassCodeNameList();
+	public ClassVO getClassDetail(String classId);
 }

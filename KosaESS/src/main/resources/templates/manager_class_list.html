@@ -30,12 +30,13 @@
 		<tr th:each="class:${classList}">
 			<td><input type="checkbox"></td>
 			<td th:text="${classStat.count}">row number</td>
-			<td><a th:href="@{/manager/class/__${class.clssId}__}">[[${class.clssNm}]]</a></td>
+			<td><a th:href="@{/manager/class/__${class.clssId}__}">[[${class.clssNm}]]</a></td><!--교육생 상세정보로 이동 -->
 			<td>[[${class.clssStartDd}]]<br>~<br>
 				[[${class.clssEndDd}]]
 			</td>
 			<td th:text="${class.clssAdr}">class address</td>
-			<td>[[${class.aplyCnt}]] / [[${class.limitCnt}]]</td>
+<!-- 			<td>[[${class.aplyCnt}]]</a> / [[${class.limitCnt}]]</td>신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
+			<td>[[${class.aplyCnt}]] / [[${class.limitCnt}]]</td><!-- 신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
 			<td th:text="${class.clssCd}">status</td>
 		</tr>
 	</table>
