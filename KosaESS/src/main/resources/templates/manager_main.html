@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/include/header :: header}">
+<head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
 <title>Main</title>
 </head>
 <head>
-<link th:href="@{/css/main_manager.css}" rel="stylesheet">
+<link th:href="@{/css/manager_main.css}" rel="stylesheet">
 </head>
 <body>
-	<div th:replace="~{/include/subbar :: subbar}"></div>
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
 	<div class="home-section">
 		<!-- title -->
 		<div class="title" th:text="${title}" >Title</div>
