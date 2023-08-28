@@ -91,7 +91,7 @@ public class AdminController {
 		//logger.warn("map: "+dataMap.toString());
 		model.addAttribute("dataMap", dataMap);
 
-		return "main_manager";
+		return "manager_main";
 	}
 
 	@RequestMapping("/admin/inquiry")
