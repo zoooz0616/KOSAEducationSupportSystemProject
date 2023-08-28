@@ -1,8 +1,11 @@
 package com.finalprj.kess.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.repository.IAdminRepository;
 
 @Service
@@ -24,6 +27,11 @@ public class AdminService implements IAdminService {
 	@Override
 	public int getCompleteClassCnt() {
 		return adminRepository.getCompleteClassCnt();
+	}
+
+	@Override
+	public List<PostVO> getPostVOList(String postValue) {
+		return adminRepository.getPostVOList(postValue);
 	}
 
 }
