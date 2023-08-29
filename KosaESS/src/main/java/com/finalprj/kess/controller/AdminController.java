@@ -12,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.service.IAdminService;
+import com.finalprj.kess.service.IManagerService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -25,6 +28,8 @@ public class AdminController {
 
 	@Autowired
 	IAdminService adminService;
+	@Autowired
+	IManagerService managerService;
 
 	/**
 	 * @author : eunji
@@ -78,18 +83,19 @@ public class AdminController {
 		//		model.addAttribute("subTitleList", subTitleList);
 
 		//Count 리스트로 전달하기
-		//		List<Integer> cntList = new ArrayList<>();
-		//		cntList.add(waitClassCnt);
-		//		cntList.add(waitInquiryCnt);
-		//		cntList.add(completeClassCnt);
-		//		model.addAttribute("cntList", cntList);
+		List<Integer> cntList = new ArrayList<>();
+		cntList.add(waitClassCnt);
+		cntList.add(completeClassCnt);
+		cntList.add(waitInquiryCnt);
+		model.addAttribute("cntList", cntList);
 
-		Map<String, Integer> dataMap = new HashMap<String, Integer>();
-		dataMap.put("교육과정 접수중", waitClassCnt);
-		dataMap.put("문의답변 대기", waitInquiryCnt);
-		dataMap.put("이수완료 대기", completeClassCnt);
+
+		//		Map<String, Integer> dataMap = new HashMap<String, Integer>();
+		//		dataMap.put("교육과정 접수중", waitClassCnt);
+		//		dataMap.put("문의답변 대기", waitInquiryCnt);
+		//		dataMap.put("이수완료 대기", completeClassCnt);
 		//logger.warn("map: "+dataMap.toString());
-		model.addAttribute("dataMap", dataMap);
+		//model.addAttribute("dataMap", dataMap);
 
 		return "manager_main";
 	}
@@ -100,8 +106,13 @@ public class AdminController {
 		session.setAttribute("role", "admin");
 		session.setAttribute("id", "admin");
 
+		//title
 		String title ="문의사항 관리";
 		model.addAttribute("title", title);
+
+		//link 연결시 필요한 값
+		String url="inquiry";
+		model.addAttribute("url", url);
 
 		//문의사항 리스트 객체 생성
 		List<PostVO> postVOList = new ArrayList<PostVO>();
@@ -122,9 +133,14 @@ public class AdminController {
 		//로그인 정보 저장
 		session.setAttribute("role", "admin");
 		session.setAttribute("id", "admin");
-		
+
+		//title
 		String title ="공지사항 관리";
 		model.addAttribute("title", title);
+
+		//link 연결시 필요한 값
+		String url="inquiry";
+		model.addAttribute("url", url);
 
 		//공지사항 리스트 객체 생성
 		List<PostVO> postVOList = new ArrayList<PostVO>();
@@ -135,8 +151,59 @@ public class AdminController {
 		postVOList = adminService.getPostVOList(postValue);
 		//logger.warn(postVOList.toString());
 		model.addAttribute("postVOList", postVOList);
-		
-		
+
+
 		return "manager_post_list";
+	}
+
+	@RequestMapping("admin/class")
+	public String classList(HttpSession session, Model model) {
+		//로그인 정보 저장
+		session.setAttribute("role", "admin");
+		session.setAttribute("id", "admin");
+
+		//title
+		String title = "교육과정 관리";
+		model.addAttribute("title", title);
+		
+		//교육과정 리스트 객체 생성
+		List<ClassVO> classVOList = adminService.getClassVOList();
+		model.addAttribute("classList", classVOList);
+		
+		//교육과정 상태
+		List<String> classCodeNameList = managerService.getClassCodeNameList();
+		model.addAttribute("classCodeNameList", classCodeNameList);
+		
+		return "manager_class_list";
+	}
+
+	@RequestMapping("admin/professor")
+	public String professor(HttpSession session, Model model) {
+		//로그인 정보 저장
+		session.setAttribute("role", "admin");
+		session.setAttribute("id", "admin");
+
+		//title
+		String title = "강사 관리";
+		model.addAttribute("title", title);
+
+		//강사 리스트 객체 생성
+		List<ProfessorVO> professorVOList = adminService.getProfessorVOList();
+		model.addAttribute("professorVOList", professorVOList);
+
+		return "manager_professor_list";
+	}
+
+	@RequestMapping("admin/manager")
+	public String manager(HttpSession session, Model model) {
+		//로그인 정보 저장
+		session.setAttribute("role", "admin");
+		session.setAttribute("id", "admin");
+
+		//title
+		String title = "업무담당자 관리";
+		model.addAttribute("title", title);
+
+		return "manager_manager_list";
 	}
 }
