@@ -33,4 +33,19 @@ public class StudentService implements IStudentService {
 	public int getCmptClass(String stdtEmail) {
 		return studentRepository.getCmptClass(stdtEmail);
 	}
+
+	@Override
+	public List<PostVO> selectNoticeMain() {
+		return studentRepository.selectNoticeMain();
+	}
+
+	@Override
+	public List<ClassVO> selectClassMain() {
+		return studentRepository.selectClassMain();
+	}
+
+	@Override
+	public List<PostVO> selectAllInquiry() {
+		return studentRepository.selectAllInquiry();
+	}
 }

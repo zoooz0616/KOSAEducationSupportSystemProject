@@ -16,6 +16,9 @@ public interface IStudentRepository {
 	List<PostVO> selectAllNotice();
 	List<ClassVO> selectAllClass();
 	int getCmptClass(String stdtEmail);
+	List<PostVO> selectNoticeMain();
+	List<ClassVO> selectClassMain();
+	List<PostVO> selectAllInquiry();
 
 
 }

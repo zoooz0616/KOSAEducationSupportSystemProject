@@ -5,12 +5,12 @@
 	flex-shrink: 0;
 	color: #0E5881;
 	text-align: center;
-	font-size: 25px;
+	font-size: 20px;
 }
 
 .maintext h3 {
 	color: #6E9BB3;
-	font-size: 23px;
+	font-size: 18px;
 }
 
 body {
@@ -30,12 +30,12 @@ body {
 
 .con {
 	background: #E7EFF3;
-	padding: 5%;
+	padding: 4%;
 }
 
 h2 {
 	text-align: center;
-	font-size: 25px;
+	font-size: 20px;
 	margin-top: 0px;
 	margin-bottom: 4%;
 }
@@ -61,13 +61,32 @@ hr {
 
 table td {
 	font-size: 16px;
-	padding: 3px 0px;
+	padding: 2px 0px;
 	font-weight: bold;
 	margin: 0px;
 }
 
+.login {
+	text-align: center;
+}
+
 .login a {
 	color: #0E5881;
+	margin: 5px 0px;
+}
+
+.login input {
+	padding: 15px;
+	margin: 5px 0;
+	border: 0;
+	width: 60%;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.loginBtn {
+	background: #0E5881;
+	margin-top: 2px;
 }
 
 .my {

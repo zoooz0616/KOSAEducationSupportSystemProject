@@ -13,8 +13,10 @@ public class ClassVO {
 	private String clssNm;//교육과정명
 	private String clssContent;//교육과정 개요
 	private int limitCnt;//지원가능인원
-	private Timestamp aplyStartDd;//지원시작일시
-	private Timestamp aplyEndDd;//지원종료일시
+	private Timestamp aplyStartDt;//지원시작일시
+	private Timestamp aplyEndDt;//지원종료일시
+	private Date aplyStartDd;//지원시작일시 (날짜)
+	private Date aplyEndDd;//지원종료일시 (날짜)
 	private Date clssStartDd;//교육시작일자
 	private Date clssEndDd;//교육종료일자
 	private Timestamp setInTm;//교육시작시간
@@ -27,6 +29,5 @@ public class ClassVO {
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
-	private String rgstDtString;//등록일시(날짜)
 	private int aplyCnt;//지원 한 인원
 }

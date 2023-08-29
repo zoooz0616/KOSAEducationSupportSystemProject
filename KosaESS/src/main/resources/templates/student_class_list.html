@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student_header.css}" rel="stylesheet">
+<link th:href="@{/css/student_main.css}" rel="stylesheet">
+<meta charset="UTF-8">
+<title>main page</title>
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+	<div class="container">
+		<div>
+			<table>
+				<tr>
+					<th>번호</th>
+					<th>교육과정명</th>
+					<th>지원기간</th>
+					<th>교육기간</th>
+					<th>교육장소</th>
+					<th>정원</th>
+					<th>강좌상태</th>
+				</tr>
+				<tr th:each="classVO : ${classList}">
+					<td></td>
+					<td><a th:text="${classVO.clssNm}"
+						th:href="@{/class/__${classVO.clssId}__}">교육과정명</a></td>
+					<td th:text="${classVO.aplyStartDd} + ' ~' +${classVO.aplyEndDd}">지원기간</td>
+					<td th:text="${classVO.clssStartDd} + ' ~' +${classVO.clssEndDd}">교육기간</td>
+					<td th:text="${classVO.clssAdr}">교육장소</td>
+					<td th:text="${classVO.limitCnt}">정원</td>
+					<td th:text="${classVO.clssCd}">상태</td>
+				</tr>
+			</table>
+		</div>
+
+	</div>
+</body>
+</html>

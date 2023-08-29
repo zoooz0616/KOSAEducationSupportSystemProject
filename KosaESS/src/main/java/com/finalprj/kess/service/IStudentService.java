@@ -16,4 +16,10 @@ public interface IStudentService {
 
 	int getCmptClass(String stdtEmail);
 
+	List<PostVO> selectNoticeMain();
+
+	List<ClassVO> selectClassMain();
+
+	List<PostVO> selectAllInquiry();
+
 }
