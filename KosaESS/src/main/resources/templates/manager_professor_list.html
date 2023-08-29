@@ -32,27 +32,24 @@
 				<div class="search_filter_table_wrap">
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
-							<td style="width: 10%;">제목</td>
+							<td style="width: 10%;">아이디</td>
 							<td style="width: 40%;"><input style="width:100%;" type="text"></td>
-							<td style="width: 10%;" >등록일</td>
-							<td style="width: 40%;"><input type="date"> <span> ~ </span> <input
-								type="date"></td>
+							<td style="width: 10%;">연락처</td>
+							<td style="width: 40%;"><input style="width:100%;" type="text"></td>
 						</tr>
 						<tr>
-							<td th:switch="${#strings.toString(title)}"><span
-								th:case="'공지사항 관리'">내용</span> <span th:case="'문의사항 관리'">작성자</span>
-								<span th:case="*">기본값</span> <!-- 이외의 값에 대한 처리 --></td>
+							<td>이름</td>
 							<td><input style="width:100%;" type="text"></td>
 							<td>상태</td>
 							<td><input type="radio" name="inquiry_status" value="전체"
 								checked="checked"> <span>전체</span>
-								<span th:switch="${#strings.toString(title)}">
+								<span>
 									<input type="radio" name="inquiry_status" id="radio1">
-									<label for="radio1" th:case="'공지사항 관리'">공개</label> <label for="radio1" th:case="'문의사항 관리'">답변대기</label>
+									<label for="radio1">활성화</label>								
 								</span>
-								<span th:switch="${#strings.toString(title)}">
+								<span>
 									<input type="radio" name="inquiry_status" id="radio2">
-									<label for="radio2" th:case="'공지사항 관리'">비공개</label> <label for="radio2" th:case="'문의사항 관리'">답변완료</label>
+									<label for="radio2">비활성화</label>
 								</span></td>
 						</tr>
 					</table>
@@ -68,20 +65,22 @@
 			</div>
 			<!-- End 검색 필터 부분 -->
 
-			<!-- 게시글 리스트 -->
+			<!-- 아이템 리스트 -->
 			<div>
-				<!-- 총 게시글 개수와 선택삭제 버튼 -->
+				<!-- 총 아이템 개수와 선택삭제 버튼 -->
 				<div class="post_detail_wrap">
-					<!-- 총 게시글 -->
+					<!-- 총 아이템 개수 -->
 					<div class="post_total_cnt">
-						<span>총 문의글 </span> 
-						<span class="post_cnt" th:text="${#lists.size(postVOList)}">0</span>
+						<span>총</span> 
+						<span class="post_cnt" th:text="${#lists.size(professorVOList)}">0</span>
 						<span>개</span>
 					</div>
 
-					<!-- 선택삭제 버튼 -->
+					<!-- 선택삭제, 등록 버튼 -->
 					<div class="post_btn_wrap">
 						<button class="post_delete_btn">선택삭제</button>
+						<button class="post_create_btn">강사등록</button>
+						
 					</div>
 				</div>
 				<!-- End 총 게시글 개수와 선택삭제 버튼 -->
@@ -92,24 +91,21 @@
 					<table class="post_list_table">
 						<tr>
 							<th><input type="checkbox" name="chk" id="chkAll"></th>
-							<th>postId</th>
-							<th>제목</th>
-							<th>작성자</th>
+							<th>Id</th>
+							<th>이름</th>
+							<th>핸드폰</th>
+							<th>이메일</th>
 							<th>등록일자</th>
-							<th>조회수</th>
-							<th>상태</th>
 							<th>수정</th>
 						</tr>
-						<tr th:each="postVO : ${postVOList}">
+						<tr th:each="professorVO : ${professorVOList}">
 							<td><input type="checkbox" name="chk"></td>
-							<td th:text="${postVO.postId}">postId</td>
-							<td><a th:text="${postVO.postTitle}"
-								th:href="@{/admin/__${url}__/__${postVO.postId}__}">게시글 제목</a></td>
-							<td th:text="${postVO.rgsterId}">작성자</td>
-							<td th:text="${postVO.rgstDt}">등록일자</td>
-							<td th:text="${postVO.postHit}">조회수</td>
-							<td th:text="${postVO.postCd}">상태</td>
-							<td><a th:href="@{/admin/__${url}__/update}">수정</a></td>
+							<td th:text="${professorVO.profId}">profId</td>
+							<td th:text="${professorVO.profNm}">이름</td>
+							<td th:text="${professorVO.profTel}">핸드폰</td>
+							<td th:text="${professorVO.profEmail}">이메일</td>
+							<td th:text="${professorVO.rgstDt}">등록일자</td>
+							<td><a th:href="@{/admin/professor/update}">수정</a></td>
 						</tr>
 					</table>
 					<!-- End 게시글 테이블 -->
