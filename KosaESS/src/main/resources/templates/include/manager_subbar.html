@@ -39,6 +39,10 @@
 						th:src="@{/img/professor_white.png}"></i> <span
 					class="links_name">강사 관리</span>
 			</a> <span class="tooltip">강사 관리</span></li>
+			<li><a th:href="@{/__${session.role}__/lecture}"> <i class='bx bx-pie-chart-alt-2'><img
+						th:src="@{/img/lecture_white.png}"></i> <span
+					class="links_name">과목 관리</span>
+			</a> <span class="tooltip">과목 관리</span></li>
 			<li><a th:href="@{/__${session.role}__/commoncode}"> <i class='bx bx-folder'><img
 						th:src="@{/img/commoncode_white.png}"></i> <span
 					class="links_name">기준 정보 관리</span>
