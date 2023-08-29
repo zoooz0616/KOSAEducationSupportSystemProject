@@ -54,4 +54,37 @@
 	]]>
 	</select>
 	
+	<select id="getProfessorVOList" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+		select
+			prof_id		as "profId",
+			prof_nm		as "profNm",
+			prof_tel	as "profTel",
+			prof_email	as "profEmail",
+			rgst_dt		as "rgstDt",
+			rgster_id	as "rgsterId",
+			updt_dt		as "updtDt",
+			updter_id	as "updterId"
+		from prof
+	]]>
+	</select>
+	
+	
+	<select id="getClassVOList" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+	SELECT
+	    clss_id AS clssId,
+	    clss_nm AS clssNm,
+	    clss_start_dd AS clssStartDd,
+	    clss_end_dd AS clssEndDd,
+	    clss_adr AS clssAdr,
+	    limit_cnt AS limitCnt,
+	    substr(clss_cd,-3,3) AS clssCd
+	FROM
+	    clss
+	ORDER BY
+		clss_id
+	]]>
+	</select>
+	
 </mapper>
