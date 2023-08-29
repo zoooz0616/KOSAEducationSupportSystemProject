@@ -7,14 +7,14 @@
 </head>
 <body>
 	<form>
-		<input type="text">
-		<input type="button" value="검색">
-	</form>
-	<form>
+		<span>
+			<input type="text">
+			<input type="button" value="검색">
+		</span>
 		<label>전체<input type="checkbox"></label>
-		<div th:each="classCodeName:${classCodeNameList}">
-		<label>[[${classCodeName}]] <input type="checkbox"> </label>
-		</div>
+		<span th:each="classCodeName:${classCodeNameList}">
+			<label>[[${classCodeName}]] <input type="checkbox"> </label>
+		</span>
 	</form>
 
 	<table>

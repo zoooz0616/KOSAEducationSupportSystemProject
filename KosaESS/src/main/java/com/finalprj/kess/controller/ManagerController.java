@@ -37,6 +37,8 @@ public class ManagerController {
 			vo.setAplyCnt(managerService.getApplyCount(vo.getClssId()));
 			vo.setClssCd(managerService.getClassCodeName(vo.getClssCd()));
  		}
+		List<String> classCodeNameList = managerService.getClassCodeNameList();
+		model.addAttribute("classCodeNameList", classCodeNameList);
 		model.addAttribute("classList", classList);
 		return "manager_class_list";
 	}
@@ -48,12 +50,11 @@ public class ManagerController {
 		thisClass = managerService.getClassDetail(classId);
 		thisClass.setAplyCnt(managerService.getApplyCount(classId));
 		List<String> fileIdList= managerService.getFileIdList(classId);
-		
-		List<String> classCodeNameList = managerService.getClassCodeNameList();
-		model.addAttribute("classCodeNameList", classCodeNameList);
-		
 		model.addAttribute("clss", thisClass);
 		model.addAttribute("fileIdList", fileIdList);
+		for (String string : fileIdList) {
+			System.out.println(string);
+		}
 		return "manager_class_detail";
 	}
 	

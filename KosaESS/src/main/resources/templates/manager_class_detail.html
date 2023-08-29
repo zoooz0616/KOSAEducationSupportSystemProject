@@ -30,10 +30,10 @@
 			<td th:text="${clss.mngrId}"></td>
 		</tr>
 	</table>
-	<div th:each="fileId:${fileIdList}">
-<!-- 		img th:href="@{manager/class/__${clss.clssId}__}/file" -->
-		<div th:text="${fileid}"></div>
+	<div th:each="item:${fileIdList}">
+		<div th:text="${item}"></div>
 	</div>
+
 	<div th:utext="${clss.clssContent}"></div>
 	<a th:href="@{/manager/class}">
 		<div>목?록</div>

@@ -68,7 +68,7 @@
 	]]>
 	</select>
 	
-	<select id="getFileIdList" resultType="com.finalprj.kess.model.FileVO" parameterType="string">
+	<select id="getFileIdList" resultType="string" parameterType="string">
 	<![CDATA[
 	select file_id from flup WHERE post_id=#{classId}
 	]]>
@@ -77,7 +77,6 @@
 	<select id="getFile" resultType="string" parameterType="string">
 	<![CDATA[
 	select file_id from flup WHERE post_id=#{classId}
-	--수정필요
 	]]>
 	</select>
 </mapper>
