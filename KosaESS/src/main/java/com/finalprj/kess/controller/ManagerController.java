@@ -2,9 +2,10 @@ package com.finalprj.kess.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,24 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ManagerController {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	IManagerService managerService;
-
+	
+//	메인 페이지
+	@GetMapping("/manager/main")
+	public String managerMain(Model model, HttpSession session) {
+		session.setAttribute("role", "GRP0004003");//삭제 예정
+		session.setAttribute("id", "MNG0000005");//삭제 예정
+		return "manager_main";
+	}
+	
 //	담당 교육 목록 조회
 	@GetMapping("/manager/class")
 	public String getClassList(Model model, HttpSession session) {
+		model.addAttribute("title", "교육 과정 목록");
 		session.setAttribute("role", "GRP0004003");//삭제 예정
 		session.setAttribute("id", "MNG0000005");//삭제 예정
 		List<ClassVO> classList = managerService.getClassList((String) session.getAttribute("id"));
@@ -40,18 +53,17 @@ public class ManagerController {
 		List<String> classCodeNameList = managerService.getClassCodeNameList();
 		model.addAttribute("classCodeNameList", classCodeNameList);
 		model.addAttribute("classList", classList);
-		model.addAttribute("title", "교육 과정 목록");
 		return "manager_class_list";
 	}
 
 //	교육 상세 조회
 	@GetMapping("/manager/class/{classId}")
 	public String getClassDetail(Model model, @PathVariable String classId) {
+		model.addAttribute("title", "교육 과정 상세");
 		ClassVO thisClass = new ClassVO();
 		thisClass = managerService.getClassDetail(classId);
 		thisClass.setAplyCnt(managerService.getApplyCount(classId));
 		List<String> fileIdList= managerService.getFileIdList(classId);
-		model.addAttribute("title", "교육 과정 상세");
 		model.addAttribute("clss", thisClass);
 		model.addAttribute("fileIdList", fileIdList);
 		return "manager_class_detail";
@@ -75,13 +87,13 @@ public class ManagerController {
 	}
 	
 //	교육 과정별 교육생 조회
-	@GetMapping("/manager/class/{classId}/student")
+	@GetMapping("/manager/student")
 	public String getStudentList(Model model) {
-		return "manager_studentlist";
+		return "manager_student_list";
 	}
 
 //	교육생 상세 조회
-	@GetMapping("/manager/class/{classId}/{studentId}")
+	@GetMapping("/manager/student/{studentId}")
 	public String getStudentDetail(Model model) {
 		return "manager_student_detail";
 	}
@@ -89,6 +101,6 @@ public class ManagerController {
 //	개인정보 조회
 	@GetMapping("/manager/mypage")
 	public String getMngrInfo(Model model) {
-		return "manager_my_page";
+		return "manager_mypage";
 	}
 }

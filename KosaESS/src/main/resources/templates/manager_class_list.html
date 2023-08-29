@@ -78,11 +78,10 @@
 				<tr th:each="class:${classList}">
 					<td><input type="checkbox"></td>
 					<td th:text="${classStat.count}">row number</td>
-					<td th:href="@{/manager/class/__${class.clssId}__}"
-						th:text="${class.clssNm}"></td>
+					<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
 					<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
 					<td th:text="${class.clssAdr}">class address</td>
-					<td th:text="|${class.aplyCnt} / ${class.limitCnt}|"></td>
+					<td><a th:text="${class.aplyCnt}" th:href="@{/manager/student}"></a><span th:text="|/ ${class.limitCnt}|"></span></td><!--req_param 추가할것 -->
 					<td th:text="${class.clssCd}">status</td>
 				</tr>
 			</table>
