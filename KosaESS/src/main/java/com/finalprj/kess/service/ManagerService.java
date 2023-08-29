@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.repository.IManagerRepository;
 
 @Service
@@ -35,6 +36,16 @@ public class ManagerService implements IManagerService {
 
 	@Override
 	public ClassVO getClassDetail(String classId) {
-		return managerRepository.getClassDetail();
+		return managerRepository.getClassDetail(classId);
+	}
+
+	@Override
+	public FileVO getFile(String classId) {
+		return managerRepository.getFile(classId);
+	}
+
+	@Override
+	public List<String> getFileIdList(String classId) {
+		return managerRepository.getFileIdList(classId);
 	}
 }

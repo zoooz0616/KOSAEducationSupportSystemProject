@@ -49,9 +49,34 @@
 	
 	<select id="getClassDetail" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
 	<![CDATA[
-	select
-	*
-	from clss where clss_id=#{clssId};
+	SELECT
+		clss_id AS clssId,
+	    clss_nm AS clssNm,
+	    aply_start_dt AS aplyStartDt,
+	    aply_end_dt AS aplyEndDt,
+	    clss_start_dd AS clssStartDd,
+	    clss_end_dd AS clssEndDd,
+	    clss_adr AS clssAdr,
+	    set_in_tm AS setInTm,
+	    set_out_tm AS setOutTm,
+	    limit_cnt AS limitCnt,
+	    substr(clss_cd,-3,3) AS clssCd,
+	    mngr_id AS mngrId,
+	    clss_content AS clssContent
+	FROM clss
+	WHERE clss_id= #{classId}
+	]]>
+	</select>
+	
+	<select id="getFileIdList" resultType="string" parameterType="string">
+	<![CDATA[
+	select file_id from flup WHERE post_id=#{classId}
+	]]>
+	</select>
+	
+	<select id="getFile" resultType="string" parameterType="string">
+	<![CDATA[
+	select file_id from flup WHERE post_id=#{classId}
 	]]>
 	</select>
 </mapper>
