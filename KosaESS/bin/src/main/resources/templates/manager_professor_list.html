@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Main</title>
+</head>
+<head>
+<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title" th:text="${title}">Title</div>
+
+		<!-- content wrap-->
+		<div class="content_wrap">
+
+			<!-- 검색 필터 부분 -->
+			<div class="search_filter_wrap">
+				<!-- 아이콘 삽임 부분 -->
+				<div class="search_filter_icon">
+					<img class="search_filter_icon_img" th:src="@{/img/filter.png}">
+				</div>
+				<!-- 아이콘 삽임 부분 -->
+
+				<!-- 검색 필터 테이블 -->
+				<div class="search_filter_table_wrap">
+					<table class="search_filter_table" style="width: 100%;">
+						<tr>
+							<td style="width: 10%;">아이디</td>
+							<td style="width: 40%;"><input style="width:100%;" type="text"></td>
+							<td style="width: 10%;">연락처</td>
+							<td style="width: 40%;"><input style="width:100%;" type="text"></td>
+						</tr>
+						<tr>
+							<td>이름</td>
+							<td><input style="width:100%;" type="text"></td>
+							<td>상태</td>
+							<td><input type="radio" name="inquiry_status" value="전체"
+								checked="checked"> <span>전체</span>
+								<span>
+									<input type="radio" name="inquiry_status" id="radio1">
+									<label for="radio1">활성화</label>								
+								</span>
+								<span>
+									<input type="radio" name="inquiry_status" id="radio2">
+									<label for="radio2">비활성화</label>
+								</span></td>
+						</tr>
+					</table>
+				</div>
+				<!-- 검색 필터 테이블 -->
+
+				<!-- 검색 버튼 -->
+				<div class="search_filter_btn_wrap">
+					<button class="search_filter_btn">검색</button>
+				</div>
+				<!-- End 검색 버튼 -->
+
+			</div>
+			<!-- End 검색 필터 부분 -->
+
+			<!-- 아이템 리스트 -->
+			<div>
+				<!-- 총 아이템 개수와 선택삭제 버튼 -->
+				<div class="post_detail_wrap">
+					<!-- 총 아이템 개수 -->
+					<div class="post_total_cnt">
+						<span>총</span> 
+						<span class="post_cnt" th:text="${#lists.size(professorVOList)}">0</span>
+						<span>개</span>
+					</div>
+
+					<!-- 선택삭제, 등록 버튼 -->
+					<div class="post_btn_wrap">
+						<button class="post_delete_btn">선택삭제</button>
+						<button class="post_create_btn">강사등록</button>
+						
+					</div>
+				</div>
+				<!-- End 총 게시글 개수와 선택삭제 버튼 -->
+
+				<!-- 게시글 리스트 -->
+				<div class="post_list_wrap">
+					<!-- 게시글 테이블 -->
+					<table class="post_list_table">
+						<tr>
+							<th><input type="checkbox" name="chk" id="chkAll"></th>
+							<th>Id</th>
+							<th>이름</th>
+							<th>핸드폰</th>
+							<th>이메일</th>
+							<th>등록일자</th>
+							<th>수정</th>
+						</tr>
+						<tr th:each="professorVO : ${professorVOList}">
+							<td><input type="checkbox" name="chk"></td>
+							<td th:text="${professorVO.profId}">profId</td>
+							<td th:text="${professorVO.profNm}">이름</td>
+							<td th:text="${professorVO.profTel}">핸드폰</td>
+							<td th:text="${professorVO.profEmail}">이메일</td>
+							<td th:text="${professorVO.rgstDt}">등록일자</td>
+							<td><a th:href="@{/admin/professor/update}">수정</a></td>
+						</tr>
+					</table>
+					<!-- End 게시글 테이블 -->
+				</div>
+				<!-- End 게시글 리스트 -->
+
+				<!-- 페이지당 목록 수 -->
+				<div></div>
+				<!-- End 페이지당 목록 수 -->
+
+				<!-- 페이지 -->
+				<div></div>
+				<!-- End 페이지 -->
+			</div>
+			<!-- End 문의 리스트 -->
+
+			<!-- End content wrap -->
+		</div>
+	</div>
+	<!-- End 컨텐츠 부분 -->
+
+	<script>
+		const chkAll = document.querySelector("#chkAll");
+		chkAll.addEventListener("change", () => {
+			const chkList = document.getElementsByName("chk");
+			for(chk of chkList){
+				chk.checked = chkAll.checked;
+			}
+		});
+	</script>
+</body>
+</html>

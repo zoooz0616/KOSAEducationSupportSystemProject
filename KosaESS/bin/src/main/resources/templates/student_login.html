@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student_header.css}" rel="stylesheet">
+<link th:href="@{/css/student_main.css}" rel="stylesheet">
+
+<meta charset="UTF-8">
+<title>login page</title>
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}" style="width: 100%;"></div>
+	<div class="container" style="float: none; margin: 0 auto;">
+		<div class="content" style="align-items: center; height: 100vh;">
+			<div class="login con">
+				<form th:action="@{/login}" method="post" class="">
+					<div class="">
+						<div class="">
+							<label for="stdtEmail"></label> <input type="text"
+								name="stdtEmail" id="id" class="" placeholder="아이디(이메일)">
+						</div>
+					</div>
+					<div class="">
+						<div class="">
+							<label for="stdtPwd"></label> <input type="password"
+								name="stdtPwd" id="pwd" class=" " placeholder="비밀번호">
+						</div>
+					</div>
+					<div class="">
+						<input type="submit" class="" th:value="로그인">
+					</div>
+					<div>
+						<a th:href="@{/findPwd}" class="">비밀번호 찾기</a> <a
+							th:href="@{/insert}" class="">회원가입</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

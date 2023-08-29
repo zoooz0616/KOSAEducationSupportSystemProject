@@ -1,0 +1,107 @@
+.home-section {
+	position: relative;
+	background: #ffffff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section .title {
+	display: inline-block;
+	color: #11101d;
+	font-size: 50px;
+	font-weight: bold;
+	margin: 20px;
+	padding: 20px;
+}
+
+.content_wrap {
+	width:90%;
+	margin: auto;
+}
+
+/* 여기까지는 공통 */
+
+.search_filter_icon_img {
+	width:30px;
+}
+.search_filter_wrap{
+	width:100%;
+}
+.search_filter_wrap .search_filter_table_wrap{
+	width:100%;
+}
+
+.search_filter_table{
+	width: 100%;
+	font-weight: bold;
+	text-align : center;
+	border: 1px solid;
+	border-collapse: collapse;
+}
+
+.search_filter_table tr td {
+	font-size: 20px;
+	border: 1px solid;
+}
+
+.search_filter_table tr td input {
+	height:100%;
+}
+
+.search_filter_btn_wrap {
+	text-align: center;
+}
+
+.search_filter_btn_wrap .search_filter_btn {
+	width: 60px;
+	background-color: #0E5881;
+	margin: 10px 0 10px 0;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.post_detail_wrap .post_total_cnt {
+	font-weight: bold;
+	float:left;
+}
+
+.post_detail_wrap .post_total_cnt .post_cnt{
+	color: #0E5881;
+}
+
+.post_detail_wrap .post_btn_wrap {
+	float: right;
+}
+
+.post_detail_wrap .post_btn_wrap button {
+	width: 80px;
+	background-color: #0E5881;
+	margin-left: 10px;
+	color: white;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.post_list_table{
+	width:100%;
+}
+
+.post_list_table tr td {
+	text-align: center;
+}
+
+.post_list_table tr td a {
+	text-decoration: none;
+	color: #0E5881;
+	font-weight: bold;
+}

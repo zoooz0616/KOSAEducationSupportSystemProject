@@ -11,6 +11,6 @@ public interface IManagerService {
 	public String getClassCodeName(String clssCd);
 	public List<String> getClassCodeNameList();
 	public ClassVO getClassDetail(String classId);
-	public FileVO getFile(String classId);
+	public FileVO getFile(String fileId);
 	public List<String> getFileIdList(String classId);
 }

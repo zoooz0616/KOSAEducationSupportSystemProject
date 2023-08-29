@@ -39,9 +39,10 @@
 							type="text"></td>
 						<td style="width: 10%;">상태</td>
 						<td style="width: 50%;"><span
-							th:each="classCodeName:${classCodeNameList}"> <input
-								type="checkbox" checked="checked"> <label
-								th:text="${classCodeName}"></label>
+							th:each="classCodeName:${classCodeNameList}"> <label>
+									<input type="checkbox" checked="checked">
+									[[${classCodeName}]]
+							</label>
 						</span></td>
 
 					</tr>
@@ -54,7 +55,7 @@
 								~ </span> <input type="date"></td>
 					</tr>
 				</table>
-
+				
 				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
 					<button class="search_filter_btn">검색</button>
@@ -78,11 +79,15 @@
 				<tr th:each="class:${classList}">
 					<td><input type="checkbox"></td>
 					<td th:text="${classStat.count}">row number</td>
-					<td th:href="@{/manager/class/__${class.clssId}__}"
-						th:text="${class.clssNm}"></td>
-					<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
+					<td><a th:href="@{/manager/class/__${class.clssId}__}">[[${class.clssNm}]]</a></td>
+					<!--교육생 상세정보로 이동 -->
+					<td>[[${class.clssStartDd}]]<br>~<br>
+						[[${class.clssEndDd}]]
+					</td>
 					<td th:text="${class.clssAdr}">class address</td>
-					<td th:text="|${class.aplyCnt} / ${class.limitCnt}|"></td>
+					<!-- 			<td>[[${class.aplyCnt}]]</a> / [[${class.limitCnt}]]</td>신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
+					<td>[[${class.aplyCnt}]] / [[${class.limitCnt}]]</td>
+					<!-- 신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
 					<td th:text="${class.clssCd}">status</td>
 				</tr>
 			</table>

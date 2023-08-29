@@ -40,6 +40,7 @@ public class ManagerController {
 		List<String> classCodeNameList = managerService.getClassCodeNameList();
 		model.addAttribute("classCodeNameList", classCodeNameList);
 		model.addAttribute("classList", classList);
+		model.addAttribute("title", "교육 과정 목록");
 		return "manager_class_list";
 	}
 
@@ -50,30 +51,28 @@ public class ManagerController {
 		thisClass = managerService.getClassDetail(classId);
 		thisClass.setAplyCnt(managerService.getApplyCount(classId));
 		List<String> fileIdList= managerService.getFileIdList(classId);
+		model.addAttribute("title", "교육 과정 상세");
 		model.addAttribute("clss", thisClass);
 		model.addAttribute("fileIdList", fileIdList);
-		for (String string : fileIdList) {
-			System.out.println(string);
-		}
 		return "manager_class_detail";
 	}
 	
 	//교육 상세 정보 > 파일 요청
-//	@GetMapping("/manager/file/{fileId}}")
-//	public ResponseEntity<byte[]> getFile(@PathVariable String fileId) {
-//		FileVO file = managerService.getFile(fileId);
-//		final HttpHeaders headers = new HttpHeaders();
-//		String[] mtypes = file.getFileType().split("/");
-//		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
-//		headers.setContentLength(file.getFileSize());
-//		try {
-//			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
-//			headers.setContentDispositionFormData("attachment", encodedFileName);
-//		} catch (UnsupportedEncodingException e) {
-//			throw new RuntimeException(e);
-//		}
-//		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
-//	}
+	@GetMapping("/manager/fileId/{fileId}")
+	public ResponseEntity<byte[]> getFile(@PathVariable String fileId) {
+		FileVO file = managerService.getFile(fileId);
+		final HttpHeaders headers = new HttpHeaders();
+		String[] mtypes = file.getFileType().split("/");
+		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+		headers.setContentLength(file.getFileSize());
+		try {
+			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+			headers.setContentDispositionFormData("attachment", encodedFileName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
+	}
 	
 //	교육 과정별 교육생 조회
 	@GetMapping("/manager/class/{classId}/student")

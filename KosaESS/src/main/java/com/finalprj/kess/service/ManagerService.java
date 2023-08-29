@@ -40,8 +40,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public FileVO getFile(String classId) {
-		return managerRepository.getFile(classId);
+	public FileVO getFile(String fileId) {
+		return managerRepository.getFile(fileId);
 	}
 
 	@Override

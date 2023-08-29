@@ -74,16 +74,9 @@
 	]]>
 	</select>
 	
-	<select id="getFile" resultType="com.finalprj.kess.model.FileVO" parameterType="string">
+	<select id="getFile" resultType="string" parameterType="string">
 	<![CDATA[
-	select
-	file_id AS fileId,
-	post_id AS postId,
-	file_Nm AS fileNm,
-	file_content AS fileContent,
-	file_size AS fileSize,
-	file_type AS fileType
-	from flup WHERE file_id=#{fileId}
+	select file_id from flup WHERE post_id=#{classId}
 	]]>
 	</select>
 </mapper>
