@@ -21,35 +21,34 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class StudentController {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	
 	@Autowired
 	IStudentService studentService;
 	StudentVO student = new StudentVO();
-	
+
 	// 메인화면
 	/**
 	 * @author : dabin
 	 * @date : 2023. 8. 24.
 	 * @parameter : model
-	 * @return : 
+	 * @return :
 	 */
-	@GetMapping("/") 
+	@GetMapping("/")
 	public String main(Model model, HttpSession session) {
 		model.addAttribute("student", student);
-		
+
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectNoticeMain();
 		model.addAttribute("postList", postList);
 		logger.warn("postList" + postList);
-		
+
 		List<ClassVO> classList = new ArrayList<ClassVO>();
 		classList = studentService.selectClassMain();
 		model.addAttribute("classList", classList);
 		logger.warn("classList" + classList);
-		
+
 		return "student_main";
 	}
 
@@ -58,36 +57,36 @@ public class StudentController {
 	 * @author : dabin
 	 * @date : 2023. 8. 24.
 	 * @parameter :
-	 * @return : 
+	 * @return :
 	 */
-	
-	@GetMapping("/login") 
+
+	@GetMapping("/login")
 	public String login() {
 		return "student_login";
 	}
-	
+
 	// 로그인 + 로그인 후 화면 변경
 	/**
 	 * @author : dabin
 	 * @date : 2023. 8. 24.
 	 * @parameter : session, model
-	 * @return : 
+	 * @return :
 	 */
-	
+
 	@PostMapping("/login")
 	public String login(String stdtEmail, String stdtPwd, HttpSession session, Model model) {
-		logger.warn("stdtId : " + stdtEmail + "password : " + stdtPwd );
+		logger.warn("stdtId : " + stdtEmail + "password : " + stdtPwd);
 		student = studentService.selectStudent(stdtEmail);
-		if(student != null) {
+		if (student != null) {
 			String dataPwd = student.getStdtPwd();
-				if(dataPwd== null) {
-				//아이디(이메일)이 없는 경우
-					logger.warn("비밀번호를 입력하세요");
-	
+			if (dataPwd == null) {
+				// 아이디(이메일)이 없는 경우
+				logger.warn("비밀번호를 입력하세요");
+
 				model.addAttribute("message", "아이디나 비밀번호를 다시 확인해주세요.");
-				}else {
-				if(dataPwd.equals(stdtPwd)) {
-					//아이디(이메일)과 비밀번호가 일치하는 경우 세션에 정보 저장
+			} else {
+				if (dataPwd.equals(stdtPwd)) {
+					// 아이디(이메일)과 비밀번호가 일치하는 경우 세션에 정보 저장
 					session.setAttribute("stdtEmail", stdtEmail);
 					session.setAttribute("stdtId", student.getStdtId());
 					session.setAttribute("stdtPwd", student.getStdtPwd());
@@ -100,48 +99,53 @@ public class StudentController {
 					session.setAttribute("stdtRole", student.getRoleCd());
 					logger.warn("아이디 비밀번호 일치" + stdtEmail);
 					logger.warn("Id" + student.getStdtId());
-					
-					Integer cmptClassCnt = studentService.getCmptClass(stdtEmail);
-					logger.warn("이수완료 : " +cmptClassCnt);
-					model.addAttribute("cmptClassCnt",cmptClassCnt);
+
+					int aplyClassCnt = studentService.getAplyClass(stdtEmail);
+					logger.warn("지원완료 : " + aplyClassCnt);
+					int cmptClassCnt = studentService.getCmptClass(stdtEmail);
+					logger.warn("이수완료 : " + cmptClassCnt);
+
+					session.setAttribute("aplyClassCnt", aplyClassCnt);
+					session.setAttribute("cmptClassCnt", cmptClassCnt);
+
 					return "redirect:/";
-				}else {
-					//비밀번호가 일치하지 않는 경우
+				} else {
+					// 비밀번호가 일치하지 않는 경우
 					logger.warn("비밀번호 불일치");
 					model.addAttribute("message", "아이디나 비밀번호를 다시 확인해주세요.");
 				}
 			}
-		}else {
+		} else {
 			logger.warn("아이디 없음");
 			model.addAttribute("message", "존재하지않는 아이디입니다.");
 		}
-		session.invalidate();	
+		session.invalidate();
 		return "redirect:/";
 	}
-	
+
 	// 로그이웃
 	/**
 	 * @author : dabin
 	 * @date : 2023. 8. 25.
 	 * @parameter : session
-	 * @return : 
+	 * @return :
 	 */
-	
-	@GetMapping("/logout") 
+
+	@GetMapping("/logout")
 	public String logout(HttpSession session, HttpServletRequest request) {
 		session.invalidate();
 		return "redirect:/";
 	}
-	
+
 	// 공지사항 리스트확인
 	/**
 	 * @author : dabin
 	 * @date : 2023. 8. 28.
 	 * @parameter : session, model
-	 * @return : 
+	 * @return :
 	 */
-	
-	@GetMapping("/notice") 
+
+	@GetMapping("/notice")
 	public String noticeList(HttpSession session, Model model) {
 		model.addAttribute("student", student);
 
@@ -149,47 +153,65 @@ public class StudentController {
 		postList = studentService.selectAllNotice();
 		model.addAttribute("postList", postList);
 		logger.warn("postList" + postList);
-		
+
 		return "student_notice_list";
 	}
-	
+
+	// 문의사항 리스트확인
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 28.
+	 * @parameter : session, model
+	 * @return :
+	 */
+	@GetMapping("/inquiry")
+	public String inquiryList(HttpSession session, Model model) {
+		model.addAttribute("student", student);
+
+		List<PostVO> postList = new ArrayList<PostVO>();
+		postList = studentService.selectAllInquiry();
+		model.addAttribute("postList", postList);
+		logger.warn("postList" + postList);
+
+		return "student_inquiry_list";
+	}
+
 	// 교육 리스트확인
-		/**
-		 * @author : dabin
-		 * @date : 2023. 8. 28.
-		 * @parameter : session, model
-		 * @return : 
-		 */
-		
-		@GetMapping("/class") 
-		public String classList(HttpSession session, Model model) {
-			model.addAttribute("student", student);
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 28.
+	 * @parameter : session, model
+	 * @return :
+	 */
 
-			List<ClassVO> classList = new ArrayList<ClassVO>();
-			classList = studentService.selectAllClass();
-			model.addAttribute("classList", classList);
-			logger.warn("classList" + classList);
-			
-			return "student_class_list";
-		}
-		
-		// 문의사항 리스트확인
-		/**
-		 * @author : dabin
-		 * @date : 2023. 8. 28.
-		 * @parameter : session, model
-		 * @return : 
-		 */
-		@GetMapping("/inquiry") 
-		public String inquiryList(HttpSession session, Model model) {
-			model.addAttribute("student", student);
+	@GetMapping("/class")
+	public String classList(HttpSession session, Model model) {
+		model.addAttribute("student", student);
 
-			List<PostVO> postList = new ArrayList<PostVO>();
-			postList = studentService.selectAllInquiry();
-			model.addAttribute("postList", postList);
-			logger.warn("postList" + postList);
-			
-			return "student_inquiry_list";
-		}
+		List<ClassVO> classList = new ArrayList<ClassVO>();
+		classList = studentService.selectAllClass();
+		model.addAttribute("classList", classList);
+		logger.warn("classList" + classList);
 
+		return "student_class_list";
+	}
+
+	// 교욱 상세페이지
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 29.
+	 * @parameter : session, model
+	 * @return :
+	 */
+	@GetMapping("/class/{clssId}")
+	public String classdetail(HttpSession session, Model model) {
+		model.addAttribute("student", student);
+
+		List<PostVO> postList = new ArrayList<PostVO>();
+		postList = studentService.selectAllInquiry();
+		model.addAttribute("postList", postList);
+		logger.warn("postList" + postList);
+
+		return "student_class_detail";
+	}
 }

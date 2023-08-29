@@ -48,4 +48,9 @@ public class StudentService implements IStudentService {
 	public List<PostVO> selectAllInquiry() {
 		return studentRepository.selectAllInquiry();
 	}
+
+	@Override
+	public int getAplyClass(String stdtEmail) {
+		return studentRepository.getAplyClass(stdtEmail);
+	}
 }

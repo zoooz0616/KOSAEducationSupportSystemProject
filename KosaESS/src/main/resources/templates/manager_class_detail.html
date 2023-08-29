@@ -18,22 +18,25 @@
 			<th>업무담당자</th>
 		</tr>
 		<tr>
-			<td th:text="${class.clssNm}"></td>
-			<td th:text="${class.aplyStartDd} ~ ${class.aplyStartDd}"></td>
-			<td th:text="${class.clssStartDd} ~ ${class.clssEndDd}"></td>
-			<td th:text="${class.clssAdr}"></td>
-			<td th:text="${class.clssCd}"></td>
-			<td th:text="${class.setInTm}"></td>
-			<td th:text="${class.setOutTm}"></td>
-			<td><a th:href="@{/manager/class/__${class.clssId}__/student}">[[${class.aplyCnt}]]</a> / ${class.limitCnt}</td>
-			<td th:text="${class.mngrId}"></td>
+			<td th:text="${clss.clssNm}"></td>
+			<td>[[${clss.aplyStartDt}]] ~ [[${clss.aplyStartDt}]]</td>
+			<td>[[${clss.clssStartDd}]] ~ [[${clss.clssEndDd}]]</td>
+			<td th:text="${clss.clssAdr}"></td>
+			<td th:text="${clss.clssCd}"></td>
+			<td th:text="${clss.setInTm}"></td>
+			<td th:text="${clss.setOutTm}"></td>
+			<td>[[${clss.aplyCnt}]] / [[${clss.limitCnt}]]</td>
+
+			<td th:text="${clss.mngrId}"></td>
 		</tr>
 	</table>
-	<div>
-	이미지 나열하기
+	<div th:each="item:${fileIdList}">
+		<div th:text="${item}"></div>
 	</div>
-	<div th:utext="post.postContent">
-	</div>
-	<a th:href="@{/manager/class}"><input type="button" name="목록"></a>
+
+	<div th:utext="${clss.clssContent}"></div>
+	<a th:href="@{/manager/class}">
+		<div>목?록</div>
+	</a>
 </body>
 </html>

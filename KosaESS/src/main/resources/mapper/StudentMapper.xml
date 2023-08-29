@@ -188,10 +188,7 @@
 				clss_cd as "clssCd",
 				cmpy_id as "cmpyId"
 			FROM clss
-			WHERE clss_cd=
-				(select tpcd_id||cmcd_id
-				from cmcd
-				where cmcd_nm='접수중')
+			ORDER BY rgst_dt DESC
 		]]>
 	</select>
 	
@@ -235,5 +232,18 @@
 	]]>
 	</select>
 	
+	
+	<!-- 지원완료건 출력 -->
+	<select id="getAplyClass" parameterType="string" resultType="int">
+	<![CDATA[
+		select count(clss_id) as "aplyClassCnt"
+			from aply
+			where stdt_id= (
+				SELECT stdt_id
+			FROM stdt
+			WHERE stdt_email=#{stdtEmail}
+			)
+	]]>
+	</select>
 	
 </mapper>

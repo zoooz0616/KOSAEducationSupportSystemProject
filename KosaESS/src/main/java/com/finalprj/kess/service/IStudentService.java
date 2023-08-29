@@ -22,4 +22,6 @@ public interface IStudentService {
 
 	List<PostVO> selectAllInquiry();
 
+	int getAplyClass(String stdtEmail);
+
 }

@@ -13,12 +13,19 @@ import com.finalprj.kess.model.StudentVO;
 @Repository
 public interface IStudentRepository {
 	StudentVO selectStudent(String stdtEmail);
-	List<PostVO> selectAllNotice();
-	List<ClassVO> selectAllClass();
-	int getCmptClass(String stdtEmail);
-	List<PostVO> selectNoticeMain();
-	List<ClassVO> selectClassMain();
-	List<PostVO> selectAllInquiry();
 
+	List<PostVO> selectAllNotice();
+
+	List<ClassVO> selectAllClass();
+
+	int getAplyClass(String stdtEmail);
+
+	int getCmptClass(String stdtEmail);
+
+	List<PostVO> selectNoticeMain();
+
+	List<ClassVO> selectClassMain();
+
+	List<PostVO> selectAllInquiry();
 
 }
