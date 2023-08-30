@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Main</title>
+</head>
+<head>
+<link th:href="@{/css/manager_main.css}" rel="stylesheet">
+</head>
+<body>
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<div class="home-section">
+		<!-- title -->
+		<div class="title" th:text="${title}" >Title</div>
+		
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<!-- box wrap -->
+			<div class="bx_wait_wrap">
+				<!-- for문으로 받은만큼 돌리기 -->
+				<!-- box -->
+				<div class="bx_wait"> 
+					<!-- box sub title -->
+					<div class="bx_wait_sub_title">교육과정 접수중</div>
+					<!-- box content -->
+					<div class="bx_wait_content">
+						<!-- total count -->
+						<div class="total_cnt">
+							<a th:href="@{/admin/class}" ><span class="cnt" th:text="${cntList[0]}">count</span></a>
+							<span class="cnt_txt">건</span>
+						</div>
+					</div>
+				</div>
+				
+				<!-- box -->
+				<div class="bx_wait"> 
+					<!-- box sub title -->
+					<div class="bx_wait_sub_title">이수완료 대기중</div>
+					<!-- box content -->
+					<div class="bx_wait_content">
+						<!-- total count -->
+						<div class="total_cnt">
+							<a th:href="@{/admin/class}" ><span class="cnt" th:text="${cntList[1]}">count</span></a>
+							<span class="cnt_txt">건</span>
+						</div>
+					</div>
+				</div>
+				
+				<!-- box -->
+				<div class="bx_wait"> 
+					<!-- box sub title -->
+					<div class="bx_wait_sub_title">문의답변 대기중</div>
+					<!-- box content -->
+					<div class="bx_wait_content">
+						<!-- total count -->
+						<div class="total_cnt">
+							<a th:href="@{/admin/inquiry}" ><span class="cnt" th:text="${cntList[2]}">count</span></a>
+							<span class="cnt_txt">건</span>
+						</div>
+					</div>
+				</div>
+				
+			<!-- End box wrap -->
+			</div>
+		<!-- End content wrap -->
+		</div>
+	</div>
+</body>
+</html>

@@ -34,8 +34,8 @@
 	]]>
 	</select>
 
-	<select id="getPostVOList" parameterType="string" 
-	resultType="com.finalprj.kess.model.PostVO">
+	<select id="getPostVOList" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
 		select
 			post.post_id		as "postId",
@@ -53,8 +53,9 @@
 		where post_id like CONCAT(#{postValue}, '%') and master_id is null
 	]]>
 	</select>
-	
-	<select id="getProfessorVOList" resultType="com.finalprj.kess.model.ProfessorVO">
+
+	<select id="getProfessorVOList"
+		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 		select
 			prof_id		as "profId",
@@ -68,20 +69,67 @@
 		from prof
 	]]>
 	</select>
-	
-	
-	<select id="getClassVOList" resultType="com.finalprj.kess.model.ClassVO">
+
+
+	<select id="getClassVOList"
+		resultType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
 	SELECT
-	    clss_id AS clssId,
-	    clss_nm AS clssNm,
-	    clss_start_dd AS clssStartDd,
-	    clss_end_dd AS clssEndDd,
-	    clss_adr AS clssAdr,
-	    limit_cnt AS limitCnt,
-	    substr(clss_cd,-3,3) AS clssCd
+	    clss_id AS "clssId",
+	    clss_nm AS "clssNm",
+	    limit_cnt AS "limitCnt",
+	    aply_start_dt	as "aplyStartDt",
+	    aply_end_dt		as "aplyEndDt",
+	    clss_start_dd AS "clssStartDd",
+	    clss_end_dd AS "clssEndDd",
+	    clss_adr AS "clssAdr",
+	    cmcd.cmcd_nm AS "clssCd"
 	FROM
 	    clss
+	JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
+	ORDER BY
+		clss_id
+	]]>
+	</select>
+
+	<select id="getClassSearch" parameterType="string"
+		resultType="string">
+	<![CDATA[
+		SELECT clss_nm
+		FROM (
+    		SELECT clss_nm
+    		FROM clss
+   			WHERE clss_nm LIKE CONCAT(#{term}, '%')
+		) WHERE ROWNUM <= 10
+	]]>
+	</select>
+	
+	<select id="getSearchClassVOList"
+		resultType="com.finalprj.kess.model.ClassVO" parameterType="hashmap">
+	<![CDATA[
+	SELECT
+	    clss_id AS "clssId",
+	    clss_nm AS "clssNm",
+	    limit_cnt AS "limitCnt",
+	    aply_start_dt	as "aplyStartDt",
+	    aply_end_dt		as "aplyEndDt",
+	    clss_start_dd AS "clssStartDd",
+	    clss_end_dd AS "clssEndDd",
+	    clss_adr AS "clssAdr",
+	    cmcd.cmcd_nm AS "clssCd"
+	FROM
+	    clss
+	JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
+	WHERE
+        clss_nm LIKE CONCAT(#{className}, '%')
+        AND cmcd.cmcd_nm IN
+    ]]>
+            <foreach collection="status" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+	<![CDATA[
+        AND (aply_start_dt >= #{aplyStartDt} AND aply_end_dt <= #{aplyEndDt})
+        AND (clss_start_dd >= #{classStartDd} AND clss_end_dd <= #{classEndDd})
 	ORDER BY
 		clss_id
 	]]>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student_header.css}" rel="stylesheet">
+<link th:href="@{/css/student_main.css}" rel="stylesheet">
+<meta charset="UTF-8">
+<title>main page</title>
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}" style="width: 100%;"></div>
+	<div class="container">
+		<div class="maintext">
+			<h1 style="color: #0E5881;">새로운 교육을 통해서 더 나은 내일로</h1>
+			<h3 style="color: #6E9BB3;">넌 해야만 해. 할 수 있어.</h3>
+		</div>
+		<div class="content">
+			<div class="con-left" style="width: 50%;">
+				<div class="class con">
+					<h2>접수중인 교육</h2>
+					<hr>
+					<table>
+						<tr th:each="ClassVO : ${classList}">
+							<td style="width: 80%;"><a
+								th:href="@{class/__${ClassVO.clssId}__}"
+								th:text="${ClassVO.clssNm}"></a></td>
+							<td style="width: 20%;" th:text="${ClassVO.rgstDtString}"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="con-right" style="width: 40%;">
+				<div class="login con"
+					style="margin-bottom: 5%; text-align: center;">
+					<div th:if="${session.stdtEmail==null}">
+						<form th:action="@{/login}" method="post" class="">
+							<div class="">
+								<div class="">
+									<label for="stdtEmail"></label> <input type="text"
+										name="stdtEmail" id="id" class="" placeholder="아이디(이메일)">
+								</div>
+							</div>
+							<div class="">
+								<div class="">
+									<label for="stdtPwd"></label> <input type="password"
+										name="stdtPwd" id="pwd" class=" " placeholder="비밀번호">
+								</div>
+							</div>
+							<div class="col-sm-offset-2 col-sm-8">
+								<input type="submit" class="" th:value="로그인">
+							</div>
+						</form>
+						<div>
+							<a th:href="@{/findPwd}" class="">비밀번호 찾기</a> <a
+								th:href="@{/insert}" class="">회원가입</a>
+						</div>
+					</div>
+					<div th:if="${session.stdtEmail!=null}">
+						<div class="">
+							<h2>
+								<span th:text="${session.stdtNm}"></span>님 지원현황
+							</h2>
+							<div class="my">
+								<div class="box">
+									<h3>지원 완료</h3>
+									<!-- <a th:href="@{/mypage}"><span th:text="${}"></span></a>  -->
+									<span>건</span>
+								</div>
+								<div class="box">
+									<h3>출력 가능 이수증</h3>
+									<a th:href="@{/#}"><span th:text="${cmptClassCnt}"></span></a>
+									<span>건</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="notice con" style="background: #E7EFF3;">
+					<div>
+						<h2>공지사항</h2>
+						<hr>
+						<table>
+							<tr th:each="PostVO : ${postList}">
+								<td style="width: 75%;"><a
+									th:href="@{notice/__${PostVO.postId}__}"
+									th:text="${PostVO.postTitle}"></a></td>
+								<td style="width: 25%;" th:text="${PostVO.rgstDtString}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
