@@ -26,6 +26,7 @@ public class ClassVO {
 	private int totalTm;//교육과정 이수시간
 	private String clssEtc;//기타사항
 	private Timestamp rgstDt;//등록일시
+	private Date rgstDd;//등록일시(날짜)
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
