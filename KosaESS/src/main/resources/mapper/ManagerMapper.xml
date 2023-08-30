@@ -12,13 +12,13 @@
 	    clss_end_dd AS clssEndDd,
 	    clss_adr AS clssAdr,
 	    limit_cnt AS limitCnt,
-	    substr(clss_cd,-3,3) AS clssCd
+	    cmcd.cmcd_nm AS clssCd
 	FROM
-	    clss
+	    clss JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
 	WHERE
 	    mngr_id = #{mngrId}
 	ORDER BY
-		clss_id
+    clss_id DESC
 	]]>
 	</select>
 
@@ -51,19 +51,19 @@
 	<![CDATA[
 	SELECT
 		clss_id AS clssId,
-	    clss_nm AS clssNm,
-	    aply_start_dt AS aplyStartDt,
-	    aply_end_dt AS aplyEndDt,
-	    clss_start_dd AS clssStartDd,
-	    clss_end_dd AS clssEndDd,
-	    clss_adr AS clssAdr,
-	    set_in_tm AS setInTm,
-	    set_out_tm AS setOutTm,
-	    limit_cnt AS limitCnt,
-	    substr(clss_cd,-3,3) AS clssCd,
-	    mngr_id AS mngrId,
-	    clss_content AS clssContent
-	FROM clss
+		clss_nm AS clssNm,
+		aply_start_dt AS aplyStartDt,
+		aply_end_dt AS aplyEndDt,
+		clss_start_dd AS clssStartDd,
+		clss_end_dd AS clssEndDd,
+		clss_adr AS clssAdr,
+		set_in_tm AS setInTm,
+		set_out_tm AS setOutTm,
+		limit_cnt AS limitCnt,
+		substr(clss_cd,-3,3) AS clssCd,
+		clss_content AS clssContent,
+		mngr.mngr_Nm AS mngrId
+	FROM clss JOIN mngr ON mngr.mngr_id=clss.mngr_id
 	WHERE clss_id= #{classId}
 	]]>
 	</select>
@@ -86,4 +86,40 @@
 	from flup WHERE file_id=#{fileId}
 	]]>
 	</select>
+	
+	<select id="getStudentList" resultType="com.finalprj.kess.model.StudentVO" parameterType="string">
+	<![CDATA[
+	SELECT
+	    s.stdt_nm AS stdtNm,
+	    s.birth_dd AS birthDd,
+	    s.stdt_email AS stdtEmail,
+	    s.stdt_tel AS stdtTel,
+	    c.cmcd_nm AS genderCd,
+	    c2.cmcd_nm AS stdtCd
+	FROM rgst r
+	    JOIN stdt s ON s.stdt_id=r.stdt_id
+	    JOIN cmcd c ON c.tpcd_id||c.cmcd_id=s.gender_cd
+	    JOIN cmcd c2 ON c2.tpcd_id||c2.cmcd_id=r.rgst_cd
+	WHERE clss_id = #{classId}
+	]]>
+	</select>
+	
+	<select id="getClassNameList" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
+	<![CDATA[
+	SELECT
+    	clss_id clssId,
+    	clss_nm clssNm
+	FROM clss WHERE mngr_id = #{mngrId}
+	ORDER BY clss_Nm
+	]]>
+	</select>
+	
+	<select id="getClassName" resultType="string" parameterType="string">
+	<![CDATA[
+	SELECT
+    	clss_nm
+	FROM clss WHERE clss_id = #{classId}
+	]]>
+	</select>
+	
 </mapper>

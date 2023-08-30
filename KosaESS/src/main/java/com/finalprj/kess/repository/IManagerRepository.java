@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.StudentVO;
 
 @Mapper
 @Repository
@@ -19,4 +20,7 @@ public interface IManagerRepository {
 	public ClassVO getClassDetail(String classId);
 	public FileVO getFile(String fileId);
 	public List<String> getFileIdList(String classId);
+	public List<StudentVO> getStudentList(String classId);
+	public List<ClassVO> getClassNameList(String mngrId);
+	public String getClassName(String classId);
 }

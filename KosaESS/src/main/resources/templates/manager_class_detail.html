@@ -41,7 +41,7 @@
 					<td th:text="${clss.clssCd}"></td>
 					<td th:text="${clss.setInTm}"></td>
 					<td th:text="${clss.setOutTm}"></td>
-					<td><a th:text ="${clss.aplyCnt}" th:href=@{/manager/student}></a><span th:text="| / ${clss.limitCnt}|"></span></td><!--req_param 추가할것 -->
+					<td><a th:text ="${clss.aplyCnt}" th:href="@{/manager/student-list/__${clss.clssId}__}"></a><span th:text="| / ${clss.limitCnt}|"></span></td><!--req_param 추가할것 -->
 					<td th:text="${clss.mngrId}"></td>
 				</tr>
 			</table>
