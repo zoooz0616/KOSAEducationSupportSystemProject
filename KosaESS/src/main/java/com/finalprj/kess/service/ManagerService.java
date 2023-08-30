@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.repository.IManagerRepository;
 
 @Service
@@ -40,12 +41,33 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public FileVO getFile(String classId) {
-		return managerRepository.getFile(classId);
+	public FileVO getFile(String fileId) {
+		return managerRepository.getFile(fileId);
 	}
 
 	@Override
 	public List<String> getFileIdList(String classId) {
 		return managerRepository.getFileIdList(classId);
 	}
+
+	@Override
+	public List<StudentVO> getStudentList(String classId) {
+		return managerRepository.getStudentList(classId);
+	}
+
+	@Override
+	public List<ClassVO> getClassNameList(String mngrId) {
+		return managerRepository.getClassNameList(mngrId);
+	}
+
+	@Override
+	public String getClassName(String classId) {
+		return managerRepository.getClassName(classId);
+	}
+
+	@Override
+	public int getRgstCount(String clssId) {
+		return managerRepository.getRgstCount(clssId);
+	}
+	
 }

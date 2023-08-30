@@ -29,5 +29,5 @@ public class ClassVO {
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
-	private int aplyCnt;//지원 한 인원
+	private int rgstCnt;//등록 인원
 }

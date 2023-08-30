@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finalprj.kess.repository.IAdminRepository">
+	<select id="getWaitInquiryCnt" resultType="int">
+	<![CDATA[
+		select count(post_id) as "waitInquiryCnt"
+		from post
+		where post_cd=
+		(select tpcd_id||cmcd_id
+		from cmcd
+		where cmcd_nm='답변대기')and post_id like 'INQ%'
+	]]>
+	</select>
+
+	<select id="getWaitClassCnt" resultType="int">
+	<![CDATA[
+		select count(clss_id) as "waitClassCnt"
+		from clss
+		where clss_cd=
+		(select tpcd_id||cmcd_id
+		from cmcd
+		where cmcd_nm='접수중')
+	]]>
+	</select>
+
+	<select id="getCompleteClassCnt" resultType="int">
+	<![CDATA[
+		select count(clss_id) as "completeClassCnt"
+		from clss
+		where clss_cd=
+		(select tpcd_id||cmcd_id
+		from cmcd
+		where cmcd_nm='교육완료' and tpcd_id='GRP0002')
+	]]>
+	</select>
+
+	<select id="getPostVOList" parameterType="string" 
+	resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select
+			post.post_id		as "postId",
+			post.master_id		as "masterId",
+			post.post_title		as "postTitle",
+			post.post_content	as "postContent",
+			post.post_hit		as "postHit",
+			cmcd.cmcd_nm		as "postCd",
+			post.rgst_dt		as "rgstDt",
+			post.rgster_id		as "rgsterId",
+			post.updt_dt		as "updtDt",
+			post.updter_id		as "updterId"
+		from post
+		join cmcd on cmcd.tpcd_id||cmcd.cmcd_id = post.post_cd
+		where post_id like CONCAT(#{postValue}, '%') and master_id is null
+	]]>
+	</select>
+	
+	<select id="getProfessorVOList" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+		select
+			prof_id		as "profId",
+			prof_nm		as "profNm",
+			prof_tel	as "profTel",
+			prof_email	as "profEmail",
+			rgst_dt		as "rgstDt",
+			rgster_id	as "rgsterId",
+			updt_dt		as "updtDt",
+			updter_id	as "updterId"
+		from prof
+	]]>
+	</select>
+	
+	
+	<select id="getClassVOList" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+	SELECT
+	    clss_id AS clssId,
+	    clss_nm AS clssNm,
+	    clss_start_dd AS clssStartDd,
+	    clss_end_dd AS clssEndDd,
+	    clss_adr AS clssAdr,
+	    limit_cnt AS limitCnt,
+	    substr(clss_cd,-3,3) AS clssCd
+	FROM
+	    clss
+	ORDER BY
+		clss_id
+	]]>
+	</select>
+	
+</mapper>

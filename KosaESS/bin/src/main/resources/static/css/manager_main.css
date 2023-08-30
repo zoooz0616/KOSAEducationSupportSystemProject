@@ -1,0 +1,62 @@
+.home-section {
+	position: relative;
+	background: #ffffff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section .title {
+	display: inline-block;
+	color: #11101d;
+	font-size: 50px;
+	font-weight: bold;
+	margin: 20px;
+	padding: 20px;
+}
+
+.content_wrap {
+	margin: 18px;
+}
+
+.bx_wait_wrap {
+	display:flex;
+}
+
+.bx_wait_wrap .bx_wait {
+	border:2px solid black;
+	width: 40%;
+	height: 300px;
+	margin:20px;
+	padding: 20px;
+	text-align: center;
+	font-weight:bold;
+}
+
+.bx_wait_wrap .bx_wait .bx_wait_sub_title {
+	font-size: 30px;
+	margin:auto;
+}
+
+.bx_wait_wrap .bx_wait .bx_wait_content .total_cnt{
+	margin-top:10px;
+	font-size: 20px;
+	text-align: center;
+	
+}
+.bx_wait_wrap .bx_wait .bx_wait_content .total_cnt a {
+	text-decoration: none;
+}
+
+.bx_wait_wrap .bx_wait .bx_wait_content .total_cnt a .cnt {
+	font-size: 100px;
+	color: #0E5881;
+}

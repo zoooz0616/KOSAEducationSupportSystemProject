@@ -2,13 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
-<title>Manager Student List</title>
+<title>Manager Class List</title>
 <link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
 </head>
 <head>
 <link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
 </head>
 <body>
+
 	<!-- 서브바 부분 -->
 	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
 	<!-- End 서브바 -->
@@ -16,7 +17,7 @@
 	<!-- 컨텐츠 부분 -->
 	<div class="home-section">
 		<!-- title -->
-		<div class="title" th:text="|${title} : ${thisClassName}|">Title</div>
+		<div class="title" th:text="${title}">Title</div>
 
 		<!-- content wrap-->
 		<div class="content_wrap">
@@ -34,17 +35,14 @@
 				<table class="search_filter_table" style="width: 100%;">
 					<tr>
 						<td style="width: 10%;">교육과정명</td>
-<!-- 						<td style="width: 30%;"><input style="width: 100%;" type="text"></td> -->
-						<td style="width: 30%;">
-							<select >
-								<option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option>
-							</select>
-						</td>
+						<td style="width: 30%;"><input style="width: 100%;"
+							type="text"></td>
 						<td style="width: 10%;">상태</td>
 						<td style="width: 50%;"><span
-							th:each="classCodeName:${classCodeNameList}"> <input
-								type="checkbox" checked="checked"> <label
-								th:text="${classCodeName}"></label>
+							th:each="classCodeName:${classCodeNameList}"> <label>
+									<input type="checkbox" checked="checked">
+									[[${classCodeName}]]
+							</label>
 						</span></td>
 
 					</tr>
@@ -57,36 +55,42 @@
 								~ </span> <input type="date"></td>
 					</tr>
 				</table>
+				
 				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
 					<button class="search_filter_btn">검색</button>
 				</div>
 				<!-- End 검색 버튼 -->
-				<p th:text = "|${stdtCnt} 명|"></p>
-				<table>
+
+			</div>
+			<!-- End 검색 필터 부분 -->
+
+
+			<table>
 				<tr>
 					<th><input type="checkbox"></th>
 					<th>번호</th>
-					<th>이름</th>
-					<th>성별</th>
-					<th>생년월일</th>
-					<th>이메일</th>
-					<th>연락처</th>
-					<th>이수여부</th><!--교육생 상태로 고치는게 어떤지? -->
+					<th>프로그램명</th>
+					<th>교육기간</th>
+					<th>교육 장소</th>
+					<th>신청/최대</th>
+					<th>교육상태</th>
 				</tr>
-				<tr th:each="stdt:${stdtList}">
+				<tr th:each="class:${classList}">
 					<td><input type="checkbox"></td>
-					<td th:text="${stdtStat.count}"></td>
-					<td><a th:text="${stdt.stdtNm}" th:href="@{manager/student/{studentId}}"></a></td>
-					<td th:text="${stdt.genderCd}">성별</td>
-					<td th:text="${stdt.birthDd}">생년월일</td>
-					<td th:text="${stdt.stdtEmail}">이메일</td>
-					<td th:text="${stdt.stdtTel}">연락처</td>
-					<td th:text="${stdt.stdtCd}">이수여부</td>
+					<td th:text="${classStat.count}">row number</td>
+					<td><a th:href="@{/manager/class/__${class.clssId}__}">[[${class.clssNm}]]</a></td>
+					<!--교육생 상세정보로 이동 -->
+					<td>[[${class.clssStartDd}]]<br>~<br>
+						[[${class.clssEndDd}]]
+					</td>
+					<td th:text="${class.clssAdr}">class address</td>
+					<!-- 			<td>[[${class.aplyCnt}]]</a> / [[${class.limitCnt}]]</td>신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
+					<td>[[${class.aplyCnt}]] / [[${class.limitCnt}]]</td>
+					<!-- 신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
+					<td th:text="${class.clssCd}">status</td>
 				</tr>
-				</table>
-			</div>
-			<!-- End 검색 필터 부분 -->
+			</table>
 		</div>
 	</div>
 </body>

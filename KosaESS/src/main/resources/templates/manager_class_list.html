@@ -101,23 +101,13 @@
 					<th>교육상태</th>
 				</tr>
 				<tr id="class_list" th:each="class:${classList}">
-					<td><input type="checkbox" name="chk"
-						th:value="${class.clssId}"></td>
-					<td th:if="${session.role != 'admin'}" th:text="${classStat.count}">row
-						number</td>
+					<td><input type="checkbox" name="chk" th:value="${class.clssId}"></td>
+					<td th:if="${session.role != 'admin'}" th:text="${classStat.count}">row number</td>
 					<td th:if="${session.role == 'admin'}" th:text="${class.clssId}"></td>
-					<td><a class="content_title"
-						th:href="@{/manager/class/__${class.clssId}__}">[[${class.clssNm}]]</a></td>
-					<!--교육생 상세정보로 이동 -->
-					<td><span th:text="${class.aplyStartDt}"></span> <br>~<br>
-						<span th:text="${class.aplyEndDt}"></span></td>
-
-					<td><span th:text="${class.clssStartDd}"></span> <br>~<br>
-						<span th:text="${class.clssEndDd}"></span></td>
+					<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
+					<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
 					<td th:text="${class.clssAdr}">class address</td>
-					<!-- 			<td>[[${class.aplyCnt}]]</a> / [[${class.limitCnt}]]</td>신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
-					<td>[[${class.aplyCnt}]] / [[${class.limitCnt}]]</td>
-					<!-- 신청한 인원 수 클릭하면 학생 리스트로 이동하기 -->
+					<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student-list/__${class.clssId}__}"></a><span th:text="|/ ${class.limitCnt}|"></span></td>
 					<td th:text="${class.clssCd}">status</td>
 				</tr>
 			</table>
