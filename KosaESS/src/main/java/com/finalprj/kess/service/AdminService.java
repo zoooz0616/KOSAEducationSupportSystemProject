@@ -1,6 +1,8 @@
 package com.finalprj.kess.service;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,4 +48,17 @@ public class AdminService implements IAdminService {
 		return adminRepository.getClassVOList();
 	}
 
+	@Override
+	public List<String> getClassSearch(String term) {
+		return adminRepository.getClassSearch(term);
+	}
+
+	@Override
+	public List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt,
+			Date aplyEndDt, Date classStartDd, Date classEndDd) {
+		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
+				aplyEndDt, classStartDd, classEndDd);
+	}
+
+	
 }
