@@ -50,7 +50,7 @@ public class ManagerController {
 		List<ClassVO> classList = managerService.getClassList((String) session.getAttribute("id"));
 		// session의 key-value쌍을 set 할 때 value는 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
 		for (ClassVO vo : classList) {
-			vo.setAplyCnt(managerService.getApplyCount(vo.getClssId()));
+			vo.setRgstCnt(managerService.getRgstCount(vo.getClssId()));
 		}
 		model.addAttribute("classList", classList);
 		List<String> classCodeNameList = managerService.getClassCodeNameList();
@@ -64,7 +64,7 @@ public class ManagerController {
 		model.addAttribute("title", "교육 과정 상세");
 		ClassVO thisClass = new ClassVO();
 		thisClass = managerService.getClassDetail(classId);
-		thisClass.setAplyCnt(managerService.getApplyCount(classId));
+		thisClass.setRgstCnt(managerService.getRgstCount(classId));
 		List<String> fileIdList = managerService.getFileIdList(classId);
 		model.addAttribute("clss", thisClass);
 		model.addAttribute("fileIdList", fileIdList);

@@ -23,4 +23,5 @@ public interface IManagerRepository {
 	public List<StudentVO> getStudentList(String classId);
 	public List<ClassVO> getClassNameList(String mngrId);
 	public String getClassName(String classId);
+	public int getRgstCount(String clssId);
 }

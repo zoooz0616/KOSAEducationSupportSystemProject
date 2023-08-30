@@ -64,5 +64,10 @@ public class ManagerService implements IManagerService {
 	public String getClassName(String classId) {
 		return managerRepository.getClassName(classId);
 	}
+
+	@Override
+	public int getRgstCount(String clssId) {
+		return managerRepository.getRgstCount(clssId);
+	}
 	
 }

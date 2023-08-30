@@ -30,6 +30,14 @@
 	    clss_id = #{clss_id}
 	]]>
 	</select>
+	<select id="getRgstCount" parameterType="string" resultType="int">
+	<![CDATA[
+	SELECT COUNT(stdt_id)
+	FROM rgst
+	WHERE
+	    clss_id = #{clss_id}
+	]]>
+	</select>
 	
 	<select id="getClassCodeName" parameterType="string" resultType="string">
 	<![CDATA[

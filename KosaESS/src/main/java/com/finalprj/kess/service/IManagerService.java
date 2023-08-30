@@ -26,4 +26,6 @@ public interface IManagerService {
 	public List<ClassVO> getClassNameList(String mngrId);
 
 	public String getClassName(String classId);
+
+	public int getRgstCount(String clssId);
 }
