@@ -1,16 +1,24 @@
 package com.finalprj.kess.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.rowset.Joinable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.PostVO;
@@ -165,15 +173,15 @@ public class AdminController {
 		//title
 		String title = "교육과정 관리";
 		model.addAttribute("title", title);
-		
+
 		//교육과정 리스트 객체 생성
 		List<ClassVO> classVOList = adminService.getClassVOList();
 		model.addAttribute("classList", classVOList);
-		
+
 		//교육과정 상태
 		List<String> classCodeNameList = managerService.getClassCodeNameList();
 		model.addAttribute("classCodeNameList", classCodeNameList);
-		
+
 		return "manager_class_list";
 	}
 
@@ -205,5 +213,36 @@ public class AdminController {
 		model.addAttribute("title", title);
 
 		return "manager_manager_list";
+	}
+
+	@GetMapping("/admin/class/autocomplete")
+	@ResponseBody
+	public String classAutocomplete(@RequestParam String term) {
+		//자동완성 검색어 목록 생성
+		List<String> autocompleteResults = new ArrayList<>();
+		//결과 생성
+		autocompleteResults = adminService.getClassSearch(term);
+
+		// 결과를 HTML 형태로 변환
+		StringBuilder resultBuilder = new StringBuilder();
+		for (String result : autocompleteResults) {
+			resultBuilder.append("<option value=\"").append(result).append("\">").append(result).append("</option>");
+		}
+
+		return resultBuilder.toString();
+	}
+
+	@GetMapping("/admin/class/search")
+	@ResponseBody
+	public List<ClassVO> classSearch(@RequestParam String className, @RequestParam(name="statusArray[]") List<String> statusArray,
+			@RequestParam Date aplyStartDt, @RequestParam Date aplyEndDt,
+			@RequestParam Date classStartDd, @RequestParam Date classEndDd) {
+		logger.warn("className: "+className+" statusArray: "+statusArray);
+		logger.warn("aply: "+aplyStartDt+"~"+aplyEndDt);
+		logger.warn("class: "+classStartDd+"~"+classEndDd);
+ 		
+		//검색 결과통해서 교육과정 리스트 객체 생성
+		List<ClassVO> classVOList = adminService.getSearchClassVOList(className, statusArray, aplyStartDt, aplyEndDt, classStartDd, classEndDd);
+		return classVOList;
 	}
 }
