@@ -195,6 +195,14 @@ public class StudentController {
 
 		return "student_class_list";
 	}
+	
+	// 교육 이미지확인
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 30.
+	 * @parameter : model
+	 * @return :
+	 */
 
 	// 교욱 상세페이지
 	/**
@@ -203,15 +211,15 @@ public class StudentController {
 	 * @parameter : session, model
 	 * @return :
 	 */
-	@GetMapping("/class/{clssId}")
-	public String classdetail(HttpSession session, Model model) {
-		model.addAttribute("student", student);
 
-		List<PostVO> postList = new ArrayList<PostVO>();
-		postList = studentService.selectAllInquiry();
-		model.addAttribute("postList", postList);
-		logger.warn("postList" + postList);
+	@GetMapping("/class/{clssId}")
+	public String classdetail(HttpSession session, String clssId, Model model) {
+		model.addAttribute("student", student);
+		ClassVO classVO = studentService.selectClass(clssId);
+		model.addAttribute("classVO", classVO);
 
 		return "student_class_detail";
 	}
+	
+	
 }

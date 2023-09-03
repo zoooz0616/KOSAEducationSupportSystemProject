@@ -24,4 +24,6 @@ public interface IStudentService {
 
 	int getAplyClass(String stdtEmail);
 
+	ClassVO selectClass(String clssId);
+
 }
