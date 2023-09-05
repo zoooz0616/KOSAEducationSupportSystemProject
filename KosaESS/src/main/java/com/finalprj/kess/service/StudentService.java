@@ -53,4 +53,10 @@ public class StudentService implements IStudentService {
 	public int getAplyClass(String stdtEmail) {
 		return studentRepository.getAplyClass(stdtEmail);
 	}
+
+	@Override
+	public ClassVO selectClass(String clssId) {
+		return studentRepository.selectClass(clssId);
+	}
+
 }

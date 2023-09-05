@@ -28,4 +28,8 @@ public interface IStudentRepository {
 
 	List<PostVO> selectAllInquiry();
 
+	ClassVO selectClass(String clssId);
+	
+	
+
 }
