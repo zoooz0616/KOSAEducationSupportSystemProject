@@ -18,4 +18,12 @@
 	where mngr.user_email=#{email}
 	]]>
 	</select>
+	
+	<update id="updateLastLoginDt" parameterType="string">
+	<![CDATA[
+	update lgin
+	set last_login_dt = systimestamp
+	where user_email=#{userEmail}
+	]]>
+	</update>
 </mapper>
