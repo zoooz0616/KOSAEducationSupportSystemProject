@@ -18,9 +18,9 @@ public interface IStudentRepository {
 
 	List<ClassVO> selectAllClass();
 
-	int getAplyClass(String stdtEmail);
+	int getAplyClass(String email);
 
-	int getCmptClass(String stdtEmail);
+	int getCmptClass(String email);
 
 	List<PostVO> selectNoticeMain();
 
@@ -34,7 +34,7 @@ public interface IStudentRepository {
 
 	FileVO getFile(String fileId);
 
-	LoginVO selectUser(String userEmail);
+	LoginVO selectUser(String email);
 
 		
 }

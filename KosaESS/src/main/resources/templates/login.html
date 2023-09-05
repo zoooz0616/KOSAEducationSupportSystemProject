@@ -13,14 +13,14 @@
 	<div class="container" style="float: none; margin: 0 auto;">
 		<div class="content" style="align-items: center; height: 100vh;">
 			<div class="login con" style="width: 40%;">
-				<form th:action="@{/student/login}" method="post" class="">
+				<form th:action="@{/login}" method="post" class="">
 					<div class="">
-						<label for="stdtEmail"></label> <input type="text"
-							name="stdtEmail" id="id" class="" placeholder="아이디(이메일)">
+						<label for="email"></label> <input type="text"
+							name="email" id="id" class="" placeholder="아이디(이메일)">
 					</div>
 					<div class="">
-						<label for="stdtPwd"></label> <input type="password"
-							name="stdtPwd" id="pwd" class=" " placeholder="비밀번호">
+						<label for="pwd"></label> <input type="password"
+							name="pwd" id="pwd" class="" placeholder="비밀번호">
 					</div>
 					<div class="submit">
 						<input type="submit" class="loginBtn" th:value="로그인">

@@ -35,9 +35,10 @@
 		resultType="com.finalprj.kess.model.StudentVO"
 		resultMap="studentResult">
 		<![CDATA[
-		SELECT *
-		FROM lgin
-		WHERE stdt_email=#{userEmail}
+		select *
+		from stdt
+		join lgin on lgin.user_email = stdt.user_email
+		where stdt.user_email=#{email}
 		]]>
 	</select>
 
@@ -77,15 +78,15 @@
 		SELECT *
 			  FROM (
 					SELECT 
-						post_id as "postId",
-						post_title as "postTitle",
-						post_cd as "postCd",
-						rgst_dt as "rgstDd"
+						post_id,
+						post_title,
+						post_cd,
+						TO_CHAR(rgst_dt,'YYYYMMDD')
 					FROM post
-					WHERE post_id LIKE 'NTC%' and post_cd=
-					(select tpcd_id||cmcd_id
-					from cmcd
-					where cmcd_nm='공개')
+					WHERE post_id LIKE 'NOTC%' and post_cd=
+						(select cmcd_id
+						from cmcd
+						where cmcd_id='PST0000001')
 					ORDER BY rgst_dt DESC
 				)
 				WHERE ROWNUM <= 5
@@ -97,16 +98,16 @@
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
 				SELECT 
-					post_id as "postId",
-					post_title as "postTitle",
-					post_hit as "postHit",
-					post_cd as "postCd",
-					rgst_dt as "rgstDd"
+					post_id,
+					post_title,
+					post_cd,
+					post_hit
+					rgst_dt
 				FROM post
-				WHERE post_id LIKE 'NTC%' and post_cd=
-				(select tpcd_id||cmcd_id
-				from cmcd
-				where cmcd_nm='공개')
+				WHERE post_id LIKE 'NOTC%' and post_cd=
+					(select cmcd_id
+					from cmcd
+					where cmcd_id='PST0000001')
 				ORDER BY rgst_dt DESC
 
 		]]>
@@ -126,15 +127,18 @@
 	<select id="selectAllInquiry" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
-			SELECT 
-					post_id as "postId",
-					post_title as "postTitle",
-					post_hit as "postHit",
-					post_cd as "postCd",
-					rgster_id as "rgsterId", 
-					rgst_dt as "rgstDd"
+				SELECT 
+					post_id,
+					post_title,
+					post_cd,
+					post_hit,
+					rgst_id,
+					rgst_dt
 				FROM post
-				WHERE post_id LIKE 'INQ%'
+				WHERE post_id LIKE 'INQY%'and post_cd=
+					(select cmcd_id
+					from cmcd
+					where cmcd_id='PST0000003' OR 'PST0000004')
 				ORDER BY rgst_dt DESC
 		]]>
 	</select>
@@ -156,16 +160,16 @@
 			SELECT *
 			  FROM (
 				SELECT
-				    clss_id as "clssId",
-				    clss_nm as "clssNm",
-				    aply_start_dt as "aplyStartDd",
-				    aply_end_dt as "aplyEndDd",
-				    clss_cd as "clssCd"
+				    clss_id,
+				    clss_nm,
+				    aply_start_dt,
+				    aply_end_dt,
+				    clss_cd
 				FROM clss
 				WHERE clss_cd=
-					(select tpcd_id||cmcd_id
+					(select cmcd_id
 					from cmcd
-					where cmcd_nm='접수중')
+					where cmcd_id='CLS0000002')
 			)
 			WHERE ROWNUM <= 15
 		]]>
@@ -176,18 +180,18 @@
 		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
 			SELECT
-			   clss_id as "clssId",
-		       clss_nm as "clssNm",
-		       aply_start_dt as "aplyStartDd",
-		       aply_end_dt as "aplyEndDd",
-		       clss_start_dd AS "clssStartDd",
-		       clss_end_dd AS "clssEndDd",
-		       substr(clss_adr, 1, 3) AS "clssAdr",
-		       cmcd.cmcd_nm AS "clssCd",
-		       flup.file_nm as "clssLogo"
+			   clss_id,
+		       clss_nm,
+		       aply_start_dt,
+		       aply_end_dt,
+		       clss_start_dd,
+		       clss_end_dd,
+		       substr(clss_adr, 1, 3),
+		       cmcd.cmcd_nm,
+		       flup.file_nm
 		   FROM
 		       clss
-		   JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
+		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN flup on flup.post_id = clss.cmpy_id
 		   ORDER BY clss_id
 		]]>
@@ -198,22 +202,22 @@
 		resultType="com.finalprj.kess.dto.ClassDetailDTO">
 		<![CDATA[
 			SELECT
-			    clss_id as "clssId",
-			    clss_nm as "clssNm",
-			    clss_content as "clssContent",
-			    aply_start_dt as "aplyStartDd",
-			    aply_end_dt as "aplyEndDd",
-			    clss_start_dd as "clssStartDd",
-			    clss_end_dd as "clssEndDd",
-			    clss_adr as "clssAdr",
-			    limit_cnt as "limitCnt",
-			    set_in_tm as "setInTm",
-			    set_out_tm as "setOutTm",
-			    clss_etc as "clssEtc",
-			    cmpy.cmpy_nm as "cmpyId",
-			    cmcd.cmcd_nm as "clssCd"
+			    clss_id,
+			    clss_nm,
+			    clss_content,
+			    aply_start_dt,
+			    aply_end_dt,
+			    clss_start_dd,
+			    clss_end_dd,
+			    clss_adr,
+			    limit_cnt,
+			    set_in_tm,
+			    set_out_tm,
+			    clss_etc,
+			    cmpy.cmpy_nm,
+			    cmcd.cmcd_nm
 			FROM clss
-			JOIN cmcd ON cmcd.tpcd_id || cmcd.cmcd_id = clss.clss_cd
+			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
 			JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
 			WHERE clss_id = #{clssId}
 		]]>
@@ -225,11 +229,11 @@
 		resultType="com.finalprj.kess.model.FileVO">
 		<![CDATA[
 			SELECT
-				file_id as "fileId",
-				post_id as "postId",
-				file_nm as "fileNm",
-				file_content as "fileContent",
-				file_size as "fileSize",
+				file_id,
+				post_id,
+				file_nm,
+				file_content,
+				file_size,
 				SUBSTR(file_type,1, INSTR(file_type, '/') -1)as "fileType"
 			FROM flup
 			WHERE post_id = #{clssId}
@@ -242,12 +246,12 @@
 		resultType="com.finalprj.kess.model.FileVO">
 		<![CDATA[
 			SELECT 
-				file_id as "fileId",
-				post_id as "postId",
-				file_nm as "fileNm", 
-				file_content as "fileContent",
-				file_size as "fileSize",
-				file_type as "fileType"
+				file_id,
+				post_id,
+				file_nm ,
+				file_content,
+				file_size,
+				file_type
 			FROM flup 
 			WHERE file_Id = #{fileId}
 		]]>
@@ -271,13 +275,13 @@
 			from rgst
 			where stdt_id= (
 				SELECT stdt_id
-			FROM stdt
-			WHERE stdt_email=#{stdtEmail}
-			)
+				FROM stdt
+				WHERE stdt_email=#{email}
+				)
 	            and cmpt_CD=
-			(select tpcd_id||cmcd_id
+			(select cmcd_id
 			from cmcd
-			where cmcd_nm='이수완료')
+			where cmcd_id='CMP0000002')
 	]]>
 	</select>
 
@@ -291,7 +295,7 @@
 			where stdt_id= (
 				SELECT stdt_id
 			FROM stdt
-			WHERE stdt_email=#{stdtEmail}
+			WHERE stdt_email=#{email}
 			)
 	]]>
 	</select>

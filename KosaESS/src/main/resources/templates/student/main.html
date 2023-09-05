@@ -25,7 +25,7 @@
 								th:href="@{/student/class/__${classVO.clssId}__}"
 								th:text="${classVO.clssNm}"></a></td>
 							<td style="width: 27%; text-align: right;"
-								th:text="${classVO.aplyStartDd} + ' ~ ' + ${classVO.aplyEndDd}"></td>
+								th:text="${classVO.aplyStartDt} + ' ~ ' + ${classVO.aplyEndDt}"></td>
 						</tr>
 					</table>
 				</div>
@@ -33,15 +33,15 @@
 			<div class="con-right" style="width: 40%;">
 				<div class="login con"
 					style="margin-bottom: 5%; text-align: center; height: 37%">
-					<div th:if="${session.stdtEmail==null}">
+					<div th:if="${session.email==null}">
 						<form th:action="@{/student/login}" method="post" class="">
 							<div class="">
-								<label for="stdtEmail"></label> <input type="text"
-									name="stdtEmail" id="id" class="" placeholder="아이디(이메일)">
+								<label for="email"></label> <input type="text"
+									name="email" id="id" class="" placeholder="아이디(이메일)">
 							</div>
 							<div class="">
-								<label for="stdtPwd"></label> <input type="password"
-									name="stdtPwd" id="pwd" class=" " placeholder="비밀번호">
+								<label for="pwd"></label> <input type="password"
+									name="pwd" id="pwd" class=" " placeholder="비밀번호">
 							</div>
 							<div class="submit">
 								<input type="submit" class="loginBtn" th:value="로그인">
@@ -49,10 +49,10 @@
 						</form>
 
 					</div>
-					<div th:if="${session.stdtEmail!=null}">
+					<div th:if="${session.email!=null}">
 						<div class="">
 							<h2>
-								<span th:text="${session.stdtNm}"></span>님 지원현황
+								<span th:text="${session.name}"></span>님 지원현황
 							</h2>
 							<div class="my">
 								<div class="box">

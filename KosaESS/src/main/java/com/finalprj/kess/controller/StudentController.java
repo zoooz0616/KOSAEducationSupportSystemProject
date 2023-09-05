@@ -6,9 +6,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.finalprj.kess.dto.ClassDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -39,8 +35,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
-
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	IStudentService studentService;
@@ -61,78 +55,54 @@ public class StudentController {
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectNoticeMain();
 		model.addAttribute("postList", postList);
-		logger.warn("postList" + postList);
 
 		List<ClassVO> classList = new ArrayList<ClassVO>();
 		classList = studentService.selectClassMain();
 		model.addAttribute("classList", classList);
-		logger.warn("classList" + classList);
 
-		return "student_main";
+		return "student/main";
 	}
 
-	// 로그인
-	/**
-	 * @author : dabin
-	 * @date : 2023. 8. 24.
-	 * @parameter :
-	 * @return :
-	 */
-
-	@GetMapping("/login")
-	public String login() {
-		return "student_login";
-	}
-
-	// 로그인 + 로그인 후 화면 변경
-	/**
-	 * @author : dabin
-	 * @date : 2023. 8. 24.
-	 * @parameter : session, model
-	 * @return :
-	 */
-
-	@PostMapping("/login")
-	public String login(String userEmail, String userPwd, HttpSession session, Model model) {
-		logger.warn("stdtId : " + userEmail + "password : " + userPwd);
-		login = studentService.selectUser(userEmail);
-		if (student != null) {
-			String dataPwd = login.getUserPwd();
-			if (dataPwd == null) {
-				// 아이디(이메일)이 없는 경우
-				logger.warn("비밀번호를 입력하세요");
-				model.addAttribute("message", "아이디나 비밀번호를 다시 확인해주세요.");
-			} else {
-				if (dataPwd.equals(userPwd)) {
-					// 아이디(이메일)과 비밀번호가 일치하는 경우 세션에 정보 저장
-					session.setAttribute("userEmail", userEmail);
-					session.setAttribute("userPwd", login.getUserPwd());
-					session.setAttribute("role_cd", login.getRole_cd());
-					logger.warn("아이디 비밀번호 일치" + userEmail);
-					logger.warn("userPwd" + login.getUserPwd());
-
-					int aplyClassCnt = studentService.getAplyClass(userEmail);
-					logger.warn("지원완료 : " + aplyClassCnt);
-					int cmptClassCnt = studentService.getCmptClass(userEmail);
-					logger.warn("이수완료 : " + cmptClassCnt);
-
-					session.setAttribute("aplyClassCnt", aplyClassCnt);
-					session.setAttribute("cmptClassCnt", cmptClassCnt);
-
-					return "redirect:/student";
-				} else {
-					// 비밀번호가 일치하지 않는 경우
-					logger.warn("비밀번호 불일치");
-					model.addAttribute("message", "아이디나 비밀번호를 다시 확인해주세요.");
-				}
-			}
-		} else {
-			logger.warn("아이디 없음");
-			model.addAttribute("message", "존재하지않는 아이디입니다.");
-		}
-		session.invalidate();
-		return "redirect:/student";
-	}
+	/*
+	 * // 로그인
+	 *//**
+		 * @author : dabin
+		 * @date : 2023. 8. 24.
+		 * @parameter :
+		 * @return :
+		 */
+	/*
+	 * 
+	 * @GetMapping("/login") public String login() { return "login"; }
+	 * 
+	 * // 로그인 + 로그인 후 화면 변경
+	 *//**
+		 * @author : dabin
+		 * @date : 2023. 8. 24.
+		 * @parameter : session, model
+		 * @return :
+		 *//*
+			 * 
+			 * @PostMapping("/login") public String login(String email, String pwd,
+			 * HttpSession session, Model model) { login = studentService.selectUser(email);
+			 * if (student != null) { String dataPwd = login.getUserPwd(); if (dataPwd ==
+			 * null) { // 아이디(이메일)이 없는 경우 model.addAttribute("message",
+			 * "아이디나 비밀번호를 다시 확인해주세요."); } else { if (dataPwd.equals(pwd)) { // 아이디(이메일)과
+			 * 비밀번호가 일치하는 경우 세션에 정보 저장 session.setAttribute("email", email);
+			 * session.setAttribute("pwd", login.getUserPwd()); session.setAttribute("name",
+			 * student.getClssNm());
+			 * 
+			 * int aplyClassCnt = studentService.getAplyClass(email); int cmptClassCnt =
+			 * studentService.getCmptClass(email);
+			 * 
+			 * session.setAttribute("aplyClassCnt", aplyClassCnt);
+			 * session.setAttribute("cmptClassCnt", cmptClassCnt);
+			 * 
+			 * return "redirect:/student"; } else { // 비밀번호가 일치하지 않는 경우
+			 * model.addAttribute("message", "아이디나 비밀번호를 다시 확인해주세요."); } } } else {
+			 * model.addAttribute("message", "존재하지않는 아이디입니다."); } session.invalidate();
+			 * return "redirect:/student"; }
+			 */
 
 	// 로그이웃
 	/**
@@ -164,9 +134,8 @@ public class StudentController {
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllNotice();
 		model.addAttribute("postList", postList);
-		logger.warn("postList" + postList);
 
-		return "student_notice_list";
+		return "student/notice_list";
 	}
 
 	// 문의사항 리스트확인
@@ -183,9 +152,8 @@ public class StudentController {
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllInquiry();
 		model.addAttribute("postList", postList);
-		logger.warn("postList" + postList);
 
-		return "student_inquiry_list";
+		return "student/inquiry_list";
 	}
 
 	// 교육 리스트확인
@@ -203,9 +171,8 @@ public class StudentController {
 		List<ClassVO> classList = new ArrayList<ClassVO>();
 		classList = studentService.selectAllClass();
 		model.addAttribute("classList", classList);
-		logger.warn("classList" + classList);
 
-		return "student_class_list";
+		return "student/class_list";
 	}
 
 	// 교욱 상세페이지
@@ -224,10 +191,8 @@ public class StudentController {
 		List<ClassDetailDTO> classDetailList = new ArrayList<ClassDetailDTO>();
 		classDetailList = studentService.selectAllClassFile(clssId);
 		model.addAttribute("classDetailList", classDetailList);
-		logger.warn("classDetailList" + classDetailList);
-		logger.warn("student" + student);
 
-		return "student_class_detail";
+		return "student/class_detail";
 	}
 
 	// 교욱 지원 모달창(로그인 유무 확인)
@@ -242,7 +207,6 @@ public class StudentController {
 	@ResponseBody
 	public String classapply(HttpSession session, Model model) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		logger.warn("stdtId" + stdtId);
 		return stdtId;
 	}
 
@@ -281,10 +245,11 @@ public class StudentController {
 	 * @date : 2023. 8. 31.
 	 * @parameter :model
 	 * @return :
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@PostMapping("/upload/{clssId}")
-	public String uploadFile(@PathVariable String clssId, @RequestPart MultipartFile file, HttpSession session) throws IOException {
+	public String uploadFile(@PathVariable String clssId, @RequestPart MultipartFile file, HttpSession session)
+			throws IOException {
 		ApplyVO apply = new ApplyVO();
 		apply.setStdtId(session.getId());
 		apply.setClssId(clssId);
@@ -293,9 +258,9 @@ public class StudentController {
 		 * apply.setFileContent(file.getBytes()); apply.setFileSize(file.getSize());
 		 * apply.setFileType(file.getContentType());
 		 */
-        
-        studentService.uploadFile(apply);
-		
+
+		studentService.uploadFile(apply);
+
 		return "redirect:/student/class";
 
 	}

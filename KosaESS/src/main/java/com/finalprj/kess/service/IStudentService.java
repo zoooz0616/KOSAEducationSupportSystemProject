@@ -15,7 +15,10 @@ public interface IStudentService {
 
 	List<ClassVO> selectAllClass();
 
-	int getCmptClass(String stdtEmail);
+	int getCmptClass(String email);
+	
+	int getAplyClass(String email);
+
 
 	List<PostVO> selectNoticeMain();
 
@@ -23,7 +26,6 @@ public interface IStudentService {
 
 	List<PostVO> selectAllInquiry();
 
-	int getAplyClass(String stdtEmail);
 
 	ClassDetailDTO selectClass(String clssId);
 
@@ -33,7 +35,7 @@ public interface IStudentService {
 
 	void uploadFile(ApplyVO apply);
 
-	LoginVO selectUser(String userEmail);
+	LoginVO selectUser(String email);
 
 
 }

@@ -29,9 +29,15 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public int getCmptClass(String stdtEmail) {
-		return studentRepository.getCmptClass(stdtEmail);
+	public int getCmptClass(String email) {
+		return studentRepository.getCmptClass(email);
 	}
+	
+	@Override
+	public int getAplyClass(String email) {
+		return studentRepository.getAplyClass(email);
+	}
+
 
 	@Override
 	public List<PostVO> selectNoticeMain() {
@@ -48,10 +54,6 @@ public class StudentService implements IStudentService {
 		return studentRepository.selectAllInquiry();
 	}
 
-	@Override
-	public int getAplyClass(String stdtEmail) {
-		return studentRepository.getAplyClass(stdtEmail);
-	}
 
 	@Override
 	public ClassDetailDTO selectClass(String clssId) {
@@ -73,8 +75,8 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public LoginVO selectUser(String userEmail) {
-		return studentRepository.selectUser(userEmail);
+	public LoginVO selectUser(String email) {
+		return studentRepository.selectUser(email);
 	}
 
 
