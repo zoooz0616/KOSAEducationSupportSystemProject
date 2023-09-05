@@ -54,17 +54,18 @@
 				<table class="search_filter_table" style="width: 100%;">
 					<tr>
 						<td style="width: 10%;">교육과정명</td>
-						<td style="width: 30%;"><input id="class_name"
-							placeholder="교육과정명" style="width: 100%;" type="text"
-							list="search_option"> <datalist id="search_option">
-							</datalist></td>
+						<td style="width: 30%;"><input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option">
+							<datalist id="search_option">
+								<option th:each="class:${classList}" th:value = "${class.clssNm}">
+							</datalist>
+						</td>
 						<td style="width: 10%;">상태</td>
-						<td style="width: 50%;"><span
-							th:each="classCodeName:${classCodeNameList}"> <label>
-									<input type="checkbox" name="chk_status" checked="checked"
-									th:value="${classCodeName}"> [[${classCodeName}]]
-							</label>
-						</span></td>
+						<td style="width: 50%;">
+							<span th:each="classCodeName:${classCodeNameList}" >
+								 <label th:text=${classCodeName.cmcdNm}></label>
+								 <input type="checkbox" name="chk_status" checked="checked" value="${classCodeName.cmcdId}">
+							</span>
+						</td>
 
 					</tr>
 					<tr th:if="${session.role == 'admin'}">
@@ -87,7 +88,6 @@
 			</div>
 			<!-- End 검색 필터 부분 -->
 
-
 			<table id="class_list_table">
 				<tr>
 					<th><input type="checkbox" name="chk" id="chkAll"></th>
@@ -97,7 +97,7 @@
 					<th th:if="${session.role == 'admin'}">지원기간</th>
 					<th>교육기간</th>
 					<th>교육 장소</th>
-					<th>신청/최대</th>
+					<th>수강/정원</th>
 					<th>교육상태</th>
 				</tr>
 				<tr id="class_list" th:each="class:${classList}">
@@ -190,7 +190,7 @@
 		            }
 		           
 		            classListTable.innerHTML=classListCode;
-                    
+// 		            th:text="${#strings.substring(reviewDTO.content, 0, 5)}"
                 },
 				error: function(error){
 					console.log("error: ", error);

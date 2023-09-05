@@ -16,18 +16,53 @@ public class ManagerService implements IManagerService {
 	IManagerRepository managerRepository;
 
 	@Override
-	public List<ClassVO> getClassList(String mngrId) {
-		return managerRepository.getClassList(mngrId);
+	public List<ClassVO> getClassListByMngrId(String mngrId) {
+		return managerRepository.getClassListByMngrId(mngrId);
 	}
 
 	@Override
-	public int getApplyCount(String clssId) {
-		return managerRepository.getApplyCount(clssId);
+	public int getApplyCountByClssId(String clssId) {
+		return managerRepository.getApplyCountByClssId(clssId);
 	}
 
 	@Override
-	public String getClassCodeName(String clssCd) {
-		return managerRepository.getClassCodeName(clssCd);
+	public String getClassCodeNameByClssId(String clssCd) {
+		return managerRepository.getClassCodeNameByClssId(clssCd);
+	}
+
+	@Override
+	public ClassVO getClassDetailByClssId(String clssId) {
+		return managerRepository.getClassDetailByClssId(clssId);
+	}
+
+	@Override
+	public FileVO getFileByFileId(String fileId) {
+		return managerRepository.getFileByFileId(fileId);
+	}
+
+	@Override
+	public List<String> getFileIdListByClssId(String clssId) {
+		return managerRepository.getFileIdListByclssId(clssId);
+	}
+
+	@Override
+	public List<StudentVO> getStudentListByClssId(String clssId) {
+		return managerRepository.getStudentListByClssId(clssId);
+	}
+
+	@Override
+	public List<ClassVO> getClassNameListByMngrId(String mngrId) {
+		return managerRepository.getClassNameListByMngrId(mngrId);
+	}
+
+	@Override
+	public String getClassNameByClssId(String clssId) {
+		return managerRepository.getClassNameByClssId(clssId);
+	}
+
+	@Override
+	public int getRgstCountByClssId(String clssId) {
+		return managerRepository.getRgstCountByClssId(clssId);
 	}
 
 	@Override
@@ -35,39 +70,4 @@ public class ManagerService implements IManagerService {
 		return managerRepository.getClassCodeNameList();
 	}
 
-	@Override
-	public ClassVO getClassDetail(String classId) {
-		return managerRepository.getClassDetail(classId);
-	}
-
-	@Override
-	public FileVO getFile(String fileId) {
-		return managerRepository.getFile(fileId);
-	}
-
-	@Override
-	public List<String> getFileIdList(String classId) {
-		return managerRepository.getFileIdList(classId);
-	}
-
-	@Override
-	public List<StudentVO> getStudentList(String classId) {
-		return managerRepository.getStudentList(classId);
-	}
-
-	@Override
-	public List<ClassVO> getClassNameList(String mngrId) {
-		return managerRepository.getClassNameList(mngrId);
-	}
-
-	@Override
-	public String getClassName(String classId) {
-		return managerRepository.getClassName(classId);
-	}
-
-	@Override
-	public int getRgstCount(String clssId) {
-		return managerRepository.getRgstCount(clssId);
-	}
-	
 }

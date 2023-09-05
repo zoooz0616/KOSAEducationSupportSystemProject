@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.model.ClassVO;
@@ -26,6 +27,7 @@ import com.finalprj.kess.service.IManagerService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/manager")
 public class ManagerController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,7 +36,7 @@ public class ManagerController {
 	IManagerService managerService;
 
 //	메인 페이지
-	@GetMapping("/manager/main")
+	@GetMapping("/manager")
 	public String managerMain(Model model, HttpSession session) {
 		session.setAttribute("role", "GRP0004003");// 삭제 예정
 		session.setAttribute("id", "MNG0000005");// 삭제 예정
@@ -42,20 +44,21 @@ public class ManagerController {
 	}
 
 //	담당 교육 목록 조회
-	@GetMapping("/manager/class")
+	@GetMapping("/class")
 	public String getClassList(Model model, HttpSession session) {
 		model.addAttribute("title", "교육 과정 목록");
 		session.setAttribute("role", "GRP0004003");// 삭제 예정
-		session.setAttribute("id", "MNG0000005");// 삭제 예정
-		List<ClassVO> classList = managerService.getClassList((String) session.getAttribute("id"));
-		// session의 key-value쌍을 set 할 때 value는 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
+		session.setAttribute("id", "MNGR000002");// 삭제 예정
+		
+		List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("id"));
+		// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
 		for (ClassVO vo : classList) {
-			vo.setRgstCnt(managerService.getRgstCount(vo.getClssId()));
+			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
 		}
 		model.addAttribute("classList", classList);
 		List<String> classCodeNameList = managerService.getClassCodeNameList();
 		model.addAttribute("classCodeNameList", classCodeNameList);
-		return "manager_class_list";
+		return "manager/manager_class_list";
 	}
 
 //	교육 상세 조회
@@ -63,9 +66,9 @@ public class ManagerController {
 	public String getClassDetail(Model model, @PathVariable String classId) {
 		model.addAttribute("title", "교육 과정 상세");
 		ClassVO thisClass = new ClassVO();
-		thisClass = managerService.getClassDetail(classId);
-		thisClass.setRgstCnt(managerService.getRgstCount(classId));
-		List<String> fileIdList = managerService.getFileIdList(classId);
+		thisClass = managerService.getClassDetailByClssId(classId);
+		thisClass.setRgstCnt(managerService.getRgstCountByClssId(classId));
+		List<String> fileIdList = managerService.getFileIdListByClssId(classId);
 		model.addAttribute("clss", thisClass);
 		model.addAttribute("fileIdList", fileIdList);
 		return "manager_class_detail";
@@ -74,7 +77,7 @@ public class ManagerController {
 	// 교육 상세 정보 > 파일 요청
 	@GetMapping("/manager/fileId/{fileId}")
 	public ResponseEntity<byte[]> getFile(@PathVariable String fileId) {
-		FileVO file = managerService.getFile(fileId);
+		FileVO file = managerService.getFileByFileId(fileId);
 		final HttpHeaders headers = new HttpHeaders();
 		String[] mtypes = file.getFileType().split("/");
 		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
@@ -94,14 +97,14 @@ public class ManagerController {
 		model.addAttribute("title", "교육생 목록");
 		session.setAttribute("role", "GRP0004003");// 삭제 예정
 		session.setAttribute("id", "MNG0000005");// 삭제 예정
-		List<StudentVO> stdtList = managerService.getStudentList(classId);
-		List<ClassVO> classNameList =managerService.getClassNameList((String) session.getAttribute("id"));
+		List<StudentVO> stdtList = managerService.getStudentListByClssId(classId);
+		List<ClassVO> classNameList =managerService.getClassNameListByMngrId((String) session.getAttribute("id"));
 		List<String> classCodeNameList = managerService.getClassCodeNameList();
 		model.addAttribute("classCodeNameList", classCodeNameList);
 		model.addAttribute("classNameList", classNameList);
 		model.addAttribute("stdtCnt", stdtList.size());
 		model.addAttribute("stdtList", stdtList);
-		model.addAttribute("thisClassName", (String) managerService.getClassName(classId));
+		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));
 		return "manager_student_list";
 	}
 

@@ -13,15 +13,25 @@ import com.finalprj.kess.model.StudentVO;
 @Repository
 public interface IManagerRepository {
 
-	public List<ClassVO> getClassList(String mngrId);
-	public int getApplyCount(String clssId);
-	public String getClassCodeName(String clssCd);
+	public List<ClassVO> getClassListByMngrId(String mngrId);
+
+	public int getApplyCountByClssId(String clssId);
+
+	public String getClassCodeNameByClssId(String clssCd);
+
 	public List<String> getClassCodeNameList();
-	public ClassVO getClassDetail(String classId);
-	public FileVO getFile(String fileId);
-	public List<String> getFileIdList(String classId);
-	public List<StudentVO> getStudentList(String classId);
-	public List<ClassVO> getClassNameList(String mngrId);
-	public String getClassName(String classId);
-	public int getRgstCount(String clssId);
+
+	public ClassVO getClassDetailByClssId(String clssId);
+
+	public FileVO getFileByFileId(String fileId);//이거 수정해야 될 예감
+
+	public List<String> getFileIdListByclssId(String clssId);
+
+	public List<StudentVO> getStudentListByClssId(String clssId);
+
+	public List<ClassVO> getClassNameListByMngrId(String mngrId);
+
+	public String getClassNameByClssId(String clssId);
+
+	public int getRgstCountByClssId(String clssId);
 }

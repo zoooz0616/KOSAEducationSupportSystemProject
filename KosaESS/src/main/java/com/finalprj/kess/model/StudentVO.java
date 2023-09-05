@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class StudentVO {
 	private String stdtId;//교육생id
-	private String userEmail;//이메일 -기존 stdtEmail 
+	private String userEmail;//이메일 -기존 stdtEmail
 	private String stdtNm;//교육생 이름
 	private String genderCd;//교육생 성별
 	private Date birthDd;//교육생 생년월일
