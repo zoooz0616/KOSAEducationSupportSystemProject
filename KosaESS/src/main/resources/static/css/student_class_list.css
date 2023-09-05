@@ -19,13 +19,15 @@ ul {
 	align-items: center;
 	justify-content: end;
 }
-input{
+
+input {
 	padding: 10px;
 	border: 0;
 	font-size: 15px;
 	font-weight: bold;
 	border-radius: 5px;
 }
+
 input::placeholder {
 	color: #0E5881;
 }
@@ -70,14 +72,35 @@ input::placeholder {
 	height: 30px;
 }
 
-.aplyBtn {
-	background: #0E5881;
-	padding: 2% 0px;
-	justify-content: center;
-	display: flex;
+.gridlist a {
+	text-decoration: none;
+	color: #0E5881;
 }
 
-.aplyBtn a {
-	text-decoration: none;
-	color: white;
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.show {
+	display: block;
+}
+
+.modal_body {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	height: 600px;
+	padding: 40px;
+	text-align: center;
+	background-color: rgb(255, 255, 255);
+	border-radius: 10px;
+	box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+	transform: translateX(-50%) translateY(-50%);
 }

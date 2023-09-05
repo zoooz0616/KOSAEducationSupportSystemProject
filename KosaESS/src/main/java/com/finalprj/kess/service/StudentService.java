@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.dto.ClassDetailDTO;
+import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
-import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.repository.IStudentRepository;
 
 @Service
@@ -15,10 +18,6 @@ public class StudentService implements IStudentService {
 	@Autowired
 	IStudentRepository studentRepository;
 
-	@Override
-	public StudentVO selectStudent(String stdtEmail) {
-		return studentRepository.selectStudent(stdtEmail);
-	}
 
 	public List<PostVO> selectAllNotice() {
 		return studentRepository.selectAllNotice();
@@ -55,8 +54,29 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public ClassVO selectClass(String clssId) {
+	public ClassDetailDTO selectClass(String clssId) {
 		return studentRepository.selectClass(clssId);
 	}
+
+	@Override
+	public List<ClassDetailDTO> selectAllClassFile(String clssId) {
+		return studentRepository.selectAllClassFile(clssId);
+	}
+
+	@Override
+	public FileVO getFile(String fileId) {
+		return studentRepository.getFile(fileId);
+	}
+
+	@Override
+	public void uploadFile(ApplyVO apply) {		
+	}
+
+	@Override
+	public LoginVO selectUser(String userEmail) {
+		return studentRepository.selectUser(userEmail);
+	}
+
+
 
 }

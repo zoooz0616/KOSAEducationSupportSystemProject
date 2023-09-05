@@ -14,7 +14,7 @@
 			<h1 style="color: #0E5881; margin-top: 3%;">새로운 교육을 통해서 더 나은 내일로</h1>
 			<h3 style="color: #6E9BB3;">넌 해야만 해. 할 수 있어.</h3>
 		</div>
-		<div class="content">
+		<div class="maincontent">
 			<div class="con-left" style="width: 55%;">
 				<div class="class con" style= "height: 85%;">
 					<h2>접수중인 교육</h2>
@@ -22,7 +22,7 @@
 					<table>
 						<tr th:each="classVO : ${classList}">
 							<td style="width: 73%;"><a
-								th:href="@{/class/__${classVO.clssId}__}"
+								th:href="@{/student/class/__${classVO.clssId}__}"
 								th:text="${classVO.clssNm}"></a></td>
 							<td style="width: 27%; text-align: right;"
 								th:text="${classVO.aplyStartDd} + ' ~ ' + ${classVO.aplyEndDd}"></td>
@@ -34,7 +34,7 @@
 				<div class="login con"
 					style="margin-bottom: 5%; text-align: center; height: 37%">
 					<div th:if="${session.stdtEmail==null}">
-						<form th:action="@{/login}" method="post" class="">
+						<form th:action="@{/student/login}" method="post" class="">
 							<div class="">
 								<label for="stdtEmail"></label> <input type="text"
 									name="stdtEmail" id="id" class="" placeholder="아이디(이메일)">
@@ -57,12 +57,12 @@
 							<div class="my">
 								<div class="box">
 									<h3>지원내역</h3>
-									<a th:href="@{/mypage/apply}"><span th:text="${session.aplyClassCnt}"></span></a>
+									<a th:href="@{/student/mypage/apply}"><span th:text="${session.aplyClassCnt}"></span></a>
 									<span>건</span>
 								</div>
 								<div class="box">
 									<h3>출력 가능 이수증</h3>
-									<a th:href="@{/mypage/complete}"><span th:text="${session.cmptClassCnt}"></span></a>
+									<a th:href="@{/student/mypage/complete}"><span th:text="${session.cmptClassCnt}"></span></a>
 									<span>건</span>
 								</div>
 							</div>

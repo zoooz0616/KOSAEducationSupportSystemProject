@@ -3,8 +3,10 @@
 <head>
 <link th:href="@{/css/student_header.css}" rel="stylesheet">
 <link th:href="@{/css/student_main.css}" rel="stylesheet">
+<link th:href="@{/css/student_class_list.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>class detail</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 <body>
 	<div th:replace="~{/include/student_header :: header}"
@@ -24,19 +26,79 @@
 					<th>회사</th>
 				</tr>
 				<tr>
-					<td th:text="${clss.clssNm}"></td>
-					<td th:text="${clss.aplyStartDd} + ' ~' + ${clss.aplyEndDd}"></td>
-					<td th:text="${clss.clssStartDd}+ ' ~' + ${clss.clssEndDd}"></td>
-					<td th:text="${clss.clssAdr}"></td>
-					<td th:text="${clss.clssCd}"></td>
-					<td th:text="${clss.setInTm}"></td>
-					<td th:text="${clss.setOutTm}"></td>
-					<td th:text="${clss.limitCnt}"></td>
-					<td th:text="${clss.cmpyId}"></td>
+					<td th:text="${classDetail.clssNm}"></td>
+					<td
+						th:text="${classDetail.aplyStartDd} + ' ~ ' + ${classDetail.aplyEndDd}"></td>
+					<td
+						th:text="${classDetail.clssStartDd}+ ' ~ ' + ${classDetail.clssEndDd}"></td>
+					<td th:text="${classDetail.clssAdr}"></td>
+					<td th:text="${classDetail.clssCd}"></td>
+					<td th:text="${classDetail.setInTm}"></td>
+					<td th:text="${classDetail.setOutTm}"></td>
+					<td th:text="${classDetail.limitCnt}"></td>
+					<td th:text="${classDetail.cmpyId}"></td>
 				</tr>
 			</table>
-
+			<div>
+				<ul th:each="ClassDetailDTO : ${classDetailList}">
+					<li>
+						<div th:if="${ClassDetailDTO.fileType=='image'}">
+							<img th:src="@{/img/__${ClassDetailDTO.fileNm}__}">
+						</div>
+						<div
+							th:if="${ClassDetailDTO.fileType == 'application' or ClassDetailDTO.fileType == 'text'}">
+							<a th:href="@{/student/download/file/__${ClassDetailDTO.fileId}__}"
+								th:title="${ClassDetailDTO.fileNm}"> <img
+								th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+								th:text="${ClassDetailDTO.fileNm}"></span>
+							</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<button class="openModalBtn">지원서 제출하기</button>
 		</div>
 	</div>
+	<div class="modal">
+		<div class="modal_body">
+			<button class="closeModalBtn">&times;</button>
+			<h2>지원서 제출</h2>
+			<form th:action="@{/student/upload/__${classDetail.clssId}__}" method="post" id="uploadForm" enctype="multipart/form-data">
+				<input type="file" name="file" id="fileInput">
+				<button type="submit" class="aplyBtn">제출</button>
+			</form>
+		</div>
+	</div>
+	<script>
+        const modal = document.querySelector('.modal');
+        const openModalBtn = document.querySelector('.openModalBtn');
+        const closeModalBtn = document.querySelector('.closeModalBtn');
+		
+ 
+        openModalBtn.addEventListener('click', () => {
+        	 $.ajax({
+                 url: '/student/class/apply',
+                 async: true,
+                 method: 'GET',
+                 success: function(stdtId) {
+                	 if (stdtId == "") {
+                		 var result = confirm("로그인 후 지원이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
+                		 
+                		 if(result) {
+                	            location.replace('/student/login');
+                	        }
+                     } else {
+                     	modal.style.display = 'block';
+                     }
+                 }
+        	});
+        });
+        
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+
+    </script>
 </body>
 </html>

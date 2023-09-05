@@ -5,15 +5,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import com.finalprj.kess.dto.ClassDetailDTO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
-import com.finalprj.kess.model.StudentVO;
 
 @Mapper
 @Repository
 public interface IStudentRepository {
-	StudentVO selectStudent(String stdtEmail);
-
 	List<PostVO> selectAllNotice();
 
 	List<ClassVO> selectAllClass();
@@ -28,8 +28,13 @@ public interface IStudentRepository {
 
 	List<PostVO> selectAllInquiry();
 
-	ClassVO selectClass(String clssId);
-	
-	
+	ClassDetailDTO selectClass(String clssId);
 
+	List<ClassDetailDTO> selectAllClassFile(String clssId);
+
+	FileVO getFile(String fileId);
+
+	LoginVO selectUser(String userEmail);
+
+		
 }

@@ -3,7 +3,7 @@
 <div th:fragment="header">
 	<header>
 		<div class="container">
-			<a th:href="@{/}"> <img th:src="@{/img/logo.png}"
+			<a th:href="@{/student}"> <img th:src="@{/img/logo.png}"
 				style="height: 60px;" />
 			</a>
 
@@ -12,10 +12,10 @@
 
 				<nav>
 					<ul class="barlist">
-						<li><a th:href="@{/class}">교육과정지원</a></li>
-						<li><a th:href="@{/notice}">공지사항</a></li>
-						<li><a class="mypage" th:href="@{/login}">로그인</a></li>
-						<li><a class="mypage" th:href="@{/join}">회원가입</a></li>
+						<li><a th:href="@{/student/class}">교육과정지원</a></li>
+						<li><a th:href="@{/student/notice}">공지사항</a></li>
+						<li><a class="mypage" th:href="@{/student/login}">로그인</a></li>
+						<li><a class="mypage" th:href="@{/student/join}">회원가입</a></li>
 					</ul>
 				</nav>
 
@@ -24,11 +24,11 @@
 				<!-- 로그인 후의 헤더 -->
 				<nav>
 					<ul class="barlist">
-						<li><a th:href="@{/class}">교육과정지원</a></li>
-						<li><a th:href="@{/inquiry}">문의사항</a></li>
-						<li><a th:href="@{/notice}">공지사항</a></li>
-						<li><a class="mypage" th:href="@{/logout}">로그아웃</a></li>
-						<li><a class="mypage" th:href="@{/mypage}">마이페이지</a></li>
+						<li><a th:href="@{/student/class}">교육과정지원</a></li>
+						<li><a th:href="@{/student/inquiry}">문의사항</a></li>
+						<li><a th:href="@{/student/notice}">공지사항</a></li>
+						<li><a class="mypage" th:href="@{/student/logout}">로그아웃</a></li>
+						<li><a class="mypage" th:href="@{/student/mypage}">마이페이지</a></li>
 					</ul>
 				</nav>
 			</div>

@@ -27,7 +27,7 @@
 					<tr th:each="postVO : ${postList}">
 						<td></td>
 						<td><a th:text="${postVO.postTitle}"
-							th:href="@{/inquiry/__${postVO.postId}__}">문의사항 제목</a></td>
+							th:href="@{/student/inquiry/__${postVO.postId}__}">문의사항 제목</a></td>
 						<td th:text="${postVO.rgsterId}">작성자</td>
 						<td th:text="${postVO.rgstDd}">등록일자</td>
 						<td th:text="${postVO.postHit}">조회수</td>
