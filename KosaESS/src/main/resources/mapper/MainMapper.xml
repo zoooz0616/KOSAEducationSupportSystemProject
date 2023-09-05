@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finalprj.kess.repository.IMainRepository">
+	<select id="getRole" parameterType="string">
+	<![CDATA[
+	select
+		role_cd
+	from lgin
+	where user_email=#{email} and user_pwd=#{pwd}
+	]]>
+	</select>
+	
+	<select id="getManagerVO" parameterType="string" resultType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+	select *
+	from mngr
+	join lgin on lgin.user_email = mngr.user_email
+	where mngr.user_email=#{email}
+	]]>
+	</select>
+</mapper>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.PostVO;
@@ -20,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/student")
 public class StudentController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
