@@ -21,4 +21,8 @@ public class MainService implements IMainService{
 		return mainRepository.getManagerVO(email);
 	}
 
+	@Override
+	public void updateLastLoginDt(String userEmail) {
+		mainRepository.updateLastLoginDt(userEmail);
+	}
 }

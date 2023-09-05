@@ -54,7 +54,17 @@ public class MainController {
 		} else if (role.equals("ROL0000002")) {
 			//관리자
 			ManagerVO managerVO = mainService.getManagerVO(email);
-			session.setAttribute("admin", managerVO);
+			session.setAttribute("mngrId", managerVO.getMngrId());
+			session.setAttribute("userEmail", managerVO.getUserEmail());
+			session.setAttribute("userPwd", managerVO.getUserPwd());
+			session.setAttribute("mngrNm", managerVO.getMngrNm());
+			session.setAttribute("mngrId", managerVO.getMngrId());
+			session.setAttribute("roleCd", managerVO.getRoleCd());
+			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
+			
+			session.setAttribute("role", "admin");
+			
+			mainService.updateLastLoginDt(managerVO.getUserEmail());
 			
 			return "redirect:/admin";
 		} else if (role.equals("ROL0000003")) {
