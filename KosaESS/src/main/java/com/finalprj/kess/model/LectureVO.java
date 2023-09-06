@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class LectureVO {
 	private String lctrId;//강의id
-	private String clssId;//교육과정id
 	private String sbjtId;//과목id
 	private String profId;//강사id
 	private String lctrNm;//강의명

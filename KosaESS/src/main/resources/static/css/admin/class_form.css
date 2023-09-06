@@ -1,0 +1,136 @@
+input {
+	outline: none;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .content_top {
+	display: flex;
+	margin: 40px;
+}
+
+.home-section .content_top .title {
+	font-size: 20px;
+	color: #333333;
+	font-weight: bold;
+	width: 80%;
+}
+
+.home-section .content_top .route a {
+	width: 20%;
+	color: #0E5881;
+	text-decoration-line: none;
+	font-weight: bold;
+}
+
+.home-section .content_middle {
+	margin: 40px;
+	display: flex;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+}
+
+.home-section .content_middle form {
+	width: 100%;
+}
+
+.class_form_content {
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.class_form_content .row {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+	height: 40px;
+}
+
+.class_form_content .row .col {
+	display: flex;
+	margin: 0 10px 0 0;
+}
+
+.class_form_content .row .col .col_title {
+	margin-right: 5px;
+	background: #E7EFF3;
+	padding: 5px;
+}
+
+.class_form_content .row .col .col_content {
+	margin-top: 7px;
+	height: 100%;
+}
+
+
+.class_form_content .row2 {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+	height: 250px;
+}
+
+.class_form_content .row2 .col2 {
+	margin: 0 5px 0 0;
+	display: flex;
+}
+
+.class_form_content .row2 .col2 .col_title {
+	margin-right: 5px;
+	background: #E7EFF3;
+	padding: 5px;
+	padding-top: 120px;
+}
+.class_form_content .row2 .col2 .col_content {
+	padding: 5px;
+}
+
+.content_info_btn_wrap img{
+	width: 20px;	
+}
+
+.col2 .col_content .content_info_btn_wrap {
+	display: flex;
+}
+
+.col2 .col_content .content_info_btn_wrap button {
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	display:flex;
+	margin: 2px;
+	padding: 5px;
+}
+
+.lecture_table {
+	border:1px solid #E7EFF3;
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10px 0 10px 0;
+}
+
+th {
+	background: #E7EFF3;
+}
+
+.lecture_table tr td, th{
+	border:1px solid #E7EFF3;
+}
+
+.lecture_table tr td * {
+	width: 100%;
+}

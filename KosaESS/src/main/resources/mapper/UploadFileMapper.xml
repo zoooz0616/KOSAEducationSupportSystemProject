@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finalprj.kess.repository.IUploadFileRepository">
+	
+	<select id="getMaxFileId" resultType="string">
+	<![CDATA[
+		select 'FILE'||LPAD((max(cast(substr(file_id,5) as number(6)))+1),6,'0')
+		from flup
+	]]>
+	</select>
+	
+	<insert id="uploadFile" parameterType="com.finalprj.kess.model.FileVO">
+	<![CDATA[
+		insert into flup
+		values(#{fileId}, #{fileSubId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, 'N')
+	]]>
+	</insert>
+	
+	<select id="getFileList" resultType="com.finalprj.kess.model.FileVO">
+	<![CDATA[
+		select *
+		from flup
+		where file_id = #{fileId}
+	]]>
+	</select>
+	
+	<select id="getFile" resultType="com.finalprj.kess.model.FileVO">
+	<![CDATA[
+		select *
+		from flup
+		where file_id = #{fileId} and file_sub_id = #{fileSubId}
+	]]>
+	</select>
+	
+	<delete id="deleteFile">
+	<![CDATA[
+		delete from flup
+		where file_id = #{fileId}
+	]]>
+	</delete>
+</mapper>

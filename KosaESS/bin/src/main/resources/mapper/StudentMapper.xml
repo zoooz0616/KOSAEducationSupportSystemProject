@@ -2,23 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.finalprj.kess.repository.IStudentRepository">
-	<resultMap id="studentResult"
-		type="com.finalprj.kess.model.StudentVO">
-		<result property="stdtId" column="STDT_ID" />
-		<result property="stdtEmail" column="STDT_EMAIL" />
-		<result property="stdtPwd" column="STDT_PWD" />
-		<result property="stdtNm" column="STDT_NM" />
-		<result property="genderCd" column="GENDER_CD" />
-		<result property="birthDd" column="BIRTH_DD" />
-		<result property="stdtTel" column="STDT_TEL" />
-		<result property="jobCd" column="JOB_CD" />
-		<result property="roleCd" column="ROLE_CD" />
-		<result property="stdtCd" column="STDT_CD" />
-		<result property="rgstDt" column="RGST_DT" />
-		<result property="rgsterId" column="RGSTER_ID" />
-		<result property="updtDt" column="UPDT_DT" />
-		<result property="updterId" column="UPDTER_ID" />
-	</resultMap>
 
 	<!-- 교육생 회원가입 -->
 	<insert id="insertStudent"

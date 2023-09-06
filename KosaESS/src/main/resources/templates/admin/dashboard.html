@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Main</title>
+
+</head>
+<head>
+<link th:href="@{/css/admin/dashboard.css}" rel="stylesheet">
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+
+</head>
+<body>
+
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<div class="home-section">
+		<!-- title -->
+		<div class="title">대시보드</div>
+
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<!-- total content wrap -->
+			<div class="row">
+				<div class="col">
+					<div class="small-box bg-aqua">
+						<div class="inner">
+							<h3 th:text="${noticeCnt}">count</h3>
+							<p>공지사항</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/notice}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-aqua">
+						<div class="inner">
+							<h3 th:text="${inquiryCnt}">count</h3>
+							<p>문의사항</p>
+						</div>
+						<div class="icon">
+							<i class="fa-solid fa-user"></i>
+						</div>
+						<a th:href="@{/admin/inquiry}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+
+
+				<div class="col">
+					<div class="small-box bg-green">
+						<div class="inner">
+							<h3 th:text="${companyCnt}">count</h3>
+							<p>기업</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/company}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-yellow">
+						<div class="inner">
+							<h3 th:text="${subjectCnt}">count</h3>
+							<p>과목</p>
+						</div>
+						<div class="icon">
+							<i class="fa-solid fa-user"></i>
+						</div>
+						<a th:href="@{/admin/subject}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3 th:text="${professorCnt}">count</h3>
+							<p>강사</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/professor}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3 th:text="${managerCnt}">count</h3>
+							<p>업무 담당자</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+						<a th:href="@{/admin/manager}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3 th:text="${studentCnt}">count</h3>
+							<p>교육생</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/student}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-yellow">
+						<div class="inner">
+							<h3 th:text="${classCnt}">count</h3>
+							<p>교육과정</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+						<a th:href="@{/admin/class}" class="small-box-footer">More
+							info <i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+
+
+			</div>
+			<div class="section_wrap">
+				<section class="left_section">
+					<div class="section_content">
+						<div class="navbar navbar-inner block-header">
+							<div class="muted pull-left">Inquiry</div>
+							<div class="pull-right">
+								<span class="badge badge-info" th:text="${waitInquiryCnt}">waitInquiryCnt</span>
+							</div>
+						</div>
+						<div class="block-content collapse in">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>문의ID</th>
+										<th>제목</th>
+										<th>등록자</th>
+										<th>등록일시</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="inquiry : ${waitInquiryList}">
+										<td th:text="${inquiry.postId}">id</td>
+										<td><a th:href="@{/admin/inquiry/__${inquiry.postId}__}"
+											th:text="${inquiry.postTitle}">title</a></td>
+										<td th:text="${inquiry.rgsterId}">registerId</td>
+										<td th:text="${inquiry.rgstDt}">registDt</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+				<section class="right_section">
+					<div class="section_content">
+						<div class="navbar navbar-inner block-header">
+							<div class="muted pull-left">Class</div>
+							<div class="pull-right">
+								<span class="badge badge-info" th:text="${completeClassCnt}">completeClassCnt</span>
+							</div>
+						</div>
+						<div class="block-content collapse in">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>교육과정ID</th>
+										<th>교육과정명</th>
+										<th>업무담당자</th>
+										<th>교육과정상태</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="class : ${completeClassList}">
+										<td th:text="${class.clssId}">id</td>
+										<td><a th:href="@{/admin/class/__${class.clssId}__}"
+											th:text="${class.clssNm}">title</a></td>
+										<td th:text="${class.mngrId}">managerId</td>
+										<td th:text="${class.clssCd}">clssCd</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

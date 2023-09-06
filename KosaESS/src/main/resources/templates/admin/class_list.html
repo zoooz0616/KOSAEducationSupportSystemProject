@@ -3,10 +3,9 @@
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
 <title>Manager Class List</title>
-<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
 </head>
 <head>
-<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
+<link th:href="@{/css/admin/class_list.css}" rel="stylesheet">
 <script>
 		$(document).ready(function(){
 			$('#class_name').on('input', function() {
@@ -28,120 +27,136 @@
 </script>
 </head>
 <body>
-
-	<!-- 서브바 부분 -->
+	<!-- 서브바-->
 	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
-	<!-- End 서브바 -->
+	<!-- 서브바 -->
 
-	<!-- 컨텐츠 부분 -->
+	<!-- Content Wrap -->
 	<div class="home-section">
-		<!-- title -->
-		<div class="title" th:text="${title}">Title</div>
 
-		<!-- content wrap-->
-		<div class="content_wrap">
-			<!-- 검색 필터 부분 -->
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">교육과정 관리</div>
+			<!-- Route -->
+			<div class="route">
+				> <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- Search Filter wrap -->
 			<div class="search_filter_wrap">
-				<!-- 검색 필터 테이블 wrap-->
-				<div class="search_filter_table_wrap">
-					<!-- 검색 필터 테이블 -->
-					<table class="search_filter_table" style="width: 100%; border: none;">
-						<tr>
-							<th style="width: 25%;">교육과정명</th>
-							<th style="width: 25%;">상태</th>
-							<th style="width: 25%;">지원기간</th>
-							<th style="width: 25%;">교육기간</th>
-						</tr>
-						<tr th:if="${session.role == 'admin'}">
-							<td style="width: 25%;"><input id="class_name"
-								placeholder="교육과정명" style="width: 100%; height: 40px;" type="text"
-								list="search_option"> <datalist id="search_option">
-								</datalist></td>
-							<td style="width: 25%;">
-								<div style="width: 90%;"id="list1" class="dropdown-check-list" tabindex="100">
-									<span style="width: 100%;padding: 10px;" class="anchor"><input type="checkbox" checked="checked">전체</span>
-									<ul style="list-style-type: none;" class="items" th:each="classCodeName:${classCodeNameList}">
-										<li>
-										<label>
-										<input type="checkbox" id ="chk_status" name="chk_status" checked="checked"
-												th:value="${classCodeName}"><span th:text="${classCodeName}">status</span>
-										</label>		
-										</li>
-									</ul>
-								</div>
-							</td>
-							<td style="width: 25%;"><input style="height: 40px;" id="aply_start_dt"
-								type="date"> <span> ~ </span> <input style="height: 40px;" id="aply_end_dt"
-								type="date"></td>
-							<td style="width: 25%;"><input style="height: 40px;" id="class_start_dd"
-								type="date"> <span> ~ </span> <input style="height: 40px;" id="class_end_dd"
-								type="date"></td>
-							<td>
-								<!-- 검색 버튼 -->
-								<div class="search_filter_btn_wrap">
-									<button id="search_btn" class="search_filter_btn">검색</button>
-								</div> <!-- End 검색 버튼 -->
-							</td>
-						</tr>
-					</table>
-					<!-- 검색 필터 테이블 끝-->
+				<!-- 교육과정명 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육과정명</div>
+					<div>
+						<input id="class_name" placeholder="교육과정명" type="text"
+							list="search_option">
+						<datalist id="search_option">
+						</datalist>
+					</div>
 				</div>
-				<!-- 검색 필터 테이블 wrap 끝 -->
+
+				<!-- 교육과정상태 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육과정상태</div>
+					<div>
+						<select style="height: 25px;">
+							<option value="전체">전체</option>
+							<option value="전체" th:each="classCodeName:${classCodeNameList}"
+								th:text="${classCodeName}">classCodeName</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- 지원기간 -->
+				<div class="filter_box">
+					<div class="filter_box_title">지원기간</div>
+					<div>
+						<input id="aply_start_dt" type="date"> <span> ~ </span> <input
+							id="aply_end_dt" type="date">
+					</div>
+				</div>
+
+				<!-- 교육기간 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육기간</div>
+					<div>
+						<input id="class_start_dd" type="date"> <span> ~ </span> <input
+							id="class_end_dd" type="date">
+					</div>
+				</div>
 			</div>
-			<!-- 검색 필터 부분 끝-->
-			
+			<!-- Search Filter wrap -->
+
+			<!-- Search Button wrap -->
+			<div class="search_filter_btn_wrap">
+				<button id="reset_btn" class="search_reset_btn">
+					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+				</button>
+				<button id="search_btn" class="search_filter_btn">
+					<img th:src="@{/img/search_white.png}"> <span>조회</span>
+				</button>
+			</div>
+			<!-- Search Button wrap -->
+		</div>
+		<!-- Content Middle-->
+
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+
 			<!-- 컨텐츠 개수와 버튼 wrap -->
-			<div class="middle_content">
-				<span> 총 </span>
-				<span th:text="${#lists.size(classList)}" > cnt </span>
-				<span> 개 </span>
-				
-				<!-- 선택삭제 버튼 -->
-				<span>
-					<button>선택삭제</button>
-				</span>
-				
-				<!-- 등록하기 버튼 -->
-				<span>
-					<a th:href="@{/admin/class/create}"><button>등록하기</button></a>
-				</span>
+			<div class="content_info_wrap">
+				<div class="content_info">
+					<span>교육과정 총 <span class="class_list_cnt"
+						th:text="${#lists.size(classList)}">classListCnt</span>개
+					</span>
+				</div>
+				<div class="content_info_btn_wrap"> <!-- 선택삭제 버튼 -->
+					<button>
+						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+					</button> <!-- 등록하기 버튼 -->
+					<a th:href="@{/admin/class/insert}" style="text-decoration: none;"><button>
+						<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+					</button></a>
+				</div>
 			</div>
-			<!-- 컨텐츠 개수와 버튼 wrap 끝-->
-					
-			
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+
 			<!-- 컨텐츠 리스트 부분 -->
 			<div class="content_list">
 				<table class="content_list_table" id="class_list_table">
-					<tr style="background: #CFDEE6;">
+					<tr style="background: #F3F6F8;">
 						<th><input type="checkbox" name="chk" id="chkAll"></th>
-						<th th:if="${session.role != 'admin'}">번호</th>
-						<th th:if="${session.role == 'admin'}">ID</th>
+						<th>ID</th>
 						<th>프로그램명</th>
-						<th th:if="${session.role == 'admin'}">지원기간</th>
+						<th>지원기간</th>
 						<th>교육기간</th>
-						<th>교육 장소</th>
-						<th>신청/최대</th>
+						<th>교육장소</th>
+						<th>수강가능인원</th>
 						<th>교육상태</th>
 					</tr>
 					<tr id="class_list" th:each="class:${classList}">
 						<td><input type="checkbox" name="chk"
 							th:value="${class.clssId}"></td>
-						<td th:if="${session.role != 'admin'}"
-							th:text="${classStat.count}">row number</td>
-						<td th:if="${session.role == 'admin'}" th:text="${class.clssId}"></td>
+						<td th:text="${class.clssId}"></td>
 						<td><a th:text="${class.clssNm}"
 							th:href="@{/manager/class/__${class.clssId}__}"></a></td>
-						<td th:text="|${class.aplyStartDd} ~ ${class.aplyEndDd}|"></td>
+						<td th:text="|${class.aplyStartDt} ~ ${class.aplyEndDt}|"></td>
 						<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
 						<td th:text="${class.clssAdr}">class address</td>
-						<td><a th:text="${class.rgstCnt}"
-							th:href="@{/manager/student-list/__${class.clssId}__}"></a><span
-							th:text="|/ ${class.limitCnt}|"></span></td>
+						<td><span th:text="${class.limitCnt}"></span></td>
 						<td th:text="${class.clssCd}">status</td>
 					</tr>
 				</table>
 			</div>
+			<!-- 컨텐츠 리스트 부분 -->
 		</div>
+		<!-- Content Bottom-->
 	</div>
 
 	<script>

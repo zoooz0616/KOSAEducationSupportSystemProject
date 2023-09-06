@@ -1,16 +1,246 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.finalprj.kess.repository.IAdminRepository">
-	<select id="getWaitInquiryCnt" resultType="int">
+	
+	<select id="getNoticeCnt" resultType="int">
 	<![CDATA[
-		select count(post_id) as "waitInquiryCnt"
+		select count(post_id)
 		from post
-		where post_cd=
-		(select tpcd_id||cmcd_id
-		from cmcd
-		where cmcd_nm='답변대기')and post_id like 'INQ%'
+		where post_id like 'NOTC%'
 	]]>
 	</select>
+	
+	<select id="getInquiryCnt" resultType="int">
+	<![CDATA[
+		select count(post_id)
+		from post
+		where post_id like 'INQY%'
+	]]>
+	</select>
+	
+	<select id="getCompanyCnt" resultType="int">
+	<![CDATA[
+		select count(cmpy_id)
+		from cmpy
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getSubjectCnt" resultType="int">
+	<![CDATA[
+		select count(sbjt_id)
+		from sbjt
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getStudentCnt" resultType="int">
+	<![CDATA[
+		select count(stdt_id)
+		from stdt
+		join lgin on lgin.user_email = stdt.user_email
+		where user_cd = 'USR0000001'
+	]]>
+	</select>
+	
+	<select id="getClassCnt" resultType="int">
+	<![CDATA[
+		select count(clss_id)
+		from clss
+		where clss_cd != 'CLS0000007'
+	]]>
+	</select>
+	
+	<select id="getProfesserCnt" resultType="int">
+	<![CDATA[
+		select count(prof_id)
+		from prof
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getManagerCnt" resultType="int">
+	<![CDATA[
+		select count(mngr_id) 
+		from mngr
+		join lgin on lgin.user_email = mngr.user_email
+		where role_cd = 'ROL0000003' and user_cd = 'USR0000001'
+	]]>
+	</select>
+	
+	<select id="getWaitInquiryCnt" resultType="int">
+	<![CDATA[
+		select count(post_id)
+		from post
+		where post_id like 'INQY%' and post_cd = 'PST0000003'
+	]]>
+	</select>
+	
+	<select id="getWaitInquiryList" resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select *
+		from post
+		where post_id like 'INQY%' and post_cd = 'PST0000003'
+	]]>
+	</select>
+	
+	<select id="getCompleteClassCnt" resultType="int">
+	<![CDATA[
+		select count(clss_id) 
+		from clss
+		where clss_cd = 'CLS0000005'
+	]]>
+	</select>
+	
+	<select id="getCompleteClassList" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+		select *
+		from clss
+		where clss_cd = 'CLS0000005'
+	]]>
+	</select>
+	
+	<select id="getClassList" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+		select *
+		from clss
+	]]>
+	</select>
+	
+	<select id="getClassCodeNameList" resultType="string">
+	<![CDATA[
+		select cmcd_nm 
+		from cmcd
+		where tpcd_id = 'GRP0000002'
+	]]>
+	</select>
+	
+	<select id="getMaxClassId" resultType="string">
+	<![CDATA[
+		select 'CLSS'||LPAD((max(cast(substr(clss_id,5) as number(6)))+1),6,'0')
+		from clss
+	]]>
+	</select>
+	
+	<select id="getCompanyList" resultType="com.finalprj.kess.model.CompanyVO">
+	<![CDATA[
+		select *
+		from cmpy
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getManagerList" resultType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+		select *
+		from mngr
+		join lgin on lgin.user_email = mngr.user_email
+		where role_cd = 'ROL0000003' and user_cd = 'USR0000001'
+		order by mngr_nm 
+	]]>
+	</select>
+	
+	<select id="getLectureList" resultType="com.finalprj.kess.model.LectureVO">
+	<![CDATA[
+		select *
+		from lctr
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getSubjectList" resultType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+		select *
+		from sbjt
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getProfessorList" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+		select *
+		from prof
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
+	<select id="getSubject" resultType="com.finalprj.kess.model.SubjectVO" parameterType="string">
+	<![CDATA[
+		select * 
+		from sbjt
+		where sbjt_id = (
+		select sbjt_id from lctr where lctr_id=#{lectureId}
+		)
+	]]>
+	</select>
+	
+	<select id="getProfessor" resultType="com.finalprj.kess.model.ProfessorVO" parameterType="string">
+	<![CDATA[
+		select * 
+		from prof
+		where prof_id = (
+		select prof_id from lctr where lctr_id=#{lectureId}
+		)
+	]]>
+	</select>
+	
+	<select id="getLecture" resultType="com.finalprj.kess.model.LectureVO" parameterType="string">
+	<![CDATA[
+		select * 
+		from lctr
+		where lctr_id = #{lectureId}
+	]]>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<select id="getWaitClassCnt" resultType="int">
 	<![CDATA[
@@ -22,75 +252,64 @@
 		where cmcd_nm='접수중')
 	]]>
 	</select>
-
-	<select id="getCompleteClassCnt" resultType="int">
-	<![CDATA[
-		select count(clss_id) as "completeClassCnt"
-		from clss
-		where clss_cd=
-		(select tpcd_id||cmcd_id
-		from cmcd
-		where cmcd_nm='교육완료' and tpcd_id='GRP0002')
-	]]>
-	</select>
-
+	
 	<select id="getPostVOList" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
 		select
-			post.post_id		as "postId",
-			post.master_id		as "masterId",
-			post.post_title		as "postTitle",
-			post.post_content	as "postContent",
-			post.post_hit		as "postHit",
-			cmcd.cmcd_nm		as "postCd",
-			post.rgst_dt		as "rgstDt",
-			post.rgster_id		as "rgsterId",
-			post.updt_dt		as "updtDt",
-			post.updter_id		as "updterId"
+			post.post_id,
+			post.master_id,
+			post.post_title,
+			post.post_content,
+			post.post_hit,
+			cmcd.cmcd_nm,
+			post.rgst_dt,
+			post.rgster_id,
+			post.updt_dt,
+			post.updter_id
 		from post
 		join cmcd on cmcd.tpcd_id||cmcd.cmcd_id = post.post_cd
 		where post_id like CONCAT(#{postValue}, '%') and master_id is null
 	]]>
 	</select>
 
-	<select id="getProfessorVOList"
-		resultType="com.finalprj.kess.model.ProfessorVO">
-	<![CDATA[
-		select
-			prof_id		as "profId",
-			prof_nm		as "profNm",
-			prof_tel	as "profTel",
-			prof_email	as "profEmail",
-			rgst_dt		as "rgstDt",
-			rgster_id	as "rgsterId",
-			updt_dt		as "updtDt",
-			updter_id	as "updterId"
-		from prof
-	]]>
-	</select>
 
 
-	<select id="getClassVOList"
-		resultType="com.finalprj.kess.model.ClassVO">
-	<![CDATA[
-	SELECT
-	    clss_id AS "clssId",
-	    clss_nm AS "clssNm",
-	    limit_cnt AS "limitCnt",
-	    aply_start_dt	as "aplyStartDt",
-	    aply_end_dt		as "aplyEndDt",
-	    clss_start_dd AS "clssStartDd",
-	    clss_end_dd AS "clssEndDd",
-	    clss_adr AS "clssAdr",
-	    cmcd.cmcd_nm AS "clssCd"
-	FROM
-	    clss
-	JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
-	ORDER BY
-		clss_id
-	]]>
-	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	<select id="getClassSearch" parameterType="string"
 		resultType="string">
@@ -103,7 +322,7 @@
 		) WHERE ROWNUM <= 10
 	]]>
 	</select>
-	
+
 	<select id="getSearchClassVOList"
 		resultType="com.finalprj.kess.model.ClassVO" parameterType="hashmap">
 	<![CDATA[
@@ -124,9 +343,10 @@
         clss_nm LIKE CONCAT(#{className}, '%')
         AND cmcd.cmcd_nm IN
     ]]>
-            <foreach collection="status" item="item" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+		<foreach collection="status" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
 	<![CDATA[
         AND (aply_start_dt >= #{aplyStartDt} AND aply_end_dt <= #{aplyEndDt})
         AND (clss_start_dd >= #{classStartDd} AND clss_end_dd <= #{classEndDd})
@@ -134,5 +354,18 @@
 		clss_id
 	]]>
 	</select>
+
+	
+	
+
+	
+	<insert id="insertClassVO" parameterType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+		insert into clss *
+		values(#{clssId}, #{mngrId},#{cmpyId},#{clssNm},#{clssContent},#{limitCnt},
+		#{aplyStartDt},#{aplyEndDt},#{clssStartDd},#{clssEndDd},#{setInTm},#{setOutTm},#{clssCd},
+		#{clssAdr},#{clssTotalTm},#{fileId},#{clssEtc},systimestamp, 'admin', null, null)		
+	]]>
+	</insert>
 	
 </mapper>
