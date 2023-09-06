@@ -19,13 +19,13 @@ public class ClassDetailDTO {
 	private Date aplyEndDd;//지원종료일시 (날짜)
 	private Date clssStartDd;//교육시작일자
 	private Date clssEndDd;//교육종료일자
-	private Timestamp setInTm;//교육시작시간
-	private Timestamp setOutTm;//교육종료시간
+	private String setInTm;//교육시작시간
+	private String setOutTm;//교육종료시간
 	private String clssCd;//교육과정 상태
 	private String clssAdr;//교육장소
 	private int totalTm;//교육과정 이수시간
 	private String clssEtc;//기타사항
 	private Date rgstDd;//등록일시(날짜)
-	private String cmpyImg; //회사 로고
+	private String cmpyNm; //회사명
 	private String clssFile; //교육관련 파일
 }

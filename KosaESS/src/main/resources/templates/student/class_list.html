@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:href="@{/css/student_header.css}" rel="stylesheet">
-<link th:href="@{/css/student_main.css}" rel="stylesheet">
-<link th:href="@{/css/student_class_list.css}" rel="stylesheet">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link th:href="@{/css/student/class_list.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -12,7 +12,7 @@
 		style="width: 100%;"></div>
 	<div class="container">
 		<div class="maintext">
-			<h1 style="color: #0E5881; margin-top: 3%;">교육과정지원</h1>
+			<h1 style="color: #0E5881; margin-top: 3%;">교육 과정 지원</h1>
 		</div>
 		<div class="content" style="flex-direction: column;">
 			<div class="search">
@@ -43,53 +43,32 @@
 				</div>
 			</div>
 			<div class="gridlist">
-				<ul th:each="classVO : ${classList}">
-					<a th:href="@{/student/class/__${classVO.clssId}__}">
-						<li><span th:text="${classVO.clssCd}" style="color: red;"></span></li>
-						<li class="classImg">
-							<div th:if="${classVO.clssLogo!=null}">
-								<img th:src="@{/img/__${classVO.clssLogo}__}">
+				<table>
+					<tr th:each="classVO : ${classList}">
+						<td><span th:text="${classVO.clssCd}" style="color: red; font-size: 15px;"></span></td>
+						<td class="classImg">
+							<div th:if="${classVO.clssContent!=null}">
+								<img th:src="@{/img/__${classVO.clssContent}__}">
 							</div>
-							<div th:if="${classVO.clssLogo==null}">
+							<div th:if="${classVO.clssContent==null}">
 								<img th:src="@{/img/logo.png}">
 							</div>
-					</li>
-						<li th:text="${classVO.clssNm}" style="font-weight: bold;">교육과정명</li>
-						<li><span>지원기간: </span><span
-							th:text="${classVO.aplyStartDd} + ' ~' +${classVO.aplyEndDd}"></span></li>
-						<li><span>교육기간: </span><span
-							th:text="${classVO.clssStartDd} + ' ~' +${classVO.clssEndDd}"></span></li>
-						<li><span>장소: </span><span th:text="${classVO.clssAdr}"></span></li>
-						<li><span>정원: </span><span th:text="${classVO.limitCnt}"></span></li>
-					</a>
-				</ul>
-
-			</div>
-			<!-- <div>
-				<table>
-					<tr>
-						<th>번호</th>
-						<th>교육과정명</th>
-						<th>지원기간</th>
-						<th>교육기간</th>
-						<th>교육장소</th>
-						<th>정원</th>
-						<th>강좌상태</th>
-					</tr>
-					<tr th:each="classVO : ${classList}">
-						<td></td>
-						<td><a th:text="${classVO.clssNm}"
-							th:href="@{/class/__${classVO.clssId}__}">교육과정명</a></td>
-						<td th:text="${classVO.aplyStartDd} + ' ~' +${classVO.aplyEndDd}">지원기간</td>
-						<td th:text="${classVO.clssStartDd} + ' ~' +${classVO.clssEndDd}">교육기간</td>
-						<td th:text="${classVO.clssAdr}">교육장소</td>
-						<td th:text="${classVO.limitCnt}">정원</td>
-						<td th:text="${classVO.clssCd}">상태</td>
-					</tr>
+						</td>
+						<td th:text="${classVO.clssNm}"
+							style="font-weight: bold; font-size: 20px;">교육과정명</td>
+						<td><span>지원기간: </span><span
+							th:text="${classVO.aplyStartDd} + ' ~' +${classVO.aplyEndDd}"></span></td>
+						<td><span>교육기간: </span><span
+							th:text="${classVO.clssStartDd} + ' ~' +${classVO.clssEndDd}"></span></td>
+						<td><span>장소: </span><span th:text="${classVO.clssAdr}"></span>
+							<span>정원: </span><span th:text="${classVO.limitCnt}"></span></td>
+						<td><button th:href="@{/student/class/__${classVO.clssId}__}">
+								지원하기</button></td>
 				</table>
-			</div> -->
+			</div>
 		</div>
 	</div>
+
 </body>
 
 

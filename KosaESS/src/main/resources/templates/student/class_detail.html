@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:href="@{/css/student_header.css}" rel="stylesheet">
-<link th:href="@{/css/student_main.css}" rel="stylesheet">
-<link th:href="@{/css/student_class_list.css}" rel="stylesheet">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link th:href="@{/css/student/class_detail.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>class detail</title>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -12,58 +12,73 @@
 	<div th:replace="~{/include/student_header :: header}"
 		style="width: 100%;"></div>
 	<div class="container">
+		<div class="maintext">
+			<h1 style="color: #0E5881; margin-top: 3%;">교육 과정 지원 상세</h1>
+		</div>
 		<div class="content">
 			<table>
 				<tr>
 					<th>이름</th>
-					<th>지원 기간</th>
-					<th>교육 기간</th>
-					<th>교육 장소</th>
-					<th>교육 상태</th>
-					<th>시작 시간</th>
-					<th>종료 시간</th>
-					<th>수강 정원</th>
-					<th>회사</th>
+					<td colspan="5" th:text="${classDetail.clssNm}"></td>
 				</tr>
 				<tr>
-					<td th:text="${classDetail.clssNm}"></td>
-					<td
+					<th>지원 기간</th>
+					<td style="width: 40%"
 						th:text="${classDetail.aplyStartDd} + ' ~ ' + ${classDetail.aplyEndDd}"></td>
-					<td
+
+					<th>교육 기간</th>
+					<td colspan="3"
 						th:text="${classDetail.clssStartDd}+ ' ~ ' + ${classDetail.clssEndDd}"></td>
+				</tr>
+				<tr>
+					<th>교육 장소</th>
 					<td th:text="${classDetail.clssAdr}"></td>
+					<th>회사</th>
+					<td style="width: 15%" 
+					th:text="${classDetail.cmpyNm}"></td>
+					<th>교육 상태</th>
 					<td th:text="${classDetail.clssCd}"></td>
-					<td th:text="${classDetail.setInTm}"></td>
-					<td th:text="${classDetail.setOutTm}"></td>
-					<td th:text="${classDetail.limitCnt}"></td>
-					<td th:text="${classDetail.cmpyId}"></td>
+				</tr>
+				<tr>
+					<th>시작 시간</th>
+					<td th:text="${classDetail.setInTm} + '시'"></td>
+					<th>종료 시간</th>
+					<td th:text="${classDetail.setOutTm}+ '시'"></td>
+					<th>수강 정원</th>
+					<td th:text="${classDetail.limitCnt}+ '명'"></td>
 				</tr>
 			</table>
 			<div>
 				<ul th:each="ClassDetailDTO : ${classDetailList}">
 					<li>
-						<div th:if="${ClassDetailDTO.fileType=='image'}">
-							<img th:src="@{/img/__${ClassDetailDTO.fileNm}__}">
-						</div>
-						<div
+						<div class="icon"
 							th:if="${ClassDetailDTO.fileType == 'application' or ClassDetailDTO.fileType == 'text'}">
-							<a th:href="@{/student/download/file/__${ClassDetailDTO.fileId}__}"
+							<a
+								th:href="@{/student/download/file/__${ClassDetailDTO.fileId}__/__${ClassDetailDTO.fileSubId}__}"
 								th:title="${ClassDetailDTO.fileNm}"> <img
-								th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
-								th:text="${ClassDetailDTO.fileNm}"></span>
+								style="width: 40px;" th:src="@{/img/file_icon.png}"
+								alt="file  아이콘"> <span th:text="${ClassDetailDTO.fileNm}"></span>
 							</a>
+						</div>
+						<div th:if="${ClassDetailDTO.fileType=='image'}">
+							<img style="width: 500px;"
+								th:src="@{/img/__${ClassDetailDTO.fileNm}__}">
 						</div>
 					</li>
 				</ul>
 			</div>
-			<button class="openModalBtn">지원서 제출하기</button>
+			<div class="btn">
+				<button class="back">목록으로</button>
+				<button class="openModalBtn">지원하기</button>
+			</div>
 		</div>
 	</div>
 	<div class="modal">
 		<div class="modal_body">
 			<button class="closeModalBtn">&times;</button>
 			<h2>지원서 제출</h2>
-			<form th:action="@{/student/upload/__${classDetail.clssId}__}" method="post" id="uploadForm" enctype="multipart/form-data">
+			<form th:action="@{/student/upload/__${classDetail.clssId}__}"
+				method="post" id="uploadForm" enctype="multipart/form-data">
 				<input type="file" name="file" id="fileInput">
 				<button type="submit" class="aplyBtn">제출</button>
 			</form>
@@ -85,7 +100,7 @@
                 		 var result = confirm("로그인 후 지원이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
                 		 
                 		 if(result) {
-                	            location.replace('/student/login');
+                	            location.replace('/login');
                 	        }
                      } else {
                      	modal.style.display = 'block';
@@ -97,8 +112,6 @@
         closeModalBtn.addEventListener('click', () => {
             modal.style.display = 'none';
         });
-
-
     </script>
 </body>
 </html>

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.ManagerVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IMainService;
 import com.finalprj.kess.service.IStudentService;
 
@@ -19,7 +19,6 @@ public class MainController {
 	@Autowired
 	IMainService mainService;
 	IStudentService studentService;
-	LoginVO login = null;
 
 	@GetMapping("/login")
 	public String login() {
@@ -34,21 +33,25 @@ public class MainController {
 	 * @return : string
 	 */
 	@PostMapping("/login")
-	public String login(HttpSession session, HttpServletRequest request) {
+	public String login(HttpSession session, HttpServletRequest request, String email, String pwd) {
 		//form에서 이메일, 비밀번호 가져옴
-		String email = request.getParameter("email");
-		String pwd = request.getParameter("pwd");
+		email = request.getParameter("email");
+		pwd = request.getParameter("pwd");
 		
 		//login 테이블에 회원이 있는지 확인하기
 		String role = mainService.getRole(email,pwd);
 		if (role.equals("ROL0000001")) {
 			//학생
-			login = studentService.selectUser(email);
-			session.setAttribute("email", email);
-			int aplyClassCnt = studentService.getAplyClass(email);
-			int cmptClassCnt = studentService.getCmptClass(email);
-			session.setAttribute("aplyClassCnt", aplyClassCnt);
-			session.setAttribute("cmptClassCnt", cmptClassCnt);
+			StudentVO studentVO = mainService.getStudentVO(email);
+			session.setAttribute("stdtId", studentVO.getStdtId());
+			session.setAttribute("userEmail", studentVO.getUserEmail());
+			session.setAttribute("userPwd", studentVO.getUserPwd());
+			session.setAttribute("stdtNm", studentVO.getStdtNm());
+			session.setAttribute("stdtId", studentVO.getStdtId());
+			session.setAttribute("roleCd", studentVO.getRoleCd());
+			session.setAttribute("lastLoginDt", studentVO.getLastLoginDt());
+						
+			mainService.updateLastLoginDt(studentVO.getUserEmail());
 			
 			return "redirect:/student";
 		} else if (role.equals("ROL0000002")) {
@@ -58,7 +61,6 @@ public class MainController {
 			session.setAttribute("userEmail", managerVO.getUserEmail());
 			session.setAttribute("userPwd", managerVO.getUserPwd());
 			session.setAttribute("mngrNm", managerVO.getMngrNm());
-			session.setAttribute("mngrId", managerVO.getMngrId());
 			session.setAttribute("roleCd", managerVO.getRoleCd());
 			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
 			
@@ -76,4 +78,18 @@ public class MainController {
 			return "redirect:/login";
 		}
 	}
+	
+	// 로그이웃
+		/**
+		 * @author : dabin
+		 * @date : 2023. 8. 25.
+		 * @parameter : session, request
+		 * @return :
+		 */
+
+		@GetMapping("/logout")
+		public String logout(HttpSession session, HttpServletRequest request) {
+			session.invalidate(); // 로그아웃
+			return "redirect:/student";
+		}
 }

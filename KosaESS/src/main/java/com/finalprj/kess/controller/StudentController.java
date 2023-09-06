@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,6 @@ import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IStudentService;
-
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -49,7 +46,7 @@ public class StudentController {
 	 * @return :
 	 */
 	@GetMapping("")
-	public String main(Model model) {
+	public String main(Model model, HttpSession session) {
 		model.addAttribute("student", student);
 
 		List<PostVO> postList = new ArrayList<PostVO>();
@@ -60,66 +57,19 @@ public class StudentController {
 		classList = studentService.selectClassMain();
 		model.addAttribute("classList", classList);
 
+		int aplyClassCnt = studentService.getAplyClass((String) session.getAttribute("userEmail"));
+		int cmptClassCnt = studentService.getCmptClass((String) session.getAttribute("userEmail"));
+		String ingClassNm = studentService.getIngClass((String) session.getAttribute("userEmail"));
+		
+		model.addAttribute("aplyClassCnt", aplyClassCnt);
+		model.addAttribute("cmptClassCnt", cmptClassCnt);
+		model.addAttribute("ingClassNm", ingClassNm);
+
 		return "student/main";
 	}
-
-	/*
-	 * // 로그인
-	 *//**
-		 * @author : dabin
-		 * @date : 2023. 8. 24.
-		 * @parameter :
-		 * @return :
-		 */
-	/*
-	 * 
-	 * @GetMapping("/login") public String login() { return "login"; }
-	 * 
-	 * // 로그인 + 로그인 후 화면 변경
-	 *//**
-		 * @author : dabin
-		 * @date : 2023. 8. 24.
-		 * @parameter : session, model
-		 * @return :
-		 *//*
-			 * 
-			 * @PostMapping("/login") public String login(String email, String pwd,
-			 * HttpSession session, Model model) { login = studentService.selectUser(email);
-			 * if (student != null) { String dataPwd = login.getUserPwd(); if (dataPwd ==
-			 * null) { // 아이디(이메일)이 없는 경우 model.addAttribute("message",
-			 * "아이디나 비밀번호를 다시 확인해주세요."); } else { if (dataPwd.equals(pwd)) { // 아이디(이메일)과
-			 * 비밀번호가 일치하는 경우 세션에 정보 저장 session.setAttribute("email", email);
-			 * session.setAttribute("pwd", login.getUserPwd()); session.setAttribute("name",
-			 * student.getClssNm());
-			 * 
-			 * int aplyClassCnt = studentService.getAplyClass(email); int cmptClassCnt =
-			 * studentService.getCmptClass(email);
-			 * 
-			 * session.setAttribute("aplyClassCnt", aplyClassCnt);
-			 * session.setAttribute("cmptClassCnt", cmptClassCnt);
-			 * 
-			 * return "redirect:/student"; } else { // 비밀번호가 일치하지 않는 경우
-			 * model.addAttribute("message", "아이디나 비밀번호를 다시 확인해주세요."); } } } else {
-			 * model.addAttribute("message", "존재하지않는 아이디입니다."); } session.invalidate();
-			 * return "redirect:/student"; }
-			 */
-
-	// 로그이웃
-	/**
-	 * @author : dabin
-	 * @date : 2023. 8. 25.
-	 * @parameter : session, request
-	 * @return :
-	 */
-
-	@GetMapping("/logout")
-	public String logout(HttpSession session, HttpServletRequest request) {
-		session.invalidate(); // 로그아웃
-		student = null;
-		return "redirect:/student";
-	}
-
+	
 	// 공지사항 리스트확인
+
 	/**
 	 * @author : dabin
 	 * @date : 2023. 8. 28.
@@ -218,9 +168,9 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@RequestMapping("/download/file/{fileId}")
-	public ResponseEntity<byte[]> downloadFile(@PathVariable String fileId) {
-		FileVO file = studentService.getFile(fileId);
+	@RequestMapping("/download/file/{fileId}/{fileSubId}")
+	public ResponseEntity<byte[]> downloadFile(@PathVariable String fileId,@PathVariable String fileSubId) {
+		FileVO file = studentService.getFile(fileId,fileSubId);
 
 		final HttpHeaders headers = new HttpHeaders();
 		if (file != null) {

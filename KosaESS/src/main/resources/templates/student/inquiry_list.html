@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:href="@{/css/student_header.css}" rel="stylesheet">
-<link th:href="@{/css/student_main.css}" rel="stylesheet">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -29,7 +29,7 @@
 						<td><a th:text="${postVO.postTitle}"
 							th:href="@{/student/inquiry/__${postVO.postId}__}">문의사항 제목</a></td>
 						<td th:text="${postVO.rgsterId}">작성자</td>
-						<td th:text="${postVO.rgstDd}">등록일자</td>
+						<td th:text="${postVO.rgstDt}">등록일자</td>
 						<td th:text="${postVO.postHit}">조회수</td>
 						<td th:text="${postVO.postCd}">상태</td>
 					</tr>

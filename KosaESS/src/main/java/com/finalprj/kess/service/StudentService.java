@@ -29,17 +29,6 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public int getCmptClass(String email) {
-		return studentRepository.getCmptClass(email);
-	}
-	
-	@Override
-	public int getAplyClass(String email) {
-		return studentRepository.getAplyClass(email);
-	}
-
-
-	@Override
 	public List<PostVO> selectNoticeMain() {
 		return studentRepository.selectNoticeMain();
 	}
@@ -66,8 +55,8 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public FileVO getFile(String fileId) {
-		return studentRepository.getFile(fileId);
+	public FileVO getFile(String fileId, String fileSubId) {
+		return studentRepository.getFile(fileId, fileSubId);
 	}
 
 	@Override
@@ -77,6 +66,21 @@ public class StudentService implements IStudentService {
 	@Override
 	public LoginVO selectUser(String email) {
 		return studentRepository.selectUser(email);
+	}
+
+	@Override
+	public int getCmptClass(String email) {
+		return studentRepository.getCmptClass(email);
+	}
+
+	@Override
+	public int getAplyClass(String email) {
+		return studentRepository.getAplyClass(email);
+	}
+
+	@Override
+	public String getIngClass(String email) {
+		return studentRepository.getIngClass(email);
 	}
 
 

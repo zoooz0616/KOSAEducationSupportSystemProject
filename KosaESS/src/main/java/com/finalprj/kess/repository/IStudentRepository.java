@@ -32,9 +32,11 @@ public interface IStudentRepository {
 
 	List<ClassDetailDTO> selectAllClassFile(String clssId);
 
-	FileVO getFile(String fileId);
+	FileVO getFile(String fileId, String fileSubId);
 
 	LoginVO selectUser(String email);
+
+	String getIngClass(String email);
 
 		
 }

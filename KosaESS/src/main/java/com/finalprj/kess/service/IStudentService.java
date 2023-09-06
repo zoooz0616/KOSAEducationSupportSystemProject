@@ -19,23 +19,23 @@ public interface IStudentService {
 	
 	int getAplyClass(String email);
 
-
 	List<PostVO> selectNoticeMain();
 
 	List<ClassVO> selectClassMain();
 
 	List<PostVO> selectAllInquiry();
 
-
 	ClassDetailDTO selectClass(String clssId);
 
 	List<ClassDetailDTO> selectAllClassFile(String clssId);
 
-	FileVO getFile(String fileId);
+	FileVO getFile(String fileId, String fileSubId);
 
 	void uploadFile(ApplyVO apply);
 
 	LoginVO selectUser(String email);
+
+	String getIngClass(String email);
 
 
 }

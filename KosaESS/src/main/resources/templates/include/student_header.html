@@ -7,7 +7,7 @@
 				style="height: 60px;" />
 			</a>
 
-			<div th:if="${session.stdtEmail==null}">
+			<div th:if="${session.userEmail==null}">
 				<!-- 로그인을 하지 않은 경우의 헤더 -->
 
 				<nav>
@@ -20,14 +20,14 @@
 				</nav>
 
 			</div>
-			<div th:if="${session.stdtEmail!=null}">
+			<div th:if="${session.userEmail!=null}">
 				<!-- 로그인 후의 헤더 -->
 				<nav>
 					<ul class="barlist">
 						<li><a th:href="@{/student/class}">교육과정지원</a></li>
 						<li><a th:href="@{/student/inquiry}">문의사항</a></li>
 						<li><a th:href="@{/student/notice}">공지사항</a></li>
-						<li><a class="mypage" th:href="@{/student/logout}">로그아웃</a></li>
+						<li><a class="mypage" th:href="@{/logout}">로그아웃</a></li>
 						<li><a class="mypage" th:href="@{/student/mypage}">마이페이지</a></li>
 					</ul>
 				</nav>
