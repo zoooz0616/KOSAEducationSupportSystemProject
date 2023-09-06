@@ -23,7 +23,8 @@ public class ClassVO {
 	private Timestamp setOutTm;//교육종료시간
 	private String clssCd;//교육과정 상태
 	private String clssAdr;//교육장소
-	private int totalTm;//교육과정 이수시간
+	private int clssTotalTm;//교육과정 총이수시간
+	private String fileId;//파일id
 	private String clssEtc;//기타사항
 	private Timestamp rgstDt;//등록일시
 	private String rgsterId;//등록자id
