@@ -33,10 +33,10 @@ public class MainController {
 	 * @return : string
 	 */
 	@PostMapping("/login")
-	public String login(HttpSession session, HttpServletRequest request, String email, String pwd) {
+	public String login(HttpSession session, HttpServletRequest request) {
 		//form에서 이메일, 비밀번호 가져옴
-		email = request.getParameter("email");
-		pwd = request.getParameter("pwd");
+		String email = request.getParameter("email");
+		String pwd = request.getParameter("pwd");
 		
 		//login 테이블에 회원이 있는지 확인하기
 		String role = mainService.getRole(email,pwd);
