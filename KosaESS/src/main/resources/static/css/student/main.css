@@ -4,7 +4,6 @@
 	justify-content: center;
 	flex-shrink: 0;
 	color: #0E5881;
-	text-align: center;
 	font-size: 20px;
 	margin: 30px 0;
 }
@@ -23,9 +22,14 @@ body {
 	margin-top: 100px;
 }
 
-.content {
+.maincontent {
 	display: flex;
 	justify-content: space-between;
+}
+
+.content {
+	display: flex;
+	justify-content: center;
 }
 
 .con {
@@ -57,7 +61,8 @@ table a:hover {
 hr {
 	border: 0px;
 	border-top: 5px solid #0E5881;
-	margin-bottom:2%;
+	margin-bottom: 2%;
+	margin-top: 0;
 }
 
 table td {
@@ -69,6 +74,8 @@ table td {
 
 .login {
 	text-align: center;
+	display: grid;
+	align-items: center;
 }
 
 .login a {
@@ -91,6 +98,11 @@ input::placeholder {
 }
 
 .loginBtn {
+	background: #0E5881;
+	color: white;
+}
+
+.wlogBtn {
 	background: #0E5881;
 	color: white;
 }
@@ -121,4 +133,15 @@ input::placeholder {
 	color: #0E5881;
 	text-decoration: none;
 	font-weight: bold;
+}
+
+.plus {
+	font-size: 25px;
+	color: #0E5881;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.my {
+	text-align: center;
 }
