@@ -17,11 +17,15 @@ public class StudentVO {
 	private String jobCd;//교육생 직업
 	private String roleCd;//역할
 	private String userCd;//계정상태
+
 	private Timestamp rgstDt;//등록일시
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
-	private String clssNm;//교육과정 이름 - 누군가의 추가
+	
+	private String clssNm;//교육과정 이름
 	private Timestamp lastLoginDt;//마지막 로그인 일시
-
+	private int countLateArrive;//지각 수
+	private int countEalryLeave;//조퇴 수
+	private int countAbsent;//결석 수
 }
