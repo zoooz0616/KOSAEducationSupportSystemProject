@@ -45,13 +45,15 @@
 					<td th:text="${clss.mngrId}"></td>
 				</tr>
 			</table>
-			<div th:each="item:${fileIdList}">
-				<img th:src="@{/manager/fileId/__${item}__}">
+			<div th:each="item:${NonImageFileInfoList}">
+				<a th:href="@{/manager/__${clss.fileId}__/__${item.fileSubId}__}" th:text="${item.fileNm}"></a>				
+			</div>
+			<div th:each="item:${imageFileSubIdList}">
+				<img th:src="@{/manager/__${clss.fileId}__/__${item}__}">
 			</div>
 
 			<div th:utext="${clss.clssContent}"></div>
-			<a th:href="@{/manager/class}">
-				<p>목?록</p>
+			<a th:href="@{/manager/class}" th:text="목록">
 			</a>
 		</div>
 	</div>

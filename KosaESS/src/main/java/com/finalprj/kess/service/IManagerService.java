@@ -11,21 +11,19 @@ public interface IManagerService {
 
 	public int getApplyCountByClssId(String clssId);
 
-	public String getClassCodeNameByClssId(String clssCd);
-
-	public List<String> getClassCodeNameList();
-
 	public ClassVO getClassDetailByClssId(String clssId);
 
-	public FileVO getFileByFileId(String fileId);
-
-	public List<String> getFileIdListByClssId(String clssId);
-
 	public List<StudentVO> getStudentListByClssId(String clssId);
-
-	public List<ClassVO> getClassNameListByMngrId(String mngrId);
 
 	public String getClassNameByClssId(String clssId);
 
 	public int getRgstCountByClssId(String clssId);
+
+	public List<Integer> getFileSubIdListByFileId(String fileId);
+	
+	public List<String> getCodeNameList(String keyword);
+	
+	public FileVO getFileByIds(String fileId, int fileSubId);
+
+	public FileVO getFileInfoByIds(String fileId, int fileSubId);
 }

@@ -26,33 +26,13 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public String getClassCodeNameByClssId(String clssCd) {
-		return managerRepository.getClassCodeNameByClssId(clssCd);
-	}
-
-	@Override
 	public ClassVO getClassDetailByClssId(String clssId) {
 		return managerRepository.getClassDetailByClssId(clssId);
 	}
 
 	@Override
-	public FileVO getFileByFileId(String fileId) {
-		return managerRepository.getFileByFileId(fileId);
-	}
-
-	@Override
-	public List<String> getFileIdListByClssId(String clssId) {
-		return managerRepository.getFileIdListByclssId(clssId);
-	}
-
-	@Override
 	public List<StudentVO> getStudentListByClssId(String clssId) {
 		return managerRepository.getStudentListByClssId(clssId);
-	}
-
-	@Override
-	public List<ClassVO> getClassNameListByMngrId(String mngrId) {
-		return managerRepository.getClassNameListByMngrId(mngrId);
 	}
 
 	@Override
@@ -66,8 +46,23 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<String> getClassCodeNameList() {
-		return managerRepository.getClassCodeNameList();
+	public List<String> getCodeNameList(String keyword) {
+		return managerRepository.getCodeNameListByKeyword(keyword);
+	}
+
+	@Override
+	public List<Integer> getFileSubIdListByFileId(String fileId) {
+		return managerRepository.getFileSubIdListByFileId(fileId);
+	}
+
+	@Override
+	public FileVO getFileByIds(String fileId, int fileSubId) {
+		return managerRepository.getFileByIds(fileId, fileSubId);
+	}
+
+	@Override
+	public FileVO getFileInfoByIds(String fileId, int fileSubId) {
+		return managerRepository.getFileInfoByIds(fileId, fileSubId);
 	}
 
 }

@@ -14,9 +14,15 @@ public class StudentVO {
 	private Date birthDd;//교육생 생년월일
 	private String stdtTel;//교육생 연락처
 	private String jobCd;//교육생 직업
+	
 	private Timestamp rgstDt;//등록일시
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
+	
 	private String clssNm;//교육과정 이름 - 누군가의 추가
+	private int countLateArrive;//지각 수
+	private int countEalryLeave;//조퇴 수
+	private int countAbsent;//결석 수
+	
 }
