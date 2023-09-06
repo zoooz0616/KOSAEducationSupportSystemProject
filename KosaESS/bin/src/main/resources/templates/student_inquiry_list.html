@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student_header.css}" rel="stylesheet">
+<link th:href="@{/css/student_main.css}" rel="stylesheet">
+<meta charset="UTF-8">
+<title>main page</title>
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+	<div class="container">
+		<div class="maintext">
+			<h1 style="color: #0E5881; margin-top: 3%;">문의사항</h1>
+		</div>
+		<div class="content">
+			<div>
+				<table>
+					<tr>
+						<th>번호</th>
+						<th>문의사항 제목</th>
+						<th>작성자</th>
+						<th>등록일자</th>
+						<th>조회수</th>
+						<th>상태</th>
+					</tr>
+					<tr th:each="postVO : ${postList}">
+						<td></td>
+						<td><a th:text="${postVO.postTitle}"
+							th:href="@{/inquiry/__${postVO.postId}__}">문의사항 제목</a></td>
+						<td th:text="${postVO.rgsterId}">작성자</td>
+						<td th:text="${postVO.rgstDd}">등록일자</td>
+						<td th:text="${postVO.postHit}">조회수</td>
+						<td th:text="${postVO.postCd}">상태</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

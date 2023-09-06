@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.finalprj.kess.repository.IStudentRepository">
-	<resultMap id="studentResult"
-		type="com.finalprj.kess.model.StudentVO">
-		<result property="stdtId" column="STDT_ID" />
-		<result property="stdtEmail" column="STDT_EMAIL" />
-		<result property="stdtPwd" column="STDT_PWD" />
-		<result property="stdtNm" column="STDT_NM" />
-		<result property="genderCd" column="GENDER_CD" />
-		<result property="birthDd" column="BIRTH_DD" />
-		<result property="stdtTel" column="STDT_TEL" />
-		<result property="jobCd" column="JOB_CD" />
-		<result property="roleCd" column="ROLE_CD" />
-		<result property="stdtCd" column="STDT_CD" />
-		<result property="rgstDt" column="RGST_DT" />
-		<result property="rgsterId" column="RGSTER_ID" />
-		<result property="updtDt" column="UPDT_DT" />
-		<result property="updterId" column="UPDTER_ID" />
-	</resultMap>
-	
+<mapper
+	namespace="com.finalprj.kess.repository.IStudentRepository">
+
 	<!-- 교육생 회원가입 -->
 	<insert id="insertStudent"
 		parameterType="com.finalprj.kess.model.StudentVO">
@@ -41,7 +25,7 @@
 		FROM stdt
 		WHERE stdt_email=#{stdtEmail}
 		]]>
-		</select>
+	</select>
 
 	<!-- 교육생 개인정보 수정 -->
 	<update id="updateStudent"
@@ -51,8 +35,8 @@
 		SET stdt_pwd=#{stdtPwd}, stdt_nm=#{stdtNm}, gender_cd=#{genderCd}, birth_dd=#{birthDd}, stdt_tel=#{stdtTel}, job_cd=#{jobCd}
 		WHERE stdt_id=#{stdtId}
 		]]>
-		</update>
-
+	</update>
+	
 	<!-- 교육생 탈퇴 -->
 	<delete id="deleteStudent"
 		parameterType="com.finalprj.kess.model.StudentVO">
@@ -72,8 +56,8 @@
 		]]>
 	</select>
 
-	<!-- 공지사항 목록 조회 (메인)-->
-	<select id="selectAllNotice" parameterType="string"
+	<!-- 공지사항 목록 조회 (메인) -->
+	<select id="selectNoticeMain" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
 		SELECT *
@@ -81,10 +65,8 @@
 					SELECT 
 						post_id as "postId",
 						post_title as "postTitle",
-						post_content as "postContent",
-						post_hit as "postHit",
 						post_cd as "postCd",
-						to_char(rgst_dt, 'YYYY-MM-DD') as "rgstDtString"
+						rgst_dt as "rgstDd"
 					FROM post
 					WHERE post_id LIKE 'NTC%' and post_cd=
 					(select tpcd_id||cmcd_id
@@ -93,6 +75,26 @@
 					ORDER BY rgst_dt DESC
 				)
 				WHERE ROWNUM <= 5
+		]]>
+	</select>
+
+	<!-- 공지사항 목록 조회 -->
+	<select id="selectAllNotice" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
+		<![CDATA[
+				SELECT 
+					post_id as "postId",
+					post_title as "postTitle",
+					post_hit as "postHit",
+					post_cd as "postCd",
+					rgst_dt as "rgstDd"
+				FROM post
+				WHERE post_id LIKE 'NTC%' and post_cd=
+				(select tpcd_id||cmcd_id
+				from cmcd
+				where cmcd_nm='공개')
+				ORDER BY rgst_dt DESC
+
 		]]>
 	</select>
 
@@ -110,9 +112,16 @@
 	<select id="selectAllInquiry" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
-			SELECT *
-			FROM post
-			WHERE post_id LIKE 'INQ%'
+			SELECT 
+					post_id as "postId",
+					post_title as "postTitle",
+					post_hit as "postHit",
+					post_cd as "postCd",
+					rgster_id as "rgsterId", 
+					rgst_dt as "rgstDd"
+				FROM post
+				WHERE post_id LIKE 'INQ%'
+				ORDER BY rgst_dt DESC
 		]]>
 	</select>
 
@@ -127,7 +136,7 @@
 	</select>
 
 	<!-- 교육지원목록 조회 (메인) -->
-	<select id="selectAllClass" parameterType="string"
+	<select id="selectClassMain" parameterType="string"
 		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
 			SELECT *
@@ -135,15 +144,9 @@
 				SELECT
 				    clss_id as "clssId",
 				    clss_nm as "clssNm",
-				    aply_start_dt as "aplyStartDt",
-				    aply_end_dt as "aplyEndDt",
-				    clss_start_dd as "clssStartDd",
-				    clss_end_dd as "clssEndDd",
-				    clss_adr as "clssAdr",
-				    limit_cnt as "limitCnt",
-				    clss_cd as "clssCd",
-				    cmpy_id as "cmpyId",
-				    to_char(rgst_dt, 'YYYY-MM-DD') as "rgstDtString"
+				    aply_start_dt as "aplyStartDd",
+				    aply_end_dt as "aplyEndDd",
+				    clss_cd as "clssCd"
 				FROM clss
 				WHERE clss_cd=
 					(select tpcd_id||cmcd_id
@@ -154,13 +157,25 @@
 		]]>
 	</select>
 
-	<!-- 교육지원 목록 이미지 불러오기 -->
-	<select id="selectClassImage" parameterType="string"
-		resultType="com.finalprj.kess.model.FileVO">
+	<!-- 교육지원목록 조회 -->
+	<select id="selectAllClass" parameterType="string"
+		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
-			SELECT file_content as "fileContent"
-			FROM flup
-			WHERE cmpy_id=#{cmpy_id}
+			SELECT
+			   clss_id as "clssId",
+		       clss_nm as "clssNm",
+		       aply_start_dt as "aplyStartDd",
+		       aply_end_dt as "aplyEndDd",
+		       clss_start_dd AS "clssStartDd",
+		       clss_end_dd AS "clssEndDd",
+		       substr(clss_adr, 1, 3) AS "clssAdr",
+		       cmcd.cmcd_nm AS "clssCd",
+		       flup.file_nm as "cmpyId"
+		   FROM
+		       clss
+		   JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
+		   JOIN flup on flup.post_id = clss.cmpy_id
+		   ORDER BY clss_id
 		]]>
 	</select>
 
@@ -168,16 +183,30 @@
 	<select id="selectClass" parameterType="string"
 		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
-			SELECT *
+			SELECT 
+				clss_id as "clssId",
+				clss_nm as "clssNm",
+				aply_start_dt as "aplyStartDd",
+				aply_end_dt as "aplyEndDd",
+				clss_start_dd as "clssStartDd",
+				clss_end_dd as "clssEndDd",
+				clss_adr as "clssAdr",
+				limit_cnt as "limitCnt",
+				set_in_tm as "setInTm",
+				set_out_tm as "setOutTm",
+ 				cmcd.cmcd_nm as "clssCd",
+				cmpy_id as "cmpyId"
 			FROM clss
-			WHERE clss_id=#{clssId}
+			JOIN (cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd)
+			WHERE clss_id=#{classId}
 		]]>
 	</select>
-	
-	
-	
+
+
+
 	<!-- 이수완료건 출력 -->
-	<select id="getCmptClass" parameterType="string" resultType="int">
+	<select id="getCmptClass" parameterType="string"
+		resultType="int">
 	<![CDATA[
 		select count(clss_id) as "cmptClassCnt"
 			from rgst
@@ -192,6 +221,20 @@
 			where cmcd_nm='이수완료')
 	]]>
 	</select>
-	
-	
+
+
+	<!-- 지원완료건 출력 -->
+	<select id="getAplyClass" parameterType="string"
+		resultType="int">
+	<![CDATA[
+		select count(clss_id) as "aplyClassCnt"
+			from aply
+			where stdt_id= (
+				SELECT stdt_id
+			FROM stdt
+			WHERE stdt_email=#{stdtEmail}
+			)
+	]]>
+	</select>
+
 </mapper>

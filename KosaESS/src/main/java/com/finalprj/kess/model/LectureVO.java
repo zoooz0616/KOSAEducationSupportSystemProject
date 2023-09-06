@@ -16,5 +16,5 @@ public class LectureVO {
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
-	private Character deleteYn;//삭제여부
+	private String deleteYn; //삭제여부
 }

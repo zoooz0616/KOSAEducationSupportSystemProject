@@ -19,6 +19,15 @@
 	]]>
 	</select>
 	
+	<select id="getStudentVO" parameterType="string" resultType="com.finalprj.kess.model.StudentVO">
+	<![CDATA[
+	select *
+	from stdt
+	join lgin on lgin.user_email = stdt.user_email
+	where stdt.user_email=#{email}
+	]]>
+	</select>
+	
 	<update id="updateLastLoginDt" parameterType="string">
 	<![CDATA[
 	update lgin

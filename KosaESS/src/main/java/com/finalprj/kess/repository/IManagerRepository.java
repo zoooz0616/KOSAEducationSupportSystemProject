@@ -3,6 +3,7 @@ package com.finalprj.kess.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.model.ClassVO;
@@ -13,15 +14,23 @@ import com.finalprj.kess.model.StudentVO;
 @Repository
 public interface IManagerRepository {
 
-	public List<ClassVO> getClassList(String mngrId);
-	public int getApplyCount(String clssId);
-	public String getClassCodeName(String clssCd);
-	public List<String> getClassCodeNameList();
-	public ClassVO getClassDetail(String classId);
-	public FileVO getFile(String fileId);
-	public List<String> getFileIdList(String classId);
-	public List<StudentVO> getStudentList(String classId);
-	public List<ClassVO> getClassNameList(String mngrId);
-	public String getClassName(String classId);
-	public int getRgstCount(String clssId);
+	public List<ClassVO> getClassListByMngrId(String mngrId);
+
+	public int getApplyCountByClssId(String clssId);
+
+	public List<String> getCodeNameListByKeyword(String keyword);
+
+	public ClassVO getClassDetailByClssId(String clssId);
+
+	public List<StudentVO> getStudentListByClssId(String clssId);
+
+	public String getClassNameByClssId(String clssId);
+
+	public int getRgstCountByClssId(String clssId);
+
+	public List<Integer> getFileSubIdListByFileId(String fileId);
+
+	public FileVO getFileByIds(@Param("fileId") String fileId, @Param("fileSubId") int fileSubId);
+
+	public FileVO getFileInfoByIds(@Param("fileId") String fileId, @Param("fileSubId") int fileSubId);
 }

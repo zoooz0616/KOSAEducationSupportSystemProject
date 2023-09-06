@@ -7,25 +7,23 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
 
 public interface IManagerService {
-	public List<ClassVO> getClassList(String mngrId);
+	public List<ClassVO> getClassListByMngrId(String mngrId);
 
-	public int getApplyCount(String clssId);
+	public int getApplyCountByClssId(String clssId);
 
-	public String getClassCodeName(String clssCd);
+	public ClassVO getClassDetailByClssId(String clssId);
 
-	public List<String> getClassCodeNameList();
+	public List<StudentVO> getStudentListByClssId(String clssId);
 
-	public ClassVO getClassDetail(String classId);
+	public String getClassNameByClssId(String clssId);
 
-	public FileVO getFile(String fileId);
+	public int getRgstCountByClssId(String clssId);
 
-	public List<String> getFileIdList(String classId);
+	public List<Integer> getFileSubIdListByFileId(String fileId);
+	
+	public List<String> getCodeNameList(String keyword);
+	
+	public FileVO getFileByIds(String fileId, int fileSubId);
 
-	public List<StudentVO> getStudentList(String classId);
-
-	public List<ClassVO> getClassNameList(String mngrId);
-
-	public String getClassName(String classId);
-
-	public int getRgstCount(String clssId);
+	public FileVO getFileInfoByIds(String fileId, int fileSubId);
 }

@@ -11,5 +11,10 @@ public class FileVO {
 	private byte[] fileContent;//파일내용
 	private long fileSize;//파일크기
 	private String fileType;//파일타입
-	private Character deleteYn; //삭제여부
+	private String deleteYn; //삭제여부
+	
+	@Override
+	public String toString() {
+		return "FileVO [fileId=" + fileId + ", fileSubId=" + fileSubId + ", fileNm=" + fileNm + ", fileSize=" + fileSize + ", fileType=" + fileType + ", deleteYn=" + deleteYn + "]";
+	}
 }
