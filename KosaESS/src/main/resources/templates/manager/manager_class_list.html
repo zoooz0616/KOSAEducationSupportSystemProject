@@ -54,17 +54,22 @@
 				<table class="search_filter_table" style="width: 100%;">
 					<tr>
 						<td style="width: 10%;">교육과정명</td>
-						<td style="width: 30%;"><input id="class_name"
-							placeholder="교육과정명" style="width: 100%;" type="text"
-							list="search_option"> <datalist id="search_option">
-							</datalist></td>
+						<td style="width: 30%;"><input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option">
+							<datalist id="search_option">
+								<option th:each="class:${classList}" th:value = "${class.clssNm}">
+							</datalist>
+						</td>
 						<td style="width: 10%;">상태</td>
-						<td style="width: 50%;"><span
-							th:each="classCodeName:${classCodeNameList}"> <label>
-									<input type="checkbox" name="chk_status" checked="checked"
-									th:value="${classCodeName}"> [[${classCodeName}]]
-							</label>
-						</span></td>
+						<td style="width: 50%;">
+							<span>
+								 <label th:text="전체"></label>
+								 <input type="checkbox" name="chk_status" checked="checked" value="CheckAllCodeName"><!-- ←←←←←← value 수정필요 -->
+							</span>
+							<span th:each="classCodeName:${classCodeNameList}" >
+								 <label th:text="${classCodeName}"></label>
+								 <input type="checkbox" name="chk_status" checked="checked" value="${classCodeName.cmcdId}">
+							</span>
+						</td>
 
 					</tr>
 					<tr th:if="${session.role == 'admin'}">
@@ -87,21 +92,20 @@
 			</div>
 			<!-- End 검색 필터 부분 -->
 
-
 			<table id="class_list_table">
 				<tr>
-					<th><input type="checkbox" name="chk" id="chkAll"></th>
+					<th th:if="${session.role == 'admin'}"><input type="checkbox" name="chk" id="chkAll"></th>
 					<th th:if="${session.role != 'admin'}">번호</th>
 					<th th:if="${session.role == 'admin'}">ID</th>
 					<th>프로그램명</th>
 					<th th:if="${session.role == 'admin'}">지원기간</th>
 					<th>교육기간</th>
 					<th>교육 장소</th>
-					<th>신청/최대</th>
+					<th>수강/정원</th>
 					<th>교육상태</th>
 				</tr>
-				<tr id="class_list" th:each="class:${classList}">
-					<td><input type="checkbox" name="chk" th:value="${class.clssId}"></td>
+				<tr id="class_list" th:each="class:${classList}" >
+					<td th:if="${session.role == 'admin'}"><input type="checkbox" name="chk" th:value="${class.clssId}"></td>
 					<td th:if="${session.role != 'admin'}" th:text="${classStat.count}">row number</td>
 					<td th:if="${session.role == 'admin'}" th:text="${class.clssId}"></td>
 					<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
@@ -190,7 +194,6 @@
 		            }
 		           
 		            classListTable.innerHTML=classListCode;
-                    
                 },
 				error: function(error){
 					console.log("error: ", error);

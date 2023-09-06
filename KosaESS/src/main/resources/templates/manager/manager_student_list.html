@@ -28,7 +28,7 @@
 				</div>
 				<!-- 아이콘 삽임 부분 -->
 			</div>
-
+기간 선택 추가하기
 			<!-- 검색 필터 테이블 -->
 			<div class="search_filter_table_wrap">
 				<table class="search_filter_table" style="width: 100%;">
@@ -62,7 +62,7 @@
 					<button class="search_filter_btn">검색</button>
 				</div>
 				<!-- End 검색 버튼 -->
-				<p th:text = "|${stdtCnt} 명|"></p>
+				<span th:text = "|${stdtCnt} 명|"></span><span>엄</span><span>준</span>
 				<table>
 				<tr>
 					<th><input type="checkbox"></th>
@@ -80,9 +80,9 @@
 					<td><a th:text="${stdt.stdtNm}" th:href="@{manager/student/{studentId}}"></a></td>
 					<td th:text="${stdt.genderCd}">성별</td>
 					<td th:text="${stdt.birthDd}">생년월일</td>
-					<td th:text="${stdt.stdtEmail}">이메일</td>
+					<td th:text="${stdt.userEmail}">이메일</td>
 					<td th:text="${stdt.stdtTel}">연락처</td>
-					<td th:text="${stdt.stdtCd}">이수여부</td>
+					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
 				</table>
 			</div>
