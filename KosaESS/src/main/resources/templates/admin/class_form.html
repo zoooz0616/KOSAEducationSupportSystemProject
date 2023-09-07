@@ -40,16 +40,16 @@
 			<!-- 컨텐츠 내용 부분 -->
 			<form th:action="@{/admin/class/__${act}__}" method="post"
 				enctype="multipart/form-data">
-				<!-- 교육과정 id -->
-				<input type="hidden" name="clssId" th:value="${classVO.clssId}">
 
 				<div class="class_form_content">
+
+					<!-- 첫번째 줄 -->
 					<div class="row">
 						<div class="col">
 							<div class="col_title">교육과정 ID</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" type="text"
-									th:value="${classVO.clssId}" readonly disabled required>
+								<input th:if="${act}=='insert'" th:name="clssId" type="text"
+									th:value="${classVO.clssId}" readonly>
 								<input th:if="${act}=='update'" type="text"
 									th:value="${classVO.clssId}" required>
 							</div>
@@ -59,7 +59,7 @@
 							<div class="col_title">교육과정명</div>
 							<div class="col_content" style="width: 200px;">
 								<input style="width: 200px;" th:if="${act}=='insert'"
-									name="clssNm" type="text" required> <input
+									th:name="clssNm" type="text" required> <input
 									style="width: 200px;" th:if="${act}=='update'" type="text"
 									th:value="${classVO.clssNm}" required>
 							</div>
@@ -70,11 +70,13 @@
 							<div class="col_title">지원 기간</div>
 							<div class="col_content">
 								<input th:if="${act}=='insert'" type="datetime-local"
-									name="aplyStartDt" required> <input
+									th:name="aplyStartDt" required> 
+								<input
 									th:if="${act}=='update'" type="datetime-local"
-									th:value="${classVO.aplyStartDt}" required> ~ <input
+									th:value="${classVO.aplyStartDt}" required> 
+									~ <input
 									th:if="${act}=='insert'" type="datetime-local"
-									name="aplyStartDt" required> <input
+									th:name="aplyEndDt" required> <input
 									th:if="${act}=='update'" type="datetime-local"
 									th:value="${classVO.aplyEndDt}" required>
 							</div>
@@ -84,28 +86,27 @@
 							<div class="col_title">교육 기간</div>
 							<div class="col_content">
 								<input th:if="${act}=='insert'" id="datepicker1" type="text"
-									value="연도-월-일" name="clssStartDd" required> <input
+									value="연도-월-일" th:name="clssStartDd" required> <input
 									th:if="${act}=='update'" id="datepicker1" type="text"
 									th:value="${classVO.clssStartDd}" required> ~ <input
 									th:if="${act}=='insert'" id="datepicker2" type="text"
-									name="clssEndDd" required> <input
+									th:name="clssEndDd" required> <input
 									th:if="${act}=='update'" id="datepicker2" type="text"
 									th:value="${classVO.clssEndDd}" required>
 							</div>
 						</div>
-
-
 					</div>
+					<!-- 첫번째 줄 -->
 
-
+					<!-- 두번째 줄 -->
 					<div class="row">
 						<div class="col">
 							<div class="col_title">교육 시간</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" type="time" name="setInTm"
+								<input th:if="${act}=='insert'" type="time" th:name="setInTm"
 									required> <input th:if="${act}=='update'" type="time"
 									required> ~ <input th:if="${act}=='insert'" type="time"
-									name="setOutTm" required> <input
+									th:name="setOutTm" required> <input
 									th:if="${act}=='update'" type="time"
 									th:value="${classVO.setOutTm}" required>
 							</div>
@@ -115,7 +116,7 @@
 							<div class="col_title">교육 장소</div>
 							<div class="col_content" style="width: 300px;">
 								<input style="width: 100%;" th:if="${act}=='insert'" type="text"
-									name="clssAdr" required> <input style="width: 100%;"
+									th:name="clssAdr" required> <input style="width: 100%;"
 									th:if="${act}=='update'" type="text"
 									th:value="${classVO.clssAdr}" required>
 							</div>
@@ -124,9 +125,9 @@
 						<div class="col">
 							<div class="col_title">교육 상태</div>
 							<div class="col_content">
-								<select>
-									<option th:each="classStatus: ${classCodeNameList}"
-										th:value="${classStatus}" th:text="${classStatus}"></option>
+								<select th:name="clssCd">
+									<option th:each="classCommonCode: ${classCommonCodeList}"
+										th:value="${classCommonCode.cmcdId}" th:text="${classCommonCode.cmcdNm}"></option>
 								</select>
 							</div>
 						</div>
@@ -134,7 +135,8 @@
 						<div class="col">
 							<div class="col_title" style="width: 80px; text-align: center;">업체</div>
 							<div class="col_content">
-								<select>
+								<select th:name="cmpyId">
+									<option value="null">미정</option>
 									<option th:each="company: ${companyList}"
 										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"></option>
 								</select>
@@ -144,8 +146,8 @@
 						<div class="col">
 							<div class="col_title" style="width: 80px; text-align: center;">인원</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" type="number" required>
-								<input th:if="${act}=='update'" type="number"
+								<input th:name="limitCnt" th:if="${act}=='insert'" type="number"
+									required> <input th:if="${act}=='update'" type="number"
 									th:value="${classVO.limitCnt}" required>
 							</div>
 
@@ -154,7 +156,8 @@
 						<div class="col">
 							<div class="col_title">업무 담당자</div>
 							<div class="col_content">
-								<select>
+								<select th:name="mngrId">
+									<option value="null">미정</option>
 									<option th:each="manager: ${managerList}"
 										th:value="${manager.mngrId}" th:text="${manager.mngrNm}"></option>
 								</select>
@@ -168,7 +171,7 @@
 							<div class="col_content" style="width: 350px; height: 100%;">
 								<div
 									style="border: 1px solid #777777; display: flex; justify-content: center; align-items: center; border-radius: 5px; background: white; width: 100%; height: 100%;">
-									<input type="text"
+									<input type="text" th:name="clssContent"
 										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
 								</div>
 							</div>
@@ -179,14 +182,14 @@
 							<div class="col_content" style="width: 900px;">
 								<div class="content_info_btn_wrap">
 									<!-- 선택삭제 버튼 -->
-									<button>
+									<div>
 										<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
-									</button>
+									</div>
 
 									<!-- 추가하기 버튼 -->
-									<button onclick="addLecture()">
+									<div onclick="addLecture()">
 										<img th:src="@{/img/plus_white.png}"><span>추가하기</span>
-									</button>
+									</div>
 								</div>
 								<div>
 									<table class="lecture_table">
@@ -199,8 +202,8 @@
 										<tr class="lecture_row">
 											<td><input type="checkbox"></td>
 											<td><select id="lecture_select"
-												onchange="lectureSelect(this.value)">
-													<option value="none">=== 강의를 선택하세요. ===</option>
+												onchange="lectureSelect(this.value)" name="lctrId">
+													<option value="null">=== 강의를 선택하세요. ===</option>
 													<option th:each="lecture: ${lectureList}"
 														th:value="${lecture.lctrId}"
 														th:text="${lecture.lctrNm}+' ('+${lecture.lctrTm}+')'"></option>
@@ -212,11 +215,12 @@
 										</tr>
 									</table>
 									<div>
+										<!-- 총 이수시간을 저장할 숨겨진 입력 필드 -->
+										<input type="hidden" id="clss_total_tm" th:name="clssTotalTm" th:value="0">
 										<div>
 											총 이수시간 : <span class="class_total_tm">0</span>
 										</div>
 									</div>
-
 								</div>
 							</div>
 						</div>
@@ -251,11 +255,11 @@
 							</div>
 						</div>
 						<div class="col2">
-							<div class="col_title">기타</div>
+							<div class="col_title" style="width:80px; text-align: center;">기타</div>
 							<div class="col_content" style="width: 500px; height: 100%;">
 								<div
 									style="border: 1px solid #777777; display: flex; justify-content: center; align-items: center; border-radius: 5px; background: white; width: 100%; height: 100%;">
-									<input type="text"
+									<input type="text" th:name="clssEtc"
 										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
 								</div>
 							</div>
@@ -265,9 +269,9 @@
 
 
 				<!-- create일 때 -->
-				<input th:if="${act}=='insert'" type="submit" value="저장하기">
+				<input class="submit_btn" th:if="${act}=='insert'" type="submit" value="저장하기">
 				<!-- update일 때 -->
-				<input th:if="${act}=='update'" type="submit" value="수정하기">
+				<input class="submit_btn" th:if="${act}=='update'" type="submit" value="수정하기">
 			</form>
 		</div>
 		<!-- Content Middle-->
@@ -275,9 +279,7 @@
 	<!-- Content Wrap -->
 	<script>
 		classTotalTm = 0; //교육과정 총 이수시간
-	
-	
-	
+
 		/*
 		 * 달력 생성기
 		 * @param sDate 파라미터만 넣으면 1개짜리 달력 생성
@@ -352,11 +354,154 @@
 					return false;
 			}
 		}
+		
+		/*
+		 * 추가하기 버튼 클릭시
+		 * 강의 한 줄 더 추가
+		 *
+		 */
+
+		var lectureCnt = 0;
+		function addLecture() {
+			if (lectureCnt < 4) {
+				$
+						.ajax({
+							url : "/admin/class/insert/getlecturelist", // 컨트롤러 엔드포인트
+							type : "POST",
+							data : {},
+							success : function(response) {
+								//서버에서 받은 응답 파싱하여 객체로 생성
+								var lectureList = response.lectureList;
+
+								console.log(lectureList[0].lctrNm);
+
+								//tr을 새로 생성하고 안의 내용 복제
+								// 새로운 행을 생성
+								var newRow = document.createElement('tr');
+								newRow.className = 'lecture_row'; // class 설정
+
+								// 첫 번째 셀 (checkbox) 추가
+								var checkboxCell = document.createElement('td');
+								checkboxCell.innerHTML = '<input type="checkbox">';
+								newRow.appendChild(checkboxCell);
+
+								// 두 번째 셀 (강의 선택) 추가
+								var lectureCell = document.createElement('td');
+								// 새로운 select 요소 생성
+								var select = document.createElement('select');
+								
+
+								// 옵션 요소 동적으로 생성
+								var defaultOption = document
+										.createElement('option');
+								defaultOption.value = 'none';
+								defaultOption.text = '=== 강의를 선택하세요. ===';
+								select.appendChild(defaultOption);
+								select.setAttribute("name","lctrId");
+								
+								for (var i = 0; i < lectureList.length; i++) {
+									var lecture = lectureList[i];
+									var option = document
+											.createElement('option');
+									option.value = lecture.lctrId;
+									option.text = lecture.lctrNm + ' ('
+											+ lecture.lctrTm + ')';
+									select.appendChild(option);
+								}
+
+								lectureCell.appendChild(select);
+								newRow.appendChild(lectureCell);
+
+								// 세 번째 셀 (과목명) 추가
+								var subjectCell = document.createElement('td');
+								subjectCell.innerHTML = '<input name="" type="text" value="subjectName" disabled>';
+								newRow.appendChild(subjectCell);
+
+								// 네 번째 셀 (강사 이름) 추가
+								var professorCell = document
+										.createElement('td');
+								professorCell.innerHTML = '<input name="" type="text" value="professorName" disabled>';
+								newRow.appendChild(professorCell);
+
+								select.onchange = function() {
+									var selectedLectureId = this.value;
+									// select 요소의 부모 td 요소 찾기
+									var tdElement = this.parentElement;
+									var thirdTdElement = tdElement.nextElementSibling;
+									var fourthTdElement = thirdTdElement.nextElementSibling;
+
+									var thirdInputElement = thirdTdElement.firstElementChild;
+									var fourthInputElement = fourthTdElement.firstElementChild;
+
+									// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
+									$
+											.ajax({
+												url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
+												type : "POST",
+												data : {
+													lectureId : selectedLectureId
+												}, // 선택한 강의 ID를 전달
+												success : function(response) {
+													//서버에서 받은 응답 파싱하여 객체로 생성
+													var subject = response.subject;
+													var professor = response.professor;
+													var lecture = response.lecture;
+
+													var subjectId = subject.sbjtId;
+													var subjectNm = subject.sbjtNm;
+													var professorId = professor.profId;
+													var professorNm = professor.profNm;
+													var lctrTm = lecture.lctrTm;
+													
+													
+
+													// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
+													thirdInputElement.value = subjectNm;
+													thirdInputElement
+															.setAttribute(
+																	"name",
+																	subjectId);
+													fourthInputElement.value = professorNm;
+													fourthInputElement
+															.setAttribute(
+																	"name",
+																	professorId);
+
+													classTotalTm += lctrTm;
+													$(".class_total_tm").text(
+															classTotalTm);
+													
+													//clss_total_tm값 변경하면서 input의 value값 변경
+													$("#clss_total_tm").val(classTotalTm);
+													console.log("이수시간: "+classTotalTm);
+												},
+												error : function() {
+													// 오류 처리 로직을 추가할 수 있습니다.
+												}
+											});
+								};
+
+								// 테이블에 새로운 행 추가
+								var table = document
+										.querySelector('.lecture_table');
+
+								table.appendChild(newRow);
+
+								//select의 option을 lectureList로 추가.
+							},
+							error : function() {
+								// 오류 처리 로직을 추가할 수 있습니다.
+							}
+						});
+				lectureCnt = lectureCnt + 1;
+			}
+		}
+		
 
 		/*
 		 * 커리큘럼 선택시 과목/강사명 자동입력
 		 * 선택한 강의를 이용하여 비동기요청을 보내고 해당 과목명, 강사명을 받아옴. 
-		 *
+		 * total시간 변경
 		 */
 		function lectureSelect(lectureId) {
 			var selectedLectureId = lectureId;
@@ -374,23 +519,26 @@
 					var subject = response.subject;
 					var professor = response.professor;
 					var lecture = response.lecture;
-					
+
 					var subjectId = subject.sbjtId;
 					var subjectNm = subject.sbjtNm;
 					var professorId = professor.profId;
 					var professorNm = professor.profNm;
-					
+
 					var lctrTm = lecture.lctrTm;
-					
-					
+
 					// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
 					$("#subject_name").val(subjectNm);
 					$("#subject_name").attr("name", subjectId);
 					$("#professor_name").val(professorNm);
 					$("#professor_name").attr("name", professorId);
-					
+
 					classTotalTm += lctrTm;
 					$(".class_total_tm").text(classTotalTm);
+					
+					//clss_total_tm값 변경하면서 input의 value값 변경
+					$("#clss_total_tm").val(classTotalTm);
+					console.log("이수시간: "+classTotalTm);
 				},
 				error : function() {
 					// 오류 처리 로직을 추가할 수 있습니다.
@@ -398,132 +546,7 @@
 			});
 		}
 
-		/*
-		 * 추가하기 버튼 클릭시
-		 * 강의 한 줄 더 추가
-		 *
-		 */
 		
-		var lectureCnt = 0;
-		function addLecture() {
-			if(lectureCnt < 4){
-			$.ajax({
-				url : "/admin/class/insert/getlecturelist", // 컨트롤러 엔드포인트
-				type : "POST",
-				data : {},
-				success : function(response) {
-					//서버에서 받은 응답 파싱하여 객체로 생성
-					var lectureList = response.lectureList;
-					
-					
-					console.log(lectureList[0].lctrNm);
-					
-					//tr을 새로 생성하고 안의 내용 복제
-					// 새로운 행을 생성
-					var newRow = document.createElement('tr');
-					newRow.className = 'lecture_row'; // class 설정
-
-					// 첫 번째 셀 (checkbox) 추가
-					var checkboxCell = document.createElement('td');
-					checkboxCell.innerHTML = '<input type="checkbox">';
-					newRow.appendChild(checkboxCell);
-
-					// 두 번째 셀 (강의 선택) 추가
-					var lectureCell = document.createElement('td');
-					// 새로운 select 요소 생성
-					var select = document.createElement('select');
-					
-					
-					// 옵션 요소 동적으로 생성
-			        var defaultOption = document.createElement('option');
-			        defaultOption.value = 'none';
-			        defaultOption.text = '=== 강의를 선택하세요. ===';
-			        select.appendChild(defaultOption);
-
-			        for (var i = 0; i < lectureList.length; i++) {
-			            var lecture = lectureList[i];
-			            var option = document.createElement('option');
-			            option.value = lecture.lctrId;
-			            option.text = lecture.lctrNm + ' (' + lecture.lctrTm + ')';
-			            select.appendChild(option);
-			        }
-
-			        lectureCell.appendChild(select);
-					newRow.appendChild(lectureCell);
-
-					// 세 번째 셀 (과목명) 추가
-					var subjectCell = document.createElement('td');
-					subjectCell.innerHTML = '<input name="" type="text" value="subjectName" disabled>';
-					newRow.appendChild(subjectCell);
-
-					// 네 번째 셀 (강사 이름) 추가
-					var professorCell = document.createElement('td');
-					professorCell.innerHTML = '<input name="" type="text" value="professorName" disabled>';
-					newRow.appendChild(professorCell);
-
-					
-					
-					
-					select.onchange = function() {
-						var selectedLectureId = this.value;
-						// select 요소의 부모 td 요소 찾기
-						var tdElement = this.parentElement;
-						var thirdTdElement = tdElement.nextElementSibling;
-						var fourthTdElement = thirdTdElement.nextElementSibling;
-						
-						var thirdInputElement = thirdTdElement.firstElementChild;
-						var fourthInputElement = fourthTdElement.firstElementChild;
-						
-						// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
-						$.ajax({
-							url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
-							type : "POST",
-							data : {
-								lectureId : selectedLectureId
-							}, // 선택한 강의 ID를 전달
-							success : function(response) {								
-								//서버에서 받은 응답 파싱하여 객체로 생성
-								var subject = response.subject;
-								var professor = response.professor;
-								var lecture = response.lecture;
-
-								var subjectId = subject.sbjtId;
-								var subjectNm = subject.sbjtNm;
-								var professorId = professor.profId;
-								var professorNm = professor.profNm;							
-								var lctrTm = lecture.lctrTm;
-
-								// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
-								thirdInputElement.value=subjectNm;
-								thirdInputElement.setAttribute("name", subjectId);
-								fourthInputElement.value=professorNm;
-								fourthInputElement.setAttribute("name", professorId);
-								
-								classTotalTm += lctrTm;
-								$(".class_total_tm").text(classTotalTm);
-							},
-							error : function() {
-								// 오류 처리 로직을 추가할 수 있습니다.
-							}
-						});
-					};
-					
-					
-					// 테이블에 새로운 행 추가
-					var table = document
-							.querySelector('.lecture_table');
-					
-					table.appendChild(newRow);
-
-					//select의 option을 lectureList로 추가.
-					},
-				error : function() {
-					// 오류 처리 로직을 추가할 수 있습니다.
-				}
-			});
-			lectureCnt = lectureCnt + 1;
-			}
-		}
 	</script>
 </body>
 </html>

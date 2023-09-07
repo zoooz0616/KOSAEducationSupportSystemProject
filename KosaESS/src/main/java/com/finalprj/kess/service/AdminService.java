@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
@@ -125,10 +127,20 @@ public class AdminService implements IAdminService {
 		return adminRepository.getLecture(lectureId);
 	}
 	
+	@Override
+	public List<CommonCodeVO> getCommonCodeList(String tpcdId) {
+		return adminRepository.getCommonCodeList(tpcdId);
+	}
 	
-	
+	@Override
+	public void insertClassVO(ClassVO classVO) {
+		adminRepository.insertClassVO(classVO);
+	}
 
-	
+	@Override
+	public void insertCurriculumVO(CurriculumVO curriculumVO) {
+		adminRepository.insertCurriculumVO(curriculumVO);
+	}
 	
 	
 	
@@ -160,10 +172,10 @@ public class AdminService implements IAdminService {
 				aplyEndDt, classStartDd, classEndDd);
 	}
 
-	@Override
-	public void insertClassVO(ClassVO classVO) {
-		adminRepository.insertClassVO(classVO);
-	}
+	
+
+	
+	
 
 	
 
