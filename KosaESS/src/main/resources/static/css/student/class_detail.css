@@ -21,9 +21,13 @@ table th {
 }
 
 .content {
+	padding-top: 2%;
 	flex-direction: column;
 	align-items: center;
 	flex-wrap: wrap;
+	width: 90%;
+	margin: 5% auto;
+	box-shadow: 0px 40px 40px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
 
 ul {
@@ -33,23 +37,23 @@ ul {
 
 .btn {
 	margin: 3% 0;
-	width: 30%;
 	text-align: center;
 	display: flex;
 	justify-content: space-evenly;
 }
 
-button {
+.back, .openModalBtn {
 	background: #0E5881;
 	color: white;
 	padding: 15px;
 	margin: 5px 0;
 	border: 0;
-	width: 20%;
 	font-size: 15px;
 	font-weight: bold;
 	border-radius: 10px;
-	width: 30%;
+}
+.moveTopBtn{
+	
 }
 
 .modal {

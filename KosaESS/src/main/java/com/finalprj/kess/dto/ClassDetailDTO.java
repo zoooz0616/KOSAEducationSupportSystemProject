@@ -1,8 +1,6 @@
 package com.finalprj.kess.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
-
 import lombok.Getter;
 import lombok.Setter;
 

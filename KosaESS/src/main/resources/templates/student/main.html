@@ -38,58 +38,63 @@
 					<div th:if="${session.userEmail==null}">
 						<form th:action="@{/login}" method="post" class="">
 							<div class="">
-								<label for="email"></label> <input type="text" name="email"
-									id="id" class="" placeholder="아이디(이메일)">
+								<label for="email"></label> <input style="width: 50%;"
+									type="text" name="email" id="id" class=""
+									placeholder="아이디(이메일)">
 							</div>
 							<div class="">
-								<label for="pwd"></label> <input type="password" name="pwd"
-									id="pwd" class=" " placeholder="비밀번호">
+								<label for="pwd"></label> <input style="width: 50%;"
+									type="password" name="pwd" id="pwd" class=" "
+									placeholder="비밀번호">
 							</div>
 							<div class="submit">
-								<input type="submit" class="loginBtn" th:value="로그인">
+								<input style="width: 50%;" type="submit" class="loginBtn"
+									th:value="로그인">
 							</div>
 						</form>
 
 					</div>
 					<div th:if="${session.userEmail!=null}">
-						<div th:if="${ingClassNm!=null}">
-							<form th:action="@{/wlog}" method="post" class="">
-								<h3 th:text="${ingClassNm}" style="margin: 0;"></h3>
-								<div class="">
-									<label for="intm"></label> <input type="text" name="intm"
-										id="intm" class="" placeholder="출근시간">
+						<div class="">
+							<h2 style="margin-bottom: 2%;">
+								<span th:text="${session.stdtNm}" style="color: #0E5881; font-size: 22px;"></span>님
+								환영합니다!
+							</h2>
+							<div class="my">
+								<div class="box">
+									<a th:href="@{/student/mypage/apply}"> <span>지원내역: </span><span
+										style="color: #0E5881; font-size: 22px;"
+										th:text="${aplyClassCnt}"></span> <span>건</span></a>
 								</div>
-								<div class="">
-									<label for="outtm"></label> <input type="text" name="outtm"
-										id="outtm" class=" " placeholder="퇴근시간">
-								</div>
-								<div class="submit" style="margin-top: 0;">
-									<input type="submit" class="wlogBtn" th:value="출근하기">
-								</div>
-							</form>
-						</div>
-						<div th:if="${ingClassNm==null}">
-							<div class="">
-								<h2>
-									<span th:text="${session.stdtNm}"></span>님 지원현황
-								</h2>
-								<div class="my">
-									<div class="box">
-										<h3>지원내역</h3>
-										<a th:href="@{/student/mypage/apply}"><span
-											th:text="${aplyClassCnt}"></span></a> <span>건</span>
-									</div>
-									<div class="box">
-										<h3>출력 가능 이수증</h3>
-										<a th:href="@{/student/mypage/complete}"><span
-											th:text="${cmptClassCnt}"></span></a> <span>건</span>
-									</div>
+								<div class="box">
+									<a th:href="@{/student/mypage/complete}"> <span>출력
+											가능 이수증: </span> <span style="color: #0E5881; font-size: 22px;"
+										th:text="${cmptClassCnt}"></span> <span>건</span></a>
 								</div>
 							</div>
 						</div>
+						<form th:action="@{/wlog}" method="post" class="inoutform">
+							<h3 th:text="${ingClassNm}" style="margin: 0; width: 50%"></h3>
+							<div th:if="${ingClassNm != null}" class="inouttm">
+								<div>
+									<label for="intm"></label><span>출근 시간</span> <input type="text"
+										name="intm" id="intm" class="checktm" readonly>
+								</div>
+								<div>
+									<label for="outtm"></label><span>퇴근 시간</span> <input
+										type="text" name="outtm" id="outtm" class="checktm" readonly>
+								</div>
+							</div>
+							<div class="submit"
+								style="margin-top: 0; display: grid; align-items: center;">
+								<!-- 토글 버튼 -->
+								<input class="wlogBtn" type="button" th:value="출근하기"
+									onclick="toggleInOut()">
+							</div>
+						</form>
 					</div>
 				</div>
-				<div class="notice con" style="background: #E7EFF3; height: 38%">
+				<div class="notice con2" style="background: #E7EFF3; height: 41%">
 					<h2 style="margin-bottom: 0;">공지사항</h2>
 					<a class="plus" style="display: block; text-align: end;"
 						th:href="@{/student/notice}">+</a>
@@ -108,4 +113,39 @@
 		</div>
 	</div>
 </body>
+
+<script>
+	var isAttendance = false; // 출근 상태를 저장하는 변수
+
+	function toggleInOut() {
+		var intmInput = document.getElementById('intm');
+		var outtmInput = document.getElementById('outtm');
+		var wlogBtn = document.querySelector('.wlogBtn');
+
+		if (isAttendance) {
+			// 퇴근 처리
+			outtmInput.value = getCurrentTime();
+			wlogBtn.value = "출근하기";
+		} else {
+			// 출근 처리
+			intmInput.value = getCurrentTime();
+			wlogBtn.value = "퇴근하기";
+		}
+
+		isAttendance = !isAttendance; // 상태를 토글
+	}
+
+	function getCurrentTime() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = (now.getMonth() + 1 < 10 ? '0' : '') + (now.getMonth() + 1);
+		var day = (now.getDate() < 10 ? '0' : '') + now.getDate();
+		var hours = (now.getHours() < 10 ? '0' : '') + now.getHours();
+		var minutes = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+		var seconds = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
+		var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':'
+				+ minutes + ':' + seconds;
+		return formattedTime;
+	}
+</script>
 </html>
