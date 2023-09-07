@@ -152,50 +152,51 @@
 			console.log("statusArray: " +statusArray);
 			console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
 			console.log("class: "+classStartDd+"~"+classEndDd);
-			
-			
-			$.ajax({
-				url: '/admin/class/search',
-				async: true,
-				method: 'GET',
-				data: {className: className, 
-						statusArray: statusArray,
-						aplyStartDt: aplyStartDt,
-						aplyEndDt: aplyEndDt,
-						classStartDd: classStartDd,
-						classEndDd: classEndDd},
-				success: function(response) {
-					var classListTable = document.querySelector("#class_list_table");
-					var classList = classListTable.querySelectorAll("#class_list");
-					classListTable.firstElementChild.remove();
-					var classListCode=
-						'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
-						'<th th:if="${session.role==\'admin\'}">ID</th>'+
-						'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
-						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
-						for(var i = 0; i < response.length; i++){
-		                       classListCode += 
-		                           '<tr><td><input type="checkbox" name="chk" th:value="'+
-		                              response[i].clssId+'"></td>'+
-		                              '<td>'+response[i].clssId+'</td>'+
-		                              '<td><a class="content_title" th:href="@{/manager/class/__'+response[i].clssId +
-		                                 '__}">'+response[i].clssNm+'</a></td>' +      
-		                        '<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
-		                        '<span>'+response[i].aplyEndDt+'</span></td>'+
-		                        '<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
-		                        '<span>'+response[i].clssEndDd+'</span></td>'+
-		                        '<td>'+response[i].clssAdr+'</td>'+
-		                        '<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
-		                        '<td>'+response[i].clssCd+'</td></tr>';
-		            }
-		           
-		            classListTable.innerHTML=classListCode;
-                },
-				error: function(error){
-					console.log("error: ", error);
+
+
+
+		$.ajax({
+			url: '/admin/class/search',
+			async: true,
+			method: 'GET',
+			data: {
+				className: className, 
+				statusArray: statusArray,
+				aplyStartDt: aplyStartDt,
+				aplyEndDt: aplyEndDt,
+				classStartDd: classStartDd,
+				classEndDd: classEndDd},
+			success: function(response) {
+				var classListTable = document.querySelector("#class_list_table");
+				var classList = classListTable.querySelectorAll("#class_list");
+				classListTable.firstElementChild.remove();
+				var classListCode=
+					'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
+					'<th th:if="${session.role==\'admin\'}">ID</th>'+
+					'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
+					'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
+				for(var i = 0; i < response.length; i++){
+				classListCode += 
+					'<tr><td><input type="checkbox" name="chk" th:value="'+
+					response[i].clssId+'"></td>'+
+					'<td>'+response[i].clssId+'</td>'+
+					'<td><a class="content_title" th:href="@{/manager/class/__'+response[i].clssId +
+					'__}">'+response[i].clssNm+'</a></td>' +
+					'<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
+					'<span>'+response[i].aplyEndDt+'</span></td>'+
+					'<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
+					'<span>'+response[i].clssEndDd+'</span></td>'+
+					'<td>'+response[i].clssAdr+'</td>'+
+					'<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
+					'<td>'+response[i].clssCd+'</td></tr>';
 				}
-			});
+				classListTable.innerHTML=classListCode;
+			},
+			error: function(error){
+				console.log("error: ", error);
+			}
 		});
+});
 	</script>
 </body>
 </html>

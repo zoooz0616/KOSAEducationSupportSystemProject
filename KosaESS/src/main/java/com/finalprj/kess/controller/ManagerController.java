@@ -40,21 +40,24 @@ public class ManagerController {
 	@Autowired
 	IManagerService managerService;
 
-//	메인 페이지
+	//	메인 페이지
 	@GetMapping("/")
 	public String managerMain(Model model, HttpSession session) {
-		session.setAttribute("role", "ROL0000003");// 삭제 예정
-		session.setAttribute("id", "MNG0000005");// 삭제 예정
-		return "manager_main";
+		if (((String)session.getAttribute("roleCd")).equals("ROL0000003")) {
+			return "manager/class_list";
+		} else {
+			return "login";
+		}
 	}
 
-//	담당 교육 목록 조회
+	//	담당 교육 목록 조회
 	@GetMapping("/class")
 	public String getClassList(Model model, HttpSession session) {
 		model.addAttribute("title", "교육 과정 목록");
-		session.setAttribute("role", "ROL0000003");// 삭제 예정
-		session.setAttribute("id", "MNGR000002");// 삭제 예정
+		//		session.setAttribute("role", "ROL0000003");// 삭제 예정
+		//		session.setAttribute("id", "MNGR000002");// 삭제 예정
 		List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("id"));
+		System.out.println((String) session.getAttribute("id"));
 		// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
 		for (ClassVO vo : classList) {
 			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
@@ -65,7 +68,7 @@ public class ManagerController {
 		return "manager/class_list";
 	}
 
-//	교육 상세 조회
+	//	교육 상세 조회
 	@GetMapping("/class/{classId}")
 	public String getClassDetail(Model model, @PathVariable String classId) {
 		model.addAttribute("title", "교육 과정 상세");
@@ -76,7 +79,7 @@ public class ManagerController {
 		List<Integer> imageFileSubIdList = managerService.getFileSubIdListByFileId(thisClass.getFileId());
 		List<FileVO> NonImageFileInfoList = new ArrayList<FileVO>();
 		for (int i = 0, j = 0; i < imageFileSubIdList.size(); i++) {
-			FileVO vo =managerService.getFileInfoByIds(thisClass.getFileId(), imageFileSubIdList.get(i)); 
+			FileVO vo = managerService.getFileInfoByIds(thisClass.getFileId(), imageFileSubIdList.get(i));
 			if (vo.getFileType().split("/")[0].equals("image")) {
 				j++;
 			} else {
@@ -106,42 +109,44 @@ public class ManagerController {
 		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
 
-//	교육생 목록 조회
+	//	교육생 목록 조회
 	@GetMapping("/student-list/{classId}")
 	public String getStudentList(Model model, HttpSession session, @PathVariable String classId) {
-//		public String getStudentList(Model model, HttpSession session, @PathVariable String classId, @RequestParam(value="startDate", defaultValue = "startDate") LocalDate startDate, @RequestParam(value = "endDate", defaultValue = "endDate") LocalDate endDate) {
-//		if(startDate==null) {startDate = firstDay;};
-//		if(endDate==null) {startDate = today;};
+		//		public String getStudentList(Model model, HttpSession session, @PathVariable String classId, @RequestParam(value="startDate", defaultValue = "startDate") LocalDate startDate, @RequestParam(value = "endDate", defaultValue = "endDate") LocalDate endDate) {
+		//		if(startDate==null) {startDate = firstDay;};
+		//		if(endDate==null) {startDate = today;};
 		model.addAttribute("title", "교육생 목록");
 		session.setAttribute("role", "ROL0000003");// 삭제 예정
 		session.setAttribute("id", "MNGR000002");// 삭제 예정
-		
+
 		List<StudentVO> stdtList = managerService.getStudentListByClssId(classId);
-		
+
 		List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("id"));
-		
+
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
 		model.addAttribute("classCodeNameList", classCodeNameList);
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
 		model.addAttribute("cmptCodeNameList", cmptCodeNameList);
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
 
 		model.addAttribute("classNameList", classNameList);
 		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));
 		model.addAttribute("stdtList", stdtList);
 		model.addAttribute("stdtCnt", stdtList.size());
-		
+
 		for (StudentVO stdt : stdtList) {
 			stdt.setCountLateArrive(managerService.getCountLateArriveByStdtId(stdt.getStdtId()));
 			stdt.setCountEalryLeave(managerService.getCountEalryLeaveByStdtId(stdt.getStdtId()));
 			stdt.setCountAbsent(managerService.getCountAbsentByStdtId(stdt.getStdtId()));
 		}
-		
+
 		return "manager/student_list";
 	}
 
-//	개인정보 조회
+	//	개인정보 조회
 	@GetMapping("/mypage")
 	public String getMngrInfo(Model model) {
 		return "manager/mypage";

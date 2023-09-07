@@ -71,8 +71,13 @@ public class MainController {
 			return "redirect:/admin";
 		} else if (role.equals("ROL0000003")) {
 			//업무담당자
-			session.setAttribute("email", email);
-			
+			ManagerVO managerVO = mainService.getManagerVO(email);
+			session.setAttribute("mngrId", managerVO.getMngrId());
+			session.setAttribute("userEmail", managerVO.getUserEmail());
+			session.setAttribute("mngrNm", managerVO.getMngrNm());
+			session.setAttribute("roleCd", managerVO.getRoleCd());
+			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
+			mainService.updateLastLoginDt(managerVO.getUserEmail());
 			return "redirect:/manager";
 		} else {
 			return "redirect:/login";
