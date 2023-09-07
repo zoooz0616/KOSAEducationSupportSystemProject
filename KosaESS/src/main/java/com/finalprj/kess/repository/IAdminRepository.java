@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
@@ -33,7 +35,7 @@ public interface IAdminRepository {
             @Param("classEndDd") Date classEndDd);
 
 
-	void insertClassVO(ClassVO classVO);
+
 	
 	
 	
@@ -60,4 +62,8 @@ public interface IAdminRepository {
 	SubjectVO getSubject(String lectureId);
 	ProfessorVO getProfessor(String lectureId);
 	LectureVO getLecture(String lectureId);
+	
+	List<CommonCodeVO> getCommonCodeList(String tpcdId);
+	void insertClassVO(ClassVO classVO);
+	void insertCurriculumVO(CurriculumVO curriculumVO);
 }
