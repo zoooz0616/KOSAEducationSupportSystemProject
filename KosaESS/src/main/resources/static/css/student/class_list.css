@@ -17,6 +17,7 @@ ul {
 	padding: 0px 5%;
 	align-items: center;
 	justify-content: end;
+	margin-bottom: 2%;
 }
 
 input {
@@ -39,6 +40,7 @@ input::placeholder {
 .subsearch {
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 1%;
 }
 
 tr {
@@ -92,15 +94,14 @@ table a {
 	color: #0E5881;
 }
 
-button {
+.applyBtn {
 	background: #0E5881;
 	color: white;
 	padding: 10px;
 	margin: 5px 0;
 	border: 0;
-	width: 20%;
 	font-size: 10px;
 	font-weight: bold;
 	border-radius: 10px;
-	width: 100%;
+	display: block;
 }
