@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
@@ -21,7 +23,7 @@ public interface IAdminService {
 	List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt, Date aplyEndDt,
 			Date classStartDd, Date classEndDd);
 
-	void insertClassVO(ClassVO classVO);
+	
 	
 	int getNoticeCnt();
 	int getInquiryCnt();
@@ -46,4 +48,8 @@ public interface IAdminService {
 	SubjectVO getSubject(String lectureId);
 	ProfessorVO getProfessor(String lectureId);
 	LectureVO getLecture(String lectureId);
+	
+	List<CommonCodeVO> getCommonCodeList(String tpcdId);
+	void insertClassVO(ClassVO classVO);
+	void insertCurriculumVO(CurriculumVO curriculumVO);
 }

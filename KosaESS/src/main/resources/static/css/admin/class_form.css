@@ -20,7 +20,8 @@ input {
 
 .home-section .content_top {
 	display: flex;
-	margin: 40px;
+	margin: 0 40px 40px 40px;
+	padding-top: 40px;
 }
 
 .home-section .content_top .title {
@@ -41,7 +42,6 @@ input {
 	margin: 40px;
 	display: flex;
 	border-top: 2px solid #0E5881;
-	border-bottom: 1px solid #0E5881;
 }
 
 .home-section .content_middle form {
@@ -105,7 +105,7 @@ input {
 	display: flex;
 }
 
-.col2 .col_content .content_info_btn_wrap button {
+.col2 .col_content .content_info_btn_wrap div {
 	background: #0E5881;
 	color: white;
 	border: none;
@@ -133,4 +133,17 @@ th {
 
 .lecture_table tr td * {
 	width: 100%;
+}
+
+form .submit_btn {
+	font-size:20px;
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	width: 100px;
+	height: 35px;
+	margin: 10px;
+	float:right;
 }
