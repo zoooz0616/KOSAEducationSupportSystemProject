@@ -35,12 +35,11 @@
 				</tr>
 				<tr>
 					<td th:text="${clss.clssNm}"></td>
-					<td th:text="|${clss.aplyStartDt} ~ ${clss.aplyStartDt}|"></td>
-					<td th:text="|${clss.clssStartDd} ~ ${clss.clssEndDd}|"></td>
+					<td th:text="|${#dates.format(clss.aplyStartDt, 'yyyy-MM-dd')}  ~ ${#dates.format(clss.aplyEndDt, 'yyyy-MM-dd')}|"></td>
 					<td th:text="${clss.clssAdr}"></td>
 					<td th:text="${clss.clssCd}"></td>
-					<td th:text="${clss.setInTm}"></td>
-					<td th:text="${clss.setOutTm}"></td>
+					<td th:text="${#dates.format(clss.setInTm, 'HH:mm')}"></td>
+					<td th:text="${#dates.format(clss.setOutTm, 'HH:mm')}"></td>
 					<td><a th:text ="${clss.rgstCnt}" th:href="@{/manager/student-list/__${clss.clssId}__}"></a><span th:text="| / ${clss.limitCnt}|"></span></td><!--req_param 추가할것 -->
 					<td th:text="${clss.mngrId}"></td>
 				</tr>

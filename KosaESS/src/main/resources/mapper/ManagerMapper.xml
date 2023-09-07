@@ -35,9 +35,9 @@
 	]]>
 	</select>
 	
-	<select id="getCodeNameListByKeyword" resultType="string">
+	<select id="getCodeNameListByKeyword" resultType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
-	SELECT cmcd_nm
+	SELECT *
 	FROM cmcd
 	WHERE cmcd_id like #{keyword} ||'%'
 	]]>
@@ -94,8 +94,8 @@
 		s.stdt_Tel,
 		r.cmpt_cd AS job_Cd
 	FROM stdt s
-	    JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
-	    JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
+		JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
+		JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
 	WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
 	]]>
 	</select>
@@ -103,8 +103,25 @@
 	<select id="getClassNameByClssId" resultType="string" parameterType="string">
 	<![CDATA[
 	SELECT
-    	clss_nm
+		clss_nm
 	FROM clss WHERE clss_id = #{clssId}
+	]]>
+	</select>
+
+	<select id="getCountLateArriveByStdtId" resultType="int">
+	<![CDATA[
+	SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000002' AND stdt_id=#{stdtId} AND delete_yn='N'
+	]]>
+	</select>
+	
+	<select id="getCountEalryLeaveByStdtId" resultType="int">
+	<![CDATA[
+	SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000003' AND stdt_id=#{stdtId} AND delete_yn='N'
+	]]>
+	</select>
+	<select id="getCountAbsentByStdtId" resultType="int">
+	<![CDATA[
+	SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000004' AND stdt_id=#{stdtId} AND delete_yn='N'
 	]]>
 	</select>
 	

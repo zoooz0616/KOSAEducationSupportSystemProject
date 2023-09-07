@@ -66,20 +66,16 @@
 								 <input type="checkbox" name="chk_status" checked="checked" value="CheckAllCodeName"><!-- ←←←←←← value 수정필요 -->
 							</span>
 							<span th:each="classCodeName:${classCodeNameList}" >
-								 <label th:text="${classCodeName}"></label>
+								 <label th:text="${classCodeName.cmcdNm}"></label>
 								 <input type="checkbox" name="chk_status" checked="checked" value="${classCodeName.cmcdId}">
 							</span>
 						</td>
-
 					</tr>
 					<tr th:if="${session.role == 'admin'}">
 						<td style="width: 10%;">지원기간</td>
-						<td style="width: 30%;"><input id="aply_start_dt" type="date">
-							<span> ~ </span> <input id="aply_end_dt" type="date"></td>
+						<td style="width: 30%;"><input id="aply_start_dt" type="date"> <span> ~ </span> <input id="aply_end_dt" type="date"></td>
 						<td style="width: 10%;">교육기간</td>
-						<td style="width: 50%;"><input id="class_start_dd"
-							type="date"> <span> ~ </span> <input id="class_end_dd"
-							type="date"></td>
+						<td style="width: 50%;"><input id="class_start_dd" type="date"> <span> ~ </span> <input id="class_end_dd" type="date"></td>
 					</tr>
 				</table>
 

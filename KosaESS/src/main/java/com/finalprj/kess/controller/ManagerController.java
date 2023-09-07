@@ -2,6 +2,9 @@ package com.finalprj.kess.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IManagerService;
@@ -29,7 +33,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/manager")
 public class ManagerController {
-
+	LocalDate today = LocalDate.now();
+	LocalDate firstDay = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -55,9 +60,9 @@ public class ManagerController {
 			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
 		}
 		model.addAttribute("classList", classList);
-		List<String> classCodeNameList = managerService.getCodeNameList("CLS");
+		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
 		model.addAttribute("classCodeNameList", classCodeNameList);
-		return "manager/manager_class_list";
+		return "manager/class_list";
 	}
 
 //	교육 상세 조회
@@ -81,7 +86,7 @@ public class ManagerController {
 		}
 		model.addAttribute("imageFileSubIdList", imageFileSubIdList);
 		model.addAttribute("NonImageFileInfoList", NonImageFileInfoList);
-		return "manager/manager_class_detail";
+		return "manager/class_detail";
 	}
 
 	// 교육 상세 정보 > 파일 요청
@@ -104,6 +109,9 @@ public class ManagerController {
 //	교육생 목록 조회
 	@GetMapping("/student-list/{classId}")
 	public String getStudentList(Model model, HttpSession session, @PathVariable String classId) {
+//		public String getStudentList(Model model, HttpSession session, @PathVariable String classId, @RequestParam(value="startDate", defaultValue = "startDate") LocalDate startDate, @RequestParam(value = "endDate", defaultValue = "endDate") LocalDate endDate) {
+//		if(startDate==null) {startDate = firstDay;};
+//		if(endDate==null) {startDate = today;};
 		model.addAttribute("title", "교육생 목록");
 		session.setAttribute("role", "ROL0000003");// 삭제 예정
 		session.setAttribute("id", "MNGR000002");// 삭제 예정
@@ -111,24 +119,31 @@ public class ManagerController {
 		List<StudentVO> stdtList = managerService.getStudentListByClssId(classId);
 		
 		List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("id"));
-		List<String> classCodeNameList = managerService.getCodeNameList("CLS");
+		
+		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
 		model.addAttribute("classCodeNameList", classCodeNameList);
-		model.addAttribute("classNameList", classNameList);
-		model.addAttribute("stdtCnt", stdtList.size());
-		model.addAttribute("stdtList", stdtList);
-		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));
-		return "manager/manager_student_list";
-	}
+		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
+		model.addAttribute("stdtCodeNameList", stdtCodeNameList);
+		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
+		model.addAttribute("cmptCodeNameList", cmptCodeNameList);
 
-//	교육생 상세 조회
-	@GetMapping("/manager/student/{studentId}")
-	public String getStudentDetail(Model model) {
-		return "manager_student_detail";
+		model.addAttribute("classNameList", classNameList);
+		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));
+		model.addAttribute("stdtList", stdtList);
+		model.addAttribute("stdtCnt", stdtList.size());
+		
+		for (StudentVO stdt : stdtList) {
+			stdt.setCountLateArrive(managerService.getCountLateArriveByStdtId(stdt.getStdtId()));
+			stdt.setCountEalryLeave(managerService.getCountEalryLeaveByStdtId(stdt.getStdtId()));
+			stdt.setCountAbsent(managerService.getCountAbsentByStdtId(stdt.getStdtId()));
+		}
+		
+		return "manager/student_list";
 	}
 
 //	개인정보 조회
-	@GetMapping("/manager/mypage")
+	@GetMapping("/mypage")
 	public String getMngrInfo(Model model) {
-		return "manager_mypage";
+		return "manager/mypage";
 	}
 }
