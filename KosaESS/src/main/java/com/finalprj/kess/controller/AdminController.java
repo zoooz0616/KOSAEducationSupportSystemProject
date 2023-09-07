@@ -2,6 +2,8 @@ package com.finalprj.kess.controller;
 
 import java.net.http.HttpRequest;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +12,7 @@ import java.util.Map;
 
 import javax.sql.rowset.Joinable;
 
+import org.apache.naming.java.javaURLContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
@@ -203,8 +209,8 @@ public class AdminController {
 		model.addAttribute("classVO", classVO);
 
 		//교육상태 리스트
-		List<String> classCodeNameList = adminService.getClassCodeNameList();
-		model.addAttribute("classCodeNameList", classCodeNameList);
+		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
+		model.addAttribute("classCommonCodeList", classCommonCodeList);
 
 		//업체 리스트
 		List<CompanyVO> companyList = adminService.getCompanyList();
@@ -223,8 +229,10 @@ public class AdminController {
 
 	@PostMapping("/class/insert")
 	public String insertClass(HttpSession session,
-			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs) {
-		//adminService.insertClassVO(classVO);
+			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
+			ClassInsertDTO classInsertDTO, @RequestParam String clssCd, @RequestParam String cmpyId,
+			@RequestParam String mngrId, @RequestParam("lctrId") List<String> lctrIds) {
+
 		//파일 업로드하기
 		String maxFileId = uploadFileService.getMaxFileId();
 		int subFileId=1;
@@ -247,7 +255,63 @@ public class AdminController {
 			redirectAttrs.addFlashAttribute("message", e.getMessage());
 		}
 
-		//교육과정 업로드하기
+
+		//교육과정 insert하기
+		ClassVO classVO = new ClassVO();
+		classVO.setClssId(classInsertDTO.getClssId());
+		classVO.setMngrId(mngrId);
+		classVO.setCmpyId(cmpyId);
+		classVO.setClssNm(classInsertDTO.getClssNm());
+		classVO.setClssContent(classInsertDTO.getClssContent());
+		classVO.setLimitCnt(classInsertDTO.getLimitCnt());
+
+		String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
+		String aplyEndDt = classInsertDTO.getAplyEndDt();
+		String setInTm = classInsertDTO.getSetInTm();
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			
+			java.util.Date parsedStartDate = dateFormat.parse(aplyStartDt);
+			java.util.Date parsedEndDate = dateFormat.parse(aplyEndDt);
+			//java.util.Date parsedSetInTm = dateFormat.parse(setInTm);
+			//java.util.Date parsedSetOutTm = dateFormat.parse(setInTm);
+			
+			Timestamp startTimestamp = new Timestamp(parsedStartDate.getTime());
+			Timestamp endTimestamp = new Timestamp(parsedEndDate.getTime());
+			//Timestamp setInTimestamp = new Timestamp(parsedSetInTm.getTime());
+			//Timestamp sertOutTimestamp = new Timestamp(parsedSetOutTm.getTime());
+			
+			classVO.setAplyStartDt(startTimestamp);
+			classVO.setAplyEndDt(endTimestamp);
+			//classVO.setSetInTm(setInTimestamp);
+			//classVO.setSetOutTm(sertOutTimestamp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		classVO.setClssStartDd(classInsertDTO.getClssStartDd());
+		classVO.setClssEndDd(classInsertDTO.getClssEndDd());
+		//classVO.setSetInTm(Timestamp.valueOf(classInsertDTO.getSetInTm()));
+		//classVO.setSetOutTm(Timestamp.valueOf(classInsertDTO.getSetOutTm()));
+		classVO.setClssCd(clssCd);
+		classVO.setClssAdr(classInsertDTO.getClssAdr());
+		classVO.setClssTotalTm(classInsertDTO.getClssTotalTm());
+		classVO.setFileId(maxFileId);
+		classVO.setClssEtc(classInsertDTO.getClssEtc());
+		classVO.setRgsterId((String)session.getAttribute("mngrId"));
+		adminService.insertClassVO(classVO);
+
+		//커리큘럼 insert하기
+		for(String lctrId : lctrIds) {
+			CurriculumVO curriculumVO = new CurriculumVO();
+			curriculumVO.setClssId(classVO.getClssId());
+			curriculumVO.setLctrId(lctrId);
+			curriculumVO.setRgsterId((String)session.getAttribute("mngrId"));
+			adminService.insertCurriculumVO(curriculumVO);
+		}
+		
+
+
 		return "redirect:/admin/class";
 	}
 
@@ -321,14 +385,14 @@ public class AdminController {
 		SubjectVO subjectVO = adminService.getSubject(lectureId);
 		ProfessorVO professorVO = adminService.getProfessor(lectureId);
 		LectureVO lectureVO = adminService.getLecture(lectureId);
-		
-		
+
+
 		Map<String, Object> response = new HashMap<>();
 		// subjectName과 professorName을 설정합니다.
 		response.put("subject", subjectVO);
 		response.put("professor", professorVO);
 		response.put("lecture", lectureVO);
-		
+
 		return response;
 	}
 

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:href="@{/css/student_header.css}" rel="stylesheet">
-<link th:href="@{/css/student_main.css}" rel="stylesheet">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
 
 <meta charset="UTF-8">
 <title>login page</title>
@@ -15,15 +15,15 @@
 			<div class="login con" style="width: 40%;">
 				<form th:action="@{/login}" method="post" class="">
 					<div class="">
-						<label for="email"></label> <input type="text"
+						<label for="email"></label> <input style="width: 50%;" type="text"
 							name="email" id="id" class="" placeholder="아이디(이메일)">
 					</div>
 					<div class="">
-						<label for="pwd"></label> <input type="password"
+						<label for="pwd"></label> <input style="width: 50%;" type="password"
 							name="pwd" id="pwd" class="" placeholder="비밀번호">
 					</div>
 					<div class="submit">
-						<input type="submit" class="loginBtn" th:value="로그인">
+						<input style="width: 50%;" type="submit" class="loginBtn" th:value="로그인">
 					</div>
 				</form>
 			</div>

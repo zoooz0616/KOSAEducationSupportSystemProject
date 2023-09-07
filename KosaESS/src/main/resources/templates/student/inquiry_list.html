@@ -24,8 +24,8 @@
 						<th>조회수</th>
 						<th>상태</th>
 					</tr>
-					<tr th:each="postVO : ${postList}">
-						<td></td>
+					<tr th:each="postVO, rowStat : ${postList}">
+						<td><span th:text="${rowStat.index + 1}"></span></td>
 						<td><a th:text="${postVO.postTitle}"
 							th:href="@{/student/inquiry/__${postVO.postId}__}">문의사항 제목</a></td>
 						<td th:text="${postVO.rgsterId}">작성자</td>

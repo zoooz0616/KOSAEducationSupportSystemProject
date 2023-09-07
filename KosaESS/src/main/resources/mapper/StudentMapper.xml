@@ -244,6 +244,12 @@
 		    FROM clss
 		    WHERE clss_id = #{clssId}
 		)
+		ORDER BY
+	    CASE
+	        WHEN file_type LIKE 'application%' THEN 0
+	        WHEN file_type LIKE 'text%' THEN 1
+	        ELSE 2
+	    END
 		]]>
 	</select>
 

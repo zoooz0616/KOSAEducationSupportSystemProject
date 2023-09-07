@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.finalprj.kess.dto.ClassDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -27,6 +30,8 @@ import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IStudentService;
+import com.finalprj.kess.service.IUploadFileService;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -35,6 +40,7 @@ public class StudentController {
 
 	@Autowired
 	IStudentService studentService;
+	IUploadFileService uploadFileService;
 	StudentVO student = null;
 	LoginVO login = null;
 
@@ -213,6 +219,51 @@ public class StudentController {
 
 		return "redirect:/student/class";
 
+	}
+	
+	@PostMapping("/upload/{classId}")
+	public String insertClass(HttpSession session,
+			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs) {
+		//파일 업로드하기
+		String maxFileId = uploadFileService.getMaxFileId();
+		int subFileId=1;
+		try {
+			for(MultipartFile file: files) {
+				if(file!=null && !file.isEmpty()) {
+					FileVO fileVO = new FileVO();
+					fileVO.setFileId(maxFileId);
+					fileVO.setFileSubId(subFileId);
+					fileVO.setFileNm(file.getOriginalFilename());
+					fileVO.setFileSize(file.getSize());
+					fileVO.setFileType(file.getContentType());
+					fileVO.setFileContent(file.getBytes());
+					uploadFileService.uploadFile(fileVO);
+					subFileId++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttrs.addFlashAttribute("message", e.getMessage());
+		}
+
+		return "redirect:/student/clss_list";
+	}
+	
+	// 교욱 이력서 제출
+		/**
+		 * @author : dabin
+		 * @date : 2023. 8. 31.
+		 * @parameter :model
+		 * @return :
+		 * @throws IOException
+		 */
+	@GetMapping("/mypage")
+	public String mypageMain(Model model) {
+		model.addAttribute("student", student);
+
+		
+
+		return "student/mypage";
 	}
 
 }
