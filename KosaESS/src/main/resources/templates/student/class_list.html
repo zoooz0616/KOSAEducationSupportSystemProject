@@ -32,7 +32,9 @@
 			</div>
 			<div class="subsearch">
 				<div>
-					<h3 class="totalcnt">총 <span th:text="${#lists.size(classList)}"></span>건</h3>
+					<h3 class="totalcnt">
+						총 <span th:text="${#lists.size(classList)}"></span>건
+					</h3>
 				</div>
 				<div>
 					<span>페이지당 목록 수</span> <select id="pageList" class="w-px80">
@@ -56,15 +58,20 @@
 						</div>
 					</td>
 					<td th:text="${classVO.clssNm}"
-						style="font-weight: bold; font-size: 20px;">교육과정명</td>
+						style="font-weight: bold; font-size: 18px;">교육과정명</td>
 					<td><span>지원기간: </span><span
 						th:text="${classVO.aplyStartDd} + ' ~' +${classVO.aplyEndDd}"></span></td>
 					<td><span>교육기간: </span><span
 						th:text="${classVO.clssStartDd} + ' ~' +${classVO.clssEndDd}"></span></td>
-					<td><span>장소: </span><span th:text="${classVO.clssAdr}"></span>
-						<span>정원: </span><span th:text="${classVO.limitCnt}"></span></td>
-					<td><a class="applyBtn" th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
-					
+					<td><span>장소: </span>
+						<span th:if="${classVO.clssAdr == null}">미정</span>
+						<span th:if="${classVO.clssAdr != null}" th:text="${classVO.clssAdr}"></span>
+						<span th:text="'  /  '"></span> 
+						<span>정원: </span>
+						<span th:text="${classVO.limitCnt}"></span></td>
+					<td><a class="applyBtn"
+						th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
+
 				</tr>
 			</table>
 		</div>

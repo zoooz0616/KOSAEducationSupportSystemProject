@@ -171,8 +171,9 @@
 					(select cmcd_id
 					from cmcd
 					where cmcd_id='CLS0000002')
+					ORDER BY rgst_dt DESC
 			)
-			WHERE ROWNUM <= 15
+			WHERE ROWNUM <= 5
 		]]>
 	</select>
 
@@ -196,13 +197,13 @@
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 		   LEFT JOIN flup on flup.file_id = cmpy.file_id
-		   ORDER BY clss_id
+		   ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
 
 	<!-- 교육지원 상세 조회 -->
 	<select id="selectClass" parameterType="string"
-		resultType="com.finalprj.kess.dto.ClassDetailDTO">
+		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
 			SELECT
 			    clss_id,
@@ -214,15 +215,15 @@
 			    clss_end_dd,
 			    clss_adr,
 			    limit_cnt,
-			    TO_CHAR(set_in_tm, 'HH24') as "setInTm",
-    			TO_CHAR(set_out_tm, 'HH24') as "setOutTm",
+			    TO_CHAR(set_in_tm, 'HH24') as "setInTime",
+    			TO_CHAR(set_out_tm, 'HH24') as "setOutTime",
 			    clss_etc,
 			    cmpy.cmpy_nm as "cmpyNm",
 			    cmcd.cmcd_nm as "clssCd"
 			FROM clss
 			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
-			JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
-			WHERE clss_id = #{clssId}
+			LEFT JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
+			WHERE clss.clss_id = #{clssId}
 		]]>
 	</select>
 
@@ -309,7 +310,7 @@
 			where cmcd_id='APL0000002')
 	]]>
 	</select>
-	
+
 	<!-- 수강중인 수업명 출력 -->
 	<select id="getIngClass" parameterType="string"
 		resultType="string">

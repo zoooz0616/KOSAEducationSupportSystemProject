@@ -45,7 +45,7 @@ public class StudentService implements IStudentService {
 
 
 	@Override
-	public ClassDetailDTO selectClass(String clssId) {
+	public ClassVO selectClass(String clssId) {
 		return studentRepository.selectClass(clssId);
 	}
 

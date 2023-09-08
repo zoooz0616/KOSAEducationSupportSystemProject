@@ -24,7 +24,7 @@
 					</tr>
 					<tr>
 						<th>지원 기간</th>
-						<td style="width: 40%"
+						<td style="width: 35%"
 							th:text="${classDetail.aplyStartDd} + ' ~ ' + ${classDetail.aplyEndDd}"></td>
 
 						<th>교육 기간</th>
@@ -41,9 +41,9 @@
 					</tr>
 					<tr>
 						<th>시작 시간</th>
-						<td th:text="${classDetail.setInTm} + '시'"></td>
+						<td th:text="${classDetail.setInTime} + '시'"></td>
 						<th>종료 시간</th>
-						<td th:text="${classDetail.setOutTm}+ '시'"></td>
+						<td th:text="${classDetail.setOutTime}+ '시'"></td>
 						<th>수강 정원</th>
 						<td th:text="${classDetail.limitCnt}+ '명'"></td>
 					</tr>

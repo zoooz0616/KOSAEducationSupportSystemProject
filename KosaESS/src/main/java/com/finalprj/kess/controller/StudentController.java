@@ -142,7 +142,7 @@ public class StudentController {
 	@GetMapping("/class/{clssId}")
 	public String classdetail(@PathVariable String clssId, Model model) {
 		model.addAttribute("student", student);
-		ClassDetailDTO classDetail = studentService.selectClass(clssId);
+		ClassVO classDetail = studentService.selectClass(clssId);
 		model.addAttribute("classDetail", classDetail);
 		List<ClassDetailDTO> classDetailList = new ArrayList<ClassDetailDTO>();
 		classDetailList = studentService.selectAllClassFile(clssId);

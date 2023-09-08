@@ -25,7 +25,7 @@ public interface IStudentService {
 
 	List<PostVO> selectAllInquiry();
 
-	ClassDetailDTO selectClass(String clssId);
+	ClassVO selectClass(String clssId);
 
 	List<ClassDetailDTO> selectAllClassFile(String clssId);
 
