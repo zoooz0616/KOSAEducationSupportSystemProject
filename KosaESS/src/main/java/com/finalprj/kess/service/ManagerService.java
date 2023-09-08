@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.repository.IManagerRepository;
@@ -46,7 +47,7 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<String> getCodeNameList(String keyword) {
+	public List<CommonCodeVO> getCodeNameList(String keyword) {
 		return managerRepository.getCodeNameListByKeyword(keyword);
 	}
 
@@ -63,6 +64,21 @@ public class ManagerService implements IManagerService {
 	@Override
 	public FileVO getFileInfoByIds(String fileId, int fileSubId) {
 		return managerRepository.getFileInfoByIds(fileId, fileSubId);
+	}
+
+	@Override
+	public int getCountLateArriveByStdtId(String stdtId) {
+		return managerRepository.getCountLateArriveByStdtId(stdtId);
+	}
+
+	@Override
+	public int getCountEalryLeaveByStdtId(String stdtId) {
+		return managerRepository.getCountEalryLeaveByStdtId(stdtId);
+	}
+
+	@Override
+	public int getCountAbsentByStdtId(String stdtId) {
+		return managerRepository.getCountAbsentByStdtId(stdtId);
 	}
 
 }

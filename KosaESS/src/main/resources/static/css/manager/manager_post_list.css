@@ -1,0 +1,202 @@
+input, progress {
+	accent-color: #0E5881;
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section .title {
+	display: inline-block;
+	color: #333333;
+	font-size: 30px;
+	font-weight: bold;
+	margin: 40px;
+}
+
+.content_wrap {
+	width: 95%;
+	margin-left: 40px;
+}
+
+/* 여기까지는 공통 */
+.search_filter_icon_img {
+	width: 30px;
+}
+
+.search_filter_wrap {
+	padding: 5px;
+	width: 100%;
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 1px 1px 3px lightgray;
+}
+
+.search_filter_wrap .search_filter_table_wrap {
+	width: 98%;
+	margin: auto;
+}
+
+.search_filter_table {
+	width: 100%;
+	font-weight: bold;
+	border-collapse: collapse;
+}
+
+.search_filter_table tr td {
+	width: 100%;
+	font-size: 15px;
+	border: none;
+	text-align: center;
+}
+
+.search_filter_table tr td input {
+	color: gray;
+	padding: 5px;
+}
+
+.search_filter_table tr td input:focus {
+	border-color: #0E5881;
+	border-radius: 3px;
+}
+
+.search_filter_btn_wrap {
+	text-align: center;
+}
+
+.search_filter_btn_wrap .search_filter_btn {
+	width: 60px;
+	background-color: #0E5881;
+	margin: 10px 0 10px 0;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.post_detail_wrap .post_total_cnt {
+	font-weight: bold;
+	float: left;
+}
+
+.post_detail_wrap .post_total_cnt .post_cnt {
+	color: #0E5881;
+}
+
+.post_detail_wrap .post_btn_wrap {
+	float: right;
+}
+
+.post_detail_wrap .post_btn_wrap button {
+	width: 80px;
+	background-color: #0E5881;
+	margin-left: 10px;
+	color: white;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.content_list_table tr {
+	border-bottom: 1px solid #0E5881;
+}
+
+.content_list_table tr td {
+	text-align: center;
+}
+
+.content_list_table tr td a {
+	text-decoration: none;
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.content_list_table tr td a:hover {
+	color: #0E5881;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.content_list {
+	width: 100%;
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 1px 1px 3px lightgray;
+	margin-top: 30px;
+}
+
+.content_list .content_list_table {
+	width: 100%;
+	border-collapse:collapse;
+	border-spacing:0;
+}
+
+.content_list .content_list_table tbody tr {
+	height:50px;
+}
+
+.dropdown-check-list {
+	display: inline-block;
+}
+
+.dropdown-check-list .anchor {
+	height: 40px; 
+	position : relative;
+	cursor: pointer;
+	display: inline-block;
+	padding: 5px 50px 5px 10px;
+	border: 1px solid #ccc;
+	position: relative;
+}
+
+.dropdown-check-list .anchor:after {
+	position: absolute;
+	content: "";
+	border-left: 2px solid black;
+	border-top: 2px solid black;
+	padding: 5px;
+	right: 10px;
+	top: 20%;
+	-moz-transform: rotate(-135deg);
+	-ms-transform: rotate(-135deg);
+	-o-transform: rotate(-135deg);
+	-webkit-transform: rotate(-135deg);
+	transform: rotate(-135deg);
+}
+
+.dropdown-check-list .anchor:active:after {
+	right: 8px;
+	top: 21%;
+}
+
+.dropdown-check-list ul.items {
+	padding: 2px;
+	display: none;
+	margin: 0;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
+.dropdown-check-list ul.items li {
+	list-style: none;
+	height: 40px;
+	padding: 10px;
+}
+
+.dropdown-check-list.visible .anchor {
+	color: #0E5881;
+}
+
+.dropdown-check-list.visible .items {
+	display: block;
+}
