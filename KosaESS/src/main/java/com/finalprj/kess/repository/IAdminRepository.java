@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -66,4 +67,8 @@ public interface IAdminRepository {
 	List<CommonCodeVO> getCommonCodeList(String tpcdId);
 	void insertClassVO(ClassVO classVO);
 	void insertCurriculumVO(CurriculumVO curriculumVO);
+	
+	ClassVO getClass(String clssId);
+	List<CurriculumVO> getCurriculumList(String clssId);
+	CurriculumDetailDTO getCurriculumDetail(String lctrId);
 }
