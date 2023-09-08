@@ -41,31 +41,39 @@ public class ManagerController {
 	IManagerService managerService;
 
 	//	메인 페이지
-	@GetMapping("/")
+	@GetMapping("")
 	public String managerMain(Model model, HttpSession session) {
-		if (((String)session.getAttribute("roleCd")).equals("ROL0000003")) {
-			return "manager/class_list";
+		String roleCd = (String) session.getAttribute("roleCd");
+		if (roleCd.equals("ROL0000003")) {
+			return "redirect:/manager/class";
 		} else {
-			return "login";
+			return "redirect:/logout";
 		}
+//		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+//			return "redirect:/login";
+//		} else {
+//			return "redirect:/class";
+//		}
 	}
 
 	//	담당 교육 목록 조회
 	@GetMapping("/class")
 	public String getClassList(Model model, HttpSession session) {
-		model.addAttribute("title", "교육 과정 목록");
-		//		session.setAttribute("role", "ROL0000003");// 삭제 예정
-		//		session.setAttribute("id", "MNGR000002");// 삭제 예정
-		List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("id"));
-		System.out.println((String) session.getAttribute("id"));
-		// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
-		for (ClassVO vo : classList) {
-			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
+		String roleCd = (String) session.getAttribute("roleCd");
+		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+			return "login";
+		} else {
+			model.addAttribute("title", "교육 과정 목록");
+			List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"));
+			// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
+			for (ClassVO vo : classList) {
+				vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
+			}
+			model.addAttribute("classList", classList);
+			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
+			model.addAttribute("classCodeNameList", classCodeNameList);
+			return "manager/class_list";
 		}
-		model.addAttribute("classList", classList);
-		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
-		model.addAttribute("classCodeNameList", classCodeNameList);
-		return "manager/class_list";
 	}
 
 	//	교육 상세 조회

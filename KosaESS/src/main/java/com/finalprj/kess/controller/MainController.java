@@ -15,17 +15,35 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainController {
-	
+
 	@Autowired
 	IMainService mainService;
 	IStudentService studentService;
 
+	/**
+	 * @updater : seungwoo
+	 * @update : 2023. 9. 8.
+	 * @parameter : session
+	 * @return : string(rold code 기준으로 login 시도 또는 메인창으로 이동)
+	 */
 	@GetMapping("/login")
-	public String login() {
-		return "login";
+	public String login(HttpSession session) {
+		String roleCd = (String) session.getAttribute("roleCd");
+		if (roleCd == null) {
+			return "login";
+		} else {
+			if (roleCd.equals("ROL0000001")) {
+				return "redirect:/student";
+			} else if (roleCd.equals("ROL0000002")) {
+				return "redirect:/admin";
+			} else if (roleCd.equals("ROL0000003")) {
+				return "redirect:/manager";
+			} else {
+				return "redirect:/student";//추후 수정 요망
+			}
+		}
 	}
-	
-	
+
 	/**
 	 * @author : eunji
 	 * @date : 2023. 9. 4.
@@ -37,9 +55,9 @@ public class MainController {
 		//form에서 이메일, 비밀번호 가져옴
 		String email = request.getParameter("email");
 		String pwd = request.getParameter("pwd");
-		
+
 		//login 테이블에 회원이 있는지 확인하기
-		String role = mainService.getRole(email,pwd);
+		String role = mainService.getRole(email, pwd);
 		if (role.equals("ROL0000001")) {
 			//학생
 			StudentVO studentVO = mainService.getStudentVO(email);
@@ -50,9 +68,9 @@ public class MainController {
 			session.setAttribute("stdtId", studentVO.getStdtId());
 			session.setAttribute("roleCd", studentVO.getRoleCd());
 			session.setAttribute("lastLoginDt", studentVO.getLastLoginDt());
-						
+
 			mainService.updateLastLoginDt(studentVO.getUserEmail());
-			
+
 			return "redirect:/student";
 		} else if (role.equals("ROL0000002")) {
 			//관리자
@@ -63,11 +81,11 @@ public class MainController {
 			session.setAttribute("mngrNm", managerVO.getMngrNm());
 			session.setAttribute("roleCd", managerVO.getRoleCd());
 			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
-			
+
 			session.setAttribute("role", "admin");
-			
+
 			mainService.updateLastLoginDt(managerVO.getUserEmail());
-			
+
 			return "redirect:/admin";
 		} else if (role.equals("ROL0000003")) {
 			//업무담당자
@@ -83,18 +101,17 @@ public class MainController {
 			return "redirect:/login";
 		}
 	}
-	
-	// 로그이웃
-		/**
-		 * @author : dabin
-		 * @date : 2023. 8. 25.
-		 * @parameter : session, request
-		 * @return :
-		 */
 
-		@GetMapping("/logout")
-		public String logout(HttpSession session, HttpServletRequest request) {
-			session.invalidate(); // 로그아웃
-			return "redirect:/student";
-		}
+	// 로그이웃
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 25.
+	 * @parameter : session, request
+	 * @return :
+	 */
+	@GetMapping("/logout")
+	public String logout(HttpSession session, HttpServletRequest request) {
+		session.invalidate(); // 로그아웃
+		return "redirect:/student";
+	}
 }
