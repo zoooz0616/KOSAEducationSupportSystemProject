@@ -13,8 +13,8 @@ public class ClassInsertDTO {
 	private String aplyStartDt;//지원시작일시
 	private String aplyEndDt;//지원종료일시
 
-	private Date clssStartDd;//교육시작일자
-	private Date clssEndDd;//교육종료일자
+	private String clssStartDd;//교육시작일자
+	private String clssEndDd;//교육종료일자
 
 	private String setInTm;//교육시작시간
 	private String setOutTm;//교육종료시간

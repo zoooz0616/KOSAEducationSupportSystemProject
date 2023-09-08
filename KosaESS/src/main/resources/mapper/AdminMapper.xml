@@ -107,6 +107,7 @@
 	<![CDATA[
 		select *
 		from clss
+		order by rgst_dt desc
 	]]>
 	</select>
 
@@ -130,7 +131,7 @@
 	<![CDATA[
 		select *
 		from cmpy
-		where delete_yn = 'N'
+		where delete_yn = 'N' and cmpy_id != 'CMPY000000'
 	]]>
 	</select>
 
@@ -220,7 +221,7 @@
 		insert into clss
 		values(#{clssId}, #{mngrId},#{cmpyId},#{clssNm},#{clssContent},#{limitCnt},
 		#{aplyStartDt},#{aplyEndDt},#{clssStartDd},#{clssEndDd},#{setInTm},#{setOutTm},#{clssCd},
-		#{clssAdr},#{clssTotalTm},#{fileId},#{clssEtc},systimestamp, 'MNGR000001', null, null)		
+		#{clssAdr},#{clssTotalTm},#{fileId},#{clssEtc},systimestamp, #{rgsterId}, null, null)		
 	]]>
 	</insert>
 
@@ -233,7 +234,7 @@
         #{clssId},
         #{lctrId},
         systimestamp,
-        'MNGR000001',
+        #{rgsterId},
         null,
         null,
         'N'

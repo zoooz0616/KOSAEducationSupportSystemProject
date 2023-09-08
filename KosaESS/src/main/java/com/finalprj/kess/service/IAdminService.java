@@ -4,10 +4,14 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
 import com.finalprj.kess.model.CurriculumVO;
+import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
@@ -52,4 +56,5 @@ public interface IAdminService {
 	List<CommonCodeVO> getCommonCodeList(String tpcdId);
 	void insertClassVO(ClassVO classVO);
 	void insertCurriculumVO(CurriculumVO curriculumVO);
+	void createClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList);
 }
