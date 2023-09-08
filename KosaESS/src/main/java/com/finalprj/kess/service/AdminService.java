@@ -4,24 +4,32 @@ import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
 import com.finalprj.kess.model.CurriculumVO;
+import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IAdminRepository;
+import com.finalprj.kess.repository.IUploadFileRepository;
 
 @Service
 public class AdminService implements IAdminService {
 
 	@Autowired
 	IAdminRepository adminRepository;
-	
+
+	@Autowired
+	IUploadFileRepository uploadFileRepository;
+
 	@Override
 	public int getNoticeCnt() {
 		return adminRepository.getNoticeCnt();
@@ -61,32 +69,32 @@ public class AdminService implements IAdminService {
 	public int getManagerCnt() {
 		return adminRepository.getManagerCnt();
 	}
-		
+
 	@Override
 	public int getWaitInquiryCnt() {
 		return adminRepository.getWaitInquiryCnt();
 	}
-	
+
 	@Override
 	public List<PostVO> getWaitInquiryList() {
 		return adminRepository.getWaitInquiryList();
 	}
-	
+
 	@Override
 	public int getCompleteClassCnt() {
 		return adminRepository.getCompleteClassCnt();
 	}
-	
+
 	@Override
 	public List<ClassVO> getCompleteClassList() {
 		return adminRepository.getCompleteClassList();
 	}
-	
+
 	@Override
 	public List<ClassVO> getClassList() {
 		return adminRepository.getClassList();
 	}
-	
+
 	@Override
 	public List<String> getClassCodeNameList() {
 		return adminRepository.getClassCodeNameList();
@@ -96,7 +104,7 @@ public class AdminService implements IAdminService {
 	public String getMaxClassId() {
 		return adminRepository.getMaxClassId();
 	}
-	
+
 	@Override
 	public List<CompanyVO> getCompanyList() {
 		return adminRepository.getCompanyList();
@@ -111,7 +119,7 @@ public class AdminService implements IAdminService {
 	public List<LectureVO> getLectureList() {
 		return adminRepository.getLectureList();
 	}
-	
+
 	@Override
 	public SubjectVO getSubject(String lectureId) {
 		return adminRepository.getSubject(lectureId);
@@ -126,29 +134,49 @@ public class AdminService implements IAdminService {
 	public LectureVO getLecture(String lectureId) {
 		return adminRepository.getLecture(lectureId);
 	}
-	
+
 	@Override
 	public List<CommonCodeVO> getCommonCodeList(String tpcdId) {
 		return adminRepository.getCommonCodeList(tpcdId);
 	}
-	
+
+	//삭제할거임
 	@Override
 	public void insertClassVO(ClassVO classVO) {
 		adminRepository.insertClassVO(classVO);
 	}
 
+	//삭제할거임
 	@Override
 	public void insertCurriculumVO(CurriculumVO curriculumVO) {
 		adminRepository.insertCurriculumVO(curriculumVO);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Override
+	@Transactional
+	public void createClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList) {
+		if (fileList != null) {
+			for(FileVO fileVO : fileList) {
+				uploadFileRepository.uploadFile(fileVO);
+			}
+		}
+
+		adminRepository.insertClassVO(classVO);
+
+		if (curriculumList != null) {
+			for(CurriculumVO curriculumVO : curriculumList) {
+				adminRepository.insertCurriculumVO(curriculumVO);
+			}
+		}
+
+	}
+
+
+
+
+
+
+
 
 	@Override
 	public int getWaitClassCnt() {
@@ -172,12 +200,14 @@ public class AdminService implements IAdminService {
 				aplyEndDt, classStartDd, classEndDd);
 	}
 
-	
 
-	
-	
 
-	
 
-	
+
+
+
+
+
+
+
 }

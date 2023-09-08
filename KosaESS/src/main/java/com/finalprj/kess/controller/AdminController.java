@@ -3,6 +3,7 @@ package com.finalprj.kess.controller;
 import java.net.http.HttpRequest;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IUploadFileRepository;
+import com.finalprj.kess.service.AdminService;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -66,7 +68,7 @@ public class AdminController {
 	 */
 	@RequestMapping("")
 	public String main(HttpSession session, Model model) {
-		if(session.getAttribute("userEmail") == null) {
+		if(session.getAttribute("mngrId")== null) {
 			return "redirect:/login";
 		}
 
@@ -230,33 +232,42 @@ public class AdminController {
 	@PostMapping("/class/insert")
 	public String insertClass(HttpSession session,
 			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
-			ClassInsertDTO classInsertDTO, @RequestParam String clssCd, @RequestParam String cmpyId,
-			@RequestParam String mngrId, @RequestParam("lctrId") List<String> lctrIds) {
+			ClassInsertDTO classInsertDTO, @RequestParam String clssCd, @RequestParam(required = false) String cmpyId,
+			@RequestParam(required = false) String mngrId, @RequestParam(name="lctrId", required = false) List<String> lctrIds) {
 
-		//파일 업로드하기
-		String maxFileId = uploadFileService.getMaxFileId();
-		int subFileId=1;
-		try {
-			for(MultipartFile file: files) {
-				if(file!=null && !file.isEmpty()) {
-					FileVO fileVO = new FileVO();
-					fileVO.setFileId(maxFileId);
-					fileVO.setFileSubId(subFileId);
-					fileVO.setFileNm(file.getOriginalFilename());
-					fileVO.setFileSize(file.getSize());
-					fileVO.setFileType(file.getContentType());
-					fileVO.setFileContent(file.getBytes());
-					uploadFileService.uploadFile(fileVO);
-					subFileId++;
+		if(session.getAttribute("mngrId")== null) {
+			return "redirect:/login";
+		}
+		
+		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
+		String maxFileId = null;	
+		List<FileVO> fileList=null;
+
+		//파일을 첨부했다면 List생성해서 전달
+		if(files[0]!=null && !files[0].isEmpty()) {
+			maxFileId = uploadFileService.getMaxFileId();
+			int subFileId=1;
+			try {
+				for(MultipartFile file: files) {
+					if(file!=null && !file.isEmpty()) {
+						FileVO fileVO = new FileVO();
+						fileVO.setFileId(maxFileId);
+						fileVO.setFileSubId(subFileId);
+						fileVO.setFileNm(file.getOriginalFilename());
+						fileVO.setFileSize(file.getSize());
+						fileVO.setFileType(file.getContentType());
+						fileVO.setFileContent(file.getBytes());
+						fileList.add(fileVO);
+						subFileId++;
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				redirectAttrs.addFlashAttribute("message", e.getMessage());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttrs.addFlashAttribute("message", e.getMessage());
 		}
 
-
-		//교육과정 insert하기
+		//교육과정 생성하기
 		ClassVO classVO = new ClassVO();
 		classVO.setClssId(classInsertDTO.getClssId());
 		classVO.setMngrId(mngrId);
@@ -264,58 +275,90 @@ public class AdminController {
 		classVO.setClssNm(classInsertDTO.getClssNm());
 		classVO.setClssContent(classInsertDTO.getClssContent());
 		classVO.setLimitCnt(classInsertDTO.getLimitCnt());
-
-		String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
-		String aplyEndDt = classInsertDTO.getAplyEndDt();
-		String setInTm = classInsertDTO.getSetInTm();
+		
+		//Date-time(String) to Timestamp
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
+			String aplyEndDt = classInsertDTO.getAplyEndDt();
 			
-			java.util.Date parsedStartDate = dateFormat.parse(aplyStartDt);
-			java.util.Date parsedEndDate = dateFormat.parse(aplyEndDt);
-			//java.util.Date parsedSetInTm = dateFormat.parse(setInTm);
-			//java.util.Date parsedSetOutTm = dateFormat.parse(setInTm);
-			
-			Timestamp startTimestamp = new Timestamp(parsedStartDate.getTime());
-			Timestamp endTimestamp = new Timestamp(parsedEndDate.getTime());
-			//Timestamp setInTimestamp = new Timestamp(parsedSetInTm.getTime());
-			//Timestamp sertOutTimestamp = new Timestamp(parsedSetOutTm.getTime());
-			
-			classVO.setAplyStartDt(startTimestamp);
-			classVO.setAplyEndDt(endTimestamp);
-			//classVO.setSetInTm(setInTimestamp);
-			//classVO.setSetOutTm(sertOutTimestamp);
+			if (aplyStartDt.equals("null") && aplyEndDt.equals("null")) {
+			    classVO.setAplyStartDt(null);
+			    classVO.setAplyEndDt(null);
+			} else {
+			    try {
+			        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			        java.util.Date parsedStartDate = dateFormat.parse(aplyStartDt);
+			        java.util.Date parsedEndDate = dateFormat.parse(aplyEndDt);
+			        Timestamp startTimestamp = new Timestamp(parsedStartDate.getTime());
+			        Timestamp endTimestamp = new Timestamp(parsedEndDate.getTime());
+			        classVO.setAplyStartDt(startTimestamp);
+			        classVO.setAplyEndDt(endTimestamp);
+			    } catch (ParseException e) {
+			        e.printStackTrace();
+			    }
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		//Time(String) to Timestamp
+		try {
+			String setInTm = classInsertDTO.getSetInTm();
+			String setOutTm = classInsertDTO.getSetOutTm();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+			java.util.Date parsedSetInTm = dateFormat.parse(setInTm);
+			java.util.Date parsedSetOutTm = dateFormat.parse(setOutTm);
+			// Date 객체를 Timestamp로 변환합니다.
+			Timestamp setInTimestamp = new Timestamp(parsedSetInTm.getTime());
+			Timestamp sertOutTimestamp = new Timestamp(parsedSetOutTm.getTime());
+			classVO.setSetInTm(setInTimestamp);
+			classVO.setSetOutTm(sertOutTimestamp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//String to Date
+		try {
+			String clssStartDd = (String)classInsertDTO.getClssStartDd();
+			String clssEndDd = (String)classInsertDTO.getClssEndDd();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		    java.util.Date startDate = dateFormat.parse(clssStartDd);
+		    java.util.Date endDate = dateFormat.parse(clssEndDd);
+		    
+		    // java.util.Date를 java.sql.Date로 변환
+		    java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+		    java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
-		classVO.setClssStartDd(classInsertDTO.getClssStartDd());
-		classVO.setClssEndDd(classInsertDTO.getClssEndDd());
-		//classVO.setSetInTm(Timestamp.valueOf(classInsertDTO.getSetInTm()));
-		//classVO.setSetOutTm(Timestamp.valueOf(classInsertDTO.getSetOutTm()));
+			classVO.setClssStartDd(sqlStartDate);
+			classVO.setClssEndDd(sqlEndDate);
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}
+		
+		
 		classVO.setClssCd(clssCd);
 		classVO.setClssAdr(classInsertDTO.getClssAdr());
 		classVO.setClssTotalTm(classInsertDTO.getClssTotalTm());
 		classVO.setFileId(maxFileId);
 		classVO.setClssEtc(classInsertDTO.getClssEtc());
 		classVO.setRgsterId((String)session.getAttribute("mngrId"));
-		adminService.insertClassVO(classVO);
 
-		//커리큘럼 insert하기
-		for(String lctrId : lctrIds) {
-			CurriculumVO curriculumVO = new CurriculumVO();
-			curriculumVO.setClssId(classVO.getClssId());
-			curriculumVO.setLctrId(lctrId);
-			curriculumVO.setRgsterId((String)session.getAttribute("mngrId"));
-			adminService.insertCurriculumVO(curriculumVO);
+		//커리큘럼을 지정하지 않았다면 null전달
+		List<CurriculumVO> curriculumList = null;
+		if(lctrIds != null) {
+			curriculumList = new ArrayList<CurriculumVO>();
+			for(String lctrId : lctrIds) {
+				CurriculumVO curriculumVO = new CurriculumVO();
+				curriculumVO.setClssId(classVO.getClssId());
+				curriculumVO.setLctrId(lctrId);
+				curriculumVO.setRgsterId((String)session.getAttribute("mngrId"));
+				curriculumList.add(curriculumVO);
+			}
 		}
-		
 
+		adminService.createClass(fileList, classVO, curriculumList);
 
 		return "redirect:/admin/class";
 	}
-
-
 
 	@RequestMapping("/professor")
 	public String professor(HttpSession session, Model model) {
