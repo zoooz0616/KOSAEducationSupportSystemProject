@@ -3,26 +3,22 @@
 <mapper namespace="com.finalprj.kess.repository.IManagerRepository">
 
 
-	<select id="getClassList" parameterType="string" resultType="com.finalprj.kess.model.ClassVO">
+	<select id="getClassListByMngrId" parameterType="string" resultType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
 	SELECT
-	    clss_id AS clssId,
-	    clss_nm AS clssNm,
-	    clss_start_dd AS clssStartDd,
-	    clss_end_dd AS clssEndDd,
-	    clss_adr AS clssAdr,
-	    limit_cnt AS limitCnt,
-	    cmcd.cmcd_nm AS clssCd
+	    clss_Id, mngr_Id, cmpy_Id, clss_Nm, clss_Content,
+	    limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
+	    set_In_Tm, set_Out_Tm, cmcd_nm as clss_Cd, clss_Adr, clss_Total_Tm,
+	    file_Id, clss_Etc
 	FROM
-	    clss JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
+	    clss JOIN cmcd m ON clss.clss_cd = m.cmcd_id
 	WHERE
-	    mngr_id = #{mngrId}
-	ORDER BY
-    clss_id DESC
+		mngr_id = #{mngrId}
+	ORDER BY clss_nm
 	]]>
 	</select>
 
-	<select id="getApplyCount" parameterType="string" resultType="int">
+	<select id="getApplyCountByClssId" parameterType="string" resultType="int">
 	<![CDATA[
 	SELECT COUNT(stdt_id)
 	FROM aply
@@ -30,7 +26,7 @@
 	    clss_id = #{clss_id}
 	]]>
 	</select>
-	<select id="getRgstCount" parameterType="string" resultType="int">
+	<select id="getRgstCountByClssId" parameterType="string" resultType="int">
 	<![CDATA[
 	SELECT COUNT(stdt_id)
 	FROM rgst
@@ -39,94 +35,93 @@
 	]]>
 	</select>
 	
-	<select id="getClassCodeName" parameterType="string" resultType="string">
+	<select id="getCodeNameListByKeyword" resultType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
-	SELECT cmcd_nm
+	SELECT *
 	FROM cmcd
-	WHERE tpcd_id = 'GRP0002' AND cmcd_id = #{clss_cd}
+	WHERE cmcd_id like #{keyword} ||'%'
 	]]>
 	</select>
 	
-	<select id="getClassCodeNameList" resultType="string">
-	<![CDATA[
-	SELECT cmcd_nm
-	FROM cmcd
-	WHERE tpcd_id = 'GRP0002'
-	]]>
-	</select>
-	
-	<select id="getClassDetail" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
+	<select id="getClassDetailByClssId" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
 	<![CDATA[
 	SELECT
-		clss_id AS clssId,
-		clss_nm AS clssNm,
-		aply_start_dt AS aplyStartDt,
-		aply_end_dt AS aplyEndDt,
-		clss_start_dd AS clssStartDd,
-		clss_end_dd AS clssEndDd,
-		clss_adr AS clssAdr,
-		set_in_tm AS setInTm,
-		set_out_tm AS setOutTm,
-		limit_cnt AS limitCnt,
-		substr(clss_cd,-3,3) AS clssCd,
-		clss_content AS clssContent,
-		mngr.mngr_Nm AS mngrId
-	FROM clss JOIN mngr ON mngr.mngr_id=clss.mngr_id
-	WHERE clss_id= #{classId}
+	    clss_Id, mngr.mngr_Nm AS mngrId, cmpy_Id, clss_Nm, clss_Content,
+	    limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
+	    set_In_Tm, set_Out_Tm, cmcd_nm as clss_Cd, clss_Adr, clss_Total_Tm,
+	    file_Id, clss_Etc
+	FROM clss
+	    JOIN cmcd m ON clss.clss_cd = m.cmcd_id
+	    JOIN mngr ON mngr.mngr_id=clss.mngr_id
+	WHERE clss_id= #{clssId}
 	]]>
 	</select>
-	
-	<select id="getFileIdList" resultType="string" parameterType="string">
+
+	<select id="getFileSubIdListByFileId" parameterType="string" resultType="int">
 	<![CDATA[
-	select file_id from flup WHERE post_id=#{classId}
+		SELECT file_sub_id
+		FROM flup WHERE file_id = #{fileId} AND DELETE_YN = 'N'
+		ORDER BY file_sub_id
 	]]>
 	</select>
 	
-	<select id="getFile" resultType="com.finalprj.kess.model.FileVO" parameterType="string">
-	<![CDATA[
-	select
-	file_id AS fileId,
-	post_id AS postId,
-	file_Nm AS fileNm,
-	file_content AS fileContent,
-	file_size AS fileSize,
-	file_type AS fileType
-	from flup WHERE file_id=#{fileId}
-	]]>
-	</select>
-	
-	<select id="getStudentList" resultType="com.finalprj.kess.model.StudentVO" parameterType="string">
+	<select id="getFileByIds" resultType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
 	SELECT
-	    s.stdt_nm AS stdtNm,
-	    s.birth_dd AS birthDd,
-	    s.stdt_email AS stdtEmail,
-	    s.stdt_tel AS stdtTel,
-	    c.cmcd_nm AS genderCd,
-	    c2.cmcd_nm AS stdtCd
-	FROM rgst r
-	    JOIN stdt s ON s.stdt_id=r.stdt_id
-	    JOIN cmcd c ON c.tpcd_id||c.cmcd_id=s.gender_cd
-	    JOIN cmcd c2 ON c2.tpcd_id||c2.cmcd_id=r.rgst_cd
-	WHERE clss_id = #{classId}
+		*
+	FROM flup
+	WHERE file_id=#{fileId} AND file_sub_id=#{fileSubId} AND DELETE_YN = 'N'
 	]]>
 	</select>
 	
-	<select id="getClassNameList" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
+	<select id="getFileInfoByIds" resultType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
 	SELECT
-    	clss_id clssId,
-    	clss_nm clssNm
-	FROM clss WHERE mngr_id = #{mngrId}
-	ORDER BY clss_Nm
+		file_id, file_sub_id, file_nm, file_Size, file_type
+	FROM flup
+	WHERE file_id=#{fileId} AND file_sub_id=#{fileSubId} AND DELETE_YN = 'N'
 	]]>
 	</select>
 	
-	<select id="getClassName" resultType="string" parameterType="string">
+	<select id="getStudentListByClssId" resultType="com.finalprj.kess.model.StudentVO">
 	<![CDATA[
 	SELECT
-    	clss_nm
-	FROM clss WHERE clss_id = #{classId}
+		s.stdt_Id,
+		s.user_Email,
+		s.stdt_Nm,
+		c1.cmcd_nm AS gender_Cd,
+		s.birth_Dd,
+		s.stdt_Tel,
+		r.cmpt_cd AS job_Cd
+	FROM stdt s
+		JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
+		JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
+	WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
+	]]>
+	</select>
+	
+	<select id="getClassNameByClssId" resultType="string" parameterType="string">
+	<![CDATA[
+	SELECT
+		clss_nm
+	FROM clss WHERE clss_id = #{clssId}
+	]]>
+	</select>
+
+	<select id="getCountLateArriveByStdtId" resultType="int">
+	<![CDATA[
+	SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000002' AND stdt_id=#{stdtId} AND delete_yn='N'
+	]]>
+	</select>
+	
+	<select id="getCountEalryLeaveByStdtId" resultType="int">
+	<![CDATA[
+	SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000003' AND stdt_id=#{stdtId} AND delete_yn='N'
+	]]>
+	</select>
+	<select id="getCountAbsentByStdtId" resultType="int">
+	<![CDATA[
+	SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000004' AND stdt_id=#{stdtId} AND delete_yn='N'
 	]]>
 	</select>
 	

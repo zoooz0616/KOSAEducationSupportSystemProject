@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -44,16 +45,16 @@ public class ManagerController {
 	@GetMapping("")
 	public String managerMain(Model model, HttpSession session) {
 		String roleCd = (String) session.getAttribute("roleCd");
-		if (roleCd.equals("ROL0000003")) {
-			return "redirect:/manager/class";
-		} else {
-			return "redirect:/logout";
-		}
-//		if (roleCd == null || !roleCd.equals("ROL0000003")) {
-//			return "redirect:/login";
+//		if (roleCd.equals("ROL0000003")) {
+//			return "redirect:/manager/class";
 //		} else {
-//			return "redirect:/class";
+//			return "redirect:/login";
 //		}
+		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+			return "redirect:/login";
+		} else {
+			return "redirect:/manager/class";
+		}
 	}
 
 	//	담당 교육 목록 조회
@@ -118,42 +119,48 @@ public class ManagerController {
 	}
 
 	//	교육생 목록 조회
-	@GetMapping("/student-list/{classId}")
+	@GetMapping("/student/{classId}")
 	public String getStudentList(Model model, HttpSession session, @PathVariable String classId) {
-		//		public String getStudentList(Model model, HttpSession session, @PathVariable String classId, @RequestParam(value="startDate", defaultValue = "startDate") LocalDate startDate, @RequestParam(value = "endDate", defaultValue = "endDate") LocalDate endDate) {
-		//		if(startDate==null) {startDate = firstDay;};
-		//		if(endDate==null) {startDate = today;};
 		model.addAttribute("title", "교육생 목록");
-		session.setAttribute("role", "ROL0000003");// 삭제 예정
-		session.setAttribute("id", "MNGR000002");// 삭제 예정
+		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));//title 옆에 현재 수업 이름 출력
+		model.addAttribute("thisClassId", classId);
 
-		List<StudentVO> stdtList = managerService.getStudentListByClssId(classId);
+		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
 
-		List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("id"));
+		List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"));//검색창에 수업 목록 넘김
 
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
-		model.addAttribute("classCodeNameList", classCodeNameList);
+		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
+		
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
-		model.addAttribute("stdtCodeNameList", stdtCodeNameList);
+		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
+		
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
-		model.addAttribute("cmptCodeNameList", cmptCodeNameList);
+		model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
+		
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);//출퇴근 상태 넘김
 
-		model.addAttribute("classNameList", classNameList);
-		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));
-		model.addAttribute("stdtList", stdtList);
-		model.addAttribute("stdtCnt", stdtList.size());
 
-		for (StudentVO stdt : stdtList) {
-			stdt.setCountLateArrive(managerService.getCountLateArriveByStdtId(stdt.getStdtId()));
-			stdt.setCountEalryLeave(managerService.getCountEalryLeaveByStdtId(stdt.getStdtId()));
-			stdt.setCountAbsent(managerService.getCountAbsentByStdtId(stdt.getStdtId()));
+		for (StudentInfoDTO stdt : stdtList) {
+			for (CommonCodeVO cmcd : wlogCodeNameList) {
+				stdt.appendWlogCnt(String.valueOf(managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId())));
+				stdt.appendWlogCnt(",");
+			}
 		}
 
+		model.addAttribute("classNameList", classNameList);
+		model.addAttribute("stdtList", stdtList);
+		model.addAttribute("stdtCnt", stdtList.size());
 		return "manager/student_list";
 	}
-
+	
+	// clssId, wlogCd, stdtId 받아서 숫자 반환
+	@GetMapping("/student/{clssId}/{wlogCd}/{stdtId}")
+	public int getStudentList(Model model, HttpSession session, @PathVariable String clssId,@PathVariable String wlogCd, @PathVariable String stdtId) {
+		return managerService.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId);
+	}
+	
 	//	개인정보 조회
 	@GetMapping("/mypage")
 	public String getMngrInfo(Model model) {

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:href="@{/css/student_header.css}" rel="stylesheet">
-<link th:href="@{/css/student_main.css}" rel="stylesheet">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -22,10 +22,10 @@
 						<th>등록일자</th>
 						<th>조회수</th>
 					</tr>
-					<tr th:each="postVO : ${postList}">
-						<td></td>
+					<tr th:each="postVO , rowStat: ${postList}">
+						<td><span th:text="${rowStat.index + 1}"></span></td>
 						<td><a th:text="${postVO.postTitle}"
-							th:href="@{/notice/__${postVO.postId}__}">공지사항 제목</a></td>
+							th:href="@{/student/notice/__${postVO.postId}__}">공지사항 제목</a></td>
 						<td th:text="${postVO.rgstDd}">등록일자</td>
 						<td th:text="${postVO.postHit}">조회수</td>
 					</tr>

@@ -125,4 +125,15 @@
 	]]>
 	</select>
 	
+	<select id="getCountByClssIdWlogCdStdtId" resultType="int">
+	<![CDATA[
+	SELECT
+		count(stdt_id) wlogCnt
+	FROM wlog
+	WHERE
+		clss_id=#{clssId} AND
+		wlog_cd=#{wlogCd} AND
+		stdt_id=#{stdtId}
+	]]>
+	</select>
 </mapper>
