@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -57,4 +58,8 @@ public interface IAdminService {
 	void insertClassVO(ClassVO classVO);
 	void insertCurriculumVO(CurriculumVO curriculumVO);
 	void createClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList);
+
+	ClassVO getClass(String clssId);
+	List<CurriculumVO> getCurriculumList(String clssId);
+	CurriculumDetailDTO getCurriculumDetail(String lctrId);
 }

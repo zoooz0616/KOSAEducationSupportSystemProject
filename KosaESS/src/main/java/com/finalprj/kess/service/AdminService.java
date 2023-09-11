@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -171,7 +172,23 @@ public class AdminService implements IAdminService {
 
 	}
 
+	@Override
+	public ClassVO getClass(String clssId) {
+		return adminRepository.getClass(clssId);
+	}
+	
+	@Override
+	public List<CurriculumVO> getCurriculumList(String clssId) {
+		return adminRepository.getCurriculumList(clssId);
+	}
 
+	@Override
+	public CurriculumDetailDTO getCurriculumDetail(String lctrId) {
+		return adminRepository.getCurriculumDetail(lctrId);
+	}
+	
+	
+	
 
 
 
@@ -199,6 +216,11 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
 				aplyEndDt, classStartDd, classEndDd);
 	}
+
+	
+
+	
+
 
 
 

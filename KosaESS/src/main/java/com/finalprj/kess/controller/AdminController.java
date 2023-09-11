@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ClassInsertDTO;
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -193,6 +195,43 @@ public class AdminController {
 		return "admin/class_list";
 	}
 
+	@RequestMapping("/class/{clssId}")
+	public String classDetail(@PathVariable String clssId, HttpSession session, Model model) {
+		//title
+		String title = "교육과정 상세";
+		model.addAttribute("title", title);
+
+		//insert or select or update
+		String act="select";
+		model.addAttribute("act", act);
+		
+		//해당 교육과정 객체 가져오기
+		ClassVO classVO = adminService.getClass(clssId);
+		model.addAttribute("classVO", classVO);
+		
+		//파일 가져오기
+		List<FileVO> fileList = null;
+		if(classVO.getFileId() != null) {
+			fileList = uploadFileService.getFileList(classVO.getFileId());
+		}
+		model.addAttribute("fileList", fileList);
+		
+		//강의 가져오기
+		List<CurriculumVO> curriculumList = adminService.getCurriculumList(classVO.getClssId());
+		List<CurriculumDetailDTO> curriculumDetailList = null;
+		
+		if(curriculumList != null) {
+			curriculumDetailList = new ArrayList<CurriculumDetailDTO>();
+			for(CurriculumVO curriculumVO: curriculumList) {
+				CurriculumDetailDTO curriculumDetailDTO= adminService.getCurriculumDetail(curriculumVO.getLctrId());
+				curriculumDetailList.add(curriculumDetailDTO);
+			}
+		}
+		model.addAttribute("curriculumDetailList", curriculumDetailList);
+		
+		return "admin/class_form";
+	}
+
 	@GetMapping("/class/insert")
 	public String insertClass(HttpSession session, Model model) {
 
@@ -238,7 +277,7 @@ public class AdminController {
 		if(session.getAttribute("mngrId")== null) {
 			return "redirect:/login";
 		}
-		
+
 		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
 		String maxFileId = null;	
 		List<FileVO> fileList=null;
@@ -275,32 +314,32 @@ public class AdminController {
 		classVO.setClssNm(classInsertDTO.getClssNm());
 		classVO.setClssContent(classInsertDTO.getClssContent());
 		classVO.setLimitCnt(classInsertDTO.getLimitCnt());
-		
+
 		//Date-time(String) to Timestamp
 		try {
 			String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
 			String aplyEndDt = classInsertDTO.getAplyEndDt();
-			
+
 			if (aplyStartDt.equals("null") && aplyEndDt.equals("null")) {
-			    classVO.setAplyStartDt(null);
-			    classVO.setAplyEndDt(null);
+				classVO.setAplyStartDt(null);
+				classVO.setAplyEndDt(null);
 			} else {
-			    try {
-			        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-			        java.util.Date parsedStartDate = dateFormat.parse(aplyStartDt);
-			        java.util.Date parsedEndDate = dateFormat.parse(aplyEndDt);
-			        Timestamp startTimestamp = new Timestamp(parsedStartDate.getTime());
-			        Timestamp endTimestamp = new Timestamp(parsedEndDate.getTime());
-			        classVO.setAplyStartDt(startTimestamp);
-			        classVO.setAplyEndDt(endTimestamp);
-			    } catch (ParseException e) {
-			        e.printStackTrace();
-			    }
+				try {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+					java.util.Date parsedStartDate = dateFormat.parse(aplyStartDt);
+					java.util.Date parsedEndDate = dateFormat.parse(aplyEndDt);
+					Timestamp startTimestamp = new Timestamp(parsedStartDate.getTime());
+					Timestamp endTimestamp = new Timestamp(parsedEndDate.getTime());
+					classVO.setAplyStartDt(startTimestamp);
+					classVO.setAplyEndDt(endTimestamp);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		//Time(String) to Timestamp
 		try {
 			String setInTm = classInsertDTO.getSetInTm();
@@ -321,20 +360,20 @@ public class AdminController {
 			String clssStartDd = (String)classInsertDTO.getClssStartDd();
 			String clssEndDd = (String)classInsertDTO.getClssEndDd();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		    java.util.Date startDate = dateFormat.parse(clssStartDd);
-		    java.util.Date endDate = dateFormat.parse(clssEndDd);
-		    
-		    // java.util.Date를 java.sql.Date로 변환
-		    java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
-		    java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+			java.util.Date startDate = dateFormat.parse(clssStartDd);
+			java.util.Date endDate = dateFormat.parse(clssEndDd);
+
+			// java.util.Date를 java.sql.Date로 변환
+			java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+			java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
 			classVO.setClssStartDd(sqlStartDate);
 			classVO.setClssEndDd(sqlEndDate);
 		} catch (ParseException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
-		
-		
+
+
 		classVO.setClssCd(clssCd);
 		classVO.setClssAdr(classInsertDTO.getClssAdr());
 		classVO.setClssTotalTm(classInsertDTO.getClssTotalTm());
