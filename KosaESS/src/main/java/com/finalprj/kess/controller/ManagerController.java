@@ -2,8 +2,8 @@ package com.finalprj.kess.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.sql.Date;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
-import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IManagerService;
 
 import jakarta.servlet.http.HttpSession;
@@ -45,11 +44,11 @@ public class ManagerController {
 	@GetMapping("")
 	public String managerMain(Model model, HttpSession session) {
 		String roleCd = (String) session.getAttribute("roleCd");
-//		if (roleCd.equals("ROL0000003")) {
-//			return "redirect:/manager/class";
-//		} else {
-//			return "redirect:/login";
-//		}
+		//		if (roleCd.equals("ROL0000003")) {
+		//			return "redirect:/manager/class";
+		//		} else {
+		//			return "redirect:/login";
+		//		}
 		if (roleCd == null || !roleCd.equals("ROL0000003")) {
 			return "redirect:/login";
 		} else {
@@ -120,50 +119,56 @@ public class ManagerController {
 
 	//	교육생 목록 조회
 	@GetMapping("/student/{classId}")
-	public String getStudentList(Model model, HttpSession session, @PathVariable String classId) {
-		model.addAttribute("title", "교육생 목록");
-		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));//title 옆에 현재 수업 이름 출력
-		model.addAttribute("thisClassId", classId);
-
-		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
-
-		List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"));//검색창에 수업 목록 넘김
-
-		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
-		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
-		
-		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
-		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
-		
-		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
-		model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
-		
-		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-		model.addAttribute("wlogCodeNameList", wlogCodeNameList);//출퇴근 상태 넘김
-
-
-		for (StudentInfoDTO stdt : stdtList) {
-			for (CommonCodeVO cmcd : wlogCodeNameList) {
-				stdt.appendWlogCnt(String.valueOf(managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId())));
-				stdt.appendWlogCnt(",");
+	public String getStudentList(Model model, HttpSession session, @PathVariable String classId, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
+		String roleCd = (String) session.getAttribute("roleCd");
+		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+			return "login";
+		} else {
+			if (startDate == null) {
+				startDate = String.valueOf(YearMonth.now().atDay(1));
 			}
-		}
 
-		model.addAttribute("classNameList", classNameList);
-		model.addAttribute("stdtList", stdtList);
-		model.addAttribute("stdtCnt", stdtList.size());
-		return "manager/student_list";
+			if (endDate == null) {
+				endDate = String.valueOf(YearMonth.now().atEndOfMonth());
+			}
+
+			List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
+			List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"));//수업 목록
+			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
+			List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
+			List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
+			List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+
+			for (StudentInfoDTO stdt : stdtList) {
+				stdt.setWlogCnt("");
+				for (CommonCodeVO cmcd : wlogCodeNameList) {
+					stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
+					stdt.appendWlogCnt(",");
+				}
+			}
+
+			model.addAttribute("title", "교육생 목록");
+			model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));//title 옆에 현재 수업 이름 출력
+			model.addAttribute("thisClassId", classId);
+			model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
+			model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
+			model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
+			model.addAttribute("wlogCodeNameList", wlogCodeNameList);//출퇴근 상태 넘김
+			model.addAttribute("classNameList", classNameList);
+			model.addAttribute("stdtList", stdtList);
+			model.addAttribute("stdtCnt", stdtList.size());
+			return "manager/student_list";
+		}
 	}
-	
-	// clssId, wlogCd, stdtId 받아서 숫자 반환
-	@GetMapping("/student/{clssId}/{wlogCd}/{stdtId}")
-	public int getStudentList(Model model, HttpSession session, @PathVariable String clssId,@PathVariable String wlogCd, @PathVariable String stdtId) {
-		return managerService.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId);
-	}
-	
+
 	//	개인정보 조회
 	@GetMapping("/mypage")
-	public String getMngrInfo(Model model) {
-		return "manager/mypage";
+	public String getMngrInfo(Model model, HttpSession session) {
+		String roleCd = (String) session.getAttribute("roleCd");
+		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+			return "login";
+		} else {
+			return "manager/mypage";
+		}
 	}
 }

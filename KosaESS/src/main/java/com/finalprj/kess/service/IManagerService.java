@@ -1,5 +1,6 @@
 package com.finalprj.kess.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -37,5 +38,5 @@ public interface IManagerService {
 
 	public int getCountAbsentByStdtId(String stdtId);
 
-	public int getCountByClssIdWlogCdStdtId (String clssId, String wlogCd, String stdtId);
+	public int getCountByClssIdWlogCdStdtId (String clssId, String wlogCd, String stdtId, String startDate, String endDate);
 }

@@ -1,5 +1,6 @@
 package com.finalprj.kess.repository;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -42,5 +43,5 @@ public interface IManagerRepository {
 
 	public int getCountEalryLeaveByStdtId(String stdtId);
 	
-	public int getCountByClssIdWlogCdStdtId (@Param("clssId") String clssId, @Param("wlogCd") String wlogCd, @Param("stdtId") String stdtId);
+	public int getCountByClssIdWlogCdStdtId (@Param("clssId") String clssId, @Param("wlogCd") String wlogCd, @Param("stdtId") String stdtId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 }

@@ -32,27 +32,16 @@
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;"><select><option
-										th:each="className:${classNameList}"
-										th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
-							<!-- 						<td><datalist id="search_option"><option th:each="class:${classList}" th:value = "${class.clssNm}"></datalist></td> -->
+							<td style="width: 30%;"><select><option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
+<!-- 							<td style="width: 30%;"><datalist id="search_option"><option th:each="class:${classList}" th:value = "${class.clssNm}"></datalist></td> -->
 							<td style="width: 10%;">상태</td>
-							<td style="width: 50%;"><span
-								th:each="classCodeName:${classCodeNameList}"> <input
-									type="checkbox" checked="checked"
-									value="${classCodeName.cmcdId}"> <label
-									th:text="${classCodeName.cmcdNm}"></label></span></td>
+							<td style="width: 50%;"><span th:each="classCodeName:${classCodeNameList}"> <input type="checkbox" checked="checked" value="${classCodeName.cmcdId}"> <label th:text="${classCodeName.cmcdNm}"></label></span></td>
 						</tr>
 						<tr>
 							<td style="width: 5%;">학생 상태</td>
-							<td style="width: 30%;"><span
-								th:each="stdtCodeName:${stdtCodeNameList}"> <input
-									type="checkbox" checked="checked"
-									value="${stdtCodeName.cmcdNm}"> <label
-									th:text="${stdtCodeName.cmcdNm}"></label></span></td>
+							<td style="width: 30%;"><span th:each="stdtCodeName:${stdtCodeNameList}"> <input type="checkbox" checked="checked" value="${stdtCodeName.cmcdNm}"> <label th:text="${stdtCodeName.cmcdNm}"></label></span></td>
 							<td style="width: 10%;">기간</td>
-							<td style="width: 55%;"><input type="date"><span>~</span><input
-								type="date"></td>
+							<td style="width: 55%;"><input type="date"><span>~</span><input type="date"></td>
 						</tr>
 						<tr>
 
@@ -73,8 +62,7 @@
 					<th><input type="checkbox"></th>
 					<th>번호</th>
 					<th>이름</th>
-					<th th:each="wlogCodeName:${wlogCodeNameList}"
-						th:text="${wlogCodeName.cmcdNm}"></th>
+					<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
 					<th>성별</th>
 					<th>생년월일</th>
 					<th>이메일</th>
@@ -85,11 +73,11 @@
 					<td><input type="checkbox"></td>
 					<td th:text="${stdtStat.count}"></td>
 					<td th:text="${stdt.stdtNm}"></td>
-					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.setSplit('stdt.wlogCnt', ',')}[${stdtStat.count}]">?</td>
+					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 					<td th:text="${stdt.genderCd}">성별</td>
 					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:text="${stdt.userEmail}">이메일</td>
-					<td th:text="${stdt.stdtTel}">연락처</td>
+					<td th:text="|${#strings.substring(stdt.stdtTel,0,3)}-${#strings.substring(stdt.stdtTel,3,7)}-${#strings.substring(stdt.stdtTel,7,)}|">연락처</td>
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
 			</table>

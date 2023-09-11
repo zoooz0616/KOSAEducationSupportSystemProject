@@ -1,5 +1,6 @@
 package com.finalprj.kess.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +84,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public int getCountByClssIdWlogCdStdtId(String clssId, String wlogCd, String stdtId) {
-		return managerRepository.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId);
+	public int getCountByClssIdWlogCdStdtId(String clssId, String wlogCd, String stdtId, String startDate, String endDate) {
+		return managerRepository.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId, startDate, endDate);
 	}
 
 }
