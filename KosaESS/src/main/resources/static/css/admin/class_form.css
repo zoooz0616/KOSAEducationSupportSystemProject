@@ -2,6 +2,11 @@ input {
 	outline: none;
 }
 
+a {
+	color: #fff;
+	text-decoration-line: none;
+}
+
 .sidebar.open ~ .home-section {
 	left: 250px;
 	width: calc(100% - 250px);
@@ -75,7 +80,6 @@ input {
 	height: 100%;
 }
 
-
 .class_form_content .row2 {
 	display: flex;
 	border-bottom: 1px solid #0E5881;
@@ -93,12 +97,13 @@ input {
 	padding: 5px;
 	padding-top: 120px;
 }
+
 .class_form_content .row2 .col2 .col_content {
 	padding: 5px;
 }
 
-.content_info_btn_wrap img{
-	width: 20px;	
+.content_info_btn_wrap img {
+	width: 20px;
 }
 
 .col2 .col_content .content_info_btn_wrap {
@@ -111,13 +116,13 @@ input {
 	border: none;
 	border-radius: 3px;
 	font-weight: bold;
-	display:flex;
+	display: flex;
 	margin: 2px;
 	padding: 5px;
 }
 
 .lecture_table {
-	border:1px solid #E7EFF3;
+	border: 1px solid #E7EFF3;
 	border-collapse: collapse;
 	width: 100%;
 	margin: 10px 0 10px 0;
@@ -127,8 +132,12 @@ th {
 	background: #E7EFF3;
 }
 
-.lecture_table tr td, th{
-	border:1px solid #E7EFF3;
+.lecture_table tr td, th {
+	border: 1px solid #E7EFF3;
+}
+
+.lecture_table tr td {
+	padding-left: 10px;
 }
 
 .lecture_table tr td * {
@@ -136,7 +145,7 @@ th {
 }
 
 form .submit_btn {
-	font-size:20px;
+	font-size: 20px;
 	background: #0E5881;
 	color: white;
 	border: none;
@@ -146,4 +155,63 @@ form .submit_btn {
 	height: 35px;
 	margin: 10px;
 	text-align: center;
+}
+
+.file_table {
+	border: 1px solid #E7EFF3;
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10px 0 10px 0;
+}
+
+.file_table tr td, th {
+	border: 1px solid #E7EFF3;
+}
+
+.file_table tr td {
+	padding-left: 10px;
+}
+
+.file_list .file_wrap {
+	display: flex;
+}
+
+.file_list div .btns {
+	border: 2px solid #0E5881;
+	background: white;
+	border-radius: 3px;
+	margin: 3px 5px 3px 5px;
+	text-align: center;
+	display: flex;
+	font-weight: bold;
+	color: #0E5881;
+	padding: 0 3px 0 3px;
+	height: 25px;
+}
+
+.file_list div .btns img {
+	width: 20px;
+}
+
+.file_input {
+	margin: 3px 5px 3px 0;
+	display: flex;
+}
+
+.file_input label {
+	background: #0E5881;
+	color: white;
+	padding: 1px 5px 1px 5px;
+	font-size: 15px;
+}
+
+.file_input input[type="file"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
 }

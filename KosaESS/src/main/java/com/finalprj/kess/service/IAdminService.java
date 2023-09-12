@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -62,4 +64,11 @@ public interface IAdminService {
 	ClassVO getClass(String clssId);
 	List<CurriculumVO> getCurriculumList(String clssId);
 	CurriculumDetailDTO getCurriculumDetail(String lctrId);
+
+	void deleteFile(String fileId, List<String> fileSubIds);
+	Integer getMaxFileSubId(String fileId);
+
+	void updateClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList);
+
+	List<ApplyDetailDTO> getApplyDetailDTOList(String clssId);
 }

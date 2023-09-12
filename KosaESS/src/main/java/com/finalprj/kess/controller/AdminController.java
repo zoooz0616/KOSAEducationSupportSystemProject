@@ -28,8 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.file.FileUtils;
+import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -42,6 +45,7 @@ import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IUploadFileRepository;
 import com.finalprj.kess.service.AdminService;
+import com.finalprj.kess.service.FileService;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -57,10 +61,18 @@ public class AdminController {
 
 	@Autowired
 	IAdminService adminService;
+
 	@Autowired
 	IManagerService managerService;
+
 	@Autowired
 	IUploadFileService uploadFileService;
+
+	@Autowired
+	FileService fileService;
+
+	@Autowired
+	FileUtils fileUtils;
 
 	/**
 	 * @author : eunji
@@ -204,22 +216,22 @@ public class AdminController {
 		//insert or select or update
 		String act="select";
 		model.addAttribute("act", act);
-		
+
 		//해당 교육과정 객체 가져오기
 		ClassVO classVO = adminService.getClass(clssId);
 		model.addAttribute("classVO", classVO);
-		
+
 		//파일 가져오기
 		List<FileVO> fileList = null;
 		if(classVO.getFileId() != null) {
 			fileList = uploadFileService.getFileList(classVO.getFileId());
 		}
 		model.addAttribute("fileList", fileList);
-		
+
 		//강의 가져오기
 		List<CurriculumVO> curriculumList = adminService.getCurriculumList(classVO.getClssId());
 		List<CurriculumDetailDTO> curriculumDetailList = null;
-		
+
 		if(curriculumList != null) {
 			curriculumDetailList = new ArrayList<CurriculumDetailDTO>();
 			for(CurriculumVO curriculumVO: curriculumList) {
@@ -228,7 +240,7 @@ public class AdminController {
 			}
 		}
 		model.addAttribute("curriculumDetailList", curriculumDetailList);
-		
+
 		return "admin/class_form";
 	}
 
@@ -279,13 +291,14 @@ public class AdminController {
 		}
 
 		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
-		String maxFileId = null;	
-		List<FileVO> fileList=null;
+		String maxFileId = null;
+		List<FileVO> fileList = null;
 
 		//파일을 첨부했다면 List생성해서 전달
 		if(files[0]!=null && !files[0].isEmpty()) {
 			maxFileId = uploadFileService.getMaxFileId();
 			int subFileId=1;
+			fileList = new ArrayList<FileVO>();
 			try {
 				for(MultipartFile file: files) {
 					if(file!=null && !file.isEmpty()) {
@@ -397,6 +410,251 @@ public class AdminController {
 		adminService.createClass(fileList, classVO, curriculumList);
 
 		return "redirect:/admin/class";
+	}
+
+	@GetMapping("/class/update/{clssId}")
+	public String updateClass(@PathVariable String clssId, Model model, HttpSession session) {
+		//title
+		String title = "교육과정 수정";
+		model.addAttribute("title", title);
+
+		//insert or select or update
+		String act="update";
+		model.addAttribute("act", act);
+
+		/*
+		 * 선택한 교육과정 정보 넘기기
+		 */
+
+		//해당 교육과정 객체 가져오기
+		ClassVO classVO = adminService.getClass(clssId);
+		model.addAttribute("classVO", classVO);
+
+		System.out.println("=================================");
+		System.out.println("총시간:"+classVO.getClssTotalTm());
+		System.out.println("=================================");
+		
+		//파일 가져오기
+		List<FileVO> fileList = null;
+		if(classVO.getFileId() != null) {
+			fileList = uploadFileService.getFileList(classVO.getFileId());
+		}
+		model.addAttribute("fileList", fileList);
+
+		//강의 가져오기
+		List<CurriculumVO> curriculumList = adminService.getCurriculumList(classVO.getClssId());
+		List<CurriculumDetailDTO> curriculumDetailList = null;
+
+		if(curriculumList != null) {
+			curriculumDetailList = new ArrayList<CurriculumDetailDTO>();
+			for(CurriculumVO curriculumVO: curriculumList) {
+				CurriculumDetailDTO curriculumDetailDTO= adminService.getCurriculumDetail(curriculumVO.getLctrId());
+				curriculumDetailList.add(curriculumDetailDTO);
+			}
+		}
+		model.addAttribute("curriculumDetailList", curriculumDetailList);
+
+
+
+		/*
+		 * 선택에 필요한 리스트 넘기기
+		 */
+
+		//교육상태 리스트
+		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
+		model.addAttribute("classCommonCodeList", classCommonCodeList);
+
+		//업체 리스트
+		List<CompanyVO> companyList = adminService.getCompanyList();
+		model.addAttribute("companyList", companyList);
+
+		//업무담당자
+		List<ManagerVO> managerList = adminService.getManagerList();
+		model.addAttribute("managerList", managerList);
+
+		//강의 리스트
+		List<LectureVO> lectureList = adminService.getLectureList();
+		model.addAttribute("lectureList", lectureList);
+
+		return "admin/class_form";
+	}
+
+	@PostMapping("/class/update")
+	public String updateClass(HttpSession session,
+			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
+			ClassInsertDTO classInsertDTO, @RequestParam String clssCd, @RequestParam(required = false) String cmpyId,
+			@RequestParam(required = false) String mngrId, @RequestParam(name="lctrId", required = false) List<String> lctrIds,
+			@RequestParam(name="fileSubId", required = false) List<String> fileSubIds) {
+
+		//원래의 교육과정 가져오기
+		ClassVO classVO = adminService.getClass(classInsertDTO.getClssId());
+
+		//현 교육과정의 fileId값 가져오기 
+		String fileId = classVO.getFileId();
+		
+		//만약 null이라면 파일이 없었음. fileId 생성해줌.
+		if(fileId == null) {
+			fileId = uploadFileService.getMaxFileId();
+		}
+		
+		//삭제되거나 변경전 파일 아이디들(deleteFileIds) 있다면 update deleteYn='Y'
+		if (fileSubIds != null) {
+			adminService.deleteFile(fileId, fileSubIds);
+		}
+		
+		//추가한 파일 insert하기.파일 변경이 없거나 모두 삭제시 fileList는 null.
+		List<FileVO> fileList = null;
+
+		if(files[0]!=null && !files[0].isEmpty()) {
+			Integer fileSubId = adminService.getMaxFileSubId(fileId);
+
+			if (fileSubId == null) {
+			    fileSubId = 1;
+			}
+			
+			fileList = new ArrayList<FileVO>();
+			try {
+				for(MultipartFile file: files) {
+					if(file!=null && !file.isEmpty()) {
+						FileVO fileVO = new FileVO();
+						fileVO.setFileId(fileId);
+						fileVO.setFileSubId(fileSubId);
+						fileVO.setFileNm(file.getOriginalFilename());
+						fileVO.setFileSize(file.getSize());
+						fileVO.setFileType(file.getContentType());
+						fileVO.setFileContent(file.getBytes());
+						fileList.add(fileVO);
+						fileSubId++;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				redirectAttrs.addFlashAttribute("message", e.getMessage());
+			}
+		}
+
+		//dto연결하고 select문들 다 가져와서 교육과정 update하기
+		classVO.setMngrId(mngrId);
+		classVO.setCmpyId(cmpyId);
+		classVO.setClssNm(classInsertDTO.getClssNm());
+		classVO.setClssContent(classInsertDTO.getClssContent());
+		classVO.setLimitCnt(classInsertDTO.getLimitCnt());
+
+		//Date-time(String) to Timestamp
+		try {
+			String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
+			String aplyEndDt = classInsertDTO.getAplyEndDt();
+
+			if (aplyStartDt.equals("null") && aplyEndDt.equals("null")) {
+				classVO.setAplyStartDt(null);
+				classVO.setAplyEndDt(null);
+			} else {
+				try {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+					java.util.Date parsedStartDate = dateFormat.parse(aplyStartDt);
+					java.util.Date parsedEndDate = dateFormat.parse(aplyEndDt);
+					Timestamp startTimestamp = new Timestamp(parsedStartDate.getTime());
+					Timestamp endTimestamp = new Timestamp(parsedEndDate.getTime());
+					classVO.setAplyStartDt(startTimestamp);
+					classVO.setAplyEndDt(endTimestamp);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		//Time(String) to Timestamp
+		try {
+			String setInTm = classInsertDTO.getSetInTm();
+			String setOutTm = classInsertDTO.getSetOutTm();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+			java.util.Date parsedSetInTm = dateFormat.parse(setInTm);
+			java.util.Date parsedSetOutTm = dateFormat.parse(setOutTm);
+			// Date 객체를 Timestamp로 변환합니다.
+			Timestamp setInTimestamp = new Timestamp(parsedSetInTm.getTime());
+			Timestamp sertOutTimestamp = new Timestamp(parsedSetOutTm.getTime());
+			classVO.setSetInTm(setInTimestamp);
+			classVO.setSetOutTm(sertOutTimestamp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		//String to Date
+		try {
+			String clssStartDd = (String)classInsertDTO.getClssStartDd();
+			String clssEndDd = (String)classInsertDTO.getClssEndDd();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			java.util.Date startDate = dateFormat.parse(clssStartDd);
+			java.util.Date endDate = dateFormat.parse(clssEndDd);
+
+			// java.util.Date를 java.sql.Date로 변환
+			java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+			java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+
+			classVO.setClssStartDd(sqlStartDate);
+			classVO.setClssEndDd(sqlEndDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		classVO.setClssCd(clssCd);
+		classVO.setClssAdr(classInsertDTO.getClssAdr());
+		classVO.setClssTotalTm(classInsertDTO.getClssTotalTm());
+		classVO.setClssEtc(classInsertDTO.getClssEtc());
+		classVO.setUpdterId((String)session.getAttribute("mngrId"));
+
+
+		//커리큘럼 다 가져와서 원래꺼 delete하고 새로 insert하기
+		//커리큘럼을 변경하지 않았거나 모두 삭제했을 경우 null전달
+		List<CurriculumVO> curriculumList = null;
+		if(lctrIds != null) {
+			curriculumList = new ArrayList<CurriculumVO>();
+			for(String lctrId : lctrIds) {
+				CurriculumVO curriculumVO = new CurriculumVO();
+				curriculumVO.setClssId(classVO.getClssId());
+				curriculumVO.setLctrId(lctrId);
+				curriculumVO.setRgsterId((String)session.getAttribute("mngrId"));
+				curriculumList.add(curriculumVO);
+			}
+		}
+
+		adminService.updateClass(fileList, classVO, curriculumList);
+		System.out.println("===============================================");
+		System.out.println("클래스: "+classVO);
+		System.out.println("===============================================");
+		
+
+		//교육과정 상세페이지로 이동하기
+		return "redirect:/admin/class/"+classVO.getClssId();
+	}
+
+	@GetMapping("/class/{clssId}/applicant")
+	public String applicant(@PathVariable String clssId, Model model, HttpSession session) {
+		//해당 교육과정VO 생성
+		ClassVO classVO = adminService.getClass(clssId);
+		model.addAttribute("classVO", classVO);
+		
+		//지원자 목록 생성
+		List<ApplyDetailDTO> applyDetailList = adminService.getApplyDetailDTOList(clssId);
+		model.addAttribute("applyDetailList", applyDetailList);
+		
+		
+		return "admin/applicant_list";
+	}
+	
+	@PostMapping("/class/{clssId}/applicant")
+	public String applicant(@PathVariable String clssId, HttpSession session, @RequestParam("action") String action) {
+		if ("합격".equals(action)) {
+            // "pass" 버튼을 클릭한 경우 실행할 코드
+            // ...
+        } else if ("불합격".equals(action)) {
+            // "fail" 버튼을 클릭한 경우 실행할 코드
+            // ...
+        }
+        
+        // 원하는 뷰 페이지로 이동
+        return "redirect:/admin/class/"+clssId+"/applicant";
 	}
 
 	@RequestMapping("/professor")

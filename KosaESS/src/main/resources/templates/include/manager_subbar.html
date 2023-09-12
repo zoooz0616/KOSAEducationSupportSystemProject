@@ -77,7 +77,7 @@
 							
 						</div>
 					</div>
-					<i class='bx bx-log-out' id="log_out"><a th:href="@{/logout}"><img
+					<i class='bx bx-log-out' id="log_out"><a onclick="logout()"><img
 								style="width: 35px; object-fit: contain;margin-top: 5px;" class='bx bx-log-out'
 								id="log_out" th:src="@{/img/logout_white.png}"></a></i>
 				</div>
@@ -85,6 +85,7 @@
 		</ul>
 	</div>
 	<script>
+		//사이드바 open/close
   		let sidebar = document.querySelector(".sidebar");
   		let closeBtn = document.querySelector("#btn");
   		closeBtn.addEventListener("click", ()=>{
@@ -125,6 +126,13 @@
     		});
   		});
 		
+		function logout() {
+	        if (!confirm("로그아웃 하시겠습니까?")) {
+	        	//원래 화면으로
+	        } else {
+	        	location.replace("/login");
+	        }
+	    }
   </script>
 </body>
 </html>

@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -187,14 +189,52 @@ public class AdminService implements IAdminService {
 		return adminRepository.getCurriculumDetail(lctrId);
 	}
 	
+	@Override
+	public void deleteFile(String fileId, List<String> fileSubIds) {
+		adminRepository.deleteFile(fileId, fileSubIds);
+	}
+	
+	@Override
+	public Integer getMaxFileSubId(String fileId) {
+		return adminRepository.getMaxFileSubId(fileId);
+	}
+
+	@Override
+	@Transactional
+	public void updateClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList) {
+		if (fileList != null) {
+			for(FileVO fileVO : fileList) {
+				uploadFileRepository.uploadFile(fileVO);
+			}
+		}
+		adminRepository.updateClassVO(classVO);
+
+		if (curriculumList != null) {
+			adminRepository.deleteCurriculum(classVO.getClssId());
+			for(CurriculumVO curriculumVO : curriculumList) {
+				adminRepository.insertCurriculumVO(curriculumVO);
+			}
+		}
+	}
+
+	@Override
+	public List<ApplyDetailDTO> getApplyDetailDTOList(String clssId) {
+		return adminRepository.getApplyDetailDTOList(clssId);
+	}
+
+
+
+
+
+
+
+
 	
 	
-
-
-
-
-
-
+	
+	
+	
+	
 	@Override
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();
@@ -216,20 +256,5 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
 				aplyEndDt, classStartDd, classEndDd);
 	}
-
-	
-
-	
-
-
-
-
-
-
-
-
-
-
-
 
 }
