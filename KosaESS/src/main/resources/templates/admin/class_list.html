@@ -145,11 +145,11 @@
 							th:value="${class.clssId}"></td>
 						<td th:text="${class.clssId}"></td>
 						<td><a th:text="${class.clssNm}"
-							th:href="@{/manager/class/__${class.clssId}__}"></a></td>
+							th:href="@{/admin/class/__${class.clssId}__}"></a></td>
 						<td th:text="|${class.aplyStartDt} ~ ${class.aplyEndDt}|"></td>
 						<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
 						<td th:text="${class.clssAdr}">class address</td>
-						<td><span th:text="${class.limitCnt}"></span></td>
+						<td><a th:href="@{/admin/class/__${class.clssId}__/applicant}"><span th:text="${class.limitCnt}"></span></a></td>
 						<td th:text="${class.clssCd}">status</td>
 					</tr>
 				</table>

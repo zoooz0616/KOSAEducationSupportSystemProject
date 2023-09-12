@@ -20,7 +20,7 @@
 	<![CDATA[
 		select *
 		from flup
-		where file_id = #{fileId}
+		where file_id = #{fileId} and delete_yn='N'
 	]]>
 	</select>
 	
