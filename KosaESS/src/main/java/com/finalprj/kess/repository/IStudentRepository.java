@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
@@ -47,6 +49,8 @@ public interface IStudentRepository {
 	int getAplyYN(String stdtId, String classId);
 
 	ClassVO selectviewClass(String viewClass);
+
+	List<CurriculumDetailDTO> getCurriculumList(String clssId);
 
 		
 }

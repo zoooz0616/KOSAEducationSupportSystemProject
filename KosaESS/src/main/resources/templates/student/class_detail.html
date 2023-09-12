@@ -21,25 +21,30 @@
 					<tr>
 						<th>이름</th>
 						<td colspan="5" th:text="${classDetail.clssNm}"></td>
+						<th>교육 상태</th>
+						<td style="width: 10%;" th:text="${classDetail.clssCdNm}"></td>
 					</tr>
 					<tr>
 						<th>지원 기간</th>
-						<td style="width: 35%"
+						<td colspan="2"
 							th:text="${classDetail.aplyStartDd} + ' ~ ' + ${classDetail.aplyEndDd}"></td>
 
 						<th>교육 기간</th>
-						<td colspan="3"
+						<td colspan="2"
 							th:text="${classDetail.clssStartDd}+ ' ~ ' + ${classDetail.clssEndDd}"></td>
+						<th>업무담당자</th>
+						<td th:text="${classDetail.mngrNm}"></td>
 					</tr>
 					<tr>
-						<th>교육 장소</th>
-						<td th:text="${classDetail.clssAdr}"></td>
 						<th>회사</th>
-						<td style="width: 15%" th:text="${classDetail.cmpyNm}"></td>
-						<th>교육 상태</th>
-						<td th:text="${classDetail.clssCdNm}"></td>
+						<td colspan="3" th:text="${classDetail.cmpyNm}"></td>
+						<th>교육 장소</th>
+						<td colspan="3" th:text="${classDetail.clssAdr}"></td>
+
 					</tr>
 					<tr>
+						<th>총 이수 시간</th>
+						<td th:text="${classDetail.clssTotalTm} + '시간'"></td>
 						<th>시작 시간</th>
 						<td th:text="${classDetail.setInTime} + '시'"></td>
 						<th>종료 시간</th>
@@ -49,6 +54,34 @@
 					</tr>
 				</table>
 				<div>
+					<div>
+						<h3>교육 주요 내용</h3>
+						<h4 th:text="${classDetail.clssContent}"></h4>
+					</div>
+					<div>
+						<h3>교육 커리큘럼</h3>
+						<table class="crclTable" style="margin-bottom: 10%;">
+							<tr>
+								<th>강의명</th>
+								<th>과목명</th>
+								<th style="width: 23%;">강사이름</th>
+								<th style="width: 23%;">이수시간</th>
+							</tr>
+							<tr th:each="CurriculumDetailDTO : ${curriculumlist}">
+								<td style="width: 35%;" th:text="${CurriculumDetailDTO.lctrNm}"></td>
+								<td th:text="${CurriculumDetailDTO.sbjtNm}"></td>
+								<td th:text="${CurriculumDetailDTO.profNm}"></td>
+								<td class="lctrTm" th:text="${CurriculumDetailDTO.lctrTm}"></td>
+							</tr>
+							<tfoot>
+								<tr>
+									<th colspan="3">총 이수 시간</th>
+									<td class="lctrTotalTm"></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+
 					<ul th:each="ClassVO : ${classDetailList}">
 						<li>
 							<div class="icon"
@@ -66,37 +99,39 @@
 							</div>
 						</li>
 					</ul>
+					<h5>기타사항</h5>
+					<h5 th:text="${classDetail.clssEtc}"></h5>
 				</div>
 			</div>
 		</div>
 		<div class="viewClass">
 			<div th:if="${class2 != null or class1 != null}">
 				<h2 style="font-size: 22px; color: #0E5881;">최근에 조회한 교육</h2>
-				<ul style="padding:0;">
+				<ul style="padding: 0;">
 					<li th:if="${class2 != null}">
 						<div class="veiwClass1">
-						<span th:text="${class2.clssCdNm}"></span>
+							<span th:text="${class2.clssCdNm}"></span>
 							<h2 th:text="${class2.clssNm}"></h2>
 							<div th:if="${class2.clssContent!=null}">
-							<img th:src="@{/img/__${class2.clssContent}__}">
-						</div>
-						<div th:if="${class2.clssContent==null}">
-							<img th:src="@{/img/logo.png}">
-						</div>
+								<img th:src="@{/img/__${class2.clssContent}__}">
+							</div>
+							<div th:if="${class2.clssContent==null}">
+								<img th:src="@{/img/logo.png}">
+							</div>
 							<a class="moveBtn"
 								th:href="@{/student/class/__${class2.clssId}__}">교육보러가기</a>
 						</div>
 					</li>
 					<li th:if="${class1 != null}">
 						<div class="veiwclass2">
-						<span th:text="${class1.clssCdNm}"></span>
+							<span th:text="${class1.clssCdNm}"></span>
 							<h2 th:text="${class1.clssNm}"></h2>
 							<div th:if="${class1.clssContent!=null}">
-							<img th:src="@{/img/__${class1.clssContent}__}">
-						</div>
-						<div th:if="${class1.clssContent==null}">
-							<img th:src="@{/img/logo.png}">
-						</div>
+								<img th:src="@{/img/__${class1.clssContent}__}">
+							</div>
+							<div th:if="${class1.clssContent==null}">
+								<img th:src="@{/img/logo.png}">
+							</div>
 							<a class="moveBtn"
 								th:href="@{/student/class/__${class1.clssId}__}">교육보러가기</a>
 						</div>
@@ -105,9 +140,6 @@
 			</div>
 		</div>
 
-	</div>
-
-	</div>
 	</div>
 	<div
 		style="position: fixed; display: block; right: 20px; bottom: 20px; width: 15%;">

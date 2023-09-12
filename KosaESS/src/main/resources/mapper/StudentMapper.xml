@@ -198,6 +198,7 @@
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 		   LEFT JOIN flup on flup.file_id = cmpy.file_id
+		   WHERE clss.delete_yn= 'N' and clss.clss_cd <> 'CLS0000007'
 		   ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
@@ -223,7 +224,7 @@
 			JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 			LEFT JOIN flup on flup.file_id = cmpy.file_id
-			WHERE clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') and clss_cd LIKE (#{ingClass} ||'%')
+			WHERE clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') and clss_cd LIKE (#{ingClass} ||'%') and clss.delete_yn= 'N' and clss.clss_cd <> 'CLS0000007'
 			ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
@@ -244,15 +245,31 @@
 			    limit_cnt,
 			    TO_CHAR(set_in_tm, 'HH24') as "setInTime",
     			TO_CHAR(set_out_tm, 'HH24') as "setOutTime",
+    			clss_total_tm,
 			    clss_etc,
 			    clss_cd,
+			    mngr.mngr_nm as "mngrNm",
 			    cmpy.cmpy_nm as "cmpyNm",
 			    cmcd.cmcd_nm as "clssCdNm"
 			FROM clss
 			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
+			JOIN MNGR on mngr.mngr_id = clss.mngr_id
 			LEFT JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
 			WHERE clss.clss_id = #{clssId}
 		]]>
+	</select>
+	
+	<!-- 교육지원 커리큘럼-->
+	<select id="getCurriculumList" parameterType="string"
+		resultType="com.finalprj.kess.dto.CurriculumDetailDTO">
+	<![CDATA[
+		select lctr.lctr_nm, lctr.lctr_tm, sbjt.sbjt_nm, prof.prof_nm
+		from crcl
+        join lctr on lctr.lctr_id = crcl.lctr_id
+        join sbjt on sbjt.sbjt_id = lctr.sbjt_id
+        join prof on prof.prof_id = lctr.prof_id
+        WHERE crcl.clss_id = #{clssId}
+	]]>
 	</select>
 
 
@@ -272,7 +289,7 @@
 		    SELECT file_id
 		    FROM clss
 		    WHERE clss_id = #{clssId}
-		)
+		) and flup.delete_yn= 'N'
 		ORDER BY
 	    CASE
 	        WHEN file_type LIKE 'application%' THEN 0

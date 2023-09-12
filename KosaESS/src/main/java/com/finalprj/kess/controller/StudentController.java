@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
@@ -148,7 +150,11 @@ public class StudentController {
 		// classDetail 객체를 가져와서 모델에 추가
 		ClassVO classDetail = studentService.selectClass(clssId);
 		model.addAttribute("classDetail", classDetail);
-
+ 
+		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(clssId);
+		model.addAttribute("curriculumlist", curriculumlist );
+		
+		
 		// classDetailList 객체를 가져와서 모델에 추가
 		List<ClassVO> classDetailList = studentService.selectAllClassFile(clssId);
 		model.addAttribute("classDetailList", classDetailList);

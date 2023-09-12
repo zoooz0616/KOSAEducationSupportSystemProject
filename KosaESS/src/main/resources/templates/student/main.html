@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>main page</title>
@@ -109,7 +110,7 @@
 							th:href="@{/student/class/__${classVO.clssId}__}"
 							th:text="${classVO.clssNm}"></a></td>
 						<td style="width: 30%; text-align: right;"
-							th:utext="${classVO.aplyStartDd} + '~ ' +  ${classVO.aplyEndDd}"></td>
+							th:text="${classVO.aplyStartDd} +' ~ '+ ${classVO.aplyEndDd}"></td>
 					</tr>
 				</table>
 			</div>
@@ -130,6 +131,8 @@
 			</div>
 		</div>
 	</div>
+	<div th:replace="~{/include/student_footer :: footer}"
+		style="width: 100%;"></div>
 </body>
 <script src="/js/student/main.js"></script>
 </html>

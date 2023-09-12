@@ -1,17 +1,17 @@
 table {
 	border: 2px solid #0E5881;
 	border-collapse: collapse;
-	width: 80%;
+	width: 95%;
 	margin-bottom: 5%;
 }
 
 th, td {
-	border: 2px solid #0E5881;
+	border: 1px solid #0E5881;
 	border-collapse: collapse;
+	padding: 1%;
 }
 
 table td {
-	padding: 1%;
 	font-weight: bold;
 }
 
@@ -21,15 +21,16 @@ table th {
 }
 
 .content {
-	padding-top: 5%;
+	padding: 5% 2%;
 	flex-direction: column;
 	align-items: center;
 	flex-wrap: wrap;
-	width: 90%;
+	width: 80%;
 	margin: 5% auto;
 	box-shadow: 0px 40px 40px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 	border-style: groove;
 	border-color: black;
+	text-align: center;
 }
 
 ul {
@@ -45,6 +46,9 @@ ul {
 
 .btn button {
 	padding: 0 3%;
+}
+.crclTable th{
+	background-color: #E7EFF3;
 }
 
 .back, .openModalBtn {

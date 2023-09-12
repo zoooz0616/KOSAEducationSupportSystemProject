@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
@@ -94,6 +96,11 @@ public class StudentService implements IStudentService {
 	@Override
 	public ClassVO selectviewClass(String viewClass) {
 		return studentRepository.selectviewClass(viewClass);
+	}
+
+	@Override
+	public List<CurriculumDetailDTO> getCurriculumList(String clssId) {
+		return studentRepository.getCurriculumList(clssId);
 	}
 
 

@@ -104,16 +104,6 @@ input::placeholder {
 	font-size: 15px;
 }
 
---------------------------------------------------------
-
-
-
-
-
-
-
-
-
 .list-style table {
 	border-style: none;
 	padding: 0 2%;
@@ -127,6 +117,8 @@ input::placeholder {
 	align-items: center;
 	height: 5%;
 	border-bottom-style: solid;
+	border-color: #0E5881;
+	border-width: thin;
 }
 
 .list-style thead {
@@ -194,6 +186,12 @@ input::placeholder {
 }
 
 ----------------------------
+
+
+
+
+
+
 
 
 
