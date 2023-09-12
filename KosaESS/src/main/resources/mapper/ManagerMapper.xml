@@ -134,9 +134,18 @@
 		clss_id=#{clssId}
 		AND wlog_cd=#{wlogCd}
 		AND stdt_id=#{stdtId}
-		AND in_tm > to_date(#{startDate}, 'YY-MM-DD')
-		AND out_tm <= to_date(#{endDate}, 'YY-MM-DD') + 1
+		AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
+		AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
 		
+	]]>
+	</select>
+	
+	<select id="getLatestClassIdByMngrId" resultType="string">
+	<![CDATA[
+		SELECT max(clss_id)
+		FROM clss
+		WHERE
+			mngr_id = #{mngrId}
 	]]>
 	</select>
 </mapper>

@@ -24,12 +24,18 @@
 			
 			<li class="profile">
 				<div class="profile-details">
-					<img th:src="@{/img/manager_white.png}" alt="profileImg">
+					<img th:src="@{/img/manager_navy.png}" alt="profileImg">
 					<div class="name_job">
 						<div class="name" th:text="${session.userEmail}">userEmail</div>
 						<div class="job" th:text="${session.lastLoginDt}">lastLoginDt</div>
+						<div class="logout" >
+							
+						</div>
 					</div>
-				</div> <i class='bx bx-log-out' id="log_out"></i>
+					<i class='bx bx-log-out' id="log_out"><a th:href="@{/logout}"><img
+								style="width: 35px; object-fit: contain;margin-top: 5px;" class='bx bx-log-out'
+								id="log_out" th:src="@{/img/logout_white.png}"></a></i>
+				</div>
 			</li>
 		</ul>
 	</div>

@@ -28,6 +28,8 @@ import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.service.IManagerService;
 
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -118,20 +120,33 @@ public class ManagerController {
 	}
 
 	//	교육생 목록 조회
-	@GetMapping("/student/{classId}")
-	public String getStudentList(Model model, HttpSession session, @PathVariable String classId, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
+	@GetMapping("/student")
+	public String getStudentList(Model model, HttpSession session, HttpServletRequest httpServletRequest,
+			@RequestParam(required = false) String classId,
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate) {
 		String roleCd = (String) session.getAttribute("roleCd");
+		
 		if (roleCd == null || !roleCd.equals("ROL0000003")) {
 			return "login";
 		} else {
 			if (startDate == null) {
 				startDate = String.valueOf(YearMonth.now().atDay(1));
+			}else {
+				startDate = httpServletRequest.getParameter("startDate");
 			}
-
+			
 			if (endDate == null) {
 				endDate = String.valueOf(YearMonth.now().atEndOfMonth());
+			}else {
+				endDate = httpServletRequest.getParameter("endDate");
 			}
-
+			
+			if (classId==null) {
+				classId=managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
+			}else {
+				classId = httpServletRequest.getParameter("classId");
+			}
 			List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
 			List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"));//수업 목록
 			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//

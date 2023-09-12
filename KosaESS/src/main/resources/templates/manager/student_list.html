@@ -10,7 +10,7 @@
 </head>
 <body>
 	<!-- 서브바 부분 -->
-	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
 	<!-- End 서브바 -->
 
 	<!-- 컨텐츠 부분 -->
@@ -32,16 +32,15 @@
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;"><select><option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
-<!-- 							<td style="width: 30%;"><datalist id="search_option"><option th:each="class:${classList}" th:value = "${class.clssNm}"></datalist></td> -->
+							<td style="width: 30%;"><select id="classId"><option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
 							<td style="width: 10%;">상태</td>
-							<td style="width: 50%;"><span th:each="classCodeName:${classCodeNameList}"> <input type="checkbox" checked="checked" value="${classCodeName.cmcdId}"> <label th:text="${classCodeName.cmcdNm}"></label></span></td>
+							<td style="width: 50%;"><span th:each="classCodeName:${classCodeNameList}"> <input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}"> <label th:text="${classCodeName.cmcdNm}"></label></span></td> <!-- regexp로 접근 -->
 						</tr>
 						<tr>
 							<td style="width: 5%;">학생 상태</td>
-							<td style="width: 30%;"><span th:each="stdtCodeName:${stdtCodeNameList}"> <input type="checkbox" checked="checked" value="${stdtCodeName.cmcdNm}"> <label th:text="${stdtCodeName.cmcdNm}"></label></span></td>
+							<td style="width: 30%;"><span th:each="stdtCodeName:${stdtCodeNameList}"> <input type="checkbox" checked="checked" th:value="${stdtCodeName.cmcdNm}"> <label th:text="${stdtCodeName.cmcdNm}"></label></span></td><!-- regexp로 접근 -->
 							<td style="width: 10%;">기간</td>
-							<td style="width: 55%;"><input type="date"><span>~</span><input type="date"></td>
+							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input type="date" id="endDate"></td>
 						</tr>
 						<tr>
 
@@ -50,7 +49,7 @@
 					<!-- 검색 버튼 -->
 				</div>
 				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn">검색</button>
+					<button class="search_filter_btn" th:id="searchButton">검색</button>
 				</div>
 			</div>
 			<!-- End 검색 버튼 -->
@@ -84,6 +83,27 @@
 			<!-- End 검색 필터 부분 -->
 		</div>
 	</div>
+<script>
 
+const url = window.location.search;
+const urlParams = url.searchParams;
+var classId = document.getElementById("classId").value;
+var startDate = document.getElementById("startDate").value;
+var date = new Date();
+if (startDate == ""){
+	startDate = new Date(date.getFullYear(), date.getMonth(), 1).toISOString();
+}
+if (endDate == ""){
+	endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString();
+}
+var endDate = document.getElementById("endDate").value;
+const searchButton = document.getElementById("searchButton");
+//		window.location.href = "/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId;
+searchButton.addEventListener('click', ()=> {
+	console.log("clicked");
+	console.log("/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId);
+})
+
+</script>
 </body>
 </html>

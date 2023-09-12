@@ -88,4 +88,9 @@ public class ManagerService implements IManagerService {
 		return managerRepository.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId, startDate, endDate);
 	}
 
+	@Override
+	public String getLatestClassIdByMngrId(String mngrId) {
+		return managerRepository.getLatestClassIdByMngrId(mngrId);
+	}
+
 }

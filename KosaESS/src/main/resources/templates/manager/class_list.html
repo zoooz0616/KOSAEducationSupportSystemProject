@@ -54,25 +54,26 @@
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;">
-							<input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option">
-								<datalist id="search_option">
+							<td style="width: 30%;"><input id="class_name"
+								placeholder="교육과정명" style="width: 100%;" type="text"
+								list="search_option"> <datalist id="search_option">
 									<option th:each="class:${classList}" th:value="${class.clssNm}">
-								</datalist>
-							</td>
+								</datalist></td>
 							<td style="width: 10%;">상태</td>
-							<td style="width: 50%;"><span> <label th:text="전체"></label> <input type="checkbox" name="chk_status" checked="checked" value="CheckAllCodeName"> <!-- ←←←←←← value 수정필요 -->
-							</span>
-							<span th:each="classCodeName:${classCodeNameList}"> <label th:text="${classCodeName.cmcdNm}"></label> <input type="checkbox" name="chk_status" checked="checked" value="${classCodeName.cmcdId}">
+							<td style="width: 50%;"><span> <label th:text="전체"></label>
+									<input type="checkbox" name="chk_status" checked="checked"
+									value="CheckAllCodeName"> <!-- ←←←←←← value 수정필요 -->
+							</span> <span th:each="classCodeName:${classCodeNameList}"> <label
+									th:text="${classCodeName.cmcdNm}"></label> <input
+									type="checkbox" name="chk_status" checked="checked"
+									value="${classCodeName.cmcdId}">
 							</span></td>
 						</tr>
 						<tr th:if="${session.role == 'admin'}">
 							<td style="width: 10%;">지원기간</td>
-							<td style="width: 30%;">
-								<input id="aply_start_dt" type="date">
-								<span> ~ </span>
-								<input id="aply_end_dt" type="date">
-							</td>
+							<td style="width: 30%;"><input id="aply_start_dt"
+								type="date"> <span> ~ </span> <input id="aply_end_dt"
+								type="date"></td>
 							<td style="width: 10%;">교육기간</td>
 							<td style="width: 50%;"><input id="class_start_dd"
 								type="date"> <span> ~ </span> <input id="class_end_dd"
@@ -104,18 +105,13 @@
 					<th>교육상태</th>
 				</tr>
 				<tr id="class_list" th:each="class:${classList}">
-					<td th:if="${session.role == 'admin'}"><input type="checkbox"
-						name="chk" th:value="${class.clssId}"></td>
-					<td th:if="${session.role != 'admin'}" th:text="${classStat.count}">row
-						number</td>
+					<td th:if="${session.role == 'admin'}"><input type="checkbox" name="chk" th:value="${class.clssId}"></td>
+					<td th:if="${session.role != 'admin'}" th:text="${classStat.count}">row number</td>
 					<td th:if="${session.role == 'admin'}" th:text="${class.clssId}"></td>
-					<td><a th:text="${class.clssNm}"
-						th:href="@{/manager/class/__${class.clssId}__}"></a></td>
+					<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
 					<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
 					<td th:text="${class.clssAdr}">class address</td>
-					<td><a th:text="${class.rgstCnt}"
-						th:href="@{/manager/student/__${class.clssId}__}"></a><span
-						th:text="|/ ${class.limitCnt}|"></span></td>
+					<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student?classId=__${class.clssId}__}"></a><span th:text="|/ ${class.limitCnt}|"></span></td>
 					<td th:text="${class.clssCd}">status</td>
 				</tr>
 			</table>
@@ -160,8 +156,6 @@
 			console.log("statusArray: " +statusArray);
 			console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
 			console.log("class: "+classStartDd+"~"+classEndDd);
-
-
 
 		$.ajax({
 			url: '/admin/class/search',
