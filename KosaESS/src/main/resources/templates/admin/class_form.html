@@ -359,7 +359,7 @@
 								<div th:if="${act}=='select'" class="file_detail" id="file_drag">
 									<div th:each="file: ${fileList}" style="display: flex;">
 										<img style="width: 30px;" th:src="@{/img/file_gray.png}">
-										<div th:text="${file.fileNm}"></div>
+										<div><a style="text-decoration-line: none; color:#0E5881;" th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}" th:text="${file.fileNm}"></a></div>
 									</div>
 								</div>
 
@@ -392,10 +392,10 @@
 				<div th:if="${act}=='select'"
 					style="display: flex; justify-content: center;">
 					<div class="submit_btn">
-						<a th:href="@{/admin/class/delete/__${classVO.clssId}__}">삭제하기</a>
+						<a style="color:#fff;text-decoration-line: none;"th:href="@{/admin/class/delete/__${classVO.clssId}__}">삭제하기</a>
 					</div>
 					<div class="submit_btn">
-						<a th:href="@{/admin/class/update/__${classVO.clssId}__}">수정하기</a>
+						<a style="color:#fff;text-decoration-line: none;" th:href="@{/admin/class/update/__${classVO.clssId}__}">수정하기</a>
 					</div>
 				</div>
 			</form>
