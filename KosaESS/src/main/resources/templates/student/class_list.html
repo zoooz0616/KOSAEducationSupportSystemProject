@@ -49,21 +49,21 @@
 			<table class="list-style" style="display: none;">
 
 				<thead>
-					<tr class="classHead">
-						<th>번호</th>
-						<th>교육과정상태</th>
-						<th>프로그램명</th>
-						<th>지원기간</th>
-						<th>교육기간</th>
-						<th>장소</th>
-						<th>정원</th>
-						<th>지원</th>
+					<tr class="classRow">
+						<td>번호</td>
+						<td>프로그램명</td>
+						<td>지원기간</td>
+						<td>교육기간</td>
+						<td>장소</td>
+						<td>정원</td>
+						<td>교육과정상태</td>
+						<td>지원하기</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="classVO, rowStat : ${classList}" class="classRow">
-						<td><span th:text="${rowStat.index + 1}"></span></td>
-						<!-- 여기서 rowStat.index는 0부터 시작하는 행 번호를 나타냅니다. -->
+						<!-- 						<td><span th:text="${rowStat.index + 1}"></span></td>
+						여기서 rowStat.index는 0부터 시작하는 행 번호를 나타냅니다.
 						<td><span class="className" th:text="${classVO.clssCdNm}"></span></td>
 						<td th:text="${classVO.clssNm}"
 							style="font-weight: bold; font-size: 18px;">교육과정명</td>
@@ -77,7 +77,7 @@
 						<td><span th:text="${classVO.limitCnt}"></span></td>
 						<td><a class="applyBtn"
 							th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
-					</tr>
+					</tr> -->
 				</tbody>
 			</table>
 			<table class="grid-style classTable">
