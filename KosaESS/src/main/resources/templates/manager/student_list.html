@@ -23,43 +23,67 @@
 			<!-- 검색 필터 부분 -->
 			<div class="search_filter_wrap">
 				<!-- 아이콘 삽임 부분 -->
-<!-- 				<div class="search_filter_icon"> -->
-<!-- 					<img class="search_filter_icon_img" th:src="@{/img/filter.png}"> -->
-<!-- 				</div> -->
+				<!-- 				<div class="search_filter_icon"> -->
+				<!-- 					<img class="search_filter_icon_img" th:src="@{/img/filter.png}"> -->
+				<!-- 				</div> -->
 				<!-- 아이콘 삽임 부분 -->
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table_wrap">
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;"><select id="classId"><option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
+							<td style="width: 30%;"><select id="classId">
+									<option th:each="className:${classNameList}"
+										th:text="${className.clssNm}" th:value="${className.clssId}"></option>
+							</select></td>
 							<td style="width: 10%;">상태</td>
-							<td style="width: 50%;"><span th:each="classCodeName:${classCodeNameList}"> <input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}"> <label th:text="${classCodeName.cmcdNm}"></label></span></td> <!-- regexp로 접근 -->
+							<td style="width: 50%;">
+								<!--리스트 전체선택 1 --> <span> <input type="checkbox"
+									checked="checked" id="chkAll1" name="chk1"> <label>전체</label>
+							</span> <span th:each="classCodeName:${classCodeNameList}"> <input
+									type="checkbox" checked="checked"
+									th:value="${classCodeName.cmcdId}" name="chk1"> <label
+									th:text="${classCodeName.cmcdNm}"></label>
+							</span>
+							</td>
+							<!-- regexp로 접근 -->
 						</tr>
 						<tr>
 							<td style="width: 5%;">학생 상태</td>
-							<td style="width: 30%;"><span th:each="stdtCodeName:${stdtCodeNameList}"> <input type="checkbox" checked="checked" th:value="${stdtCodeName.cmcdNm}"> <label th:text="${stdtCodeName.cmcdNm}"></label></span></td><!-- regexp로 접근 -->
+							<td style="width: 30%;">
+								<!--리스트 전체선택 2 --> <span> <input type="checkbox"
+									checked="checked" id="chkAll2" name="chk"> <label>전체</label>
+							</span> <span th:each="stdtCodeName:${stdtCodeNameList}"> <input
+									type="checkbox" checked="checked"
+									th:value="${stdtCodeName.cmcdNm}" name="chk2"> <label
+									th:text="${stdtCodeName.cmcdNm}"></label>
+							</span>
+							</td>
+							<!-- regexp로 접근 -->
 							<td style="width: 10%;">기간</td>
-							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input type="date" id="endDate"></td>
+							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input
+								type="date" id="endDate"></td>
 						</tr>
 
 					</table>
 					<!-- 검색 버튼 -->
 				</div>
 				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn" th:id="searchButton" onclick="search()">검색</button>
+					<button class="search_filter_btn" th:id="searchButton"
+						onclick="search()">검색</button>
 				</div>
 			</div>
 			<!-- End 검색 버튼 -->
-			<span th:text="|${stdtCnt} 명|"></span> <span
+			<span th:text="|${stdtCnt} 명|" id="stdtCnt"></span> <span
 				th:each="cmptCodeName:${cmptCodeNameList}"><button
 					th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}"></button></span>
-			<table>
+			<table id="stdt_list_table">
 				<tr>
-					<th><input type="checkbox"></th>
+					<th><input type="checkbox" id="chkAllStdt"></th>
 					<th>번호</th>
 					<th>이름</th>
-					<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
+					<th th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${wlogCodeName.cmcdNm}"></th>
 					<th>성별</th>
 					<th>생년월일</th>
 					<th>이메일</th>
@@ -67,14 +91,16 @@
 					<th>이수여부</th>
 				</tr>
 				<tr th:each="stdt:${stdtList}">
-					<td><input type="checkbox"></td>
+					<td><input type="checkbox" id="chkStdt"></td>
 					<td th:text="${stdtStat.count}"></td>
 					<td th:text="${stdt.stdtNm}"></td>
-					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+					<td th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 					<td th:text="${stdt.genderCd}">성별</td>
 					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:text="${stdt.userEmail}">이메일</td>
-					<td th:text="|${#strings.substring(stdt.stdtTel,0,3)}-${#strings.substring(stdt.stdtTel,3,7)}-${#strings.substring(stdt.stdtTel,7,)}|">연락처</td>
+					<td
+						th:text="|${#strings.substring(stdt.stdtTel,0,3)}-${#strings.substring(stdt.stdtTel,3,7)}-${#strings.substring(stdt.stdtTel,7,)}|">연락처</td>
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
 			</table>
@@ -82,50 +108,95 @@
 		</div>
 	</div>
 
-<script>
-/*숫자 값을 00 형식으로 맞춰줌*/
-function leftPad(value) {if (value >= 10) {return value;}return `0${value}`;}
-/*날짜 넣으면 YYYY-MM-DD로 반환해주며, 2번째 인자로 delimiter 지정 가능*/
-/* 예시 >>> toStringByFormatting(new Date(2021, 0, 1)); */
-function toStringByFormatting(source, delimiter = '-') {const year = source.getFullYear();const month = leftPad(source.getMonth()+1);const day = leftPad(source.getDate());return [year, month, day].join(delimiter);}
+	<script>
+	const url = window.location.search;//현재 창의 주소값
+	const urlParams = url.searchParams;//url에서 파라미터만 가져옴
+	var classId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
+	var startDate = document.getElementById("startDate").value;
+	var endDate = document.getElementById("endDate").value;
+	var date = new Date();
+	var year = date.getFullYear();
+	const searchButton = document.getElementById("searchButton");
 
-const url = window.location.search;//현재 창의 주소값
-const urlParams = url.searchParams;//url에서 파라미터만 가져옴
-var classId = document.getElementById("classId").value;//classId 파라미터
-var startDate = document.getElementById("startDate").value;//startDate 파라미터
-var endDate = document.getElementById("startDate").value;//endDate 파라미터
-var date = new Date();
-if (startDate == ""){
-	startDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth(), 1));
-}
-if (endDate == ""){
-	endDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-}
-var endDate = document.getElementById("endDate").value;
-const searchButton = document.getElementById("searchButton");
-//		window.location.href = "/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId;
-searchButton.addEventListener('click', ()=> {
-	console.log("clicked");
-	console.log("/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId);
-})
-
-function search() {
-	var classId = document.getElementById("classId");
-	var startDate = document.getElementById("startDate");
-	var endDate = document.getElementById("endDate");
-	$.ajax({
-		url: '/manager/student/search', // 서버의 엔드포인트 URL
-		method: 'GET',
-		/*data: { classId<<컨트롤러: classId<<우리가 보내는거})*/
-		data: { classId: classId//,startDate:startDate,endDate:endDate
+	/*숫자 값을 00 형식으로 맞춰줌*/
+	function leftPad(value) {if (value >= 10) {return value;}return `0${value}`;}
+	/*날짜 넣으면 YYYY-MM-DD로 반환해주며, 2번째 인자로 delimiter 지정 가능*/
+	/* 예시 >>> toStringByFormatting(new Date(2021, 0, 1)); */
+	function toStringByFormatting(source, delimiter = '-') {const year = source.getFullYear();const month = leftPad(source.getMonth()+1);const day = leftPad(source.getDate());return [year, month, day].join(delimiter);}
+	/*이번 달의 첫 날*/
+	function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
+	/*이번 달의 마지막 날*/
+	function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var lastDay = new Date(year,month, 0).getDate();return year + "-" + month + "-" + lastDay;}
+// 	/*startDate=="" 라면 startDate = 이번 달의 첫 날*/
+// 	if (startDate == ""){startDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth(), 1));}
+// 	/*endDate=="" 라면 endtDate = 이번 달의 마지막 날*/
+// 	if (endDate == ""){endDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth() + 1, 0));}
+	
+	//		window.location.href = "/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId;
+	function search() {
+		if(startDate==""){startDate=getFirstDay();}
+		if(endDate==""){endDate=getLastDay();}
+		$.ajax({
+			type:'get',
+			url:'/manager/student/search', // 서버의 엔드포인트 URL
+			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
+			data: {classId:classId,startDate:startDate,endDate:endDate
 			},
-		success: function(response) {
-			$('#search_option').html(response);
-			var studentList = response.student;
+			success: function(response) {
+				var stdtListTable = document.getElementById("stdt_list_table");
+				var stdtList = document.getElementById("stdt_list");
+				stdtListTable.removeChild(stdtListTable.childNodes[0]);
+				document.getElementById("stdtCnt").text="0";
+// 				$('#stdtCnt').HTML('0');
+				var classListCode=
+					'<tr>'+
+					'<th><input type="checkbox" id="chkAllStdt"></th>'+
+					'<th>번호</th>'+
+					'<th>이름</th>'+
+					'<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>'+
+					'<th>성별</th>'+
+					'<th>생년월일</th>'+
+					'<th>이메일</th>'+
+					'<th>연락처</th>'+
+					'<th>이수여부</th>'
+					'</tr>';
+				for(var i = 0; i < response.length; i++){
+					classListCode +=
+					'<tr">'+
+						'<td><input type="checkbox" id="chkStdt"></td>'+
+						'<td>'+ (i+1) +'</td>'+
+						'<td>'+ response.stdtNm +'</td>'+
+						'<td>'+ response.wlogCnt +'</td>'+
+						'<td>'+ response.genderCd +'</td>'+
+						'<td>'+ response.birthDd +'</td>'+
+						'<td>'+ response.userEmail +'</td>'+
+						'<td>'+ response.stdtTel +'</td>'+
+						'<td>'+ response.jobCd +'</td>'+
+					'</tr>';
+				}
+				classListTable.innerHTML=classListCode;
+			},error: function(error){
+				console.log("error: ", error);
+			}
+		});
+	}
+	
+	//리스트 전체선택1
+	const chkAll1 = document.querySelector("#chkAll1");
+	chkAll1.addEventListener("change", () => {
+		const chkList1 = document.getElementsByName("chk1");
+		for(chk1 of chkList1){
+			chk1.checked = chkAll1.checked;
 		}
 	});
-}
-
+	//리스트 전체선택2
+	const chkAll2 = document.querySelector("#chkAll2");
+	chkAll2.addEventListener("change", () => {
+		const chkList2 = document.getElementsByName("chk2");
+		for(chk2 of chkList2){
+			chk2.checked = chkAll2.checked;
+		}
+	});
 </script>
 
 </body>

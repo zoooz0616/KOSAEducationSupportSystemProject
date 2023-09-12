@@ -194,13 +194,26 @@ public class ManagerController {
 		}
 	}
 
-	@PostMapping("/student/search")
+	@GetMapping("/student/search")
 	@ResponseBody
-	public Map<String, Object> fetchLectureSelect(@RequestParam("classId") String classId){
-		List<StudentInfoDTO> studentList = managerService.getStudentListByClssId(classId);
+	public Map<String, Object> fetchLectureSelect(
+			@RequestParam("classId") String classId
+			,@RequestParam("startDate") String startDate
+			,@RequestParam("endDate") String endDate
+			){
+		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+
+		for (StudentInfoDTO stdt : stdtList) {
+			stdt.setWlogCnt("");
+			for (CommonCodeVO cmcd : wlogCodeNameList) {
+				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
+				stdt.appendWlogCnt(",");
+			}
+		}
 
 		Map<String, Object> response = new HashMap<>();
-		response.put("studentList", studentList);
+		response.put("stdtList", stdtList);
 
 		return response;
 	}
