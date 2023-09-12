@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +21,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.LectureVO;
+import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.service.IManagerService;
 
 import jakarta.servlet.ServletRequest;
@@ -185,5 +192,16 @@ public class ManagerController {
 		} else {
 			return "manager/mypage";
 		}
+	}
+
+	@PostMapping("/student/search")
+	@ResponseBody
+	public Map<String, Object> fetchLectureSelect(@RequestParam("classId") String classId){
+		List<StudentInfoDTO> studentList = managerService.getStudentListByClssId(classId);
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("studentList", studentList);
+
+		return response;
 	}
 }

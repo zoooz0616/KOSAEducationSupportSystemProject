@@ -40,7 +40,7 @@
 					<td th:text="${clss.clssCd}"></td>
 					<td th:text="${#dates.format(clss.setInTm, 'HH:mm')}"></td>
 					<td th:text="${#dates.format(clss.setOutTm, 'HH:mm')}"></td>
-					<td><a th:text ="${clss.rgstCnt}" th:href="@{/manager/student/__${clss.clssId}__}"></a><span th:text="| / ${clss.limitCnt}|"></span></td><!--req_param 추가할것 -->
+					<td><a th:text="${clss.rgstCnt}" th:href="@{/manager/student?classId=__${clss.clssId}__}"></a><span th:text="|/ ${clss.limitCnt}|"></span></td>
 					<td th:text="${clss.mngrId}"></td>
 				</tr>
 			</table>
@@ -52,8 +52,7 @@
 			</div>
 
 			<div th:utext="${clss.clssContent}"></div>
-			<a th:href="@{/manager/class}" th:text="목록">
-			</a>
+			<a th:href="@{/manager/class}" th:text="목록"></a>
 		</div>
 	</div>
 </body>

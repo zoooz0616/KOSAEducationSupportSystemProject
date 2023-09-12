@@ -23,9 +23,9 @@
 			<!-- 검색 필터 부분 -->
 			<div class="search_filter_wrap">
 				<!-- 아이콘 삽임 부분 -->
-				<div class="search_filter_icon">
-					<img class="search_filter_icon_img" th:src="@{/img/filter.png}">
-				</div>
+<!-- 				<div class="search_filter_icon"> -->
+<!-- 					<img class="search_filter_icon_img" th:src="@{/img/filter.png}"> -->
+<!-- 				</div> -->
 				<!-- 아이콘 삽임 부분 -->
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table_wrap">
@@ -42,14 +42,12 @@
 							<td style="width: 10%;">기간</td>
 							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input type="date" id="endDate"></td>
 						</tr>
-						<tr>
 
-						</tr>
 					</table>
 					<!-- 검색 버튼 -->
 				</div>
 				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn" th:id="searchButton">검색</button>
+					<button class="search_filter_btn" th:id="searchButton" onclick="search()">검색</button>
 				</div>
 			</div>
 			<!-- End 검색 버튼 -->
@@ -83,18 +81,25 @@
 			<!-- End 검색 필터 부분 -->
 		</div>
 	</div>
-<script>
 
-const url = window.location.search;
-const urlParams = url.searchParams;
-var classId = document.getElementById("classId").value;
-var startDate = document.getElementById("startDate").value;
+<script>
+/*숫자 값을 00 형식으로 맞춰줌*/
+function leftPad(value) {if (value >= 10) {return value;}return `0${value}`;}
+/*날짜 넣으면 YYYY-MM-DD로 반환해주며, 2번째 인자로 delimiter 지정 가능*/
+/* 예시 >>> toStringByFormatting(new Date(2021, 0, 1)); */
+function toStringByFormatting(source, delimiter = '-') {const year = source.getFullYear();const month = leftPad(source.getMonth()+1);const day = leftPad(source.getDate());return [year, month, day].join(delimiter);}
+
+const url = window.location.search;//현재 창의 주소값
+const urlParams = url.searchParams;//url에서 파라미터만 가져옴
+var classId = document.getElementById("classId").value;//classId 파라미터
+var startDate = document.getElementById("startDate").value;//startDate 파라미터
+var endDate = document.getElementById("startDate").value;//endDate 파라미터
 var date = new Date();
 if (startDate == ""){
-	startDate = new Date(date.getFullYear(), date.getMonth(), 1).toISOString();
+	startDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth(), 1));
 }
 if (endDate == ""){
-	endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString();
+	endDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth() + 1, 0));
 }
 var endDate = document.getElementById("endDate").value;
 const searchButton = document.getElementById("searchButton");
@@ -104,6 +109,24 @@ searchButton.addEventListener('click', ()=> {
 	console.log("/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId);
 })
 
+function search() {
+	var classId = document.getElementById("classId");
+	var startDate = document.getElementById("startDate");
+	var endDate = document.getElementById("endDate");
+	$.ajax({
+		url: '/manager/student/search', // 서버의 엔드포인트 URL
+		method: 'GET',
+		/*data: { classId<<컨트롤러: classId<<우리가 보내는거})*/
+		data: { classId: classId//,startDate:startDate,endDate:endDate
+			},
+		success: function(response) {
+			$('#search_option').html(response);
+			var studentList = response.student;
+		}
+	});
+}
+
 </script>
+
 </body>
 </html>

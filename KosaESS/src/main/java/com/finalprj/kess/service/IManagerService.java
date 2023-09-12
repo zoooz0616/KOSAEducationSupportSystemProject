@@ -41,4 +41,6 @@ public interface IManagerService {
 	public int getCountByClssIdWlogCdStdtId (String clssId, String wlogCd, String stdtId, String startDate, String endDate);
 
 	public String getLatestClassIdByMngrId(String mngrId);
+
+//	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }

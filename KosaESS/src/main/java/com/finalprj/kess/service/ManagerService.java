@@ -93,4 +93,9 @@ public class ManagerService implements IManagerService {
 		return managerRepository.getLatestClassIdByMngrId(mngrId);
 	}
 
+//	@Override
+//	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
+//		return managerRepository.getStudentListBySearch(classId, startDate, endDate);
+//	}
+
 }

@@ -30,7 +30,7 @@
 <body>
 
 	<!-- 서브바 부분 -->
-	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
 	<!-- End 서브바 -->
 
 	<!-- 컨텐츠 부분 -->
@@ -52,37 +52,37 @@
 							<th style="width: 25%;">지원기간</th>
 							<th style="width: 25%;">교육기간</th>
 						</tr>
-						<tr th:if="${session.role == 'admin'}">
-							<td style="width: 25%;"><input id="class_name"
-								placeholder="교육과정명" style="width: 100%; height: 40px;" type="text"
-								list="search_option"> <datalist id="search_option">
-								</datalist></td>
-							<td style="width: 25%;">
-								<div style="width: 90%;"id="list1" class="dropdown-check-list" tabindex="100">
-									<span style="width: 100%;padding: 10px;" class="anchor"><input type="checkbox" checked="checked">전체</span>
-									<ul style="list-style-type: none;" class="items" th:each="classCodeName:${classCodeNameList}">
-										<li>
-										<label>
-										<input type="checkbox" id ="chk_status" name="chk_status" checked="checked"
-												th:value="${classCodeName}"><span th:text="${classCodeName}">status</span>
-										</label>		
-										</li>
-									</ul>
-								</div>
-							</td>
-							<td style="width: 25%;"><input style="height: 40px;" id="aply_start_dt"
-								type="date"> <span> ~ </span> <input style="height: 40px;" id="aply_end_dt"
-								type="date"></td>
-							<td style="width: 25%;"><input style="height: 40px;" id="class_start_dd"
-								type="date"> <span> ~ </span> <input style="height: 40px;" id="class_end_dd"
-								type="date"></td>
-							<td>
-								<!-- 검색 버튼 -->
-								<div class="search_filter_btn_wrap">
-									<button id="search_btn" class="search_filter_btn">검색</button>
-								</div> <!-- End 검색 버튼 -->
-							</td>
-						</tr>
+<!-- 						<tr th:if="${session.role == 'admin'}"> -->
+<!-- 							<td style="width: 25%;"><input id="class_name" -->
+<!-- 								placeholder="교육과정명" style="width: 100%; height: 40px;" type="text" -->
+<!-- 								list="search_option"> <datalist id="search_option"> -->
+<!-- 								</datalist></td> -->
+<!-- 							<td style="width: 25%;"> -->
+<!-- 								<div style="width: 90%;"id="list1" class="dropdown-check-list" tabindex="100"> -->
+<!-- 									<span style="width: 100%;padding: 10px;" class="anchor"><input type="checkbox" checked="checked">전체</span> -->
+<!-- 									<ul style="list-style-type: none;" class="items" th:each="classCodeName:${classCodeNameList}"> -->
+<!-- 										<li> -->
+<!-- 										<label> -->
+<!-- 										<input type="checkbox" id ="chk_status" name="chk_status" checked="checked" -->
+<!-- 												th:value="${classCodeName}"><span th:text="${classCodeName}">status</span> -->
+<!-- 										</label>		 -->
+<!-- 										</li> -->
+<!-- 									</ul> -->
+<!-- 								</div> -->
+<!-- 							</td> -->
+<!-- 							<td style="width: 25%;"><input style="height: 40px;" id="aply_start_dt" -->
+<!-- 								type="date"> <span> ~ </span> <input style="height: 40px;" id="aply_end_dt" -->
+<!-- 								type="date"></td> -->
+<!-- 							<td style="width: 25%;"><input style="height: 40px;" id="class_start_dd" -->
+<!-- 								type="date"> <span> ~ </span> <input style="height: 40px;" id="class_end_dd" -->
+<!-- 								type="date"></td> -->
+<!-- 							<td> -->
+<!-- 								검색 버튼 -->
+<!-- 								<div class="search_filter_btn_wrap"> -->
+<!-- 									<button id="search_btn" class="search_filter_btn">검색</button> -->
+<!-- 								</div> End 검색 버튼 -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
 					</table>
 					<!-- 검색 필터 테이블 끝-->
 				</div>
@@ -124,19 +124,13 @@
 						<th>교육상태</th>
 					</tr>
 					<tr id="class_list" th:each="class:${classList}">
-						<td><input type="checkbox" name="chk"
-							th:value="${class.clssId}"></td>
-						<td th:if="${session.role != 'admin'}"
-							th:text="${classStat.count}">row number</td>
-						<td th:if="${session.role == 'admin'}" th:text="${class.clssId}"></td>
-						<td><a th:text="${class.clssNm}"
-							th:href="@{/manager/class/__${class.clssId}__}"></a></td>
+						<td><input type="checkbox" name="chk" th:value="${class.clssId}"></td>
+						<td th:if="${session.role != 'admin'}" th:text="${classStat.count}">row number</td>
+						<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
 						<td th:text="|${class.aplyStartDd} ~ ${class.aplyEndDd}|"></td>
 						<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
 						<td th:text="${class.clssAdr}">class address</td>
-						<td><a th:text="${class.rgstCnt}"
-							th:href="@{/manager/student-list/__${class.clssId}__}"></a><span
-							th:text="|/ ${class.limitCnt}|"></span></td>
+						<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student-list?classId=__${class.clssId}__}"></a><span th:text="|/ ${class.limitCnt}|"></span></td>
 						<td th:text="${class.clssCd}">status</td>
 					</tr>
 				</table>

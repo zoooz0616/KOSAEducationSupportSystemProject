@@ -46,4 +46,6 @@ public interface IManagerRepository {
 	public int getCountByClssIdWlogCdStdtId (@Param("clssId") String clssId, @Param("wlogCd") String wlogCd, @Param("stdtId") String stdtId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
 	public String getLatestClassIdByMngrId(String mngrId);
+
+//	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }
