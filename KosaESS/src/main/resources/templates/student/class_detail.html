@@ -37,7 +37,7 @@
 						<th>회사</th>
 						<td style="width: 15%" th:text="${classDetail.cmpyNm}"></td>
 						<th>교육 상태</th>
-						<td th:text="${classDetail.clssCd}"></td>
+						<td th:text="${classDetail.clssCdNm}"></td>
 					</tr>
 					<tr>
 						<th>시작 시간</th>
@@ -49,98 +49,115 @@
 					</tr>
 				</table>
 				<div>
-					<ul th:each="ClassDetailDTO : ${classDetailList}">
+					<ul th:each="ClassVO : ${classDetailList}">
 						<li>
 							<div class="icon"
-								th:if="${ClassDetailDTO.fileType == 'application' or ClassDetailDTO.fileType == 'text'}">
+								th:if="${ClassVO.fileType == 'application' or ClassVO.fileType == 'text'}">
 								<a
-									th:href="@{/student/download/file/__${ClassDetailDTO.fileId}__/__${ClassDetailDTO.fileSubId}__}"
-									th:title="${ClassDetailDTO.fileNm}"> <img
-									style="width: 40px;" th:src="@{/img/file_icon.png}"
-									alt="file  아이콘"> <span th:text="${ClassDetailDTO.fileNm}"></span>
+									th:href="@{/student/download/file/__${ClassVO.fileId}__/__${ClassVO.fileSubId}__}"
+									th:title="${ClassVO.fileNm}"> <img style="width: 40px;"
+									th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+									th:text="${ClassVO.fileNm}"></span>
 								</a>
 							</div>
-							<div th:if="${ClassDetailDTO.fileType=='image'}">
+							<div th:if="${ClassVO.fileType=='image'}">
 								<img style="width: 500px;"
-									th:src="@{/img/__${ClassDetailDTO.fileNm}__}">
+									th:src="@{/img/__${ClassVO.fileNm}__}">
 							</div>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-		<div
-			style="width: 20%; position: fixed; display: block; right: 8%; top: 25%; margin: 30px 0;">
-			<div>
-				<h2>최근에 조회한 교육</h2>
-				<ul>
-					<li></li>
-					<li></li>
+		<div class="viewClass">
+			<div th:if="${class2 != null or class1 != null}">
+				<h2 style="font-size: 22px; color: #0E5881;">최근에 조회한 교육</h2>
+				<ul style="padding:0;">
+					<li th:if="${class2 != null}">
+						<div class="veiwClass1">
+						<span th:text="${class2.clssCdNm}"></span>
+							<h2 th:text="${class2.clssNm}"></h2>
+							<div th:if="${class2.clssContent!=null}">
+							<img th:src="@{/img/__${class2.clssContent}__}">
+						</div>
+						<div th:if="${class2.clssContent==null}">
+							<img th:src="@{/img/logo.png}">
+						</div>
+							<a class="moveBtn"
+								th:href="@{/student/class/__${class2.clssId}__}">교육보러가기</a>
+						</div>
+					</li>
+					<li th:if="${class1 != null}">
+						<div class="veiwclass2">
+						<span th:text="${class1.clssCdNm}"></span>
+							<h2 th:text="${class1.clssNm}"></h2>
+							<div th:if="${class1.clssContent!=null}">
+							<img th:src="@{/img/__${class1.clssContent}__}">
+						</div>
+						<div th:if="${class1.clssContent==null}">
+							<img th:src="@{/img/logo.png}">
+						</div>
+							<a class="moveBtn"
+								th:href="@{/student/class/__${class1.clssId}__}">교육보러가기</a>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>
+
+	</div>
+
+	</div>
 	</div>
 	<div
-		style="position: fixed; display: block; right: 20px; bottom: 20px;">
+		style="position: fixed; display: block; right: 20px; bottom: 20px; width: 15%;">
 		<div class="btn">
 			<button class="back">목록으로</button>
 			<button class="openModalBtn">지원하기</button>
-			<button class="moveTopBtn"></button>
+			<button class="moveTopBtn">
+				<img th:src="@{/img/up_navy.png}" style="height: 40px;">
+			</button>
 		</div>
 	</div>
 	<div class="modal">
-		<div class="modal_body">
-			<button class="closeModalBtn">&times;</button>
-			<h2>지원서 제출</h2>
+		<div class="modalBody">
+			<div class="modalHeader">
+				<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
+			</div>
 			<form th:action="@{/student/upload/__${classDetail.clssId}__}"
-				method="post" id="uploadForm" enctype="multipart/form-data">
-				<input type="file" name="file" id="fileInput">
-				<button type="submit" class="aplyBtn">제출</button>
+				method="post" id="uploadAplyForm" enctype="multipart/form-data">
+				<div class="modalContent">
+					<div class="upload-area">
+						<p>지원서파일을 여기에 첨부하세요.</p>
+						<input type="file" name="file" id="fileInput">
+					</div>
+				</div>
+				<div class="modalFooter">
+					<button type="reset" class="closeModalBtn">취소</button>
+					<button type="submit" class="aplyBtn">제출</button>
+				</div>
 			</form>
 		</div>
 	</div>
+	<script th:inline="javascript">
+		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
+		var clssCd = /*[[${classDetail.clssCd}]]*/'CLS0000002';
+	</script>
 	<script>
-        const modal = document.querySelector('.modal');
-        const openModalBtn = document.querySelector('.openModalBtn');
-        const closeModalBtn = document.querySelector('.closeModalBtn');
-		
- 
-        openModalBtn.addEventListener('click', () => {
-        	 $.ajax({
-                 url: '/student/class/apply',
-                 async: true,
-                 method: 'GET',
-                 success: function(stdtId) {
-                	 if (stdtId == "") {
-                		 var result = confirm("로그인 후 지원이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
-                		 
-                		 if(result) {
-                	            location.replace('/login');
-                	        }
-                     } else {
-                     	modal.style.display = 'block';
-                     }
-                 }
-        	});
-        });
-        
-        closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-        
-        const backBtn = document.querySelector('.back');
+		document.addEventListener('DOMContentLoaded', function() {
+			// '지원하기' 버튼 엘리먼트 가져오기
+			var openModalBtn = document.querySelector('.openModalBtn');
 
-        backBtn.addEventListener('click', () => {
-        	location.replace('/student/class');
-        });
-        
-        const topBtn = document.querySelector(".moveTopBtn");
-
-     	// 버튼 클릭 시 맨 위로 이동
-     	topBtn.addEventListener('click', () =>{
-       		window.scrollTo({ top: 0, behavior: "smooth" });  
-     });	
-        
-    </script>
+			// '지원하기' 버튼을 표시 또는 숨깁니다.
+			if (clssCd === 'CLS0000002') {
+				openModalBtn.style.display = 'block'; // 버튼을 표시
+			}
+		});
+	</script>
+	<script th:inline="javascript">
+		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
+		var classId = /*[[${classDetail.clssId}]]*/'';
+	</script>
+	<script src="/js/student/class_detail.js"></script>
 </body>
 </html>

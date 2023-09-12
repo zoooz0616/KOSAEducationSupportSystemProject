@@ -36,4 +36,5 @@ public class ClassVO {
 	private String updterId;// 수정자id
 	private int rgstCnt;// 등록 인원
 	private String cmpyNm;//업체 이름
+	private String clssCdNm; // 교육상태명 
 }

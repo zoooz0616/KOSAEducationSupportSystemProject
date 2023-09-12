@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import com.finalprj.kess.dto.ClassDetailDTO;
+import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
@@ -30,13 +30,23 @@ public interface IStudentRepository {
 
 	ClassVO selectClass(String clssId);
 
-	List<ClassDetailDTO> selectAllClassFile(String clssId);
+	List<ClassVO> selectAllClassFile(String clssId);
 
 	FileVO getFile(String fileId, String fileSubId);
 
 	LoginVO selectUser(String email);
 
 	String getIngClass(String email);
+
+	List<ClassVO> searchClasses(String keyword, String ingClass);
+
+	String getMaxAplyId();
+
+	void uploadAplyFile(ApplyVO apply);
+
+	int getAplyYN(String stdtId, String classId);
+
+	ClassVO selectviewClass(String viewClass);
 
 		
 }

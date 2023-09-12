@@ -34,21 +34,7 @@
 			<div class="login con"
 				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
 				<div th:if="${session.userEmail==null}">
-					<form th:action="@{/login}" method="post" class="">
-						<div class="">
-							<label for="email"></label> <input style="width: 50%;"
-								type="text" name="email" id="id" class="" placeholder="아이디(이메일)">
-						</div>
-						<div class="">
-							<label for="pwd"></label> <input style="width: 50%;"
-								type="password" name="pwd" id="pwd" class=" " placeholder="비밀번호">
-						</div>
-						<div class="submit">
-							<input style="width: 50%;" type="submit" class="loginBtn"
-								th:value="로그인">
-						</div>
-					</form>
-
+					<h2>회원가입후 이용가능</h2>
 				</div>
 				<div th:if="${session.userEmail!=null}">
 					<div class="">
@@ -69,6 +55,28 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="login con"
+				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				<div th:if="${session.userEmail==null}">
+					<form th:action="@{/login}" method="post" class="">
+						<div class="">
+							<label for="email"></label> <input style="width: 50%;"
+								type="text" name="email" id="id" class="" placeholder="아이디(이메일)">
+						</div>
+						<div class="">
+							<label for="pwd"></label> <input style="width: 50%;"
+								type="password" name="pwd" id="pwd" class=" " placeholder="비밀번호">
+						</div>
+						<div class="submit">
+							<input style="width: 50%;" type="submit" class="loginBtn"
+								th:value="로그인">
+						</div>
+					</form>
+
+				</div>
+				<div th:if="${session.userEmail!=null}">
 					<form th:action="@{/wlog}" method="post" class="inoutform">
 						<h3 th:text="${ingClassNm}" style="margin: 0; width: 50%"></h3>
 						<div th:if="${ingClassNm != null}" class="inouttm">
@@ -90,23 +98,22 @@
 					</form>
 				</div>
 			</div>
-			<div class="class con" style="width: 40%;">
+			<div class="class con" style="width: 45%;">
 				<h2 style="margin-bottom: 0;">접수중인 교육</h2>
 				<a class="plus" style="display: block; text-align: end;"
 					th:href="@{/student/class}">+</a>
 				<hr>
 				<table>
 					<tr th:each="classVO : ${classList}">
-						<td style="width: 75%;"><a
+						<td style="width: 70%;"><a
 							th:href="@{/student/class/__${classVO.clssId}__}"
 							th:text="${classVO.clssNm}"></a></td>
-						<td style="width: 25%; text-align: right;"
-							th:utext="'~ ' +  ${classVO.aplyEndDd}"></td>
+						<td style="width: 30%; text-align: right;"
+							th:utext="${classVO.aplyStartDd} + '~ ' +  ${classVO.aplyEndDd}"></td>
 					</tr>
 				</table>
 			</div>
-			<div class="notice con"
-				style="background: #E7EFF3; width: 40%;">
+			<div class="notice con" style="background: #E7EFF3; width: 40%;">
 				<h2 style="margin-bottom: 0;">공지사항</h2>
 				<a class="plus" style="display: block; text-align: end;"
 					th:href="@{/student/notice}">+</a>
@@ -124,39 +131,5 @@
 		</div>
 	</div>
 </body>
-<script src="/js/slide.js"></script>
-<script>
-	var isAttendance = false; // 출근 상태를 저장하는 변수
-
-	function toggleInOut() {
-		var intmInput = document.getElementById('intm');
-		var outtmInput = document.getElementById('outtm');
-		var wlogBtn = document.querySelector('.wlogBtn');
-
-		if (isAttendance) {
-			// 퇴근 처리
-			outtmInput.value = getCurrentTime();
-			wlogBtn.value = "출근하기";
-		} else {
-			// 출근 처리
-			intmInput.value = getCurrentTime();
-			wlogBtn.value = "퇴근하기";
-		}
-
-		isAttendance = !isAttendance; // 상태를 토글
-	}
-
-	function getCurrentTime() {
-		var now = new Date();
-		var year = now.getFullYear();
-		var month = (now.getMonth() + 1 < 10 ? '0' : '') + (now.getMonth() + 1);
-		var day = (now.getDate() < 10 ? '0' : '') + now.getDate();
-		var hours = (now.getHours() < 10 ? '0' : '') + now.getHours();
-		var minutes = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-		var seconds = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
-		var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':'
-				+ minutes + ':' + seconds;
-		return formattedTime;
-	}
-</script>
+<script src="/js/student/main.js"></script>
 </html>

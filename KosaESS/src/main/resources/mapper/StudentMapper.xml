@@ -191,13 +191,40 @@
 		       clss_end_dd,
 		       substr(clss_adr, 1, 3) as "clssAdr", 
 		       limit_cnt,
-		       cmcd.cmcd_nm as "clssCd",
+		       clss_cd,
+			   cmcd.cmcd_nm as "clssCdNm",
 		       flup.file_nm as "clssContent" 
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 		   LEFT JOIN flup on flup.file_id = cmpy.file_id
 		   ORDER BY clss.rgst_dt DESC
+		]]>
+	</select>
+
+	<!-- 교육지원목록 검색 -->
+	<select id="searchClasses" parameterType="string"
+		resultType="com.finalprj.kess.model.ClassVO">
+		<![CDATA[
+			SELECT
+			    clss_id,
+			    clss_nm,
+			    clss.cmpy_id,
+			    aply_start_dt as "aplyStartDd",
+			    aply_end_dt as "aplyEndDd",
+			    clss_start_dd,
+			    clss_end_dd,
+			    substr(clss_adr, 1, 3) as "clssAdr", 
+			    limit_cnt,
+			    clss_cd,
+			    cmcd.cmcd_nm as "clssCdNm",
+			    flup.file_nm as "clssContent" 
+			FROM clss
+			JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
+			LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
+			LEFT JOIN flup on flup.file_id = cmpy.file_id
+			WHERE clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') and clss_cd LIKE (#{ingClass} ||'%')
+			ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
 
@@ -218,8 +245,9 @@
 			    TO_CHAR(set_in_tm, 'HH24') as "setInTime",
     			TO_CHAR(set_out_tm, 'HH24') as "setOutTime",
 			    clss_etc,
+			    clss_cd,
 			    cmpy.cmpy_nm as "cmpyNm",
-			    cmcd.cmcd_nm as "clssCd"
+			    cmcd.cmcd_nm as "clssCdNm"
 			FROM clss
 			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
@@ -254,25 +282,52 @@
 		]]>
 	</select>
 
-	<!-- 파일 다운로드 -->
-
-	<select id="getFile" parameterType="string"
-		resultType="com.finalprj.kess.model.FileVO">
+	<!-- 검색내역 리스트 -->
+	<select id="selectviewClass" parameterType="string"
+		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
-			SELECT *
-			FROM flup 
-			WHERE file_id = #{fileId} and file_sub_id = #{fileSubId}
+			SELECT
+			   clss_id,
+		       clss_nm,
+		       clss.cmpy_id,
+		       clss_cd,
+			   cmcd.cmcd_nm as "clssCdNm",
+		   		flup.file_nm as "clssContent" 
+		   FROM clss
+		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
+		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
+		   LEFT JOIN flup on flup.file_id = cmpy.file_id
+		   WHERE clss.clss_id = #{viewClass}
 		]]>
 	</select>
 
-	<insert id="insertApply">
+	<!-- 중복지원 내역 확인하기 -->
+	<select id="getAplyYN" parameterType="string" resultType="int">
 	<![CDATA[
-			INSERT INTO aply
-			(stdt_id, clss_id, file_nm, file_content, file_size, file_type, rgster_id)
-		VALUES
-			(#{stdtId}, #{clssId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, #{stdtId})
-		]]>
+		select COALESCE(COUNT(aply_id), 0) as "applyYN"
+			from aply
+			where stdt_id = #{stdtId}
+				and clss_id = #{classId}
+	]]>
+	</select>
+
+	<!-- 이수 테이블 aplyId MAX값 가져오기 -->
+	<select id="getMaxAplyId" resultType="string">
+	<![CDATA[
+		select 'APLY'||LPAD((max(cast(substr(aply_id,5) as number(6)))+1),6,'0')
+		from aply
+	]]>
+	</select>
+
+	<!-- 지원서 파일 업로드 -->
+	<insert id="uploadAplyFile"
+		parameterType="com.finalprj.kess.model.FileVO">
+	<![CDATA[
+		insert into aply
+		values(#{aplyId}, #{stdtId}, #{clssId}, #{aplyCd}, #{fileId},systimestamp, #{rgsterId}, null, null)
+	]]>
 	</insert>
+
 
 
 	<!-- 이수완료건 출력 -->
