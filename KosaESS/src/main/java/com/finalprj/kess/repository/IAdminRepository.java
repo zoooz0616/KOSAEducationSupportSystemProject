@@ -78,4 +78,6 @@ public interface IAdminRepository {
 	void updateClassVO(ClassVO classVO);
 	void deleteCurriculum(String clssId);
 	List<ApplyDetailDTO> getApplyDetailDTOList(String clssId);
+	void updateAplyPass(List<String> aplyIds);
+	void updateAplyFail(List<String> aplyIds);
 }
