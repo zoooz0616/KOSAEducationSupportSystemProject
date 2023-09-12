@@ -107,7 +107,11 @@
 	<![CDATA[
 		select *
 		from clss
-		order by rgst_dt desc
+		left join mngr on mngr.mngr_id = clss.mngr_id
+		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
+		join cmcd on cmcd.cmcd_id = clss.clss_cd
+		where clss.delete_yn='N'
+		order by clss.rgst_dt desc
 	]]>
 	</select>
 
@@ -247,6 +251,9 @@
 	<![CDATA[
 		select *
 		from clss
+		left join mngr on mngr.mngr_id = clss.mngr_id
+		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
+		join cmcd on cmcd.cmcd_id = clss.clss_cd
 		where clss_id = #{clssId}
 	]]>
 	</select>
@@ -336,9 +343,21 @@
 	]]>
 	</select>
 
+	<update id="updateAplyPass" parameterType="java.util.List">
+		<foreach collection="aplyIds" item="item">
+		update aply
+		set aply_cd = 'APL0000003'
+		where aply_id = #{item}
+		</foreach>
+	</update>
 
-
-
+	<update id="updateAplyFail" parameterType="java.util.List">
+		<foreach collection="aplyIds" item="item">
+		update aply
+		set aply_cd = 'APL0000004'
+		where aply_id = #{item}
+		</foreach>
+	</update>
 
 
 
@@ -395,11 +414,6 @@
 	]]>
 	</select>
 
-
-
-
-
-
 	<select id="getClassSearch" parameterType="string"
 		resultType="string">
 	<![CDATA[
@@ -443,11 +457,5 @@
 		clss_id
 	]]>
 	</select>
-
-
-
-
-
-
 
 </mapper>

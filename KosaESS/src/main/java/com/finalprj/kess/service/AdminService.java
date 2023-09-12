@@ -222,13 +222,25 @@ public class AdminService implements IAdminService {
 		return adminRepository.getApplyDetailDTOList(clssId);
 	}
 
+	@Override
+	public void updateAplyPass(List<String> aplyIds) {
+		adminRepository.updateAplyPass(aplyIds);
+	}
+
+	@Override
+	public void updateAplyFail(List<String> aplyIds) {
+		adminRepository.updateAplyFail(aplyIds);
+	}
 
 
 
 
 
-
-
+	
+	
+	
+	
+	
 	
 	
 	
@@ -256,5 +268,6 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
 				aplyEndDt, classStartDd, classEndDd);
 	}
+
 
 }

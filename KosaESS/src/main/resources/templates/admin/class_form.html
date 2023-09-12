@@ -58,7 +58,7 @@
 
 						<div class="col">
 							<div class="col_title">교육과정명</div>
-							<div class="col_content" style="width: 200px;">
+							<div class="col_content">
 								<input style="width: 200px;" th:if="${act}=='insert'"
 									type="text" th:name="clssNm" required> <input
 									style="width: 200px;" th:if="${act}=='update'" type="text"
@@ -151,7 +151,7 @@
 										th:value="${classCommonCode.cmcdId}"
 										th:text="${classCommonCode.cmcdNm}"
 										th:selected="${classCommonCode.cmcdId == classVO.clssCd}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.clssCd} "></span>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.cmcdNm} "></span>
 							</div>
 						</div>
 
@@ -167,7 +167,7 @@
 									<option th:each="company: ${companyList}"
 										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"
 										th:selected="${company.cmpyId == classVO.cmpyId}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.cmpyId}"></span>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.cmpyNm}"></span>
 							</div>
 						</div>
 
@@ -194,7 +194,7 @@
 									<option th:each="manager: ${managerList}"
 										th:value="${manager.mngrId}" th:text="${manager.mngrNm}"
 										th:selected="${manager.mngrId == classVO.mngrId}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrId}"></span>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrNm}"></span>
 							</div>
 						</div>
 					</div>

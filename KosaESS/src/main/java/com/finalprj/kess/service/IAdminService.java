@@ -71,4 +71,6 @@ public interface IAdminService {
 	void updateClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList);
 
 	List<ApplyDetailDTO> getApplyDetailDTOList(String clssId);
+	void updateAplyPass(List<String> aplyIds);
+	void updateAplyFail(List<String> aplyIds);
 }

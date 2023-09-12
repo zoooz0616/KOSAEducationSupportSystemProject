@@ -632,13 +632,18 @@ public class AdminController {
 	}
 	
 	@PostMapping("/class/{clssId}/applicant")
-	public String applicant(@PathVariable String clssId, HttpSession session, @RequestParam("action") String action) {
+	public String applicant(@PathVariable String clssId, HttpSession session,
+			@RequestParam("action") String action, @RequestParam(name="chk", required = false)List<String> aplyIds) {
+		//checked된 체크박스의 value(aplyId값)을 받아오기
+		System.out.println("aplyIds["+aplyIds+"]");
+
 		if ("합격".equals(action)) {
+			//선택한 개수와 현재 합격된 교육생 수가 수강가능 인원 이하인지 확인(나중에 구현)
             // "pass" 버튼을 클릭한 경우 실행할 코드
-            // ...
+            adminService.updateAplyPass(aplyIds);
         } else if ("불합격".equals(action)) {
             // "fail" 버튼을 클릭한 경우 실행할 코드
-            // ...
+            adminService.updateAplyFail(aplyIds);
         }
         
         // 원하는 뷰 페이지로 이동
