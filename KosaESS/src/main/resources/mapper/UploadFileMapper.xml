@@ -24,12 +24,15 @@
 	]]>
 	</select>
 	
-	<select id="getFile" resultType="com.finalprj.kess.model.FileVO">
-	<![CDATA[
-		select *
-		from flup
-		where file_id = #{fileId} and file_sub_id = #{fileSubId}
-	]]>
+	<!-- 파일 다운로드 -->
+
+	<select id="getFile" parameterType="string"
+		resultType="com.finalprj.kess.model.FileVO">
+		<![CDATA[
+			SELECT *
+			FROM flup 
+			WHERE file_id = #{fileId} and file_sub_id = #{fileSubId}
+		]]>
 	</select>
 	
 	<delete id="deleteFile">

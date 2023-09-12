@@ -12,7 +12,7 @@ public interface IUploadFileService {
 	List<FileVO> getFileList(String fileId);
 	
 	//파일 한 개 가져오기
-	FileVO getFile(String fileId, int fileSubId);
+	FileVO getFile(String fileId, String fileSubId);
 	
 	void deleteFile(String fileId);
 }

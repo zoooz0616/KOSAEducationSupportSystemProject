@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.finalprj.kess.dto.ClassDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.FileVO;
@@ -17,7 +16,6 @@ import com.finalprj.kess.repository.IStudentRepository;
 public class StudentService implements IStudentService {
 	@Autowired
 	IStudentRepository studentRepository;
-
 
 	public List<PostVO> selectAllNotice() {
 		return studentRepository.selectAllNotice();
@@ -43,24 +41,14 @@ public class StudentService implements IStudentService {
 		return studentRepository.selectAllInquiry();
 	}
 
-
 	@Override
-	public ClassDetailDTO selectClass(String clssId) {
+	public ClassVO selectClass(String clssId) {
 		return studentRepository.selectClass(clssId);
 	}
 
 	@Override
-	public List<ClassDetailDTO> selectAllClassFile(String clssId) {
+	public List<ClassVO> selectAllClassFile(String clssId) {
 		return studentRepository.selectAllClassFile(clssId);
-	}
-
-	@Override
-	public FileVO getFile(String fileId, String fileSubId) {
-		return studentRepository.getFile(fileId, fileSubId);
-	}
-
-	@Override
-	public void uploadFile(ApplyVO apply) {		
 	}
 
 	@Override
@@ -83,6 +71,30 @@ public class StudentService implements IStudentService {
 		return studentRepository.getIngClass(email);
 	}
 
+	@Override
+	public List<ClassVO> searchClasses(String keyword, String ingClass) {
+		return studentRepository.searchClasses(keyword, ingClass);
+	}
+
+	@Override
+	public String getMaxAplyId() {
+		return studentRepository.getMaxAplyId();
+	}
+
+	@Override
+	public void uploadAplyFile(ApplyVO apply) {
+		studentRepository.uploadAplyFile(apply);
+	}
+
+	@Override
+	public int getAplyYN(String stdtId, String classId) {
+		return studentRepository.getAplyYN(stdtId, classId);
+	}
+
+	@Override
+	public ClassVO selectviewClass(String viewClass) {
+		return studentRepository.selectviewClass(viewClass);
+	}
 
 
 }

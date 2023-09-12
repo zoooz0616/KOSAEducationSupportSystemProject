@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.finalprj.kess.dto.ClassDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.FileVO;
@@ -40,6 +39,7 @@ public class StudentController {
 
 	@Autowired
 	IStudentService studentService;
+	@Autowired
 	IUploadFileService uploadFileService;
 	StudentVO student = null;
 	LoginVO login = null;
@@ -66,14 +66,14 @@ public class StudentController {
 		int aplyClassCnt = studentService.getAplyClass((String) session.getAttribute("userEmail"));
 		int cmptClassCnt = studentService.getCmptClass((String) session.getAttribute("userEmail"));
 		String ingClassNm = studentService.getIngClass((String) session.getAttribute("userEmail"));
-		
+
 		model.addAttribute("aplyClassCnt", aplyClassCnt);
 		model.addAttribute("cmptClassCnt", cmptClassCnt);
 		model.addAttribute("ingClassNm", ingClassNm);
 
 		return "student/main";
 	}
-	
+
 	// 공지사항 리스트확인
 
 	/**
@@ -140,13 +140,53 @@ public class StudentController {
 	 */
 
 	@GetMapping("/class/{clssId}")
-	public String classdetail(@PathVariable String clssId, Model model) {
+	public String classdetail(@PathVariable String clssId, Model model, HttpSession session) {
+		// 학생 정보를 세션에서 가져와서 student 객체에 저장
+		String student = (String) session.getAttribute("student");
 		model.addAttribute("student", student);
-		ClassDetailDTO classDetail = studentService.selectClass(clssId);
+
+		// classDetail 객체를 가져와서 모델에 추가
+		ClassVO classDetail = studentService.selectClass(clssId);
 		model.addAttribute("classDetail", classDetail);
-		List<ClassDetailDTO> classDetailList = new ArrayList<ClassDetailDTO>();
-		classDetailList = studentService.selectAllClassFile(clssId);
+
+		// classDetailList 객체를 가져와서 모델에 추가
+		List<ClassVO> classDetailList = studentService.selectAllClassFile(clssId);
 		model.addAttribute("classDetailList", classDetailList);
+
+		// viewClass1과 viewClass2, viewClass3 세션에서 가져와서 모델에 추가
+		String viewClass1 = (String) session.getAttribute("viewClass1");
+		String viewClass2 = (String) session.getAttribute("viewClass2");
+		String viewClass3 = (String) session.getAttribute("viewClass3");
+
+		// viewClass3가 null인 경우 처리
+		if (viewClass3 == null) {
+			viewClass3 = "";
+		}
+		if (viewClass2 == null) {
+			viewClass2 = "";
+		}
+
+		if (viewClass3.equals(clssId)) {
+			// viewClass3 세션을 수정해서 새로운 clssId로 설정
+			session.setAttribute("viewClass3", clssId);
+			session.setAttribute("viewClass2", viewClass2);
+			session.setAttribute("viewClass1", viewClass1);
+		} else if (viewClass2.equals(clssId)) {
+			// viewClass2 세션을 수정해서 새로운 clssId로 설정
+			session.setAttribute("viewClass2", viewClass3);
+			session.setAttribute("viewClass1", viewClass1);
+			session.setAttribute("viewClass3", clssId);
+		} else {
+			// viewClass1 세션을 수정해서 새로운 clssId로 설정
+			session.setAttribute("viewClass1", viewClass2);
+			session.setAttribute("viewClass2", viewClass3);
+			session.setAttribute("viewClass3", clssId);
+		}
+
+		ClassVO class1 = studentService.selectviewClass((String) session.getAttribute("viewClass1"));
+		model.addAttribute("class1", class1);
+		ClassVO class2 = studentService.selectviewClass((String) session.getAttribute("viewClass2"));
+		model.addAttribute("class2", class2);
 
 		return "student/class_detail";
 	}
@@ -175,8 +215,8 @@ public class StudentController {
 	 */
 
 	@RequestMapping("/download/file/{fileId}/{fileSubId}")
-	public ResponseEntity<byte[]> downloadFile(@PathVariable String fileId,@PathVariable String fileSubId) {
-		FileVO file = studentService.getFile(fileId,fileSubId);
+	public ResponseEntity<byte[]> downloadFile(@PathVariable String fileId, @PathVariable String fileSubId) {
+		FileVO file = uploadFileService.getFile(fileId, fileSubId);
 
 		final HttpHeaders headers = new HttpHeaders();
 		if (file != null) {
@@ -195,6 +235,25 @@ public class StudentController {
 		}
 	}
 
+	// 교육 지원 중복 내여 체크
+	/**
+	 * @author : dabin
+	 * @return
+	 * @date : 2023. 9. 10.
+	 * @parameter :model
+	 * @throws IOException
+	 */
+	@GetMapping("/upload/{classId}/check")
+	@ResponseBody
+	public int checkApplyYN(HttpSession session, @PathVariable String classId, Model model) {
+
+		// 지원 내역 중복 확인
+		String stdtId = (String) session.getAttribute("stdtId");
+		int applyYN = studentService.getAplyYN(stdtId, classId);
+		return applyYN;
+
+	}
+
 	// 교욱 이력서 제출
 	/**
 	 * @author : dabin
@@ -203,67 +262,70 @@ public class StudentController {
 	 * @return :
 	 * @throws IOException
 	 */
-	@PostMapping("/upload/{clssId}")
-	public String uploadFile(@PathVariable String clssId, @RequestPart MultipartFile file, HttpSession session)
-			throws IOException {
-		ApplyVO apply = new ApplyVO();
-		apply.setStdtId(session.getId());
-		apply.setClssId(clssId);
-		/*
-		 * apply.setFileNm(file.getOriginalFilename());
-		 * apply.setFileContent(file.getBytes()); apply.setFileSize(file.getSize());
-		 * apply.setFileType(file.getContentType());
-		 */
 
-		studentService.uploadFile(apply);
+	@PostMapping("/upload/{classId}")
+	public String uplodApplyFile(HttpSession session, RedirectAttributes redirectAttrs,
+			@RequestParam("file") MultipartFile file, @PathVariable String classId, Model model) throws IOException {
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		// 업로드하기
+		String maxFileId = uploadFileService.getMaxFileId();
+		int subFileId = 1;
+		FileVO fileVO = new FileVO();
+		fileVO.setFileId(maxFileId);
+		fileVO.setFileSubId(subFileId);
+		fileVO.setFileNm(file.getOriginalFilename());
+		fileVO.setFileSize(file.getSize());
+		fileVO.setFileType(file.getContentType());
+		fileVO.setFileContent(file.getBytes());
+		uploadFileService.uploadFile(fileVO);
+		subFileId++;
+
+		// 이력서 내역 추가하기
+		String maxApplyId = studentService.getMaxAplyId();
+		ApplyVO apply = new ApplyVO();
+		apply.setAplyId(maxApplyId);
+		apply.setStdtId(stdtId);
+		apply.setClssId(classId);
+		apply.setAplyCd("APL0000002");
+		apply.setFileId(maxFileId);
+		apply.setRgsterId(stdtId);
+		studentService.uploadAplyFile(apply);
 
 		return "redirect:/student/class";
-
 	}
-	
-	@PostMapping("/upload/{classId}")
-	public String insertClass(HttpSession session,
-			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs) {
-		//파일 업로드하기
-		String maxFileId = uploadFileService.getMaxFileId();
-		int subFileId=1;
-		try {
-			for(MultipartFile file: files) {
-				if(file!=null && !file.isEmpty()) {
-					FileVO fileVO = new FileVO();
-					fileVO.setFileId(maxFileId);
-					fileVO.setFileSubId(subFileId);
-					fileVO.setFileNm(file.getOriginalFilename());
-					fileVO.setFileSize(file.getSize());
-					fileVO.setFileType(file.getContentType());
-					fileVO.setFileContent(file.getBytes());
-					uploadFileService.uploadFile(fileVO);
-					subFileId++;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttrs.addFlashAttribute("message", e.getMessage());
-		}
 
-		return "redirect:/student/clss_list";
-	}
-	
-	// 교욱 이력서 제출
-		/**
-		 * @author : dabin
-		 * @date : 2023. 8. 31.
-		 * @parameter :model
-		 * @return :
-		 * @throws IOException
-		 */
+	// 마이페이지 이동
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 31.
+	 * @parameter :model
+	 * @return :
+	 * @throws IOException
+	 */
 	@GetMapping("/mypage")
 	public String mypageMain(Model model) {
 		model.addAttribute("student", student);
 
-		
-
 		return "student/mypage";
+	}
+
+	// 교욱 리스트 검색 버튼
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .8
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/class/search")
+	@ResponseBody
+	public List<ClassVO> searchClasses(@RequestParam("keyword") String keyword,
+			@RequestParam("ingClass") String ingClass, Model model) {
+		// 검색어(keyword)를 사용하여 교육 과정을 검색하고 결과를 모델에 담습니다.
+		List<ClassVO> searchResults = studentService.searchClasses(keyword, ingClass);
+		model.addAttribute("classList", searchResults);
+		return searchResults;
 	}
 
 }

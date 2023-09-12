@@ -30,7 +30,7 @@ public class UploadFileService implements IUploadFileService {
 	}
 
 	@Override
-	public FileVO getFile(String fileId, int fileSubId) {
+	public FileVO getFile(String fileId, String fileSubId) {
 		return uploadFileRepository.getFile(fileId, fileSubId);
 	}
 
