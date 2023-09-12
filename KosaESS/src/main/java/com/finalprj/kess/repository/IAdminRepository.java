@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -71,4 +72,12 @@ public interface IAdminRepository {
 	ClassVO getClass(String clssId);
 	List<CurriculumVO> getCurriculumList(String clssId);
 	CurriculumDetailDTO getCurriculumDetail(String lctrId);
+	
+	void deleteFile(String fileId, List<String> fileSubIds);
+	int getMaxFileSubId(String fileId);
+	void updateClassVO(ClassVO classVO);
+	void deleteCurriculum(String clssId);
+	List<ApplyDetailDTO> getApplyDetailDTOList(String clssId);
+	void updateAplyPass(List<String> aplyIds);
+	void updateAplyFail(List<String> aplyIds);
 }

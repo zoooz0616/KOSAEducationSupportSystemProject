@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Applicant List</title>
+</head>
+<head>
+<link th:href="@{/css/admin/applicant_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">교육과정 지원자 관리</div>
+			<!-- Route -->
+			<div class="route">
+				> <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+					관리</a> > <a th:href="@{/admin/class/__${classVO.clssId}__/applicant}">지원자
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- 교육과정 요약정보 -->
+			<div class="class_summary">
+				<div class="row">
+					<div class="col" style="width: 20%">
+						<div class="col_title">교육과정ID</div>
+						<div class="col_content">
+							<span th:text="${classVO.clssId}"></span>
+						</div>
+					</div>
+
+					<div class="col" style="width: 30%">
+						<div class="col_title">교육과정명</div>
+						<div class="col_content"
+							style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+							<a th:href="@{/admin/class/__${classVO.clssId}__}"><span
+								th:text="${classVO.clssNm}"></span></a>
+						</div>
+					</div>
+
+					<div class="col" style="width: 20%">
+						<div class="col_title">업무담당자</div>
+						<div class="col_content">
+							<a th:href="@{/admin/manager/__${classVO.mngrId}__}"><span
+								th:text="${classVO.mngrId}"></span></a>
+						</div>
+					</div>
+
+					<div class="col" style="width: 20%">
+						<div class="col_title">업체명</div>
+						<div class="col_content">
+							<a th:href="@{/admin/company/__${classVO.cmpyId}__}"><span
+								th:text="${classVO.cmpyId}"></span></a>
+						</div>
+					</div>
+
+					<div class="col" style="width: 10%">
+						<div class="col_title">수강정원</div>
+						<div class="col_content">
+							<span th:text="${classVO.limitCnt}"></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col" style="width: 40%">
+						<div class="col_title">지원기간</div>
+						<div class="col_content">
+							<span th:text="${classVO.aplyStartDt}"></span> ~ <span
+								th:text="${classVO.aplyEndDt}"></span>
+						</div>
+					</div>
+
+					<div class="col" style="width: 30%">
+						<div class="col_title">교육기간</div>
+						<div class="col_content">
+							<span th:text="${classVO.clssStartDd}"></span> ~ <span
+								th:text="${classVO.clssEndDd}"></span>
+						</div>
+					</div>
+
+					<div class="col" style="width: 15%">
+						<div class="col_title">교육시간</div>
+						<div class="col_content">
+							<span th:text="${#dates.format(classVO.setInTm, 'HH:mm')}"></span>
+							~ <span th:text="${#dates.format(classVO.setOutTm, 'HH:mm')}"></span>
+						</div>
+					</div>
+
+					<div class="col" style="width: 15%">
+						<div class="col_title">교육상태</div>
+						<div class="col_content">
+							<span th:text="${classVO.clssCd}"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 교육과정 요약정보 -->
+		</div>
+		<!-- Content Middle-->
+
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+			<form th:action="@{/admin/class/__${classVO.clssId}__/applicant}"
+				method="post">
+				<!-- 컨텐츠 개수와 버튼 wrap -->
+				<div class="content_info_wrap">
+					<div class="content_info">
+						<span>지원자 총 <span class="applicant_list_cnt"
+							th:text="${#lists.size(applyDetailList)}">aplyListCnt</span>명
+						</span>
+					</div>
+					<div class="content_info_btn_wrap">
+						<!-- 선택삭제 버튼 -->
+						<input type="submit" name="action" value="합격">
+						<!-- 등록하기 버튼 -->
+						<input type="submit" name="action" value="불합격">
+					</div>
+				</div>
+				<!-- 컨텐츠 개수와 버튼 wrap -->
+
+				<!-- 지원자 목록 -->
+				<!-- 컨텐츠 리스트 부분 -->
+				<div class="content_list">
+					<table class="content_list_table" id="class_list_table">
+						<tr style="background: #F3F6F8;">
+							<th><input type="checkbox" id="chkAll" value=""></th>
+							<th>지원ID</th>
+							<th>교육생ID</th>
+							<th>이름</th>
+							<th>지원서</th>
+							<th>지원일시</th>
+							<th>지원상태</th>
+						</tr>
+						<tr id="applicant_list" th:each="apply: ${applyDetailList}">
+							<td style="text-align:center;"><input type="checkbox" name="chk"
+							th:value="${apply.aplyId}"></td>
+							<td th:text="${apply.aplyId}"></td>
+							<td th:text="${apply.stdtId}"></td>
+							<td th:text="${apply.stdtNm}"></td>
+							<td><a th:href="@{/download/file/__${apply.fileId}__/__${apply.fileSubId}__}" th:text="${apply.fileNm}"></a></td>
+							<td th:text="${apply.rgstDt}"></td>
+							<td th:text="${apply.cmcdNm}"></td>
+						</tr>
+					</table>
+				</div>
+				<!-- 컨텐츠 리스트 부분 -->
+			</form>
+		</div>
+		<!-- Content Bottom-->
+	</div>
+	<!-- Content Wrap -->
+
+<script>
+//전체 선택
+document.addEventListener("DOMContentLoaded", function () {
+    const chkAll = document.getElementById("chkAll");
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
+
+    chkAll.addEventListener("change", function () {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = chkAll.checked;
+        });
+    });
+});
+
+//form submit버튼 클릭시 선택한 값이 있는지 확인
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form');//form
+
+    form.addEventListener("submit", function (event) {
+    	//checked되어 있는 input들 선택
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]:checked');
+        
+    	//만약 아무것도 선택되어있지 않다면
+        if (checkboxes.length === 0) {
+            alert("선택되지 않았습니다.");
+            event.preventDefault();//submit취소
+        }
+    });
+});
+</script>
+</body>
+</html>

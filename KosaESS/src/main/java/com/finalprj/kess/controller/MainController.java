@@ -1,14 +1,25 @@
 package com.finalprj.kess.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IMainService;
 import com.finalprj.kess.service.IStudentService;
+import com.finalprj.kess.service.IUploadFileService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +30,9 @@ public class MainController {
 	@Autowired
 	IMainService mainService;
 	IStudentService studentService;
+	
+	@Autowired
+	IUploadFileService uploadFileService;
 
 	/**
 	 * @updater : seungwoo
@@ -114,5 +128,26 @@ public class MainController {
 	public String logout(HttpSession session, HttpServletRequest request) {
 		session.invalidate(); // 로그아웃
 		return "redirect:/student";
+	}
+	
+	@RequestMapping("/download/file/{fileId}/{fileSubId}")
+	public ResponseEntity<byte[]> downloadFile(@PathVariable String fileId, @PathVariable String fileSubId) {
+		FileVO file = uploadFileService.getFile(fileId, fileSubId);
+
+		final HttpHeaders headers = new HttpHeaders();
+		if (file != null) {
+			String[] mtypes = file.getFileType().split("/");
+			headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+			headers.setContentLength(file.getFileSize());
+			try {
+				String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+				headers.setContentDispositionFormData("attachment", encodedFileName);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+		}
 	}
 }

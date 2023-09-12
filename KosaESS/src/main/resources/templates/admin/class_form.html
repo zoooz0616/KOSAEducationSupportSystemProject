@@ -37,6 +37,7 @@
 
 		<!-- Content Middle-->
 		<div class="content_middle">
+
 			<!-- 컨텐츠 내용 부분 -->
 			<form th:action="@{/admin/class/__${act}__}" method="post"
 				enctype="multipart/form-data">
@@ -48,22 +49,21 @@
 						<div class="col">
 							<div class="col_title">교육과정 ID</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" th:name="clssId" type="text"
-									th:value="${classVO.clssId}" readonly> <input
-									th:if="${act}=='update'" type="text"
-									th:value="${classVO.clssId}" required> <span
-									th:if="${act}=='select'" th:text="${classVO.clssId}"></span>
+								<input th:if="${act=='insert' or act=='update'}"
+									th:name="clssId" type="text" th:value="${classVO.clssId}"
+									readonly> <span th:if="${act}=='select'"
+									th:text="${classVO.clssId}"></span>
 							</div>
 						</div>
 
 						<div class="col">
 							<div class="col_title">교육과정명</div>
-							<div class="col_content" style="width: 200px;">
+							<div class="col_content">
 								<input style="width: 200px;" th:if="${act}=='insert'"
-									th:name="clssNm" type="text" required> <input
+									type="text" th:name="clssNm" required> <input
 									style="width: 200px;" th:if="${act}=='update'" type="text"
-									th:value="${classVO.clssNm}" required> <span
-									style="width: 300px;" th:if="${act}=='select'"
+									th:name="clssNm" th:value="${classVO.clssNm}" required>
+								<span style="width: 300px;" th:if="${act}=='select'"
 									th:text="${classVO.clssNm}"></span>
 							</div>
 
@@ -75,13 +75,13 @@
 								<input th:if="${act}=='insert'" type="datetime-local"
 									th:name="aplyStartDt" th:value="null"> <input
 									th:if="${act}=='update'" type="datetime-local"
-									th:value="${classVO.aplyStartDt}"> <span
-									th:if="${act}=='select'"
+									th:name="aplyStartDt" th:value="${classVO.aplyStartDt}">
+								<span th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.aplyStartDt, 'yyyy-MM:dd HH:mm')}"></span>
 								~ <input th:if="${act}=='insert'" type="datetime-local"
 									th:name="aplyEndDt" th:value="null"> <input
 									th:if="${act}=='update'" type="datetime-local"
-									th:value="${classVO.aplyEndDt}"> <span
+									th:name="aplyEndDt" th:value="${classVO.aplyEndDt}"> <span
 									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.aplyEndDt, 'yyyy-MM:dd HH:mm')}"></span>
 							</div>
@@ -93,13 +93,13 @@
 								<input th:if="${act}=='insert'" id="datepicker1" type="text"
 									th:name="clssStartDd" th:value="null"> <input
 									th:if="${act}=='update'" id="datepicker1" type="text"
-									th:value="${classVO.clssStartDd}"> <span
-									th:if="${act}=='select'" th:text="${classVO.clssStartDd}"></span>
+									th:name="clssStartDd" th:value="${classVO.clssStartDd}">
+								<span th:if="${act}=='select'" th:text="${classVO.clssStartDd}"></span>
 
 								~ <input th:if="${act}=='insert'" id="datepicker2" type="text"
 									th:name="clssEndDd" th:value="null"> <input
 									th:if="${act}=='update'" id="datepicker2" type="text"
-									th:value="${classVO.clssEndDd}"> <span
+									th:name="clssEndDd" th:value="${classVO.clssEndDd}"> <span
 									th:if="${act}=='select'" th:text="${classVO.clssEndDd}"></span>
 
 							</div>
@@ -114,14 +114,16 @@
 							<div class="col_content">
 								<input th:if="${act}=='insert'" type="time" th:name="setInTm"
 									th:value="null"> <input th:if="${act}=='update'"
-									type="time"> <span style="width: 300px;"
-									th:if="${act}=='select'"
+									type="time" th:name="setInTm"
+									th:value="${#dates.format(classVO.setInTm, 'HH:mm:ss')}">
+								<span style="width: 300px;" th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.setInTm, 'HH:mm')}"></span> ~
 
 								<input th:if="${act}=='insert'" type="time" th:name="setOutTm"
 									th:value="null"> <input th:if="${act}=='update'"
-									type="time" th:value="${classVO.setOutTm}"> <span
-									style="width: 300px;" th:if="${act}=='select'"
+									type="time" th:name="setOutTm"
+									th:value="${#dates.format(classVO.setOutTm, 'HH:mm:ss')}">
+								<span style="width: 300px;" th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.setOutTm, 'HH:mm')}"></span>
 							</div>
 						</div>
@@ -131,7 +133,7 @@
 							<div class="col_content" style="width: 300px;">
 								<input style="width: 100%;" th:if="${act}=='insert'" type="text"
 									th:name="clssAdr"> <input style="width: 100%;"
-									th:if="${act}=='update'" type="text"
+									th:if="${act}=='update'" type="text" th:name="clssAdr"
 									th:value="${classVO.clssAdr}"> <span
 									th:if="${act}=='select'" th:text="${classVO.clssAdr} "></span>
 							</div>
@@ -144,7 +146,12 @@
 									<option th:each="classCommonCode: ${classCommonCodeList}"
 										th:value="${classCommonCode.cmcdId}"
 										th:text="${classCommonCode.cmcdNm}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.clssCd} "></span>
+								</select> <select th:if="${act}=='update'" th:name="clssCd">
+									<option th:each="classCommonCode: ${classCommonCodeList}"
+										th:value="${classCommonCode.cmcdId}"
+										th:text="${classCommonCode.cmcdNm}"
+										th:selected="${classCommonCode.cmcdId == classVO.clssCd}"></option>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.cmcdNm} "></span>
 							</div>
 						</div>
 
@@ -155,17 +162,22 @@
 									<option value="">미정</option>
 									<option th:each="company: ${companyList}"
 										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.cmpyId}"></span>
+								</select> <select th:if="${act}=='update'" th:name="cmpyId">
+									<option value="">미정</option>
+									<option th:each="company: ${companyList}"
+										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"
+										th:selected="${company.cmpyId == classVO.cmpyId}"></option>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.cmpyNm}"></span>
 							</div>
 						</div>
 
 						<div class="col">
 							<div class="col_title" style="width: 80px; text-align: center;">인원</div>
 							<div class="col_content">
-								<input th:name="limitCnt" th:if="${act}=='insert'" type="number"
+								<input th:if="${act}=='insert'" type="number" th:name="limitCnt"
 									th:value="0"> <input th:if="${act}=='update'"
-									type="number" th:value="${classVO.limitCnt}"> <span
-									th:if="${act}=='select'" th:text="${classVO.limitCnt}"></span>
+									type="number" th:name="limitCnt" th:value="${classVO.limitCnt}">
+								<span th:if="${act}=='select'" th:text="${classVO.limitCnt}"></span>
 							</div>
 
 						</div>
@@ -177,7 +189,12 @@
 									<option value="">미정</option>
 									<option th:each="manager: ${managerList}"
 										th:value="${manager.mngrId}" th:text="${manager.mngrNm}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrId}"></span>
+								</select> <select th:if="${act}=='update'" th:name="mngrId">
+									<option value="">미정</option>
+									<option th:each="manager: ${managerList}"
+										th:value="${manager.mngrId}" th:text="${manager.mngrNm}"
+										th:selected="${manager.mngrId == classVO.mngrId}"></option>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrNm}"></span>
 							</div>
 						</div>
 					</div>
@@ -190,6 +207,9 @@
 									style="border: 1px solid #777777; display: flex; justify-content: center; align-items: center; border-radius: 5px; background: white; width: 100%; height: 100%;">
 									<input th:if="${act}=='insert'" type="text"
 										th:name="clssContent"
+										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
+									<input th:if="${act}=='update'" type="text"
+										th:name="clssContent" th:value="${classVO.clssContent}"
 										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
 									<span th:if="${act}=='select'" th:text="${classVO.clssContent}"></span>
 								</div>
@@ -220,8 +240,7 @@
 											<th><div>과목명</div></th>
 											<th><div>강사이름</div></th>
 										</tr>
-										<tr th:if="${act=='insert' or act=='update'}"
-											class="lecture_row">
+										<tr th:if="${act}=='insert'" class="lecture_row">
 											<td><input type="checkbox"></td>
 											<td><select id="lecture_select"
 												onchange="lectureSelect(this.value)" name="lctrId">
@@ -235,6 +254,25 @@
 											<td><input id="professor_name" name="" type="text"
 												value="professorName" disabled></td>
 											<td><input class="lecture_time" type="hidden" value="0"></td>
+										</tr>
+
+										<tr th:if="${act}=='update'" class="lecture_row"
+											th:each="curriculumDetail: ${curriculumDetailList}">
+											<td><input type="checkbox"></td>
+											<td><select id="lecture_select"
+												onchange="lectureSelect(this.value)" name="lctrId">
+													<option value="">=== 강의를 선택하세요. ===</option>
+													<option th:each="lecture: ${lectureList}"
+														th:value="${lecture.lctrId}"
+														th:text="${lecture.lctrNm}+' ('+${lecture.lctrTm}+')'"
+														th:selected="${lecture.lctrId == curriculumDetail.lctrId}"></option>
+											</select></td>
+											<td><input id="subject_name" name="sbjtId" type="text"
+												th:value="${curriculumDetail.sbjtNm}" disabled></td>
+											<td><input id="professor_name" name="profId" type="text"
+												th:value="${curriculumDetail.profNm}" disabled></td>
+											<td><input class="lecture_time" type="hidden"
+												th:value="${curriculumDetail.lctrTm}"></td>
 										</tr>
 
 										<tr th:if="${act}=='select'" class="lecture_row"
@@ -252,8 +290,11 @@
 										<input type="hidden" id="clss_total_tm" th:name="clssTotalTm"
 											th:value="0">
 										<div>
-											총 이수시간 : <span th:if="${act=='insert' or act=='update'}"
+											총 이수시간 : 
+											<span th:if="${act}=='insert'"
 												class="class_total_tm">0</span> <span
+												th:if="${act}=='update'" class="class_total_tm"
+												th:text="${classVO.clssTotalTm}">0</span> <span
 												th:if="${act}=='select'" th:text="${classVO.clssTotalTm}">0</span>
 										</div>
 									</div>
@@ -264,27 +305,62 @@
 
 					<div class="row2">
 						<div class="col2">
-							<div class="col_title">파일 첨부</div>
+							<div class="col_title">첨부 파일</div>
 							<div class="col_content" style="width: 800px;">
-								<div th:if="${act=='insert' or act=='update'}">
-									<input type="file" name="files" id="file"
-										class="files form-control form-control-sm" multiple>
+
+								<div th:if="${act}=='insert'">
+									<div class="file_list">
+										<div class="file_wrap">
+											<div class="file_input">
+												<input type="text" readonly /> <label> 첨부파일 <input
+													id="file" type="file" name="files"
+													onchange="selectFile(this);" />
+												</label>
+											</div>
+											<button type="button" onclick="removeFile(this);"
+												class="btns del_btn">
+												<span>삭제</span>
+											</button>
+											<button type="button" onclick="addFile();"
+												class="btns fn_add_btn">
+												<span>파일 추가</span>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div th:if="${act}=='update'">
+									<div class="file_list">
+										<div class="file_wrap" th:each="file, iterStat : ${fileList}">
+											<div class="file_input">
+												<input
+													type="text" th:name="fileId" th:value="${file.fileNm}"
+													onchange="fileChange(this)" readonly /> 
+												<input type="hidden" th:value="${file.fileSubId}"> 
+												<label>
+													첨부파일 <input id="file" type="file" name="files"
+													onchange="selectFile(this);" />
+												
+
+												</label>
+											</div>
+											<button type="button" onclick="removeFile(this);"
+												class="btns del_btn">
+												<span>삭제</span>
+											</button>
+											<div th:if="${iterStat.index<1}">
+												<button type="button" onclick="addFile();"
+													class="btns fn_add_btn">
+													<span>파일 추가</span>
+												</button>
+											</div>
+										</div>
+									</div>
 								</div>
 								<div th:if="${act}=='select'" class="file_detail" id="file_drag">
-									<table class="file_table" style="width: 700px;">
-										<tr>
-											<th><div>삭제</div></th>
-											<th><div>파일명</div></th>
-											<th><div>파일크기</div></th>
-											<th><div>파일타입</div></th>
-										</tr>
-										<tr th:each="file: ${fileList}">
-											<td><div>삭제</div></td>
-											<td><span th:text="${file.fileNm}"></span></td>
-											<td><span th:text="${file.fileSize}"></span></td>
-											<td><span th:text="${file.fileType}"></span></td>
-										</tr>
-									</table>
+									<div th:each="file: ${fileList}" style="display: flex;">
+										<img style="width: 30px;" th:src="@{/img/file_gray.png}">
+										<div><a style="text-decoration-line: none; color:#0E5881;" th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}" th:text="${file.fileNm}"></a></div>
+									</div>
 								</div>
 
 							</div>
@@ -294,8 +370,10 @@
 							<div class="col_content" style="width: 500px; height: 100%;">
 								<div
 									style="border: 1px solid #777777; display: flex; justify-content: center; align-items: center; border-radius: 5px; background: white; width: 100%; height: 100%;">
-									<input th:if="${act=='insert' or act=='update'}" type="text"
-										th:name="clssEtc"
+									<input th:if="${act}=='insert'" type="text" th:name="clssEtc"
+										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
+									<input th:if="${act}=='update'" type="text" th:name="clssEtc"
+										th:value="${classVO.clssEtc}"
 										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
 									<span th:if="${act}=='select'" th:text="${classVO.clssEtc}"></span>
 								</div>
@@ -306,14 +384,19 @@
 
 
 				<!-- create / update일 때 -->
-				<div th:if="${act=='insert' or act=='update'}" style="display: flex; justify-content: center;"> 
+				<div th:if="${act=='insert' or act=='update'}"
+					style="display: flex; justify-content: center;">
 					<input class="submit_btn" type="submit" value="저장하기">
 				</div>
 				<!-- select일 때 -->
 				<div th:if="${act}=='select'"
 					style="display: flex; justify-content: center;">
-					<div class="submit_btn" >삭제하기</div>
-					<div class="submit_btn" >수정하기</div>
+					<div class="submit_btn">
+						<a style="color:#fff;text-decoration-line: none;"th:href="@{/admin/class/delete/__${classVO.clssId}__}">삭제하기</a>
+					</div>
+					<div class="submit_btn">
+						<a style="color:#fff;text-decoration-line: none;" th:href="@{/admin/class/update/__${classVO.clssId}__}">수정하기</a>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -662,6 +745,84 @@
 			$(".class_total_tm").text(clssTotalTm);
 			//clss_total_tm값 변경하면서 input의 value값 변경
 			$("#clss_total_tm").val(clssTotalTm);
+		}
+		
+		// 파일 선택
+	    function selectFile(element) {
+
+	        const file = element.files[0];
+	        const filename = element.closest('.file_input').firstElementChild;
+
+	        // 1. 파일 선택 창에서 취소 버튼이 클릭된 경우
+	        if ( !file ) {
+	            filename.value = '';
+	            return false;
+	        }
+
+	        // 2. 파일 크기가 10MB를 초과하는 경우
+	        const fileSize = Math.floor(file.size / 1024 / 1024);
+	        if (fileSize > 10) {
+	            alert('10MB 이하의 파일로 업로드해 주세요.');
+	            filename.value = '';
+	            element.value = '';
+	            return false;
+	        }
+
+	        // 3. 파일명 지정
+	        filename.value = file.name;
+	        fileChange(filename);
+	    }
+
+
+	    // 파일 추가
+	    function addFile() {
+	        const fileDiv = document.createElement('div');
+	        fileDiv.className = 'file_wrap';
+	        fileDiv.innerHTML =`
+	            <div class="file_input">
+	                <input type="text" readonly />
+	                <label> 첨부파일
+	                    <input type="file" name="files" onchange="selectFile(this);" />
+	                </label>
+	            </div>
+	            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+	        `;
+	        document.querySelector('.file_list').appendChild(fileDiv);
+	    }
+
+
+	    // 파일 삭제
+	    function removeFile(element) {
+	        const fileAddBtn = element.nextElementSibling;
+            var deleteFileInput = element.previousElementSibling.querySelectorAll('input[type="hidden"]');
+            deleteFileInput.forEach (
+	            	function(inputElement) {
+	            		// 각 input 요소의 name 속성을 "fileSubId"로 설정
+	            		inputElement.setAttribute('name', 'fileSubId');	
+	            		console.log(inputElement.value);
+	            	}
+	            );
+	        if (fileAddBtn) {
+	            const inputs = element.previousElementSibling.querySelectorAll('input[type="text"]');
+	            inputs.forEach(input => input.value = '')
+	            return false;
+	        }
+	        element.parentElement.style.display = 'none';
+	    }
+	    
+	    //파일 수정
+	    function fileChange(inputElement) {
+	    	console.log("파일수정함");
+	    	
+    		// 이후 형제 노드를 찾음
+    		var nextInput = inputElement.nextElementSibling;
+
+    		// 이전 형제 노드가 <input type="hidden"> 태그인 경우에만 작업 수행
+    		if (nextInput && nextInput.tagName === 'INPUT' && nextInput.type === 'hidden') {
+        		// 이전 <input type="hidden"> 태그에 name 속성을 추가
+        		nextInput.setAttribute('name', 'fileSubId');
+        		console.log(nextInput.value);
+    		}
 		}
 	</script>
 </body>
