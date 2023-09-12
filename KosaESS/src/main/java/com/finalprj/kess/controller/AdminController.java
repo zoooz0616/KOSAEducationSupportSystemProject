@@ -7,13 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.rowset.Joinable;
-
-import org.apache.naming.java.javaURLContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
-import com.finalprj.kess.file.FileUtils;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -45,7 +40,6 @@ import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IUploadFileRepository;
 import com.finalprj.kess.service.AdminService;
-import com.finalprj.kess.service.FileService;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -67,12 +61,6 @@ public class AdminController {
 
 	@Autowired
 	IUploadFileService uploadFileService;
-
-	@Autowired
-	FileService fileService;
-
-	@Autowired
-	FileUtils fileUtils;
 
 	/**
 	 * @author : eunji
@@ -644,13 +632,18 @@ public class AdminController {
 	}
 	
 	@PostMapping("/class/{clssId}/applicant")
-	public String applicant(@PathVariable String clssId, HttpSession session, @RequestParam("action") String action) {
+	public String applicant(@PathVariable String clssId, HttpSession session,
+			@RequestParam("action") String action, @RequestParam(name="chk", required = false)List<String> aplyIds) {
+		//checked된 체크박스의 value(aplyId값)을 받아오기
+		System.out.println("aplyIds["+aplyIds+"]");
+
 		if ("합격".equals(action)) {
+			//선택한 개수와 현재 합격된 교육생 수가 수강가능 인원 이하인지 확인(나중에 구현)
             // "pass" 버튼을 클릭한 경우 실행할 코드
-            // ...
+            adminService.updateAplyPass(aplyIds);
         } else if ("불합격".equals(action)) {
             // "fail" 버튼을 클릭한 경우 실행할 코드
-            // ...
+            adminService.updateAplyFail(aplyIds);
         }
         
         // 원하는 뷰 페이지로 이동

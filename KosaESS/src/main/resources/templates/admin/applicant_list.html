@@ -134,13 +134,23 @@
 				<div class="content_list">
 					<table class="content_list_table" id="class_list_table">
 						<tr style="background: #F3F6F8;">
-							<th><input type="checkbox" name="chk" id="chkAll"></th>
+							<th><input type="checkbox" id="chkAll" value=""></th>
 							<th>지원ID</th>
 							<th>교육생ID</th>
 							<th>이름</th>
 							<th>지원서</th>
 							<th>지원일시</th>
 							<th>지원상태</th>
+						</tr>
+						<tr id="applicant_list" th:each="apply: ${applyDetailList}">
+							<td style="text-align:center;"><input type="checkbox" name="chk"
+							th:value="${apply.aplyId}"></td>
+							<td th:text="${apply.aplyId}"></td>
+							<td th:text="${apply.stdtId}"></td>
+							<td th:text="${apply.stdtNm}"></td>
+							<td><a th:href="@{/download/file/__${apply.fileId}__/__${apply.fileSubId}__}" th:text="${apply.fileNm}"></a></td>
+							<td th:text="${apply.rgstDt}"></td>
+							<td th:text="${apply.cmcdNm}"></td>
 						</tr>
 					</table>
 				</div>
@@ -151,5 +161,34 @@
 	</div>
 	<!-- Content Wrap -->
 
+<script>
+//전체 선택
+document.addEventListener("DOMContentLoaded", function () {
+    const chkAll = document.getElementById("chkAll");
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
+
+    chkAll.addEventListener("change", function () {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = chkAll.checked;
+        });
+    });
+});
+
+//form submit버튼 클릭시 선택한 값이 있는지 확인
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form');//form
+
+    form.addEventListener("submit", function (event) {
+    	//checked되어 있는 input들 선택
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]:checked');
+        
+    	//만약 아무것도 선택되어있지 않다면
+        if (checkboxes.length === 0) {
+            alert("선택되지 않았습니다.");
+            event.preventDefault();//submit취소
+        }
+    });
+});
+</script>
 </body>
 </html>

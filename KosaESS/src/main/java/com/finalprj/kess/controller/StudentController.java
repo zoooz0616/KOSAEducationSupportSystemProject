@@ -214,27 +214,6 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@RequestMapping("/download/file/{fileId}/{fileSubId}")
-	public ResponseEntity<byte[]> downloadFile(@PathVariable String fileId, @PathVariable String fileSubId) {
-		FileVO file = uploadFileService.getFile(fileId, fileSubId);
-
-		final HttpHeaders headers = new HttpHeaders();
-		if (file != null) {
-			String[] mtypes = file.getFileType().split("/");
-			headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
-			headers.setContentLength(file.getFileSize());
-			try {
-				String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
-				headers.setContentDispositionFormData("attachment", encodedFileName);
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
-			}
-			return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
-		}
-	}
-
 	// 교육 지원 중복 내여 체크
 	/**
 	 * @author : dabin

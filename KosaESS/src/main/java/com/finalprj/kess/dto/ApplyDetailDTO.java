@@ -10,10 +10,10 @@ public class ApplyDetailDTO {
 	private String stdtId;
 	private String stdtNm;
 	private String aplyCd;
-	private String aplyNm;
-	private String fileId;
+	private String cmcdNm;
+	private String fileId;//파일id
 	private String fileNm;
-	private byte[] fileContent;
-	private Timestamp rgstD;
+	private int fileSubId;//파일서브id
+	private Timestamp rgstDt;
 	
 }
