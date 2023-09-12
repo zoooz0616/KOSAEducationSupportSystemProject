@@ -66,20 +66,16 @@
 								 <input type="checkbox" name="chk_status" checked="checked" value="CheckAllCodeName"><!-- ←←←←←← value 수정필요 -->
 							</span>
 							<span th:each="classCodeName:${classCodeNameList}" >
-								 <label th:text="${classCodeName}"></label>
+								 <label th:text="${classCodeName.cmcdNm}"></label>
 								 <input type="checkbox" name="chk_status" checked="checked" value="${classCodeName.cmcdId}">
 							</span>
 						</td>
-
 					</tr>
 					<tr th:if="${session.role == 'admin'}">
 						<td style="width: 10%;">지원기간</td>
-						<td style="width: 30%;"><input id="aply_start_dt" type="date">
-							<span> ~ </span> <input id="aply_end_dt" type="date"></td>
+						<td style="width: 30%;"><input id="aply_start_dt" type="date"> <span> ~ </span> <input id="aply_end_dt" type="date"></td>
 						<td style="width: 10%;">교육기간</td>
-						<td style="width: 50%;"><input id="class_start_dd"
-							type="date"> <span> ~ </span> <input id="class_end_dd"
-							type="date"></td>
+						<td style="width: 50%;"><input id="class_start_dd" type="date"> <span> ~ </span> <input id="class_end_dd" type="date"></td>
 					</tr>
 				</table>
 
@@ -156,50 +152,51 @@
 			console.log("statusArray: " +statusArray);
 			console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
 			console.log("class: "+classStartDd+"~"+classEndDd);
-			
-			
-			$.ajax({
-				url: '/admin/class/search',
-				async: true,
-				method: 'GET',
-				data: {className: className, 
-						statusArray: statusArray,
-						aplyStartDt: aplyStartDt,
-						aplyEndDt: aplyEndDt,
-						classStartDd: classStartDd,
-						classEndDd: classEndDd},
-				success: function(response) {
-					var classListTable = document.querySelector("#class_list_table");
-					var classList = classListTable.querySelectorAll("#class_list");
-					classListTable.firstElementChild.remove();
-					var classListCode=
-						'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
-						'<th th:if="${session.role==\'admin\'}">ID</th>'+
-						'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
-						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
-						for(var i = 0; i < response.length; i++){
-		                       classListCode += 
-		                           '<tr><td><input type="checkbox" name="chk" th:value="'+
-		                              response[i].clssId+'"></td>'+
-		                              '<td>'+response[i].clssId+'</td>'+
-		                              '<td><a class="content_title" th:href="@{/manager/class/__'+response[i].clssId +
-		                                 '__}">'+response[i].clssNm+'</a></td>' +      
-		                        '<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
-		                        '<span>'+response[i].aplyEndDt+'</span></td>'+
-		                        '<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
-		                        '<span>'+response[i].clssEndDd+'</span></td>'+
-		                        '<td>'+response[i].clssAdr+'</td>'+
-		                        '<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
-		                        '<td>'+response[i].clssCd+'</td></tr>';
-		            }
-		           
-		            classListTable.innerHTML=classListCode;
-                },
-				error: function(error){
-					console.log("error: ", error);
+
+
+
+		$.ajax({
+			url: '/admin/class/search',
+			async: true,
+			method: 'GET',
+			data: {
+				className: className, 
+				statusArray: statusArray,
+				aplyStartDt: aplyStartDt,
+				aplyEndDt: aplyEndDt,
+				classStartDd: classStartDd,
+				classEndDd: classEndDd},
+			success: function(response) {
+				var classListTable = document.querySelector("#class_list_table");
+				var classList = classListTable.querySelectorAll("#class_list");
+				classListTable.firstElementChild.remove();
+				var classListCode=
+					'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
+					'<th th:if="${session.role==\'admin\'}">ID</th>'+
+					'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
+					'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
+				for(var i = 0; i < response.length; i++){
+				classListCode += 
+					'<tr><td><input type="checkbox" name="chk" th:value="'+
+					response[i].clssId+'"></td>'+
+					'<td>'+response[i].clssId+'</td>'+
+					'<td><a class="content_title" th:href="@{/manager/class/__'+response[i].clssId +
+					'__}">'+response[i].clssNm+'</a></td>' +
+					'<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
+					'<span>'+response[i].aplyEndDt+'</span></td>'+
+					'<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
+					'<span>'+response[i].clssEndDd+'</span></td>'+
+					'<td>'+response[i].clssAdr+'</td>'+
+					'<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
+					'<td>'+response[i].clssCd+'</td></tr>';
 				}
-			});
+				classListTable.innerHTML=classListCode;
+			},
+			error: function(error){
+				console.log("error: ", error);
+			}
 		});
+});
 	</script>
 </body>
 </html>

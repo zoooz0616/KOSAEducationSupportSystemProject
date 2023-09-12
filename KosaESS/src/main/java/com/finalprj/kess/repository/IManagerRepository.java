@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
 
@@ -18,7 +19,7 @@ public interface IManagerRepository {
 
 	public int getApplyCountByClssId(String clssId);
 
-	public List<String> getCodeNameListByKeyword(String keyword);
+	public List<CommonCodeVO> getCodeNameListByKeyword(String keyword);
 
 	public ClassVO getClassDetailByClssId(String clssId);
 
@@ -33,4 +34,10 @@ public interface IManagerRepository {
 	public FileVO getFileByIds(@Param("fileId") String fileId, @Param("fileSubId") int fileSubId);
 
 	public FileVO getFileInfoByIds(@Param("fileId") String fileId, @Param("fileSubId") int fileSubId);
+
+	public int getCountLateArriveByStdtId(String stdtId);
+
+	public int getCountAbsentByStdtId(String stdtId);
+
+	public int getCountEalryLeaveByStdtId(String stdtId);
 }

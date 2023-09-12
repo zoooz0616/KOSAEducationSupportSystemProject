@@ -2,7 +2,6 @@ package com.finalprj.kess.service;
 
 import java.util.List;
 
-import com.finalprj.kess.dto.ClassDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.FileVO;
@@ -25,17 +24,24 @@ public interface IStudentService {
 
 	List<PostVO> selectAllInquiry();
 
-	ClassDetailDTO selectClass(String clssId);
+	ClassVO selectClass(String clssId);
 
-	List<ClassDetailDTO> selectAllClassFile(String clssId);
+	List<ClassVO> selectAllClassFile(String clssId);
 
-	FileVO getFile(String fileId, String fileSubId);
-
-	void uploadFile(ApplyVO apply);
 
 	LoginVO selectUser(String email);
 
 	String getIngClass(String email);
+
+	List<ClassVO> searchClasses(String keyword, String ingClass);
+
+	String getMaxAplyId();
+
+	void uploadAplyFile(ApplyVO apply);
+
+	int getAplyYN(String stdtId, String classId);
+
+	ClassVO selectviewClass(String viewClass);
 
 
 }

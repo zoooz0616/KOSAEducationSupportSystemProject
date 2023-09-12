@@ -4,6 +4,7 @@
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/class_list.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -16,61 +17,107 @@
 		</div>
 		<div class="content" style="flex-direction: column;">
 			<div class="search">
-				<form th:action="@{/student/class}" style="width: 60%;">
-					<input type="text" name="searchClass" value=""
-						placeholder="검색어를 입력하세요." style="width: 70%;"> <input
-						type="submit" class="searchBtn" th:value="검색">
-				</form>
-				<input type="checkbox" name="aplyclass" id="aply"><label
-					for="aply">지원가능한 교육만</label>
+				<div class="searchform">
+					<input type="text" class="searchInput" placeholder="교육과정명을 검색하세요.">
+					<input type="button" class="searchBtn" value="검색"> <input
+						type="checkbox" name="aplyclass" id="aply"><label
+						for="aply">지원가능한 교육만</label>
+				</div>
+
 				<div>
 					<ul class="common">
 						<li class="list-view"><img th:src="@{/img/list_navy.png}"></li>
-						<li class="grid-view"><img th:src="@{/img/grid_navy.png}"></li>
+						<li class="grid-view active"><img
+							th:src="@{/img/grid_navy.png}"></li>
 					</ul>
 				</div>
 			</div>
 			<div class="subsearch">
 				<div>
-					<h3 class="totalcnt">총 <span th:text="${#lists.size(classList)}"></span>건</h3>
+					<h3 class="totalcnt">
+						총 <span class="totalRowCount" th:text="${#lists.size(classList)}"></span>건
+					</h3>
 				</div>
 				<div>
-					<span>페이지당 목록 수</span> <select id="pageList" class="w-px80">
+					<span>페이지당 목록 수</span> <select id="pageList">
 						<option value="8">8개씩</option>
 						<option value="16">16개씩</option>
 						<option value="32">32개씩</option>
 					</select>
 				</div>
 			</div>
-			<table>
-				<tr th:each="classVO, rowStat : ${classList}">
-					<!-- 여기서 rowStat.index는 0부터 시작하는 행 번호를 나타냅니다. -->
-					<td><span th:text="${classVO.clssCd}"
-						style="color: red; font-size: 15px;"></span></td>
-					<td class="classImg">
-						<div th:if="${classVO.clssContent!=null}">
-							<img th:src="@{/img/__${classVO.clssContent}__}">
-						</div>
-						<div th:if="${classVO.clssContent==null}">
-							<img th:src="@{/img/logo.png}">
-						</div>
-					</td>
-					<td th:text="${classVO.clssNm}"
-						style="font-weight: bold; font-size: 20px;">교육과정명</td>
-					<td><span>지원기간: </span><span
-						th:text="${classVO.aplyStartDd} + ' ~' +${classVO.aplyEndDd}"></span></td>
-					<td><span>교육기간: </span><span
-						th:text="${classVO.clssStartDd} + ' ~' +${classVO.clssEndDd}"></span></td>
-					<td><span>장소: </span><span th:text="${classVO.clssAdr}"></span>
-						<span>정원: </span><span th:text="${classVO.limitCnt}"></span></td>
-					<td><a class="applyBtn" th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
-					
-				</tr>
+			<table class="list-style" style="display: none;">
+
+				<thead>
+					<tr class="classHead">
+						<th>번호</th>
+						<th>교육과정상태</th>
+						<th>프로그램명</th>
+						<th>지원기간</th>
+						<th>교육기간</th>
+						<th>장소</th>
+						<th>정원</th>
+						<th>지원</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="classVO, rowStat : ${classList}" class="classRow">
+						<td><span th:text="${rowStat.index + 1}"></span></td>
+						<!-- 여기서 rowStat.index는 0부터 시작하는 행 번호를 나타냅니다. -->
+						<td><span class="className" th:text="${classVO.clssCdNm}"></span></td>
+						<td th:text="${classVO.clssNm}"
+							style="font-weight: bold; font-size: 18px;">교육과정명</td>
+						<td><span></span><span
+							th:text="${classVO.aplyStartDd} + ' ~ ' +${classVO.aplyEndDd}"></span></td>
+						<td><span></span><span
+							th:text="${classVO.clssStartDd} + ' ~ ' +${classVO.clssEndDd}"></span></td>
+						<td><span></span> <span th:if="${classVO.clssAdr == null}">미정</span>
+							<span th:if="${classVO.clssAdr != null}"
+							th:text="${classVO.clssAdr}"></span>
+						<td><span th:text="${classVO.limitCnt}"></span></td>
+						<td><a class="applyBtn"
+							th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
+					</tr>
+				</tbody>
 			</table>
+			<table class="grid-style classTable">
+				<tbody>
+					<tr th:each="classVO, rowStat : ${classList}" class="classRow">
+						<td><span class="className" th:text="${classVO.clssCdNm}"></span></td>
+						<td class="classImg">
+							<div th:if="${classVO.clssContent!=null}">
+								<img th:src="@{/img/__${classVO.clssContent}__}">
+							</div>
+							<div th:if="${classVO.clssContent==null}">
+								<img th:src="@{/img/logo.png}">
+							</div>
+						</td>
+						<td th:text="${classVO.clssNm}"
+							style="font-weight: bold; font-size: 18px;">교육과정명</td>
+						<td><span>지원기간: </span><span
+							th:text="${classVO.aplyStartDd} + ' ~ ' +${classVO.aplyEndDd}"></span></td>
+						<td><span>교육기간: </span><span
+							th:text="${classVO.clssStartDd} + ' ~ ' +${classVO.clssEndDd}"></span></td>
+						<td><span>장소: </span> <span
+							th:if="${classVO.clssAdr == null}">미정</span> <span
+							th:if="${classVO.clssAdr != null}" th:text="${classVO.clssAdr}"></span>
+							<span th:text="'  /  '"></span> <span>정원: </span> <span
+							th:text="${classVO.limitCnt}"></span></td>
+						<td><a class="applyBtn"
+							th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div style="position: fixed; right: 50px; bottom: 20px;">
+		<div class="btn">
+			<button class="moveTopBtn">
+				<img th:src="@{/img/up_navy.png}" style="height: 40px;">
+			</button>
 		</div>
 	</div>
 
 </body>
-
-
+<script src="/js/student/class_list.js"></script>
 </html>

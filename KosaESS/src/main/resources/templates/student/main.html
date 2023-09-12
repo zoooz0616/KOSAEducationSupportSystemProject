@@ -9,143 +9,127 @@
 <body>
 	<div th:replace="~{/include/student_header :: header}"
 		style="width: 100%;"></div>
-	<div class="container">
-		<div class="maintext" style="text-align: center;">
-			<h1 style="color: #0E5881; margin-top: 3%;">새로운 교육을 통해서 더 나은 내일로</h1>
-			<h3 style="color: #6E9BB3;">넌 해야만 해. 할 수 있어.</h3>
-		</div>
-		<div class="maincontent">
-			<div class="con-left" style="width: 55%;">
-				<div class="class con" style="height: 85%;">
-					<h2 style="margin-bottom: 0;">접수중인 교육</h2>
-					<a class="plus" style="display: block; text-align: end;"
-						th:href="@{/student/class}">+</a>
-					<hr>
-					<table>
-						<tr th:each="classVO : ${classList}">
-							<td style="width: 73%;"><a
-								th:href="@{/student/class/__${classVO.clssId}__}"
-								th:text="${classVO.clssNm}"></a></td>
-							<td style="width: 27%; text-align: right;"
-								th:text="${classVO.aplyStartDd} + ' ~ ' + ${classVO.aplyEndDd}"></td>
-						</tr>
-					</table>
+	<div class="banner">
+		<div class="img-list">
+			<div class="imgs img1">
+				<div class="bannertext">
+					<h2 style="font-size: 30px;">KOSA 교육 지원 시스템</h2>
+					<h1 style="font-size: 40px;">새로운 교육을 통해서 더 나은 내일로</h1>
 				</div>
 			</div>
-			<div class="con-right" style="width: 40%;">
-				<div class="login con"
-					style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
-					<div th:if="${session.userEmail==null}">
-						<form th:action="@{/login}" method="post" class="">
-							<div class="">
-								<label for="email"></label> <input style="width: 50%;"
-									type="text" name="email" id="id" class=""
-									placeholder="아이디(이메일)">
-							</div>
-							<div class="">
-								<label for="pwd"></label> <input style="width: 50%;"
-									type="password" name="pwd" id="pwd" class=" "
-									placeholder="비밀번호">
-							</div>
-							<div class="submit">
-								<input style="width: 50%;" type="submit" class="loginBtn"
-									th:value="로그인">
-							</div>
-						</form>
-
-					</div>
-					<div th:if="${session.userEmail!=null}">
-						<div class="">
-							<h2 style="margin-bottom: 2%;">
-								<span th:text="${session.stdtNm}" style="color: #0E5881; font-size: 22px;"></span>님
-								환영합니다!
-							</h2>
-							<div class="my">
-								<div class="box">
-									<a th:href="@{/student/mypage/apply}"> <span>지원내역: </span><span
-										style="color: #0E5881; font-size: 22px;"
-										th:text="${aplyClassCnt}"></span> <span>건</span></a>
-								</div>
-								<div class="box">
-									<a th:href="@{/student/mypage/complete}"> <span>출력
-											가능 이수증: </span> <span style="color: #0E5881; font-size: 22px;"
-										th:text="${cmptClassCnt}"></span> <span>건</span></a>
-								</div>
-							</div>
-						</div>
-						<form th:action="@{/wlog}" method="post" class="inoutform">
-							<h3 th:text="${ingClassNm}" style="margin: 0; width: 50%"></h3>
-							<div th:if="${ingClassNm != null}" class="inouttm">
-								<div>
-									<label for="intm"></label><span>출근 시간</span> <input type="text"
-										name="intm" id="intm" class="checktm" readonly>
-								</div>
-								<div>
-									<label for="outtm"></label><span>퇴근 시간</span> <input
-										type="text" name="outtm" id="outtm" class="checktm" readonly>
-								</div>
-							</div>
-							<div class="submit"
-								style="margin-top: 0; display: grid; align-items: center;">
-								<!-- 토글 버튼 -->
-								<input class="wlogBtn" type="button" th:value="출근하기"
-									onclick="toggleInOut()">
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="notice con2" style="background: #E7EFF3; height: 41%">
-					<h2 style="margin-bottom: 0;">공지사항</h2>
-					<a class="plus" style="display: block; text-align: end;"
-						th:href="@{/student/notice}">+</a>
-					<hr>
-					<table>
-						<tr th:each="postVO : ${postList}">
-							<td style="width: 75%;"><a
-								th:href="@{notice/__${postVO.postId}__}"
-								th:text="${postVO.postTitle}"></a></td>
-							<td style="width: 25%; text-align: right;"
-								th:text="${postVO.rgstDd}"></td>
-						</tr>
-					</table>
+			<div class="imgs img2">
+				<div class="bannertext">
+					<h2>second...</h2>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="container" style="margin-top: -7%;">
+		<div class="button-list">
+			<button class="button-left" style="margin-right: 1%;"></button>
+			<button class="button-right"></button>
+		</div>
+		<div class="maincontent">
+			<div class="login con"
+				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				<div th:if="${session.userEmail==null}">
+					<h2>회원가입후 이용가능</h2>
+				</div>
+				<div th:if="${session.userEmail!=null}">
+					<div class="">
+						<h2 style="margin-bottom: 2%;">
+							<span th:text="${session.stdtNm}"
+								style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
+						</h2>
+						<div class="my">
+							<div class="box">
+								<a th:href="@{/student/mypage/apply}"> <span>지원내역: </span><span
+									style="color: #0E5881; font-size: 22px;"
+									th:text="${aplyClassCnt}"></span> <span>건</span></a>
+							</div>
+							<div class="box">
+								<a th:href="@{/student/mypage/complete}"> <span>출력 가능
+										이수증: </span> <span style="color: #0E5881; font-size: 22px;"
+									th:text="${cmptClassCnt}"></span> <span>건</span></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="login con"
+				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				<div th:if="${session.userEmail==null}">
+					<form th:action="@{/login}" method="post" class="">
+						<div class="">
+							<label for="email"></label> <input style="width: 50%;"
+								type="text" name="email" id="id" class="" placeholder="아이디(이메일)">
+						</div>
+						<div class="">
+							<label for="pwd"></label> <input style="width: 50%;"
+								type="password" name="pwd" id="pwd" class=" " placeholder="비밀번호">
+						</div>
+						<div class="submit">
+							<input style="width: 50%;" type="submit" class="loginBtn"
+								th:value="로그인">
+						</div>
+					</form>
+
+				</div>
+				<div th:if="${session.userEmail!=null}">
+					<form th:action="@{/wlog}" method="post" class="inoutform">
+						<h3 th:text="${ingClassNm}" style="margin: 0; width: 50%"></h3>
+						<div th:if="${ingClassNm != null}" class="inouttm">
+							<div>
+								<label for="intm"></label><span>출근 시간</span> <input type="text"
+									name="intm" id="intm" class="checktm" readonly>
+							</div>
+							<div>
+								<label for="outtm"></label><span>퇴근 시간</span> <input type="text"
+									name="outtm" id="outtm" class="checktm" readonly>
+							</div>
+						</div>
+						<div class="submit"
+							style="margin-top: 0; display: grid; align-items: center;">
+							<!-- 토글 버튼 -->
+							<input class="wlogBtn" type="button" th:value="출근하기"
+								onclick="toggleInOut()">
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="class con" style="width: 45%;">
+				<h2 style="margin-bottom: 0;">접수중인 교육</h2>
+				<a class="plus" style="display: block; text-align: end;"
+					th:href="@{/student/class}">+</a>
+				<hr>
+				<table>
+					<tr th:each="classVO : ${classList}">
+						<td style="width: 70%;"><a
+							th:href="@{/student/class/__${classVO.clssId}__}"
+							th:text="${classVO.clssNm}"></a></td>
+						<td style="width: 30%; text-align: right;"
+							th:utext="${classVO.aplyStartDd} + '~ ' +  ${classVO.aplyEndDd}"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="notice con" style="background: #E7EFF3; width: 40%;">
+				<h2 style="margin-bottom: 0;">공지사항</h2>
+				<a class="plus" style="display: block; text-align: end;"
+					th:href="@{/student/notice}">+</a>
+				<hr>
+				<table>
+					<tr th:each="postVO : ${postList}">
+						<td style="width: 75%;"><a
+							th:href="@{notice/__${postVO.postId}__}"
+							th:text="${postVO.postTitle}"></a></td>
+						<td style="width: 25%; text-align: right;"
+							th:text="${postVO.rgstDd}"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 </body>
-
-<script>
-	var isAttendance = false; // 출근 상태를 저장하는 변수
-
-	function toggleInOut() {
-		var intmInput = document.getElementById('intm');
-		var outtmInput = document.getElementById('outtm');
-		var wlogBtn = document.querySelector('.wlogBtn');
-
-		if (isAttendance) {
-			// 퇴근 처리
-			outtmInput.value = getCurrentTime();
-			wlogBtn.value = "출근하기";
-		} else {
-			// 출근 처리
-			intmInput.value = getCurrentTime();
-			wlogBtn.value = "퇴근하기";
-		}
-
-		isAttendance = !isAttendance; // 상태를 토글
-	}
-
-	function getCurrentTime() {
-		var now = new Date();
-		var year = now.getFullYear();
-		var month = (now.getMonth() + 1 < 10 ? '0' : '') + (now.getMonth() + 1);
-		var day = (now.getDate() < 10 ? '0' : '') + now.getDate();
-		var hours = (now.getHours() < 10 ? '0' : '') + now.getHours();
-		var minutes = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-		var seconds = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
-		var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':'
-				+ minutes + ':' + seconds;
-		return formattedTime;
-	}
-</script>
+<script src="/js/student/main.js"></script>
 </html>

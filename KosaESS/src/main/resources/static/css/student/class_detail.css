@@ -17,17 +17,19 @@ table td {
 
 table th {
 	background-color: #E7EFF3;
-	width: 10%;
+	width: 12%;
 }
 
 .content {
-	padding-top: 2%;
+	padding-top: 5%;
 	flex-direction: column;
 	align-items: center;
 	flex-wrap: wrap;
 	width: 90%;
 	margin: 5% auto;
 	box-shadow: 0px 40px 40px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	border-style: groove;
+	border-color: black;
 }
 
 ul {
@@ -36,24 +38,35 @@ ul {
 }
 
 .btn {
-	margin: 3% 0;
 	text-align: center;
 	display: flex;
 	justify-content: space-evenly;
 }
 
+.btn button {
+	padding: 0 3%;
+}
+
 .back, .openModalBtn {
 	background: #0E5881;
 	color: white;
-	padding: 15px;
-	margin: 5px 0;
+	padding: 1%;
+	margin: 8px 0;
 	border: 0;
-	font-size: 15px;
+	font-size: 12px;
 	font-weight: bold;
 	border-radius: 10px;
 }
-.moveTopBtn{
-	
+
+.openModalBtn {
+	display: none;
+}
+
+.moveTopBtn {
+	padding: 0;
+	background: white;
+	border-style: none;
+	height: 60px;
 }
 
 .modal {
@@ -70,16 +83,110 @@ ul {
 	display: block;
 }
 
-.modal_body {
+.modalBody {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	width: 500px;
 	height: 600px;
-	padding: 40px;
 	text-align: center;
 	background-color: rgb(255, 255, 255);
 	border-radius: 10px;
 	box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
 	transform: translateX(-50%) translateY(-50%);
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modalHeader {
+	display: flex;
+	padding: 7%;
+	justify-content: center;
+	background-color: #E7EFF3;
+}
+
+.upload-area {
+	margin: 5% auto;
+	border: none;
+	padding: 20% 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: white;
+	color: darkgray;
+	border-style: dashed;
+	border-color: black;
+	font-size: 18px;
+	width: 90%;
+}
+
+.upload-area-title {
+	margin-top: 1rem;
+	display: block;
+	font-weight: 700;
+}
+
+.modal-footer {
+	padding: 2%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.aplyBtn, .closeModalBtn {
+	padding: 3% 7%;
+	font-weight: 500;
+	border-radius: 10px;
+	color: #FFF;
+	background-color: #0E5881;
+	margin: 0 2%;
+}
+
+#file-upload-button {
+	padding: 3% 7%;
+	font-weight: 500;
+	border-radius: 10px;
+	color: #FFF;
+	background-color: #0E5881;
+	margin: 0 2%;
+}
+
+#fileInput {
+	color: black;
+	padding: 2% 0;
+}
+
+.viewClass {
+	width: 20%;
+	position: fixed;
+	right: 4%;
+	top: 20%;
+	margin: 30px 0;
+	padding: 2%;
+}
+
+.viewClass li {
+	border-style: solid;
+	border-color: #0E5881;
+	padding: 5%;
+	font-size: 17px;
+	margin-bottom: 2%;
+}
+
+.viewClass a {
+	background: #0E5881;
+	color: white;
+	padding: 4%;
+	margin-top: 10px;
+	font-size: 13px;
+	border-radius: 10px;
+	text-decoration-line: none;
+}
+
+.viewClass img {
+	width: 80%;
+	margin-bottom: 5%;
+}
+
+.viewClass span {
+	color: red;
+	font-size: 15px;
 }

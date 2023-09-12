@@ -1,10 +1,6 @@
 package com.finalprj.kess.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Data;
 
 @Data
