@@ -221,7 +221,7 @@
 		insert into clss
 		values(#{clssId}, #{mngrId},#{cmpyId},#{clssNm},#{clssContent},#{limitCnt},
 		#{aplyStartDt},#{aplyEndDt},#{clssStartDd},#{clssEndDd},#{setInTm},#{setOutTm},#{clssCd},
-		#{clssAdr},#{clssTotalTm},#{fileId},#{clssEtc},systimestamp, #{rgsterId}, null, null)		
+		#{clssAdr},#{clssTotalTm},#{fileId},#{clssEtc},systimestamp, #{rgsterId}, null, null, 'N')		
 	]]>
 	</insert>
 
@@ -271,15 +271,70 @@
 	]]>
 	</select>
 
+	<delete id="deleteFile">
+		update flup
+		set delete_yn = 'Y'
+		where file_id=#{fileId} and file_sub_id
+		in (
+		<foreach item="subId" collection="fileSubIds" separator=",">
+			#{subId}
+		</foreach>
+		)
+	</delete>
 
+	<select id="getMaxFileSubId" parameterType="string"
+		resultType="Integer">
+	<![CDATA[
+		select max(file_sub_id)+1
+		from flup
+		where file_id=#{fileId}
+		]]>
+	</select>
 
+	<update id="updateClassVO"
+		parameterType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+		update clss
+		set 
+			mngr_id = #{mngrId},
+			cmpy_id = #{cmpyId},
+			clss_nm = #{clssNm},
+			clss_content = #{clssContent},
+			limit_cnt = #{limitCnt},
+			aply_start_dt = #{aplyStartDt},
+			aply_end_dt = #{aplyEndDt},
+			clss_start_dd = #{clssStartDd},
+			clss_end_dd = #{clssEndDd},
+			set_in_tm = #{setInTm},
+			set_out_tm = #{setOutTm},
+			clss_cd = #{clssCd},
+			clss_adr = #{clssAdr},
+			clss_total_tm = #{clssTotalTm},
+			clss_etc = #{clssEtc},
+			updt_dt = systimestamp,
+			updter_id = #{updterId}
+		where clss_id=#{clssId}
+	]]>
+	</update>
 
+	<delete id="deleteCurriculum" parameterType="string">
+	<![CDATA[
+		delete from crcl
+		where clss_id=#{clssId}
+	]]>
+	</delete>
 
-
-
-
-
-
+	<select id="getApplyDetailDTOList" parameterType="string"
+		resultType="com.finalprj.kess.dto.ApplyDetailDTO">
+	<![CDATA[
+		select *
+		from aply
+		join stdt on stdt.stdt_id = aply.stdt_id
+		join cmcd on cmcd.cmcd_id = aply.aply_cd
+		join flup on flup.file_id = aply.file_id
+		where clss_id = #{clssId} and aply_cd != 'APL0000001'
+	]]>
+	</select>
 
 
 
