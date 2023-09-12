@@ -12,6 +12,7 @@ public class ApplyDetailDTO {
 	private String aplyCd;
 	private String cmcdNm;
 	private String fileId;//파일id
+	private String fileNm;
 	private int fileSubId;//파일서브id
 	private Timestamp rgstDt;
 	

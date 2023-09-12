@@ -148,7 +148,7 @@
 							<td th:text="${apply.aplyId}"></td>
 							<td th:text="${apply.stdtId}"></td>
 							<td th:text="${apply.stdtNm}"></td>
-							<td><a th:href="@{/admin/filedownload}" th:text="${apply.fileNm}"></a></td>
+							<td><a th:href="@{/download/file/__${apply.fileId}__/__${apply.fileSubId}__}" th:text="${apply.fileNm}"></a></td>
 							<td th:text="${apply.rgstDt}"></td>
 							<td th:text="${apply.cmcdNm}"></td>
 						</tr>
