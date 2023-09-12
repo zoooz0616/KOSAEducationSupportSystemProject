@@ -44,7 +44,6 @@ $(document).ready(function() {
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
 				var classTable;
-
 				if ($('.list-view').hasClass('active')) {
 					// 리스트 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
 					// 테이블 헤더 업데이트
