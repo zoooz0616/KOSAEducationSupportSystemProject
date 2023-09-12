@@ -142,6 +142,16 @@
 							<th>지원일시</th>
 							<th>지원상태</th>
 						</tr>
+						<tr id="applicant_list" th:each="apply: ${applyDetailList}">
+							<td><input type="checkbox" name="chk"
+							th:value="${apply.aplyId}"></td>
+							<td th:text="${apply.aplyId}"></td>
+							<td th:text="${apply.stdtId}"></td>
+							<td th:text="${apply.stdtNm}"></td>
+							<td><a th:href="@{/admin/filedownload}" th:text="${apply.fileNm}"></a></td>
+							<td th:text="${apply.rgstDt}"></td>
+							<td th:text="${apply.cmcdNm}"></td>
+						</tr>
 					</table>
 				</div>
 				<!-- 컨텐츠 리스트 부분 -->

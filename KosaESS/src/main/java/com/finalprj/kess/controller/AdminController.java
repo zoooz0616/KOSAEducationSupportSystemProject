@@ -7,13 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.rowset.Joinable;
-
-import org.apache.naming.java.javaURLContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
-import com.finalprj.kess.file.FileUtils;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -45,7 +40,6 @@ import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IUploadFileRepository;
 import com.finalprj.kess.service.AdminService;
-import com.finalprj.kess.service.FileService;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -67,12 +61,6 @@ public class AdminController {
 
 	@Autowired
 	IUploadFileService uploadFileService;
-
-	@Autowired
-	FileService fileService;
-
-	@Autowired
-	FileUtils fileUtils;
 
 	/**
 	 * @author : eunji
