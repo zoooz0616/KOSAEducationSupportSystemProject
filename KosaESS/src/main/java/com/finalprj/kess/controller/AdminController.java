@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -187,10 +188,9 @@ public class AdminController {
 		List<ClassVO> classList = adminService.getClassList();
 		model.addAttribute("classList", classList);
 
-		//교육과정 상태
-		List<String> classCodeNameList = adminService.getClassCodeNameList();
-		model.addAttribute("classCodeNameList", classCodeNameList);
-
+		//교육상태 리스트
+		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
+		model.addAttribute("classCommonCodeList", classCommonCodeList);
 
 		return "admin/class_list";
 	}
@@ -421,7 +421,7 @@ public class AdminController {
 		System.out.println("=================================");
 		System.out.println("총시간:"+classVO.getClssTotalTm());
 		System.out.println("=================================");
-		
+
 		//파일 가져오기
 		List<FileVO> fileList = null;
 		if(classVO.getFileId() != null) {
@@ -479,17 +479,17 @@ public class AdminController {
 
 		//현 교육과정의 fileId값 가져오기 
 		String fileId = classVO.getFileId();
-		
+
 		//만약 null이라면 파일이 없었음. fileId 생성해줌.
 		if(fileId == null) {
 			fileId = uploadFileService.getMaxFileId();
 		}
-		
+
 		//삭제되거나 변경전 파일 아이디들(deleteFileIds) 있다면 update deleteYn='Y'
 		if (fileSubIds != null) {
 			adminService.deleteFile(fileId, fileSubIds);
 		}
-		
+
 		//추가한 파일 insert하기.파일 변경이 없거나 모두 삭제시 fileList는 null.
 		List<FileVO> fileList = null;
 
@@ -497,9 +497,9 @@ public class AdminController {
 			Integer fileSubId = adminService.getMaxFileSubId(fileId);
 
 			if (fileSubId == null) {
-			    fileSubId = 1;
+				fileSubId = 1;
 			}
-			
+
 			fileList = new ArrayList<FileVO>();
 			try {
 				for(MultipartFile file: files) {
@@ -611,10 +611,26 @@ public class AdminController {
 		System.out.println("===============================================");
 		System.out.println("클래스: "+classVO);
 		System.out.println("===============================================");
-		
+
 
 		//교육과정 상세페이지로 이동하기
 		return "redirect:/admin/class/"+classVO.getClssId();
+	}
+
+	@PostMapping("/cls/delete")
+	public String classDeleteAll(@RequestParam(name="chk")List<String> clssIds){
+		//선택한 교육과정 모두 update deleteYn='Y', updt
+		adminService.deleteClass(clssIds);
+
+		return "redirect:/admin/class";
+	}
+
+	@PostMapping("/cls/delete/{clssId}")
+	public @ResponseBody String classDelete(@PathVariable String clssId) {
+		List<String> clssIds = new ArrayList<String>();
+		clssIds.add(clssId);
+		adminService.deleteClass(clssIds);
+		return clssId;
 	}
 
 	@GetMapping("/class/{clssId}/applicant")
@@ -622,32 +638,29 @@ public class AdminController {
 		//해당 교육과정VO 생성
 		ClassVO classVO = adminService.getClass(clssId);
 		model.addAttribute("classVO", classVO);
-		
+
 		//지원자 목록 생성
 		List<ApplyDetailDTO> applyDetailList = adminService.getApplyDetailDTOList(clssId);
 		model.addAttribute("applyDetailList", applyDetailList);
-		
-		
+
+
 		return "admin/applicant_list";
 	}
-	
+
 	@PostMapping("/class/{clssId}/applicant")
 	public String applicant(@PathVariable String clssId, HttpSession session,
 			@RequestParam("action") String action, @RequestParam(name="chk", required = false)List<String> aplyIds) {
-		//checked된 체크박스의 value(aplyId값)을 받아오기
-		System.out.println("aplyIds["+aplyIds+"]");
-
 		if ("합격".equals(action)) {
 			//선택한 개수와 현재 합격된 교육생 수가 수강가능 인원 이하인지 확인(나중에 구현)
-            // "pass" 버튼을 클릭한 경우 실행할 코드
-            adminService.updateAplyPass(aplyIds);
-        } else if ("불합격".equals(action)) {
-            // "fail" 버튼을 클릭한 경우 실행할 코드
-            adminService.updateAplyFail(aplyIds);
-        }
-        
-        // 원하는 뷰 페이지로 이동
-        return "redirect:/admin/class/"+clssId+"/applicant";
+			// "pass" 버튼을 클릭한 경우 실행할 코드
+			adminService.updateAplyPass(aplyIds);
+		} else if ("불합격".equals(action)) {
+			// "fail" 버튼을 클릭한 경우 실행할 코드
+			adminService.updateAplyFail(aplyIds);
+		}
+
+		// 원하는 뷰 페이지로 이동
+		return "redirect:/admin/class/"+clssId+"/applicant";
 	}
 
 	@RequestMapping("/professor")
@@ -699,15 +712,31 @@ public class AdminController {
 
 	@GetMapping("/class/search")
 	@ResponseBody
-	public List<ClassVO> classSearch(@RequestParam String className, @RequestParam(name="statusArray[]") List<String> statusArray,
-			@RequestParam Date aplyStartDt, @RequestParam Date aplyEndDt,
-			@RequestParam Date classStartDd, @RequestParam Date classEndDd) {
-		logger.warn("className: "+className+" statusArray: "+statusArray);
+	public List<ClassVO> classSearch(@RequestParam(name="className", required = false) String className, @RequestParam(name="status", required = false) String status,
+			@RequestParam(name="aplyStartDt", required = false) Date aplyStartDt, @RequestParam(name="aplyEndDt", required = false) Date aplyEndDt,
+			@RequestParam(name="classStartDd", required = false) Date classStartDd, @RequestParam(name="classEndDd", required = false) Date classEndDd) {
+
+		logger.warn("className: "+className+" status: "+status);
 		logger.warn("aply: "+aplyStartDt+"~"+aplyEndDt);
 		logger.warn("class: "+classStartDd+"~"+classEndDd);
 
+		//교육과정 상태는 list<string>으로 전달하기(1개 혹은 전체)
+		List<String> statusList = new ArrayList<>();
+		
+		if(status.equals("all")) {
+			//교육상태 전체값을 리스트에 넣어 전달
+			List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
+			for(CommonCodeVO commonCodeVO:classCommonCodeList) {
+				statusList.add(commonCodeVO.getCmcdId());
+			}
+		}else {
+			statusList.add(status);
+		}
+
+
+
 		//검색 결과통해서 교육과정 리스트 객체 생성
-		List<ClassVO> classVOList = adminService.getSearchClassVOList(className, statusArray, aplyStartDt, aplyEndDt, classStartDd, classEndDd);
+		List<ClassVO> classVOList = adminService.getSearchClassVOList(className, statusList, aplyStartDt, aplyEndDt, classStartDd, classEndDd);
 		logger.warn(classVOList.toString());
 		return classVOList;
 	}

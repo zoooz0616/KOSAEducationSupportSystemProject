@@ -42,4 +42,5 @@ public class ClassVO {
 	private String clssCdNm; // 교육상태명
 	private String mngrNm;// 업무담당자 이름
 	private String fileNm; // 파일 이름
+
 }
