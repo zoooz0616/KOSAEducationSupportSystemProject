@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>강사 관리</title>
+</head>
+<head>
+<link th:href="@{/css/admin/lecture_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">강의 관리</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/lecture}">강의
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- left section -->
+			<div class="left_section">
+				<!-- 강의 관리 -->
+				<div class="lecture_wrap" style="height: 100%;">
+
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						강의 총 <span class="cnt" th:text="${#lists.size(lectureList)}"></span> 개
+						<button>선택삭제</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 강의 등록하기 -->
+					<div class="insert_professor insert" style="padding: 5px;">
+						<div>
+							<span>과목명</span> <select>
+								<option th:each="subject: ${subjectList}"
+									th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}">
+							</select> <span>강사명</span> <select>
+								<option th:each="professor: ${professorList}"
+									th:value="${professor.profId}" th:text="${professor.profNm}">
+							</select> 
+							<span>강의명</span> <input type="text" placeholder="강의명"
+								style="width: 150px;">
+							<span>이수시간</span> <input type="number" value="0"
+								style="width: 100px;">
+						</div>
+						<div>
+							<button class="insert_btn" type="button">등록하기</button>
+						</div>
+					</div>
+					<!-- 강의 등록하기 -->
+
+					<!-- 리스트 -->
+					<div class="table_wrap" style="height: 80%; border:1px solid #CFDEE6;">
+						<table>
+							<tr class="content_list_th">
+								<th><input type="checkbox"></th>
+								<th>ID</th>
+								<th>강의명</th>
+								<th>과목명</th>
+								<th>강사명</th>
+								<th>이수시간</th>
+								<th style="width:100px;">관리</th>
+							</tr>
+							<tr th:each="lecture : ${lectureList}">
+								<td style="text-align:center;"><input type="checkbox"></td>
+								<td th:text="${lecture.lctrId}"></td>
+								<td th:text="${lecture.lctrNm}"></td>
+								<td th:text="${lecture.sbjtNm}"></td>
+								<td th:text="${lecture.profNm}"></td>
+								<td th:text="${lecture.lctrTm}"></td>
+								<td style="text-align: center;">
+									<button class="update_btn">수정</button>
+									<button class="delete_btn">삭제</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 강의 관리 -->
+			</div>
+			<!-- left section -->
+
+			<!-- right section -->
+			<div class="right_section">
+				<!-- 과목 관리 -->
+				<div class="subject_wrap" style="height: 50%;">
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						과목 총 <span class="cnt" th:text="${#lists.size(subjectList)}"></span> 개
+						<button>선택삭제</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 과목 등록하기 -->
+					<div class="insert_professor insert" style="padding: 5px;">
+						<div>
+							<span style="color: #0E5881;
+	font-weight: bold;">과목명</span>
+							<input type="text" placeholder="과목명">
+						</div>
+
+						<div>
+							<button  class="insert_btn"type="button">등록하기</button>
+						</div>
+					</div>
+					<!-- 과목 등록하기 -->
+
+					<!-- 리스트 -->
+					<div class="table_wrap">
+						<table>
+							<tr class="content_list_th">
+								<th><input type="checkbox"></th>
+								<th>ID</th>
+								<th>과목명</th>
+								<th style="width:100px;">관리</th>
+							</tr>
+							<tr th:each="subject : ${subjectList}">
+								<td style="text-align:center;"><input type="checkbox"></td>
+								<td th:text="${subject.sbjtId}"></td>
+								<td th:text="${subject.sbjtNm}"></td>
+								<td style="text-align: center;">
+									<button class="update_btn">수정</button>
+									<button class="delete_btn">삭제</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 과목 관리 -->
+
+				<!-- 강사 관리 -->
+				<div class="professor_wrap" style="height: 50%;">
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						강사 총 <span class="cnt" th:text="${#lists.size(professorList)}"></span> 명
+						<button>선택삭제</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 강사 등록하기 -->
+					<div class="insert_professor insert" style="padding: 5px;">
+						<div>
+							<input type="text" placeholder="강사명" style="width: 100px;">
+							<input type="text" placeholder="전화번호" style="width: 150px;">
+							<input type="text" placeholder="이메일" style="width: 150px;">
+						</div>
+						<div>
+							<button class="insert_btn" type="button">등록하기</button>
+						</div>
+					</div>
+					<!-- 강사 등록하기 -->
+
+					<!-- 리스트 -->
+					<div class="table_wrap">
+						<table>
+							<tr class="content_list_th">
+								<th><input type="checkbox"></th>
+								<th>ID</th>
+								<th>강사명</th>
+								<th>전화번호</th>
+								<th>이메일</th>
+								<th style="width:100px;">관리</th>
+							</tr>
+							<tr th:each="professor : ${professorList}">
+								<td style="text-align:center;"><input type="checkbox"></td>
+								<td th:text="${professor.profId}"></td>
+								<td th:text="${professor.profNm}"></td>
+								<td th:text="${professor.profTel}"></td>
+								<td th:text="${professor.profEmail}"></td>
+								<td style="text-align: center;">
+									<button class="update_btn">수정</button>
+									<button class="delete_btn">삭제</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 강사 관리 -->
+			</div>
+			<!-- right section -->
+		</div>
+		<!-- Content Middle-->
+	</div>
+</body>
+</html>
