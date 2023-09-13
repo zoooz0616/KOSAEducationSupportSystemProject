@@ -196,10 +196,10 @@ public class ManagerController {
 
 	@GetMapping("/student/search")
 	@ResponseBody
-	public Map<String, Object> fetchLectureSelect(
+	public Map<String, Object> fetchStudentList(
 			@RequestParam("classId") String classId
-			,@RequestParam("startDate") String startDate
-			,@RequestParam("endDate") String endDate
+//			,@RequestParam("startDate") String startDate
+//			,@RequestParam("endDate") String endDate
 			){
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
@@ -207,7 +207,7 @@ public class ManagerController {
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");
 			for (CommonCodeVO cmcd : wlogCodeNameList) {
-				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
+//				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
 				stdt.appendWlogCnt(",");
 			}
 		}
@@ -217,4 +217,26 @@ public class ManagerController {
 
 		return response;
 	}
+	
+//	@GetMapping("/student/search")
+//	@ResponseBody
+//	public Map<String, Object> fetchCodeNameList(
+//			@RequestParam("keyword") String keyword
+//			){
+////		List<String> stdtList = managerService.getCodeNameList(keyword);
+//		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+//
+////		for (StudentInfoDTO stdt : stdtList) {
+////			stdt.setWlogCnt("");
+////			for (CommonCodeVO cmcd : wlogCodeNameList) {
+//////				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
+////				stdt.appendWlogCnt(",");
+////			}
+////		}
+//
+//		Map<String, Object> response = new HashMap<>();
+////		response.put("stdtList", stdtList);
+//
+//		return response;
+//	}
 }
