@@ -109,82 +109,6 @@
 	</div>
 
 	<script>
-
-	/*숫자 값을 00 형식으로 맞춰줌*/
-	function leftPad(value) {if (value >= 10) {return value;}return `0${value}`;}
-	/*날짜 넣으면 YYYY-MM-DD로 반환해주며, 2번째 인자로 delimiter 지정 가능*/
-	/* 예시 >>> toStringByFormatting(new Date(2021, 0, 1)); */
-	function toStringByFormatting(source, delimiter = '-') {const year = source.getFullYear();const month = leftPad(source.getMonth()+1);const day = leftPad(source.getDate());return [year, month, day].join(delimiter);}
-// 	/*startDate=="" 라면 startDate = 이번 달의 첫 날*/
-// 	if (startDate == ""){startDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth(), 1));}
-// 	/*endDate=="" 라면 endtDate = 이번 달의 마지막 날*/
-// 	if (endDate == ""){endDate = toStringByFormatting(new Date(date.getFullYear(), date.getMonth() + 1, 0));}
-	
-	//		window.location.href = "/manager/student?startDate=" + startDate + "&endDate=" + endDate+ "&classId=" + classId;
-	function search() {
-		var classId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
-		var stdtListTable = document.getElementById("stdt_list_table");
-		stdtListTable.removeChild(stdtListTable.childNodes[0]);
-		
-// 		const url = window.location.search;//현재 창의 주소값
-// 		const urlParams = url.searchParams;//url에서 파라미터만 가져옴
-// 		var startDate = document.getElementById("startDate").value;
-// 		var endDate = document.getElementById("endDate").value;
-// 		var date = new Date();
-// 		var year = date.getFullYear();
-// 		const searchButton = document.getElementById("searchButton");
-// 	/*이번 달의 첫 날*/
-// 	function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
-// 	/*이번 달의 마지막 날*/
-// 	function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var lastDay = new Date(year,month, 0).getDate();return year + "-" + month + "-" + lastDay;}
-// 		if(startDate==""){startDate=getFirstDay();}
-// 		if(endDate==""){endDate=getLastDay();}
-		$.ajax({
-			type:'get',
-			url:'/manager/student/search', // 서버의 엔드포인트 URL
-			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
-			data: {classId:classId
-// 				,startDate:startDate,endDate:endDate
-			},
-			success: function(response) {
-				var stdtList = response.stdtList;
-				document.getElementById("stdtCnt").innerHTML=stdtList.length;
-				var classListCode=
-					'<tr>'+
-					'<th><input type="checkbox" id="chkAllStdt"></th>'+
-					'<th>번호</th>'+
-					'<th>이름</th>';
-// 					for(){
-// 					'<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>';
-// 					}
-					classListCode+='<th>성별</th>'+
-					'<th>생년월일</th>'+
-					'<th>이메일</th>'+
-					'<th>연락처</th>'+
-					'<th>이수여부</th>';
-					'</tr>';
-				for(var i = 0; i < stdtList.length; i++){
-					classListCode +=
-					'<tr">'+
-						'<td><input type="checkbox" id="chkStdt"></td>'+
-						'<td>'+ (i+1) +'</td>'+
-						'<td>'+ stdtList[i].stdtNm +'</td>'+
-						'<td>'+ stdtList[i].wlogCnt +'</td>'+
-						'<td>'+ stdtList[i].genderCd +'</td>'+
-						'<td>'+ stdtList[i].birthDd +'</td>'+
-						'<td>'+ stdtList[i].userEmail +'</td>'+
-						'<td>'+ stdtList[i].stdtTel +'</td>'+
-						'<td>'+ stdtList[i].jobCd +'</td>'+
-					'</tr>';
-				}
-				console.log(classListCode);
-				stdtListTable.innerHTML=classListCode;
-			},error: function(error){
-				console.log("error: ", error);
-			}
-		});
-	}
-	
 	//리스트 전체선택1
 	const chkAll1 = document.querySelector("#chkAll1");
 	chkAll1.addEventListener("change", () => {
@@ -193,6 +117,7 @@
 			chk1.checked = chkAll1.checked;
 		}
 	});
+	
 	//리스트 전체선택2
 	const chkAll2 = document.querySelector("#chkAll2");
 	chkAll2.addEventListener("change", () => {
@@ -201,6 +126,94 @@
 			chk2.checked = chkAll2.checked;
 		}
 	});
+	
+	function search() {
+		
+		var classId=document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
+		var startDate='';
+		var endDate='';
+		var date = new Date();
+		var year = date.getFullYear();
+//	 	/*이번 달의 첫 날*/
+	 	function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
+//	 	/*이번 달의 마지막 날*/
+	 	function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var lastDay = new Date(year,month, 0).getDate();return year + "-" + month + "-" + lastDay;}
+	 		if(startDate==''){startDate=getFirstDay();}
+	 		if(endDate==''){endDate=getLastDay();}
+		
+
+		$.ajax({
+			type:'get',
+			url:'/manager/student/search', // 서버의 엔드포인트 URL
+// 			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
+			data: {
+				classId:classId
+ 				, startDate:startDate
+ 				, endDate:endDate
+			},
+			success: function(stdtListResponse) {
+				var stdtTableHead = '<tr><th><input type="checkbox" id="chkAllStdt"></th><th>번호</th><th>이름</th>';
+				var wlogCodeNameList;
+				var stdtTableBody;
+				var stdtListTable = document.getElementById("stdt_list_table");
+				var stdtList = stdtListResponse.stdtList;
+				stdtListTable.removeChild(stdtListTable.childNodes[1]);
+				document.getElementById("stdtCnt").innerHTML=stdtList.length;
+// /*
+				$.ajax({
+					type:'get',
+					url:'/manager/student/search/codename',
+					success: function(wlogResponse) {
+						wlogCodeNameList = wlogResponse.wlogCodeList;
+						for (let i = 0; i < wlogCodeNameList.length; i++) {
+							console.log(wlogCodeNameList[i].cmcdNm);
+							stdtTableHead +='<th>'+ wlogCodeNameList[i].cmcdNm +'</th>';
+							console.log(stdtTableHead);
+						}
+					stdtTableHead +='<th>성별</th><th>생년월일</th><th>이메일</th><th>연락처</th><th>이수여부</th></tr>';
+					},error: function(error){
+						console.log("error: ", error);
+					}
+				})
+// */				
+				
+// 				for(let i = 0; i < stdtList.length; i++){
+// 					stdtTableBody +=
+// 					'<tr><td><input type="checkbox" id="chkStdt"></td>'+
+// 						'<td>'+ (i+1) +'</td>'+
+// 						'<td>'+ stdtList[i].stdtNm +'</td>';
+// // /*
+// 						$.ajax({
+// 							type:'get',
+// 							url:'/manager/student/search/codename',
+// 							success: function(wlogResponse) {
+// 								wlogCodeNameList = wlogResponse.wlogCodeList;
+
+// 							for (let j = 0; j < wlogCodeNameList.length; j++) {
+// 								stdtTableBody +='<td>'+ stdtList[i].wlogCnt.split(',')[j] +'</td>'
+// 							}
+
+// 							},error: function(error){
+// 								console.log("error: ", error);
+// 							}
+// 						})
+// // */
+// 					stdtTableBody +=
+// 						'<td>'+ stdtList[i].genderCd +'</td>'+
+// 						'<td>'+ stdtList[i].birthDd +'</td>'+
+// 						'<td>'+ stdtList[i].userEmail +'</td>'+
+// 						'<td>'+ stdtList[i].stdtTel +'</td>'+
+// 						'<td>'+ stdtList[i].jobCd +'</td></tr>';
+// 				}
+
+				stdtListTable.innerHTML=stdtTableHead//+stdtTableBody;
+			},error: function(error){
+				console.log("error: ", error);
+			}
+		})
+
+	}
+
 </script>
 
 </body>

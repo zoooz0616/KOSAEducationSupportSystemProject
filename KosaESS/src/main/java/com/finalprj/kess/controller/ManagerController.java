@@ -198,45 +198,40 @@ public class ManagerController {
 	@ResponseBody
 	public Map<String, Object> fetchStudentList(
 			@RequestParam("classId") String classId
-//			,@RequestParam("startDate") String startDate
-//			,@RequestParam("endDate") String endDate
+			,@RequestParam("startDate") String startDate
+			,@RequestParam("endDate") String endDate
 			){
+		
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-
+		
+		if(startDate==null || startDate=="") {
+			startDate = String.valueOf(YearMonth.now().atDay(1));
+			}
+		if(endDate==null || endDate=="") {
+			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
+		}
+		
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");
 			for (CommonCodeVO cmcd : wlogCodeNameList) {
-//				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
+				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
 				stdt.appendWlogCnt(",");
 			}
 		}
 
-		Map<String, Object> response = new HashMap<>();
-		response.put("stdtList", stdtList);
+		Map<String, Object> stdtListResponse = new HashMap<>();
+		stdtListResponse.put("stdtList", stdtList);
 
-		return response;
+		return stdtListResponse;
 	}
 	
-//	@GetMapping("/student/search")
-//	@ResponseBody
-//	public Map<String, Object> fetchCodeNameList(
-//			@RequestParam("keyword") String keyword
-//			){
-////		List<String> stdtList = managerService.getCodeNameList(keyword);
-//		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-//
-////		for (StudentInfoDTO stdt : stdtList) {
-////			stdt.setWlogCnt("");
-////			for (CommonCodeVO cmcd : wlogCodeNameList) {
-//////				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
-////				stdt.appendWlogCnt(",");
-////			}
-////		}
-//
-//		Map<String, Object> response = new HashMap<>();
-////		response.put("stdtList", stdtList);
-//
-//		return response;
-//	}
+	@GetMapping("/student/search/codename")
+	@ResponseBody
+	public Map<String, Object> fetchCodeNameList(){
+		List<CommonCodeVO> wlogCodeList = managerService.getCodeNameList("WOK");
+		Map<String, Object> wlogResponse = new HashMap<>();
+		wlogResponse.put("wlogCodeList", wlogCodeList);
+		return wlogResponse;
+	}
 }
