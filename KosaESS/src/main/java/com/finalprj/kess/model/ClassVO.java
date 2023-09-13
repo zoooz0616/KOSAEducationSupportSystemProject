@@ -38,6 +38,6 @@ public class ClassVO {
 	
 	private String cmpyNm;//업체 이름
 	private String cmcdNm;//교육상태명
-	private String clssCdNm; // 교육상태명 
+	private String clssCdNm; //교육상태명 
 	private String mngrNm;//업무담당자 이름
 }

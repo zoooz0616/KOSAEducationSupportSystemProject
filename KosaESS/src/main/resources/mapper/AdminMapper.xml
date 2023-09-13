@@ -344,24 +344,60 @@
 	</select>
 
 	<update id="updateAplyPass" parameterType="java.util.List">
-		<foreach collection="aplyIds" item="item">
-		update aply
-		set aply_cd = 'APL0000003'
-		where aply_id = #{item}
-		</foreach>
-	</update>
+    <foreach collection="aplyIds" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
+        update aply
+        set 
+            aply_cd = 'APL0000003',
+            updt_dt = SYSTIMESTAMP,
+            updter_id = 'MNGR000001'			
+        where aply_id = #{item}
+    </foreach>
+</update>
 
 	<update id="updateAplyFail" parameterType="java.util.List">
-		<foreach collection="aplyIds" item="item">
+		<foreach collection="aplyIds" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
 		update aply
-		set aply_cd = 'APL0000004'
+		set 
+			aply_cd = 'APL0000004',
+			updt_dt = SYSTIMESTAMP,
+            updter_id = 'MNGR000001'
 		where aply_id = #{item}
 		</foreach>
 	</update>
 
+	<update id="deleteClass" parameterType="java.util.List">
+	<foreach collection="clssIds" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
+		update clss
+		set
+			delete_yn = 'Y',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+		where clss_id = #{item}
+	</foreach>
+	</update>
 
-
-
+	<select id="getSearchClassVOList"
+		resultType="com.finalprj.kess.model.ClassVO" parameterType="hashmap">
+	<![CDATA[
+	SELECT *
+	FROM
+	    clss
+	left join cmcd on cmcd.cmcd_id = clss.clss_cd
+	WHERE
+        clss_nm LIKE CONCAT(#{className}, '%')
+        AND clss_cd IN
+    ]]>
+		<foreach collection="status" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	<![CDATA[
+        AND ((aply_start_dt >= #{aplyStartDt} AND aply_end_dt <= #{aplyEndDt}) or aply_start_dt is null or aply_end_dt is null)
+        AND ((clss_start_dd >= #{classStartDd} AND clss_end_dd <= #{classEndDd}) or clss_start_dd is null or clss_end_dd is null)
+	ORDER BY
+		clss_id
+	]]>
+	</select>
 
 
 
@@ -425,37 +461,4 @@
 		) WHERE ROWNUM <= 10
 	]]>
 	</select>
-
-	<select id="getSearchClassVOList"
-		resultType="com.finalprj.kess.model.ClassVO" parameterType="hashmap">
-	<![CDATA[
-	SELECT
-	    clss_id AS "clssId",
-	    clss_nm AS "clssNm",
-	    limit_cnt AS "limitCnt",
-	    aply_start_dt	as "aplyStartDt",
-	    aply_end_dt		as "aplyEndDt",
-	    clss_start_dd AS "clssStartDd",
-	    clss_end_dd AS "clssEndDd",
-	    clss_adr AS "clssAdr",
-	    cmcd.cmcd_nm AS "clssCd"
-	FROM
-	    clss
-	JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
-	WHERE
-        clss_nm LIKE CONCAT(#{className}, '%')
-        AND cmcd.cmcd_nm IN
-    ]]>
-		<foreach collection="status" item="item" open="("
-			separator="," close=")">
-			#{item}
-		</foreach>
-	<![CDATA[
-        AND (aply_start_dt >= #{aplyStartDt} AND aply_end_dt <= #{aplyEndDt})
-        AND (clss_start_dd >= #{classStartDd} AND clss_end_dd <= #{classEndDd})
-	ORDER BY
-		clss_id
-	]]>
-	</select>
-
 </mapper>

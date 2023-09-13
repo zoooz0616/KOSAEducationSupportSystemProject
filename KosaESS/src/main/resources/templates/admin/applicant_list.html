@@ -20,7 +20,7 @@
 			<div class="title">교육과정 지원자 관리</div>
 			<!-- Route -->
 			<div class="route">
-				> <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+				 <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
 					관리</a> > <a th:href="@{/admin/class/__${classVO.clssId}__/applicant}">지원자
 					관리</a>
 			</div>
@@ -52,7 +52,7 @@
 						<div class="col_title">업무담당자</div>
 						<div class="col_content">
 							<a th:href="@{/admin/manager/__${classVO.mngrId}__}"><span
-								th:text="${classVO.mngrId}"></span></a>
+								th:text="${classVO.mngrNm}"></span></a>
 						</div>
 					</div>
 
@@ -60,7 +60,7 @@
 						<div class="col_title">업체명</div>
 						<div class="col_content">
 							<a th:href="@{/admin/company/__${classVO.cmpyId}__}"><span
-								th:text="${classVO.cmpyId}"></span></a>
+								th:text="${classVO.cmpyNm}"></span></a>
 						</div>
 					</div>
 
@@ -100,7 +100,7 @@
 					<div class="col" style="width: 15%">
 						<div class="col_title">교육상태</div>
 						<div class="col_content">
-							<span th:text="${classVO.clssCd}"></span>
+							<span th:text="${classVO.cmcdNm}"></span>
 						</div>
 					</div>
 				</div>

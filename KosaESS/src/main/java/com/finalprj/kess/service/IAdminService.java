@@ -27,8 +27,7 @@ public interface IAdminService {
 	
 	List<PostVO> getPostVOList(String postValue);
 	List<String> getClassSearch(String term);
-	List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt, Date aplyEndDt,
-			Date classStartDd, Date classEndDd);
+	
 
 	
 	
@@ -73,4 +72,9 @@ public interface IAdminService {
 	List<ApplyDetailDTO> getApplyDetailDTOList(String clssId);
 	void updateAplyPass(List<String> aplyIds);
 	void updateAplyFail(List<String> aplyIds);
+
+	void deleteClass(List<String> clssIds);
+	
+	List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt, Date aplyEndDt,
+			Date classStartDd, Date classEndDd);
 }
