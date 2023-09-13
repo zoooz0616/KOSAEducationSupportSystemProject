@@ -40,7 +40,7 @@
 			<div class="title">교육과정 관리</div>
 			<!-- Route -->
 			<div class="route">
-				> <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
 					관리</a>
 			</div>
 		</div>
@@ -54,8 +54,8 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육과정명</div>
 					<div>
-						<input id="class_name" placeholder="교육과정명" type="text"
-							list="search_option">
+						<input class="search_input" id="class_name" placeholder="교육과정명"
+							value="" type="text" list="search_option" required>
 						<datalist id="search_option">
 						</datalist>
 					</div>
@@ -65,10 +65,11 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육과정상태</div>
 					<div>
-						<select style="height: 25px;">
-							<option value="전체">전체</option>
-							<option value="전체" th:each="classCodeName:${classCodeNameList}"
-								th:text="${classCodeName}">classCodeName</option>
+						<select class="search_select_input">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="classCommonCode: ${classCommonCodeList}"
+								th:value="${classCommonCode.cmcdId}"
+								th:text="${classCommonCode.cmcdNm}"></option>
 						</select>
 					</div>
 				</div>
@@ -77,8 +78,9 @@
 				<div class="filter_box">
 					<div class="filter_box_title">지원기간</div>
 					<div>
-						<input id="aply_start_dt" type="date"> <span> ~ </span> <input
-							id="aply_end_dt" type="date">
+						<input class="search_input" id="aply_start_dt" type="date">
+						<span> ~ </span> <input class="search_input" id="aply_end_dt"
+							type="date">
 					</div>
 				</div>
 
@@ -86,8 +88,9 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육기간</div>
 					<div>
-						<input id="class_start_dd" type="date"> <span> ~ </span> <input
-							id="class_end_dd" type="date">
+						<input class="search_input" id="class_start_dd" type="date">
+						<span> ~ </span> <input class="search_input" id="class_end_dd"
+							type="date">
 					</div>
 				</div>
 			</div>
@@ -95,10 +98,11 @@
 
 			<!-- Search Button wrap -->
 			<div class="search_filter_btn_wrap">
-				<button id="reset_btn" class="search_reset_btn">
+				<button type="button" class="search_reset_btn"
+					onclick="resetInput()">
 					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
 				</button>
-				<button id="search_btn" class="search_filter_btn">
+				<button type="button" id="search_btn" class="search_filter_btn">
 					<img th:src="@{/img/search_white.png}"> <span>조회</span>
 				</button>
 			</div>
@@ -108,76 +112,94 @@
 
 		<!-- Content Bottom-->
 		<div class="content_bottom">
+			<form th:action="@{/admin/cls/delete}" method="post">
+				<!-- 컨텐츠 개수와 버튼 wrap -->
+				<div class="content_info_wrap">
+					<div class="content_info">
+						<span>교육과정 총 <span class="class_list_cnt"
+							th:text="${#lists.size(classList)}">classListCnt</span>개
+						</span>
+					</div>
+					<div class="content_info_btn_wrap">
+						<!-- 선택삭제 버튼 -->
+						<button type="submit">
+							<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+						</button>
 
-			<!-- 컨텐츠 개수와 버튼 wrap -->
-			<div class="content_info_wrap">
-				<div class="content_info">
-					<span>교육과정 총 <span class="class_list_cnt"
-						th:text="${#lists.size(classList)}">classListCnt</span>개
-					</span>
+						<!-- 등록하기 버튼 -->
+						<a th:href="@{/admin/class/insert}" style="text-decoration: none;">
+							<button type="button">
+								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+							</button>
+						</a>
+					</div>
 				</div>
-				<div class="content_info_btn_wrap"> <!-- 선택삭제 버튼 -->
-					<button>
-						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
-					</button> <!-- 등록하기 버튼 -->
-					<a th:href="@{/admin/class/insert}" style="text-decoration: none;"><button>
-						<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
-					</button></a>
-				</div>
-			</div>
-			<!-- 컨텐츠 개수와 버튼 wrap -->
+				<!-- 컨텐츠 개수와 버튼 wrap -->
 
-			<!-- 컨텐츠 리스트 부분 -->
-			<div class="content_list">
-				<table class="content_list_table" id="class_list_table">
-					<tr style="background: #F3F6F8;">
-						<th><input type="checkbox" name="chk" id="chkAll"></th>
-						<th>ID</th>
-						<th>프로그램명</th>
-						<th>지원기간</th>
-						<th>교육기간</th>
-						<th>교육장소</th>
-						<th>수강가능인원</th>
-						<th>교육상태</th>
-					</tr>
-					<tr id="class_list" th:each="class:${classList}">
-						<td><input type="checkbox" name="chk"
-							th:value="${class.clssId}"></td>
-						<td th:text="${class.clssId}"></td>
-						<td><a th:text="${class.clssNm}"
-							th:href="@{/admin/class/__${class.clssId}__}"
-							style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a></td>
-						<td th:text="|${class.aplyStartDt} ~ ${class.aplyEndDt}|"></td>
-						<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
-						<td th:text="${class.clssAdr}">class address</td>
-						<td><a th:href="@{/admin/class/__${class.clssId}__/applicant}"><span th:text="${class.limitCnt}"></span></a></td>
-						<td th:text="${class.cmcdNm}">status</td>
-					</tr>
-				</table>
-			</div>
-			<!-- 컨텐츠 리스트 부분 -->
+				<!-- 컨텐츠 리스트 부분 -->
+				<div class="content_list">
+					<table class="content_list_table" id="class_list_table">
+						<tr class="content_list_th">
+							<th><input type="checkbox" id="chkAll"></th>
+							<th>ID</th>
+							<th>프로그램명</th>
+							<th>지원기간</th>
+							<th>교육기간</th>
+							<th>교육장소</th>
+							<th>수강가능인원</th>
+							<th>교육상태</th>
+						</tr>
+						<tr id="class_list" th:each="class:${classList}">
+							<td><input type="checkbox" name="chk"
+								th:value="${class.clssId}"></td>
+							<td th:text="${class.clssId}"></td>
+							<td><a th:text="${class.clssNm}"
+								th:href="@{/admin/class/__${class.clssId}__}"
+								style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a></td>
+							<td th:text="|${class.aplyStartDt} ~ ${class.aplyEndDt}|"></td>
+							<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
+							<td th:text="${class.clssAdr}">class address</td>
+							<td><a
+								th:href="@{/admin/class/__${class.clssId}__/applicant}"><span
+									th:text="${class.limitCnt}"></span></a></td>
+							<td th:text="${class.cmcdNm}">status</td>
+						</tr>
+					</table>
+				</div>
+				<!-- 컨텐츠 리스트 부분 -->
+			</form>
 		</div>
 		<!-- Content Bottom-->
 	</div>
 
 	<script>
-		//리스트 전체선택
-		const chkAll = document.querySelector("#chkAll");
-		chkAll.addEventListener("change", () => {
-			const chkList = document.getElementsByName("chk");
-			for(chk of chkList){
-				chk.checked = chkAll.checked;
-			}
+		//전체 선택
+		document.addEventListener("DOMContentLoaded", function () {
+		    const chkAll = document.getElementById("chkAll");
+		    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
+
+		    chkAll.addEventListener("change", function () {
+		        checkboxes.forEach(function (checkbox) {
+		            checkbox.checked = chkAll.checked;
+		        });
+		    });
 		});
 		
-		//dropdown checkbox
-		var checkList = document.getElementById('list1');
-		checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
-		  if (checkList.classList.contains('visible'))
-		    checkList.classList.remove('visible');
-		  else
-		    checkList.classList.add('visible');
-		}
+		//form submit버튼 클릭시 선택한 값이 있는지 확인
+		document.addEventListener("DOMContentLoaded", function () {
+		    const form = document.querySelector('form');//form
+
+		    form.addEventListener("submit", function (event) {
+		    	//checked되어 있는 input들 선택
+		        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]:checked');
+		        
+		    	//만약 아무것도 선택되어있지 않다면
+		        if (checkboxes.length === 0) {
+		            alert("선택되지 않았습니다.");
+		            event.preventDefault();//submit취소
+		        }
+		    });
+		});
 		
 		//검색 클릭 이벤트
 		const searchBtn = document.querySelector("#search_btn");
@@ -186,10 +208,7 @@
 			var className = document.querySelector("#class_name").value;
 						
 			//교육과정 상태값 가져오기
-			var statusArray = new Array();
-			$('input:checkbox[name=chk_status]:checked').each(function(){
-				statusArray.push(this.value);			
-			});
+			var status = document.querySelector(".search_select_input").value;
 			
 			//교육과정 지원 시작
 			var aplyStartDt = document.querySelector("#aply_start_dt").value;
@@ -202,46 +221,75 @@
 			
 			//교육과정 종료일
 			var classEndDd = document.querySelector("#class_end_dd").value;
-			
-			console.log("className: " +className);
-			console.log("statusArray: " +statusArray);
-			console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
-			console.log("class: "+classStartDd+"~"+classEndDd);
-			
+
+			// 변수 중 하나라도 빈 값인 경우
+			if (status === "" || aplyStartDt === "" || aplyEndDt === "" || classStartDd === "" || classEndDd === "") {
+			  alert("모든 필드를 입력해야 합니다.");
+			} else {
+			  // 모든 변수가 빈 값이 아닌 경우 이후의 코드 실행
+			  // 여기에 실행할 코드를 추가합니다.
 			
 			$.ajax({
 				url: '/admin/class/search',
 				async: true,
 				method: 'GET',
-				data: {className: className, 
-						statusArray: statusArray,
-						aplyStartDt: aplyStartDt,
-						aplyEndDt: aplyEndDt,
-						classStartDd: classStartDd,
-						classEndDd: classEndDd},
+				data: {
+					className: className, 
+					status: status,
+					aplyStartDt: aplyStartDt,
+					aplyEndDt: aplyEndDt,
+					classStartDd: classStartDd,
+					classEndDd: classEndDd},
 				success: function(response) {
+					
 					var classListTable = document.querySelector("#class_list_table");
-					var classList = classListTable.querySelectorAll("#class_list");
+					//var classListItems = classListTable.querySelectorAll("#class_list");//class_list id를 가진 모든 요소 선택
+					//classListItems.forEach(function(item) {
+					//	  item.remove(); // 각 요소의 classList에서 해당 클래스를 제거
+					//	});
+					
 					classListTable.firstElementChild.remove();
+				
+					
+					
+					
 					var classListCode=
-						'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
-						'<th th:if="${session.role==\'admin\'}">ID</th>'+
-						'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
-						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
+						'<tr class="content_list_th">'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
+						'<th>ID</th>'+
+						'<th>프로그램명</th>'+'	<th>지원기간</th>'+
+						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>수강가능인원</th>'+'<th>교육상태</th></tr>';
 						for(var i = 0; i < response.length; i++){
+							// response[i].aplyStartDt에서 날짜를 가져와서 Date 객체로 변환
+							var aplystartDate = new Date(response[i].aplyStartDt);
+							var aplyEndDate = new Date(response[i].aplyEndDt);
+
+							// 원하는 형식에 맞게 날짜와 시간을 문자열로 변환
+							var formattedStartDate = aplystartDate.getFullYear() + '-' +
+							    String(aplystartDate.getMonth() + 1).padStart(2, '0') + '-' +
+							    String(aplystartDate.getDate()).padStart(2, '0') + ' ' +
+							    String(aplystartDate.getHours()).padStart(2, '0') + ':' +
+							    String(aplystartDate.getMinutes()).padStart(2, '0');
+							    
+							var formattedEndDate = aplyEndDate.getFullYear() + '-' +
+							    String(aplyEndDate.getMonth() + 1).padStart(2, '0') + '-' +
+							    String(aplyEndDate.getDate()).padStart(2, '0') + ' ' +
+							    String(aplyEndDate.getHours()).padStart(2, '0') + ':' +
+							    String(aplyEndDate.getMinutes()).padStart(2, '0');
+							
+							
 		                       classListCode += 
-		                           '<tr><td><input type="checkbox" name="chk" th:value="'+
+		                           '<tr id="class_list"><td><input type="checkbox" name="chk" value="'+
 		                              response[i].clssId+'"></td>'+
 		                              '<td>'+response[i].clssId+'</td>'+
-		                              '<td>'+'<a class="content_title" href="/manager/class/'+response[i].clssId +
+		                              '<td>'+'<a class="content_title" href="/admin/class/'+response[i].clssId +
 		                                 '">'+response[i].clssNm+'</a></td>' +      
-		                        '<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
-		                        '<span>'+response[i].aplyEndDt+'</span></td>'+
-		                        '<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
+		                        '<td><span>'+formattedStartDate+'</span>~'+
+		                        '<span>'+formattedEndDate+'</span></td>'+
+		                        '<td><span>'+response[i].clssStartDd+'</span>~'+
 		                        '<span>'+response[i].clssEndDd+'</span></td>'+
 		                        '<td>'+response[i].clssAdr+'</td>'+
-		                        '<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
-		                        '<td>'+response[i].clssCd+'</td></tr>';
+		                        '<td><span>'+'<a href="/admin/class/'+response[i].clssId +'/applicant">'+response[i].limitCnt+'</a></span></td>'+
+		                        '<td>'+response[i].cmcdNm+'</td></tr>';
 		            }
 		           
 		            classListTable.innerHTML=classListCode;
@@ -251,7 +299,22 @@
 					console.log("error: ", error);
 				}
 			});
+			}
 		});
+		
+		//초기화 버튼
+		function resetInput() {
+			// 모든 요소를 선택
+		    const inputElements = document.querySelectorAll(".search_input");
+
+		    // 각 요소의 값을 초기화
+		    inputElements.forEach(function(element) {
+		        element.value = "";
+		    });
+		    
+		    const inputSelectElement = document.querySelector(".search_select_input");
+		    inputSelectElement.value="all";
+        }
 	</script>
 </body>
 </html>

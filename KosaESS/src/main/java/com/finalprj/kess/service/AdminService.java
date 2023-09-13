@@ -232,6 +232,12 @@ public class AdminService implements IAdminService {
 		adminRepository.updateAplyFail(aplyIds);
 	}
 
+	@Override
+	public void deleteClass(List<String> clssIds) {
+		adminRepository.deleteClass(clssIds);
+	}
+
+
 
 
 
@@ -268,6 +274,4 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
 				aplyEndDt, classStartDd, classEndDd);
 	}
-
-
 }

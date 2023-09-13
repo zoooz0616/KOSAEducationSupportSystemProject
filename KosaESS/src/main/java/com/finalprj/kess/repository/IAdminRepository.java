@@ -28,14 +28,7 @@ public interface IAdminRepository {
 	int getWaitClassCnt();
 	List<PostVO> getPostVOList(String postValue);
 	List<String> getClassSearch(String term);
-	List<ClassVO> getSearchClassVOList(
-			@Param("className") String className,
-            @Param("status") List<String> status, //접수예정, 접수중, 접수마감, 교육중, 교육완료, 취소, 폐강
-            @Param("aplyStartDt") Date aplyStartDt,
-            @Param("aplyEndDt") Date aplyEndDt,
-            @Param("classStartDd") Date classStartDd,
-            @Param("classEndDd") Date classEndDd);
-
+	
 
 
 	
@@ -80,4 +73,14 @@ public interface IAdminRepository {
 	List<ApplyDetailDTO> getApplyDetailDTOList(String clssId);
 	void updateAplyPass(List<String> aplyIds);
 	void updateAplyFail(List<String> aplyIds);
+	void deleteClass(List<String> clssIds);
+	
+	List<ClassVO> getSearchClassVOList(
+			@Param("className") String className,
+            @Param("status") List<String> status, //접수예정, 접수중, 접수마감, 교육중, 교육완료, 취소, 폐강
+            @Param("aplyStartDt") Date aplyStartDt,
+            @Param("aplyEndDt") Date aplyEndDt,
+            @Param("classStartDd") Date classStartDd,
+            @Param("classEndDd") Date classEndDd);
+
 }

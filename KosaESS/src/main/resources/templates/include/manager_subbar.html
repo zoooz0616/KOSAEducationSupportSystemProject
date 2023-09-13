@@ -44,13 +44,14 @@
 			</a> <span class="tooltip">강사 관리</span></li>
 			<li><a class="icon_img" th:href="@{/__${session.role}__/lecture}"> <i
 					class='bx bx-pie-chart-alt-2'><img
-						th:src="@{/img/lecture_white.png}"></i> <span class="links_name">과목
+						th:src="@{/img/subject_white.png}"></i> <span class="links_name">과목
 						관리</span>
 			</a> <span class="tooltip">과목 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/commoncode}"> <i
-					class='bx bx-folder'><img th:src="@{/img/commoncode_white.png}"></i>
-					<span class="links_name">기준 정보 관리</span>
-			</a> <span class="tooltip">기준 정보 관리</span></li>
+			
+			<li><a class="icon_img" th:href="@{/__${session.role}__/class}"> <i
+					class='bx bx-cart-alt'><img th:src="@{/img/lecture_white.png}"></i>
+					<span class="links_name">강의 관리</span>
+			</a> <span class="tooltip">강의 관리</span></li>
 			<li><a class="icon_img" th:href="@{/__${session.role}__/class}"> <i
 					class='bx bx-cart-alt'><img th:src="@{/img/class_white.png}"></i>
 					<span class="links_name">교육과정 관리</span>
@@ -59,6 +60,10 @@
 					class='bx bx-heart'><img th:src="@{/img/student_white.png}"></i>
 					<span class="links_name">교육생 관리</span>
 			</a> <span class="tooltip">교육생 관리</span></li>
+			<li><a class="icon_img" th:href="@{/__${session.role}__/commoncode}"> <i
+					class='bx bx-folder'><img th:src="@{/img/commoncode_white.png}"></i>
+					<span class="links_name">기준 정보 관리</span>
+			</a> <span class="tooltip">기준 정보 관리</span></li>
 			<!--  
 			<li><a href="#"> <i class='bx bx-cog'></i> <span
 					class="links_name">출퇴근 관리</span>
