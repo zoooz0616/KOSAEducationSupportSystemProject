@@ -70,7 +70,7 @@ $(document).ready(function() {
 							row.append('<td><span>' + classVO.clssAdr + '</span></td>');
 						}
 						row.append('<td><span>' + classVO.limitCnt + '</span></td>');
-						row.append('<td><span class="className">' + classVO.clssCdNm + '</span></td>');
+						row.append('<td><span class="className">' + classVO.cmcdNm + '</span></td>');
 						var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
 						row.append($('<td>').append(applyBtn));
 						// 행을 테이블에 추가합니다.
@@ -92,9 +92,9 @@ $(document).ready(function() {
 						var row = $('<tr class="classRow"></tr>');
 
 						// 각 열에 해당하는 데이터를 행에 추가합니다.
-						row.append('<td><span class="className">' + classVO.clssCdNm + '</span></td>');
-						if (classVO.clssContent != null) {
-							row.append('<td class="classImg"><div><img src="/img/' + classVO.clssContent + '"></div>');
+						row.append('<td><span class="className">' + classVO.cmcdNm + '</span></td>');
+						if (classVO.fileNm != null) {
+							row.append('<td class="classImg"><div><img src="/img/' + classVO.fileNm + '"></div>');
 						} else {
 							row.append('<td class="classImg"><div><img src="/img/logo.png"></div>');
 						}

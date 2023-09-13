@@ -192,8 +192,8 @@
 		       substr(clss_adr, 1, 3) as "clssAdr", 
 		       limit_cnt,
 		       clss_cd,
-			   cmcd.cmcd_nm as "clssCdNm",
-		       flup.file_nm as "clssContent" 
+			   cmcd.cmcd_nm,
+		       flup.file_nm 
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -218,8 +218,8 @@
 			    substr(clss_adr, 1, 3) as "clssAdr", 
 			    limit_cnt,
 			    clss_cd,
-			    cmcd.cmcd_nm as "clssCdNm",
-			    flup.file_nm as "clssContent" 
+			    cmcd.cmcd_nm,
+			    flup.file_nm 
 			FROM clss
 			JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -248,18 +248,18 @@
     			clss_total_tm,
 			    clss_etc,
 			    clss_cd,
-			    mngr.mngr_nm as "mngrNm",
-			    cmpy.cmpy_nm as "cmpyNm",
-			    cmcd.cmcd_nm as "clssCdNm"
+			    mngr.mngr_nm ,
+			    cmpy.cmpy_nm ,
+			    cmcd.cmcd_nm 
 			FROM clss
 			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
-			JOIN MNGR on mngr.mngr_id = clss.mngr_id
+			LEFT JOIN MNGR on mngr.mngr_id = clss.mngr_id
 			LEFT JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
 			WHERE clss.clss_id = #{clssId}
 		]]>
 	</select>
-	
-	<!-- 교육지원 커리큘럼-->
+
+	<!-- 교육지원 커리큘럼 -->
 	<select id="getCurriculumList" parameterType="string"
 		resultType="com.finalprj.kess.dto.CurriculumDetailDTO">
 	<![CDATA[
@@ -308,8 +308,8 @@
 		       clss_nm,
 		       clss.cmpy_id,
 		       clss_cd,
-			   cmcd.cmcd_nm as "clssCdNm",
-		   		flup.file_nm as "clssContent" 
+			   cmcd.cmcd_nm,
+		   		flup.file_nm
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id

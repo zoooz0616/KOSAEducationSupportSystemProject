@@ -83,12 +83,12 @@
 			<table class="grid-style classTable">
 				<tbody>
 					<tr th:each="classVO, rowStat : ${classList}" class="classRow">
-						<td><span class="className" th:text="${classVO.clssCdNm}"></span></td>
+						<td><span class="className" th:text="${classVO.cmcdNm}"></span></td>
 						<td class="classImg">
-							<div th:if="${classVO.clssContent!=null}">
-								<img th:src="@{/img/__${classVO.clssContent}__}">
+							<div th:if="${classVO.fileNm!=null}">
+								<img th:src="@{/img/__${classVO.fileNm}__}">
 							</div>
-							<div th:if="${classVO.clssContent==null}">
+							<div th:if="${classVO.fileNm==null}">
 								<img th:src="@{/img/logo.png}">
 							</div>
 						</td>

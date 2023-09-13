@@ -7,12 +7,15 @@
 <body th:fragment="subbar">
 	<div class="sidebar">
 		<ul>
-			<li><a><img><span>개인 정보 조회/수정</span></a></li>
-			<li><a><img><span>교육 과정 지원 내역</span></a></li>
-			<li><a><img><span>교육 과정 이수 내역</span></a></li>
-			<li><a><img><span>출퇴근 관리</span></a></li>
+			<li class="active" data-image="/img/manager_white.png" data-image="/img/manager_navy.png"><img
+				th:src="@{/img/manager_navy.png}"><span>개인 정보 조회/수정</span></li>
+			<li data-image="/img/list_white.png"><img
+				th:src="@{/img/list_navy.png}"><span>교육 과정 지원 내역</span></li>
+			<li data-image="/img/print_white.png"><img
+				th:src="@{/img/print_navy.png}"><span>교육 과정 이수 내역</span></li>
+			<li data-image="/img/worklog_white.png"><img
+				th:src="@{/img/worklog_navy.png}"><span>출퇴근 관리</span></li>
 		</ul>
 	</div>
-
 </body>
 </html>

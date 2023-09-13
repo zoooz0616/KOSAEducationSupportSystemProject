@@ -1,5 +1,25 @@
-.sidebar{
+.sidebar {
 	background: #E7EFF3;
 	height: 100%;
-	
+	width: 20%;
+}
+
+.sidebar ul {
+	list-style: none;
+	padding: 10% 0 100% 0;
+}
+
+.sidebar li {
+	padding: 5% 10%;
+	text-decoration: none;
+	color: #0E5881;
+	font-size: 15px;
+	font-weight: 600;
+	align-items: center;
+	display: flex;
+}
+
+.sidebar img {
+	height: 30px;
+	margin-right: 5%;
 }

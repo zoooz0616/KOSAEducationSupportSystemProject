@@ -4,22 +4,26 @@
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/subbar.css}" rel="stylesheet">
+<link th:href="@{/css/student/mypage.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
 <body>
 	<div th:replace="~{/include/student_header :: header}"
 		style="width: 100%;"></div>
-	<div th:replace="~{/include/student_subbar :: subbar}"></div>
+
 	<div class="container">
 		<div class="maintext">
 			<h1 style="color: #0E5881; margin-top: 3%;">마이페이지</h1>
 		</div>
 		<div class="content">
-			<div class="sidebar"></div>
-			<div class="maincontent"></div>
+			<div th:replace="~{/include/student_subbar :: subbar}"></div>
+			<div class="maincontent">
+				<h3>개인 정보 조회/수정</h3>
+			</div>
 		</div>
 	</div>
 
 </body>
+<script src="/js/student/sidebar.js"></script>
 </html>

@@ -34,11 +34,12 @@ public class ClassVO {
 	private String rgsterId;// 등록자id
 	private Timestamp updtDt;// 수정일시
 	private String updterId;// 수정자id
-	private String deleteYn; //삭제여부 
+	private String deleteYn; // 삭제여부
 	private int rgstCnt;// 등록 인원
-	
-	private String cmpyNm;//업체 이름
-	private String cmcdNm;//교육상태명
-	private String clssCdNm; // 교육상태명 
-	private String mngrNm;//업무담당자 이름
+
+	private String cmpyNm;// 업체 이름
+	private String cmcdNm;// 교육상태명
+	private String clssCdNm; // 교육상태명
+	private String mngrNm;// 업무담당자 이름
+	private String fileNm; // 파일 이름
 }
