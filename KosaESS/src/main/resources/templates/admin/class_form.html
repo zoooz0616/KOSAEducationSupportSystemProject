@@ -77,13 +77,13 @@
 									th:if="${act}=='update'" type="datetime-local"
 									th:name="aplyStartDt" th:value="${classVO.aplyStartDt}">
 								<span th:if="${act}=='select'"
-									th:text="${#dates.format(classVO.aplyStartDt, 'yyyy-MM:dd HH:mm')}"></span>
+									th:text="${#dates.format(classVO.aplyStartDt, 'yyyy-MM-dd HH:mm')}"></span>
 								~ <input th:if="${act}=='insert'" type="datetime-local"
 									th:name="aplyEndDt" th:value="null"> <input
 									th:if="${act}=='update'" type="datetime-local"
 									th:name="aplyEndDt" th:value="${classVO.aplyEndDt}"> <span
 									th:if="${act}=='select'"
-									th:text="${#dates.format(classVO.aplyEndDt, 'yyyy-MM:dd HH:mm')}"></span>
+									th:text="${#dates.format(classVO.aplyEndDt, 'yyyy-MM-dd HH:mm')}"></span>
 							</div>
 						</div>
 
@@ -91,13 +91,13 @@
 							<div class="col_title">교육 기간</div>
 							<div class="col_content">
 								<input th:if="${act}=='insert'" id="datepicker1" type="text"
-									th:name="clssStartDd" th:value="null"> <input
+									th:name="clssStartDd" th:value="null" placeholder="연도-월-일"> <input
 									th:if="${act}=='update'" id="datepicker1" type="text"
 									th:name="clssStartDd" th:value="${classVO.clssStartDd}">
 								<span th:if="${act}=='select'" th:text="${classVO.clssStartDd}"></span>
 
 								~ <input th:if="${act}=='insert'" id="datepicker2" type="text"
-									th:name="clssEndDd" th:value="null"> <input
+									th:name="clssEndDd" th:value="null" placeholder="연도-월-일"> <input
 									th:if="${act}=='update'" id="datepicker2" type="text"
 									th:name="clssEndDd" th:value="${classVO.clssEndDd}"> <span
 									th:if="${act}=='select'" th:text="${classVO.clssEndDd}"></span>
@@ -567,8 +567,7 @@
 									var fifthInputElement = fifthTdElement.firstElementChild;
 
 									// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
-									$
-											.ajax({
+									$.ajax({
 												url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
 												type : "POST",
 												data : {

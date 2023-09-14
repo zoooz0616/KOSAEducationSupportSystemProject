@@ -237,6 +237,16 @@ public class AdminService implements IAdminService {
 		adminRepository.deleteClass(clssIds);
 	}
 
+	@Override
+	public List<ProfessorVO> getProfessorList() {
+		return adminRepository.getProfessorList();
+	}
+
+	@Override
+	public List<SubjectVO> getSubjectList() {
+		return adminRepository.getSubjectList();
+	}
+
 
 
 
