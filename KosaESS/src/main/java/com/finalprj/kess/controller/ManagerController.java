@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -69,9 +70,7 @@ public class ManagerController {
 	@GetMapping("/class")
 	public String getClassList(Model model, HttpSession session) {
 		String roleCd = (String) session.getAttribute("roleCd");
-		if (roleCd == null || !roleCd.equals("ROL0000003")) {
-			return "login";
-		} else {
+		if (roleCd != null && roleCd.equals("ROL0000003")) {
 			model.addAttribute("title", "교육 과정 목록");
 			List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"));
 			// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
@@ -82,12 +81,34 @@ public class ManagerController {
 			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
 			model.addAttribute("classCodeNameList", classCodeNameList);
 			return "manager/class_list";
+		} else {
+			if(roleCd == null) {
+			return "login";
+			} else {
+				switch(roleCd) {
+				case "ROL0000001":
+					return "redirect:/student";
+				case "ROL0000002":
+					return "redirect:/admin";
+				default :
+					return "redirect:/logout";
+				}
+			}
 		}
 	}
 
 	//	교육 상세 조회
 	@GetMapping("/class/{classId}")
-	public String getClassDetail(Model model, @PathVariable String classId) {
+	public String getClassDetail(Model model, @PathVariable String classId, HttpSession session) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		
 		model.addAttribute("title", "교육 과정 상세");
 		ClassVO thisClass = new ClassVO();
 		thisClass = managerService.getClassDetailByClssId(classId);
@@ -97,11 +118,12 @@ public class ManagerController {
 		List<FileVO> NonImageFileInfoList = new ArrayList<FileVO>();
 		for (int i = 0, j = 0; i < imageFileSubIdList.size(); i++) {
 			FileVO vo = managerService.getFileInfoByIds(thisClass.getFileId(), imageFileSubIdList.get(i));
+			System.out.println("imageFileSubIdList : " + imageFileSubIdList.get(i));
 			if (vo.getFileType().split("/")[0].equals("image")) {
 				j++;
 			} else {
 				NonImageFileInfoList.add(vo);
-				imageFileSubIdList.remove(j);
+				imageFileSubIdList.remove(i);
 			}
 		}
 		model.addAttribute("imageFileSubIdList", imageFileSubIdList);
@@ -111,7 +133,16 @@ public class ManagerController {
 
 	// 교육 상세 정보 > 파일 요청
 	@GetMapping("/{fileId}/{fileSubId}")
-	public ResponseEntity<byte[]> getFile(@PathVariable String fileId, @PathVariable int fileSubId) {
+	public ResponseEntity<byte[]> getFile(@PathVariable String fileId, @PathVariable int fileSubId, HttpSession session) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return null;
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return null;
+		}
+				
 		FileVO file = managerService.getFileByIds(fileId, fileSubId);
 		final HttpHeaders headers = new HttpHeaders();
 		String[] mtypes = file.getFileType().split("/");
@@ -128,30 +159,28 @@ public class ManagerController {
 
 	//	교육생 목록 조회
 	@GetMapping("/student")
-	public String getStudentList(Model model, HttpSession session, HttpServletRequest httpServletRequest,
-			@RequestParam(required = false) String classId,
-			@RequestParam(required = false) String startDate,
+	public String getStudentList(Model model, HttpSession session, HttpServletRequest httpServletRequest, @RequestParam(required = false) String classId, @RequestParam(required = false) String startDate,
 			@RequestParam(required = false) String endDate) {
 		String roleCd = (String) session.getAttribute("roleCd");
-		
+
 		if (roleCd == null || !roleCd.equals("ROL0000003")) {
 			return "login";
 		} else {
 			if (startDate == null) {
 				startDate = String.valueOf(YearMonth.now().atDay(1));
-			}else {
+			} else {
 				startDate = httpServletRequest.getParameter("startDate");
 			}
-			
+
 			if (endDate == null) {
 				endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-			}else {
+			} else {
 				endDate = httpServletRequest.getParameter("endDate");
 			}
-			
-			if (classId==null) {
-				classId=managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
-			}else {
+
+			if (classId == null) {
+				classId = managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
+			} else {
 				classId = httpServletRequest.getParameter("classId");
 			}
 			List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
@@ -186,32 +215,33 @@ public class ManagerController {
 	//	개인정보 조회
 	@GetMapping("/mypage")
 	public String getMngrInfo(Model model, HttpSession session) {
-		String roleCd = (String) session.getAttribute("roleCd");
-		if (roleCd == null || !roleCd.equals("ROL0000003")) {
-			return "login";
-		} else {
-			return "manager/mypage";
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
 		}
+		
+		
+		return "manager/mypage";
 	}
 
 	@GetMapping("/student/search")
 	@ResponseBody
-	public Map<String, Object> fetchStudentList(
-			@RequestParam("classId") String classId
-			,@RequestParam("startDate") String startDate
-			,@RequestParam("endDate") String endDate
-			){
-		
+	public Map<String, Object> fetchStudentList(@RequestParam("classId") String classId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-		
-		if(startDate==null || startDate=="") {
+
+		if (startDate == null || startDate == "") {
 			startDate = String.valueOf(YearMonth.now().atDay(1));
-			}
-		if(endDate==null || endDate=="") {
+		}
+		if (endDate == null || endDate == "") {
 			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
 		}
-		
+
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");
 			for (CommonCodeVO cmcd : wlogCodeNameList) {
@@ -225,10 +255,10 @@ public class ManagerController {
 
 		return stdtListResponse;
 	}
-	
+
 	@GetMapping("/student/search/codename")
 	@ResponseBody
-	public Map<String, Object> fetchCodeNameList(){
+	public Map<String, Object> fetchCodeNameList() {
 		List<CommonCodeVO> wlogCodeList = managerService.getCodeNameList("WOK");
 		Map<String, Object> wlogResponse = new HashMap<>();
 		wlogResponse.put("wlogCodeList", wlogCodeList);
