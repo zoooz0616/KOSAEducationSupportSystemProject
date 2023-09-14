@@ -1,11 +1,13 @@
 package com.finalprj.kess.repository;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -23,7 +25,7 @@ public interface IManagerRepository {
 
 	public ClassVO getClassDetailByClssId(String clssId);
 
-	public List<StudentVO> getStudentListByClssId(String clssId);
+	public List<StudentInfoDTO> getStudentListByClssId(String clssId);
 
 	public String getClassNameByClssId(String clssId);
 
@@ -40,4 +42,10 @@ public interface IManagerRepository {
 	public int getCountAbsentByStdtId(String stdtId);
 
 	public int getCountEalryLeaveByStdtId(String stdtId);
+	
+	public int getCountByClssIdWlogCdStdtId (@Param("clssId") String clssId, @Param("wlogCd") String wlogCd, @Param("stdtId") String stdtId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+
+	public String getLatestClassIdByMngrId(String mngrId);
+
+//	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

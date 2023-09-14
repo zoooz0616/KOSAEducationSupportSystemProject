@@ -186,14 +186,14 @@
 	<script>
 		//전체 선택
 		document.addEventListener("DOMContentLoaded", function () {
-		    const chkAll = document.getElementById("chkAll");
-		    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
+			const chkAll = document.getElementById("chkAll");
+			const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
 
-		    chkAll.addEventListener("change", function () {
-		        checkboxes.forEach(function (checkbox) {
-		            checkbox.checked = chkAll.checked;
-		        });
-		    });
+			chkAll.addEventListener("change", function () {
+				checkboxes.forEach(function (checkbox) {
+					checkbox.checked = chkAll.checked;
+				});
+			});
 		});
 		
 		//form submit버튼 클릭시 선택한 값이 있는지 확인

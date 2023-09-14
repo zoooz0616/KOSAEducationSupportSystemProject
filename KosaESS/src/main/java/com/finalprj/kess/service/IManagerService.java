@@ -1,7 +1,11 @@
 package com.finalprj.kess.service;
 
+import java.sql.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -14,7 +18,7 @@ public interface IManagerService {
 
 	public ClassVO getClassDetailByClssId(String clssId);
 
-	public List<StudentVO> getStudentListByClssId(String clssId);
+	public List<StudentInfoDTO> getStudentListByClssId(String clssId);
 
 	public String getClassNameByClssId(String clssId);
 
@@ -34,4 +38,9 @@ public interface IManagerService {
 
 	public int getCountAbsentByStdtId(String stdtId);
 
+	public int getCountByClssIdWlogCdStdtId (String clssId, String wlogCd, String stdtId, String startDate, String endDate);
+
+	public String getLatestClassIdByMngrId(String mngrId);
+
+//	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Manager Class List</title>
+</head>
+<head>
+<link th:href="@{/css/admin/class_list.css}" rel="stylesheet">
+<script>
+		$(document).ready(function(){
+			$('#class_name').on('input', function() {
+                var searchTerm = $(this).val();
+                if (searchTerm.length >= 1) {
+                    $.ajax({
+                        url: '/admin/class/autocomplete', // 서버의 엔드포인트 URL
+                        method: 'GET',
+                        data: { term: searchTerm },
+                        success: function(response) {
+                            $('#search_option').html(response);
+                        }
+                    });
+                } else {
+                    $('#search_option').empty();
+                }
+			});
+		});
+</script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">교육과정 관리</div>
+			<!-- Route -->
+			<div class="route">
+				> <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- Search Filter wrap -->
+			<div class="search_filter_wrap">
+				<!-- 교육과정명 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육과정명</div>
+					<div>
+						<input id="class_name" placeholder="교육과정명" type="text"
+							list="search_option">
+						<datalist id="search_option">
+						</datalist>
+					</div>
+				</div>
+
+				<!-- 교육과정상태 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육과정상태</div>
+					<div>
+						<select style="height: 25px;">
+							<option value="전체">전체</option>
+							<option value="전체" th:each="classCodeName:${classCodeNameList}"
+								th:text="${classCodeName}">classCodeName</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- 지원기간 -->
+				<div class="filter_box">
+					<div class="filter_box_title">지원기간</div>
+					<div>
+						<input id="aply_start_dt" type="date"> <span> ~ </span> <input
+							id="aply_end_dt" type="date">
+					</div>
+				</div>
+
+				<!-- 교육기간 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육기간</div>
+					<div>
+						<input id="class_start_dd" type="date"> <span> ~ </span> <input
+							id="class_end_dd" type="date">
+					</div>
+				</div>
+			</div>
+			<!-- Search Filter wrap -->
+
+			<!-- Search Button wrap -->
+			<div class="search_filter_btn_wrap">
+				<button id="reset_btn" class="search_reset_btn">
+					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+				</button>
+				<button id="search_btn" class="search_filter_btn">
+					<img th:src="@{/img/search_white.png}"> <span>조회</span>
+				</button>
+			</div>
+			<!-- Search Button wrap -->
+		</div>
+		<!-- Content Middle-->
+
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+			<div class="content_info_wrap">
+				<div class="content_info">
+					<span>교육과정 총 <span class="class_list_cnt"
+						th:text="${#lists.size(classList)}">classListCnt</span>개
+					</span>
+				</div>
+				<div class="content_info_btn_wrap"> <!-- 선택삭제 버튼 -->
+					<button>
+						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+					</button> <!-- 등록하기 버튼 -->
+					<a th:href="@{/admin/class/insert}" style="text-decoration: none;"><button>
+						<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+					</button></a>
+				</div>
+			</div>
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+
+			<!-- 컨텐츠 리스트 부분 -->
+			<div class="content_list">
+				<table class="content_list_table" id="class_list_table">
+					<tr style="background: #F3F6F8;">
+						<th><input type="checkbox" name="chk" id="chkAll"></th>
+						<th>ID</th>
+						<th>프로그램명</th>
+						<th>지원기간</th>
+						<th>교육기간</th>
+						<th>교육장소</th>
+						<th>수강가능인원</th>
+						<th>교육상태</th>
+					</tr>
+					<tr id="class_list" th:each="class:${classList}">
+						<td><input type="checkbox" name="chk"
+							th:value="${class.clssId}"></td>
+						<td th:text="${class.clssId}"></td>
+						<td><a th:text="${class.clssNm}"
+							th:href="@{/manager/class/__${class.clssId}__}"></a></td>
+						<td th:text="|${class.aplyStartDt} ~ ${class.aplyEndDt}|"></td>
+						<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
+						<td th:text="${class.clssAdr}">class address</td>
+						<td><span th:text="${class.limitCnt}"></span></td>
+						<td th:text="${class.clssCd}">status</td>
+					</tr>
+				</table>
+			</div>
+			<!-- 컨텐츠 리스트 부분 -->
+		</div>
+		<!-- Content Bottom-->
+	</div>
+
+	<script>
+		//리스트 전체선택
+		const chkAll = document.querySelector("#chkAll");
+		chkAll.addEventListener("change", () => {
+			const chkList = document.getElementsByName("chk");
+			for(chk of chkList){
+				chk.checked = chkAll.checked;
+			}
+		});
+		
+		//dropdown checkbox
+		var checkList = document.getElementById('list1');
+		checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
+		  if (checkList.classList.contains('visible'))
+		    checkList.classList.remove('visible');
+		  else
+		    checkList.classList.add('visible');
+		}
+		
+		//검색 클릭 이벤트
+		const searchBtn = document.querySelector("#search_btn");
+		searchBtn.addEventListener("click", () => {
+			//교육과정명
+			var className = document.querySelector("#class_name").value;
+						
+			//교육과정 상태값 가져오기
+			var statusArray = new Array();
+			$('input:checkbox[name=chk_status]:checked').each(function(){
+				statusArray.push(this.value);			
+			});
+			
+			//교육과정 지원 시작
+			var aplyStartDt = document.querySelector("#aply_start_dt").value;
+			
+			//교육과정 지원 마감
+			var aplyEndDt = document.querySelector("#aply_end_dt").value;
+			
+			//교육과정 시작일
+			var classStartDd = document.querySelector("#class_start_dd").value;
+			
+			//교육과정 종료일
+			var classEndDd = document.querySelector("#class_end_dd").value;
+			
+			console.log("className: " +className);
+			console.log("statusArray: " +statusArray);
+			console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
+			console.log("class: "+classStartDd+"~"+classEndDd);
+			
+			
+			$.ajax({
+				url: '/admin/class/search',
+				async: true,
+				method: 'GET',
+				data: {className: className, 
+						statusArray: statusArray,
+						aplyStartDt: aplyStartDt,
+						aplyEndDt: aplyEndDt,
+						classStartDd: classStartDd,
+						classEndDd: classEndDd},
+				success: function(response) {
+					var classListTable = document.querySelector("#class_list_table");
+					var classList = classListTable.querySelectorAll("#class_list");
+					classListTable.firstElementChild.remove();
+					var classListCode=
+						'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
+						'<th th:if="${session.role==\'admin\'}">ID</th>'+
+						'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
+						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
+						for(var i = 0; i < response.length; i++){
+		                       classListCode += 
+		                           '<tr><td><input type="checkbox" name="chk" th:value="'+
+		                              response[i].clssId+'"></td>'+
+		                              '<td>'+response[i].clssId+'</td>'+
+		                              '<td>'+'<a class="content_title" href="/manager/class/'+response[i].clssId +
+		                                 '">'+response[i].clssNm+'</a></td>' +      
+		                        '<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
+		                        '<span>'+response[i].aplyEndDt+'</span></td>'+
+		                        '<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
+		                        '<span>'+response[i].clssEndDd+'</span></td>'+
+		                        '<td>'+response[i].clssAdr+'</td>'+
+		                        '<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
+		                        '<td>'+response[i].clssCd+'</td></tr>';
+		            }
+		           
+		            classListTable.innerHTML=classListCode;
+                    
+                },
+				error: function(error){
+					console.log("error: ", error);
+				}
+			});
+		});
+	</script>
+</body>
+</html>

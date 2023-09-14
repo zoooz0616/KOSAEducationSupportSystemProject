@@ -7,10 +7,11 @@
 </head>
 <head>
 <link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<!-- 서브바 부분 -->
-	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
 	<!-- End 서브바 -->
 
 	<!-- 컨텐츠 부분 -->
@@ -23,68 +24,184 @@
 			<!-- 검색 필터 부분 -->
 			<div class="search_filter_wrap">
 				<!-- 아이콘 삽임 부분 -->
-				<div class="search_filter_icon">
-					<img class="search_filter_icon_img" th:src="@{/img/filter.png}">
-				</div>
+				<!-- 				<div class="search_filter_icon"> -->
+				<!-- 					<img class="search_filter_icon_img" th:src="@{/img/filter.png}"> -->
+				<!-- 				</div> -->
 				<!-- 아이콘 삽임 부분 -->
-			<!-- 검색 필터 테이블 -->
-			<div class="search_filter_table_wrap">
-				<table class="search_filter_table" style="width: 100%;">
-					<tr>
-						<td style="width: 10%;">교육과정명</td>
-						<td style="width: 30%;"><select><option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
-<!-- 						<td><datalist id="search_option"><option th:each="class:${classList}" th:value = "${class.clssNm}"></datalist></td> -->
-						<td style="width: 10%;">상태</td>
-						<td style="width: 50%;"><span th:each="classCodeName:${classCodeNameList}"> <input type="checkbox" checked="checked" value="${classCodeName.cmcdId}"> <label th:text="${classCodeName.cmcdNm}"></label></span></td>
-					</tr>
-					<tr>
-						<td style="width: 5%;">학생 상태</td>
-						<td style="width: 30%;"><span th:each="stdtCodeName:${stdtCodeNameList}"> <input type="checkbox" checked="checked" value="${stdtCodeName.cmcdNm}"> <label th:text="${stdtCodeName.cmcdNm}"></label></span></td>
-						<td style="width: 10%;">기간</td>
-						<td style="width: 55%;"><input type="date"><span>~</span><input type="date"></td>
-					</tr>
-					<tr>
-						
-					</tr>
-				</table>
-			</div>
-				<!-- 검색 버튼 -->
-			</div>
-				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn">검색</button>
+				<!-- 검색 필터 테이블 -->
+				<div class="search_filter_table_wrap">
+					<table class="search_filter_table" style="width: 100%;">
+						<tr>
+							<td style="width: 10%;">교육과정명</td>
+							<td style="width: 30%;"><select id="classId">
+									<option th:each="className:${classNameList}"
+										th:text="${className.clssNm}" th:value="${className.clssId}"></option>
+							</select></td>
+							<td style="width: 10%;">상태</td>
+							<td style="width: 50%;">
+								<!--리스트 전체선택 1 --> <span> <input type="checkbox"
+									checked="checked" id="chkAll1" name="chk1"> <label>전체</label>
+							</span> <span th:each="classCodeName:${classCodeNameList}"> <input
+									type="checkbox" checked="checked"
+									th:value="${classCodeName.cmcdId}" name="chk1"> <label
+									th:text="${classCodeName.cmcdNm}"></label>
+							</span>
+							</td>
+							<!-- regexp로 접근 -->
+						</tr>
+						<tr>
+							<td style="width: 5%;">학생 상태</td>
+							<td style="width: 30%;">
+								<!--리스트 전체선택 2 --> <span> <input type="checkbox"
+									checked="checked" id="chkAll2" name="chk"> <label>전체</label>
+							</span> <span th:each="stdtCodeName:${stdtCodeNameList}"> <input
+									type="checkbox" checked="checked"
+									th:value="${stdtCodeName.cmcdNm}" name="chk2"> <label
+									th:text="${stdtCodeName.cmcdNm}"></label>
+							</span>
+							</td>
+							<!-- regexp로 접근 -->
+							<td style="width: 10%;">기간</td>
+							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input
+								type="date" id="endDate"></td>
+						</tr>
+
+					</table>
+					<!-- 검색 버튼 -->
 				</div>
-				<!-- End 검색 버튼 -->
-				<span th:text="|${stdtCnt} 명|"></span> <span th:each="cmptCodeName:${cmptCodeNameList}"><button th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}"></button></span>
-				<table>
-					<tr>
-						<th><input type="checkbox"></th>
-						<th>번호</th>
-						<th>이름</th>
-						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
-						<th>성별</th>
-						<th>생년월일</th>
-						<th>이메일</th>
-						<th>연락처</th>
-						<th>이수여부</th>
-					</tr>
-					<tr th:each="stdt:${stdtList}">
-						<td><input type="checkbox"></td>
-						<td th:text="${stdtStat.count}"></td>
-						<td th:text="${stdt.stdtNm}"></td>
-						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
-<!-- 						<td th:text="${stdt.countLateArrive}"></td> -->
-<!-- 						<td th:text="${stdt.countLateArrive}"></td> -->
-<!-- 						<td th:text="${stdt.countLateArrive}"></td> -->
-						<td th:text="${stdt.genderCd}">성별</td>
-						<td th:text="${stdt.birthDd}">생년월일</td>
-						<td th:text="${stdt.userEmail}">이메일</td>
-						<td th:text="${stdt.stdtTel}">연락처</td>
-						<td th:text="${stdt.jobCd}">이수여부</td>
-					</tr>
-				</table>
+				<div class="search_filter_btn_wrap">
+					<button class="search_filter_btn" th:id="searchButton"
+						onclick="search()">검색</button>
+				</div>
+			</div>
+			<!-- End 검색 버튼 -->
+			<span th:text="${stdtCnt}" id="stdtCnt"></span><span>명</span>
+			<span th:each="cmptCodeName:${cmptCodeNameList}">
+				<button th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}"></button>
+			</span>
+			<table id="stdt_list_table">
+				<tr>
+					<th><input type="checkbox" id="chkAllStdt"></th>
+					<th>번호</th>
+					<th>이름</th>
+					<th th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${wlogCodeName.cmcdNm}"></th>
+					<th>성별</th>
+					<th>생년월일</th>
+					<th>이메일</th>
+					<th>연락처</th>
+					<th>이수여부</th>
+				</tr>
+				<tr th:each="stdt:${stdtList}" id="stdt_list_row">
+					<td><input type="checkbox" id="chkStdt"></td>
+					<td th:text="${stdtStat.count}"></td>
+					<td th:text="${stdt.stdtNm}"></td>
+					<td th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+					<td th:text="${stdt.genderCd}">성별</td>
+					<td th:text="${stdt.birthDd}">생년월일</td>
+					<td th:text="${stdt.userEmail}">이메일</td>
+					<td
+						th:text="|${#strings.substring(stdt.stdtTel,0,3)}-${#strings.substring(stdt.stdtTel,3,7)}-${#strings.substring(stdt.stdtTel,7,)}|">연락처</td>
+					<td th:text="${stdt.jobCd}">이수여부</td>
+				</tr>
+			</table>
 			<!-- End 검색 필터 부분 -->
 		</div>
 	</div>
+
+	<script>
+	//리스트 전체선택1
+	const chkAll1 = document.querySelector("#chkAll1");
+	chkAll1.addEventListener("change", () => {
+		const chkList1 = document.getElementsByName("chk1");
+		for(chk1 of chkList1){
+			chk1.checked = chkAll1.checked;
+		}
+	});
 	
+	//리스트 전체선택2
+	const chkAll2 = document.querySelector("#chkAll2");
+	chkAll2.addEventListener("change", () => {
+		const chkList2 = document.getElementsByName("chk2");
+		for(chk2 of chkList2){
+			chk2.checked = chkAll2.checked;
+		}
+	});
+	
+	function search() {
+		var classId=document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
+		var startDate = document.getElementById("startDate").value;
+		var endDate = document.getElementById("endDate").value;
+		var date = new Date();
+		var year = date.getFullYear();
+	 	function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
+	 	function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var lastDay = new Date(year,month, 0).getDate();return year + "-" + month + "-" + lastDay;}
+	 	if(startDate==''){startDate=getFirstDay();}
+	 	if(endDate==''){endDate=getLastDay();}
+	 	
+		$.ajax({
+			type:'get',
+			url:'/manager/student/search', // 서버의 엔드포인트 URL
+// 			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
+			data: {
+				classId:classId
+ 				, startDate:startDate
+ 				, endDate:endDate
+			},
+			async:false,
+			success: function(stdtListResponse) {
+				//테이블의 모든 내용을 삭제
+				var stdtListTable = document.getElementById('stdt_list_table');
+				$('#stdt_list_table tr td').remove();
+
+				var stdtList = stdtListResponse.stdtList;
+				document.getElementById("stdtCnt").innerHTML=stdtList.length;
+
+				for(let i = 0; i < stdtList.length; i++){
+					var newRow = document.createElement('tr');
+					var rowNum = document.createElement('td');
+					rowNum.innerHTML=i+1;
+					var rowName = document.createElement('td');
+					rowName.innerHTML=stdtList[i].stdtNm;
+					var rowWlog = document.createElement('td');
+					$.ajax({
+						type:'get',
+						url:'/manager/student/search/codename',
+						async:false,
+						success: function(wlogResponse) {
+						wlogCodeNameList = wlogResponse.wlogCodeList;
+						for (let j = 0; j < wlogCodeNameList.length; j++) {
+						}
+						},error: function(error){console.log("error: ", error);}
+					})
+					var rowGender = document.createElement('td');
+					rowGender.innerHTML=stdtList[i].genderCd;
+					var rowBirth = document.createElement('td');
+					rowBirth.innerHTML=stdtList[i].birthDd;
+					var rowEmail = document.createElement('td');
+					rowEmail.innerHTML=stdtList[i].userEmail;
+					var rowTel = document.createElement('td');
+					rowTel.innerHTML=stdtList[i].stdtTel;
+					var rowJob = document.createElement('td');
+					rowJob.innerHTML=stdtList[i].jobCd;
+					newRow.appendChild(rowNum);
+					newRow.appendChild(rowName);
+					newRow.appendChild(rowGender);
+					newRow.appendChild(rowBirth);
+					newRow.appendChild(rowEmail);
+					newRow.appendChild(rowTel);
+					newRow.appendChild(rowJob);
+					stdtListTable.appendChild(newRow);
+				}
+				$('#stdt_list_table').appendChild(stdtTableBody);
+			},error: function(error){
+				console.log("error: ", error);
+			}
+		})
+	}
+
+</script>
+
 </body>
 </html>

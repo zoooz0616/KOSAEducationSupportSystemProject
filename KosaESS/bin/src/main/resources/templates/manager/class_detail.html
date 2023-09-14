@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Manager Class Detail</title>
+<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
+</head>
+<head>
+<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title" th:text="${title}">Title</div>
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<!-- 검색 필터 부분 -->
+			<div class="search_filter_wrap"></div>
+			<table>
+				<tr>
+					<th>이름</th>
+					<th>지원 기간</th>
+					<th>교육 기간</th>
+					<th>교육 장소</th>
+					<th>교육 상태</th>
+					<th>시작 시간</th>
+					<th>종료 시간</th>
+					<th>수강 정원</th>
+					<th>업무담당자</th>
+				</tr>
+				<tr>
+					<td th:text="${clss.clssNm}"></td>
+					<td th:text="|${#dates.format(clss.aplyStartDt, 'yyyy-MM-dd')}  ~ ${#dates.format(clss.aplyEndDt, 'yyyy-MM-dd')}|"></td>
+					<td th:text="${clss.clssAdr}"></td>
+					<td th:text="${clss.clssCd}"></td>
+					<td th:text="${#dates.format(clss.setInTm, 'HH:mm')}"></td>
+					<td th:text="${#dates.format(clss.setOutTm, 'HH:mm')}"></td>
+					<td><a th:text ="${clss.rgstCnt}" th:href="@{/manager/student-list/__${clss.clssId}__}"></a><span th:text="| / ${clss.limitCnt}|"></span></td><!--req_param 추가할것 -->
+					<td th:text="${clss.mngrId}"></td>
+				</tr>
+			</table>
+			<div th:each="item:${NonImageFileInfoList}">
+				<a th:href="@{/manager/__${clss.fileId}__/__${item.fileSubId}__}" th:text="${item.fileNm}"></a>				
+			</div>
+			<div th:each="item:${imageFileSubIdList}">
+				<img th:src="@{/manager/__${clss.fileId}__/__${item}__}">
+			</div>
+
+			<div th:utext="${clss.clssContent}"></div>
+			<a th:href="@{/manager/class}" th:text="목록">
+			</a>
+		</div>
+	</div>
+</body>
+</html>

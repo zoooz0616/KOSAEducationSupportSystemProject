@@ -4,7 +4,6 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	justify-content: space-between;
 }
 
 ul {
@@ -18,14 +17,17 @@ ul {
 	padding: 0px 5%;
 	align-items: center;
 	justify-content: end;
+	margin-bottom: 2%;
 }
-input{
+
+input {
 	padding: 10px;
 	border: 0;
 	font-size: 15px;
 	font-weight: bold;
 	border-radius: 5px;
 }
+
 input::placeholder {
 	color: #0E5881;
 }
@@ -38,20 +40,37 @@ input::placeholder {
 .subsearch {
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 1%;
 }
 
-.gridlist ul {
-	border: solid;
-	padding: 0px 2%;
-	height: 300px;
-	width: 280px;
-	text-align: center;
+tr {
+	display: grid;
+	align-items: center;
+	width: 21%;
+	border: 2px solid #0E5881;
+	padding: 1%;
+	margin-bottom: 3%;
 }
 
-.gridlist img {
+tbody {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+table img {
 	height: 60px;
 	width: 260px;
-	margin: 15% 0px;
+	margin: 5% 0px;
+}
+
+table td {
+	padding: 0.5%;
+	font-size: 12px;
+}
+
+table a {
+	text-align: center;
 }
 
 .classImg {
@@ -70,14 +89,19 @@ input::placeholder {
 	height: 30px;
 }
 
-.aplyBtn {
-	background: #0E5881;
-	padding: 2% 0px;
-	justify-content: center;
-	display: flex;
+.gridlist a {
+	text-decoration: none;
+	color: #0E5881;
 }
 
-.aplyBtn a {
-	text-decoration: none;
+.applyBtn {
+	background: #0E5881;
 	color: white;
+	padding: 10px;
+	margin: 5px 0;
+	border: 0;
+	font-size: 10px;
+	font-weight: bold;
+	border-radius: 10px;
+	display: block;
 }
