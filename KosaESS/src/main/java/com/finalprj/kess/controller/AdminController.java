@@ -813,7 +813,6 @@ public class AdminController {
 			
 			adminService.insertLectureVO(lectureVO);
 			
-			
 			return "success";
 		}
 	}
