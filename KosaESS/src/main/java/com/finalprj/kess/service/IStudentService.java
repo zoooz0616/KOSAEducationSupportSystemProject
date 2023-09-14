@@ -56,5 +56,12 @@ public interface IStudentService {
 
 	String getMaxRegistrationId();
 
+	void updateAplyFile(String aplyId, FileVO fileVO, int maxFileSubId);
+
+	int getmaxSubId(String aplyId);
+
+	void updateAplydt(String aplyId, String stdtId);
+
+
 
 }

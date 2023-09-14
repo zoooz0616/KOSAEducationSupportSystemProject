@@ -66,25 +66,39 @@ $(document).ready(function() {
 	}
 
 	updateTable();
-	$('.applyTable').on('click', '.update', function() {
+	var modal = $('.modal');
+	var applyTable = $('.applyTable');
+
+	applyTable.on('click', '.update', function() {
 		var clickedRow = $(this).closest('tr');
 		var aplyId = clickedRow.find('td:hidden span').text();
+		modal.show();
 
-		$.ajax({
-			type: 'POST',
-			url: '/student/mypage/aplyList/update',
-			data: {
-				aplyCd: 'APL0000002',
-				aplyId: aplyId
-			},
-			success: function() {
-				updateTable(); // 성공한 후 테이블 업데이트
-			}
+		// 모달 내부의 .aplyBtn 버튼 클릭 시
+		modal.on('click', '.aplyBtn', function() {
+			let formData = new FormData();
+			let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+			formData.append("formData", file); // FormData에 파일 추가
+
+			$.ajax({
+				type: 'POST',
+				url: '/student/mypage/uploadFile/' + aplyId,
+				data: formData, // FormData 사용
+				processData: false,
+				contentType: false,
+				success: function() {
+					modal.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
+					alert("지원서를 수정하였습니다.");
+					updateTable(); // 성공한 후 테이블 업데이트
+				}
+			});
 		});
 	});
+	modal.on('click', '.closeModalBtn', function() {
+		modal.hide();
+	});
 
-	// jQuery 이벤트 위임을 사용하여 동적으로 생성된 버튼에 이벤트 리스너를 추가합니다.
-	$('.applyTable').on('click', '.cancel', function() {
+	applyTable.on('click', '.cancel', function() {
 		var clickedRow = $(this).closest('tr');
 		var aplyId = clickedRow.find('td:hidden span').text();
 
@@ -96,13 +110,15 @@ $(document).ready(function() {
 				aplyId: aplyId
 			},
 			success: function() {
+				alert("지원을 취소하셨습니다.");
 				updateTable(); // 성공한 후 테이블 업데이트
 			}
 		});
 	});
 
 
-	$('.applyTable').on('click', '.apply', function() {
+
+	applyTable.on('click', '.apply', function() {
 		var clickedRow = $(this).closest('tr');
 		var aplyId = clickedRow.find('td:hidden span').text();
 
@@ -121,6 +137,7 @@ $(document).ready(function() {
 						aplyId: aplyId
 					},
 					success: function() {
+						alert("수강이 확정되었습니다.");
 						updateTable();
 					}
 				});
@@ -128,7 +145,7 @@ $(document).ready(function() {
 		});
 	});
 
-	$('.applyTable').on('click', '.drop', function() {
+	applyTable.on('click', '.drop', function() {
 		var clickedRow = $(this).closest('tr');
 		var aplyId = clickedRow.find('td:hidden span').text();
 
@@ -140,8 +157,12 @@ $(document).ready(function() {
 				aplyId: aplyId
 			},
 			success: function() {
+				alert("수강을 포기하셨습니다.");
 				updateTable(); // 성공한 후 테이블 업데이트
 			}
 		});
 	});
 });
+
+
+

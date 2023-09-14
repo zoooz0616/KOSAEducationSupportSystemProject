@@ -334,13 +334,13 @@ public class StudentController {
 
 	@PostMapping("/mypage/aplyList/update")
 	@ResponseBody
-	public void updateaply(@RequestParam("aplyCd") String aplyCd, @RequestParam("aplyId") String aplyId,
+	public void updateAply(@RequestParam("aplyCd") String aplyCd, @RequestParam("aplyId") String aplyId,
 			HttpSession session) {
 		/* String stdtId = (String) session.getAttribute("stdtId"); */
 		studentService.updateaply(aplyCd, aplyId);
 	}
-	
-	// 마이페이지 수강내역 추가 
+
+	// 마이페이지 수강내역 추가
 	/**
 	 * @author : dabin
 	 * @date : 2023. 9 .13
@@ -350,12 +350,37 @@ public class StudentController {
 
 	@PostMapping("/insert/rgstList")
 	@ResponseBody
-	public void insertRgst(@RequestParam("aplyId") String aplyId,
-			HttpSession session) {
-		
+	public void insertRgst(@RequestParam("aplyId") String aplyId, HttpSession session) {
+
 		String maxRgstId = studentService.getMaxRegistrationId();
 		String stdtId = (String) session.getAttribute("stdtId");
 		studentService.insertRgst(aplyId, maxRgstId, stdtId);
 	}
 
+	// 마이페이지 수강내역 업데이트
+	/**
+	 * @author : dabin
+	 * @return 
+	 * @date : 2023. 9. 14
+	 * @parameter :model
+	 * @throws IOException
+	 */
+
+	@PostMapping("/mypage/uploadFile/{aplyId}")
+	public String updateAplyFile(@PathVariable String aplyId, @RequestParam("formData") MultipartFile file,HttpSession session)
+			throws IOException {
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		int maxFileSubId = studentService.getmaxSubId(aplyId);
+
+		FileVO fileVO = new FileVO();
+		fileVO.setFileNm(file.getOriginalFilename());
+		fileVO.setFileSize(file.getSize());
+		fileVO.setFileType(file.getContentType());
+		fileVO.setFileContent(file.getBytes());
+		studentService.updateAplyFile(aplyId, fileVO, maxFileSubId);
+		studentService.updateAplydt(aplyId, stdtId);
+		
+		return "redirect:/student/mypage";
+	}
 }

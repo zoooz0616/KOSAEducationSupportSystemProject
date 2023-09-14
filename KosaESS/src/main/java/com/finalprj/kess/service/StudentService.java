@@ -125,5 +125,20 @@ public class StudentService implements IStudentService {
 		return studentRepository.getMaxRegistrationId();
 	}
 
+	@Override
+	public void updateAplyFile(String aplyId, FileVO fileVO, int maxFileSubId) {
+		studentRepository.updateAplyFile(aplyId, fileVO, maxFileSubId);
+	}
+
+	@Override
+	public int getmaxSubId(String aplyId) {
+		return studentRepository.getmaxSubId(aplyId);
+	}
+
+	@Override
+	public void updateAplydt(String aplyId, String stdtId) {
+		studentRepository.updateAplydt(aplyId, stdtId);
+	}
+
 
 }

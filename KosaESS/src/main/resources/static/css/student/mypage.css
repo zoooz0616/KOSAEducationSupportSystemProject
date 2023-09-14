@@ -1,13 +1,90 @@
-.maincontent{
-	width:73%;
-	padding:0 5%;
+.maincontent {
+	width: 73%;
+	padding: 0 5%;
 }
 
-.maincontent > div{
-	width:100%;
+.maincontent>div {
+	width: 100%;
 }
 
-
-.applyList button{
+.applyList button {
 	
+}
+
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.show {
+	display: block;
+}
+
+.modalBody {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	height: 600px;
+	text-align: center;
+	background-color: rgb(255, 255, 255);
+	border-radius: 10px;
+	box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+	transform: translateX(-50%) translateY(-50%);
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modalHeader {
+	display: flex;
+	padding: 7%;
+	justify-content: center;
+	background-color: #E7EFF3;
+}
+.upload-area {
+	margin: 5% auto;
+	border: none;
+	padding: 20% 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: white;
+	color: darkgray;
+	border-style: dashed;
+	border-color: black;
+	font-size: 18px;
+	width: 90%;
+}
+
+.modal-footer {
+	padding: 2%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.aplyBtn, .closeModalBtn {
+	padding: 3% 7%;
+	font-weight: 500;
+	border-radius: 10px;
+	color: #FFF;
+	background-color: #0E5881;
+	margin: 0 2%;
+}
+
+#file-upload-button {
+	padding: 3% 7%;
+	font-weight: 500;
+	border-radius: 10px;
+	color: #FFF;
+	background-color: #0E5881;
+	margin: 0 2%;
+}
+
+#fileInput {
+	color: black;
+	padding: 2% 0;
 }

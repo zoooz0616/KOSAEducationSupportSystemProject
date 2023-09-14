@@ -83,10 +83,6 @@ ul {
 	background-color: rgba(0, 0, 0, 0.4);
 }
 
-.modal.show {
-	display: block;
-}
-
 .modalBody {
 	position: absolute;
 	top: 50%;
@@ -121,12 +117,6 @@ ul {
 	border-color: black;
 	font-size: 18px;
 	width: 90%;
-}
-
-.upload-area-title {
-	margin-top: 1rem;
-	display: block;
-	font-weight: 700;
 }
 
 .modal-footer {
