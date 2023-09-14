@@ -6,6 +6,14 @@
 </head>
 <head>
 <link th:href="@{/css/admin/class_list.css}" rel="stylesheet">
+<link href="/css/datepicker.css" rel="stylesheet" type="text/css"
+	media="all">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Air datepicker css -->
+<script src="/js/datepicker.js"></script>
+<!-- Air datepicker js -->
+<script src="/js/datepicker.ko.js"></script>
+<!-- 달력 한글 추가를 위해 커스텀 -->
 <script>
 		$(document).ready(function(){
 			$('#class_name').on('input', function() {
@@ -78,9 +86,10 @@
 				<div class="filter_box">
 					<div class="filter_box_title">지원기간</div>
 					<div>
-						<input class="search_input" id="aply_start_dt" type="date">
-						<span> ~ </span> <input class="search_input" id="aply_end_dt"
-							type="date">
+						<input id="aply_start_dt" class="search_input" type="text"
+							placeholder="연도-월-일" style="width:100px;"> <span> ~ </span> <input
+							id="aply_end_dt" class="search_input" type="text"
+							placeholder="연도-월-일" style="width:100px;">
 					</div>
 				</div>
 
@@ -88,9 +97,10 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육기간</div>
 					<div>
-						<input class="search_input" id="class_start_dd" type="date">
-						<span> ~ </span> <input class="search_input" id="class_end_dd"
-							type="date">
+						<input id="class_start_dd" class="search_input" type="text"
+							placeholder="연도-월-일" style="width:100px;"> <span> ~ </span> <input
+							id="class_end_dd" class="search_input" type="text"
+							placeholder="연도-월-일" style="width:100px;">
 					</div>
 				</div>
 			</div>
@@ -156,7 +166,8 @@
 							<td><a th:text="${class.clssNm}"
 								th:href="@{/admin/class/__${class.clssId}__}"
 								style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a></td>
-							<td th:text="|${class.aplyStartDt} ~ ${class.aplyEndDt}|"></td>
+							<td th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
+							${#dates.format(class.aplyEndDt, 'yyyy-MM-dd HH:mm')}|"></td>
 							<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
 							<td th:text="${class.clssAdr}">class address</td>
 							<td><a
@@ -259,24 +270,32 @@
 						'<th>프로그램명</th>'+'	<th>지원기간</th>'+
 						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>수강가능인원</th>'+'<th>교육상태</th></tr>';
 						for(var i = 0; i < response.length; i++){
+							
 							// response[i].aplyStartDt에서 날짜를 가져와서 Date 객체로 변환
-							var aplystartDate = new Date(response[i].aplyStartDt);
-							var aplyEndDate = new Date(response[i].aplyEndDt);
-
-							// 원하는 형식에 맞게 날짜와 시간을 문자열로 변환
-							var formattedStartDate = aplystartDate.getFullYear() + '-' +
-							    String(aplystartDate.getMonth() + 1).padStart(2, '0') + '-' +
-							    String(aplystartDate.getDate()).padStart(2, '0') + ' ' +
-							    String(aplystartDate.getHours()).padStart(2, '0') + ':' +
-							    String(aplystartDate.getMinutes()).padStart(2, '0');
-							    
-							var formattedEndDate = aplyEndDate.getFullYear() + '-' +
-							    String(aplyEndDate.getMonth() + 1).padStart(2, '0') + '-' +
-							    String(aplyEndDate.getDate()).padStart(2, '0') + ' ' +
-							    String(aplyEndDate.getHours()).padStart(2, '0') + ':' +
-							    String(aplyEndDate.getMinutes()).padStart(2, '0');
+							var aplyStartDt = response[i].aplyStartDt;
+							var aplyEndDt = response[i].aplyEndDt;
 							
+							var aplystartDate = null;
+							var aplyEndDate= null;
 							
+							if(aplyStartDt != "null"){
+								aplystartDate = new Date(response[i].aplyStartDt);
+								aplyEndDate = new Date(response[i].aplyEndDt);
+								
+								// 원하는 형식에 맞게 날짜와 시간을 문자열로 변환
+								var formattedStartDate = aplystartDate.getFullYear() + '-' +
+								    String(aplystartDate.getMonth() + 1).padStart(2, '0') + '-' +
+								    String(aplystartDate.getDate()).padStart(2, '0') + ' ' +
+								    String(aplystartDate.getHours()).padStart(2, '0') + ':' +
+								    String(aplystartDate.getMinutes()).padStart(2, '0');
+								    
+								var formattedEndDate = aplyEndDate.getFullYear() + '-' +
+								    String(aplyEndDate.getMonth() + 1).padStart(2, '0') + '-' +
+								    String(aplyEndDate.getDate()).padStart(2, '0') + ' ' +
+								    String(aplyEndDate.getHours()).padStart(2, '0') + ':' +
+								    String(aplyEndDate.getMinutes()).padStart(2, '0');
+							}
+													
 		                       classListCode += 
 		                           '<tr id="class_list"><td><input type="checkbox" name="chk" value="'+
 		                              response[i].clssId+'"></td>'+
@@ -315,6 +334,95 @@
 		    const inputSelectElement = document.querySelector(".search_select_input");
 		    inputSelectElement.value="all";
         }
+		
+		
+		/*
+		 * 달력 생성기
+		 * @param sDate 파라미터만 넣으면 1개짜리 달력 생성
+		 * @example   datePickerSet($("#datepicker"));
+		 * @param sDate, 
+		 * @param eDate 2개 넣으면 연결달력 생성되어 서로의 날짜를 넘어가지 않음
+		 * @example   datePickerSet($("#datepicker1"), $("#datepicker2"));
+		 */
+		//시작일과 종료일 input 요소
+		var aplyStartDateInput = $("#aply_start_dt");
+		 var aplyEndDateInput = $("#aply_end_dt");
+		
+		 var classStartDateInput = $("#class_start_dd");
+		 var classEndDateInput = $("#class_end_dd");
+		 
+		 
+		 
+		 
+		 // datepicker 설정
+		 datePickerSet(aplyStartDateInput, aplyEndDateInput, true);
+		 datePickerSet(classStartDateInput, classEndDateInput, true);
+
+		function datePickerSet(sDate, eDate, flag) {
+
+			//시작 ~ 종료 2개 짜리 달력 datepicker	
+			if (!isValidStr(sDate) && !isValidStr(eDate) && sDate.length > 0
+					&& eDate.length > 0) {
+				var sDay = sDate.val();
+				var eDay = eDate.val();
+
+				if (flag && !isValidStr(sDay) && !isValidStr(eDay)) { //처음 입력 날짜 설정, update...			
+					var sdp = sDate.datepicker().data("datepicker");
+					sdp.selectDate(new Date(sDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+
+					var edp = eDate.datepicker().data("datepicker");
+					edp.selectDate(new Date(eDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+				}
+
+				//시작일자 세팅하기 날짜가 없는경우엔 제한을 걸지 않음
+				if (!isValidStr(eDay)) {
+					sDate.datepicker({
+						maxDate : new Date(eDay.replace(/-/g, "/"))
+					});
+				}
+				sDate.datepicker({
+					language : 'ko',
+					autoClose : true,
+					onSelect : function() {
+						datePickerSet(sDate, eDate);
+					}
+				});
+
+				//종료일자 세팅하기 날짜가 없는경우엔 제한을 걸지 않음
+				if (!isValidStr(sDay)) {
+					eDate.datepicker({
+						minDate : new Date(sDay.replace(/-/g, "/"))
+					});
+				}
+				eDate.datepicker({
+					language : 'ko',
+					autoClose : true,
+					onSelect : function() {
+						datePickerSet(sDate, eDate);
+					}
+				});
+
+				//한개짜리 달력 datepicker
+			} else if (!isValidStr(sDate)) {
+				var sDay = sDate.val();
+				if (flag && !isValidStr(sDay)) { //처음 입력 날짜 설정, update...			
+					var sdp = sDate.datepicker().data("datepicker");
+					sdp.selectDate(new Date(sDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+				}
+
+				sDate.datepicker({
+					language : 'ko',
+					autoClose : true
+				});
+			}
+
+			function isValidStr(str) {
+				if (str == null || str == undefined || str == "")
+					return true;
+				else
+					return false;
+			}
+		}
 	</script>
 </body>
 </html>

@@ -17,4 +17,8 @@ public class LectureVO {
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
 	private String deleteYn; //삭제여부
+	
+	private String sbjtNm;
+	private String profNm;
+	
 }

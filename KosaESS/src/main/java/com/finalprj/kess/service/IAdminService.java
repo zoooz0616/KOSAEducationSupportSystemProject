@@ -77,4 +77,7 @@ public interface IAdminService {
 	
 	List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt, Date aplyEndDt,
 			Date classStartDd, Date classEndDd);
+
+	List<ProfessorVO> getProfessorList();
+	List<SubjectVO> getSubjectList();
 }
