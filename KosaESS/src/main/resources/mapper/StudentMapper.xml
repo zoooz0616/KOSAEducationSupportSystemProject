@@ -478,6 +478,7 @@
 	]]>
 	</select>
 
+	<!-- 지원 테이블 파일 수정 -->
 	<insert id="updateAplyFile"
 		parameterType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
@@ -496,6 +497,7 @@
 	]]>
 	</insert>
 	
+	<!-- 지원 수정 날짜 업데이트 -->
 	<insert id="updateAplydt">
 	<![CDATA[
 		update aply
