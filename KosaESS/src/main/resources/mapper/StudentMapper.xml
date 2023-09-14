@@ -192,12 +192,13 @@
 		       substr(clss_adr, 1, 3) as "clssAdr", 
 		       limit_cnt,
 		       clss_cd,
-			   cmcd.cmcd_nm as "clssCdNm",
-		       flup.file_nm as "clssContent" 
+			   cmcd.cmcd_nm,
+		       flup.file_nm 
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 		   LEFT JOIN flup on flup.file_id = cmpy.file_id
+		   WHERE clss.delete_yn= 'N' and clss.clss_cd <> 'CLS0000007'
 		   ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
@@ -217,13 +218,13 @@
 			    substr(clss_adr, 1, 3) as "clssAdr", 
 			    limit_cnt,
 			    clss_cd,
-			    cmcd.cmcd_nm as "clssCdNm",
-			    flup.file_nm as "clssContent" 
+			    cmcd.cmcd_nm,
+			    flup.file_nm 
 			FROM clss
 			JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 			LEFT JOIN flup on flup.file_id = cmpy.file_id
-			WHERE clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') and clss_cd LIKE (#{ingClass} ||'%')
+			WHERE clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') and clss_cd LIKE (#{ingClass} ||'%') and clss.delete_yn= 'N' and clss.clss_cd <> 'CLS0000007'
 			ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
@@ -244,15 +245,31 @@
 			    limit_cnt,
 			    TO_CHAR(set_in_tm, 'HH24') as "setInTime",
     			TO_CHAR(set_out_tm, 'HH24') as "setOutTime",
+    			clss_total_tm,
 			    clss_etc,
 			    clss_cd,
-			    cmpy.cmpy_nm as "cmpyNm",
-			    cmcd.cmcd_nm as "clssCdNm"
+			    mngr.mngr_nm ,
+			    cmpy.cmpy_nm ,
+			    cmcd.cmcd_nm 
 			FROM clss
 			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
+			LEFT JOIN MNGR on mngr.mngr_id = clss.mngr_id
 			LEFT JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
 			WHERE clss.clss_id = #{clssId}
 		]]>
+	</select>
+
+	<!-- 교육지원 커리큘럼 -->
+	<select id="getCurriculumList" parameterType="string"
+		resultType="com.finalprj.kess.dto.CurriculumDetailDTO">
+	<![CDATA[
+		select lctr.lctr_nm, lctr.lctr_tm, sbjt.sbjt_nm, prof.prof_nm
+		from crcl
+        join lctr on lctr.lctr_id = crcl.lctr_id
+        join sbjt on sbjt.sbjt_id = lctr.sbjt_id
+        join prof on prof.prof_id = lctr.prof_id
+        WHERE crcl.clss_id = #{clssId}
+	]]>
 	</select>
 
 
@@ -272,7 +289,7 @@
 		    SELECT file_id
 		    FROM clss
 		    WHERE clss_id = #{clssId}
-		)
+		) and flup.delete_yn= 'N'
 		ORDER BY
 	    CASE
 	        WHEN file_type LIKE 'application%' THEN 0
@@ -291,8 +308,8 @@
 		       clss_nm,
 		       clss.cmpy_id,
 		       clss_cd,
-			   cmcd.cmcd_nm as "clssCdNm",
-		   		flup.file_nm as "clssContent" 
+			   cmcd.cmcd_nm,
+		   		flup.file_nm
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -391,5 +408,104 @@
 	]]>
 	</select>
 
+	<!-- 지원내역 조회 -->
+	<select id="searchAplyList" parameterType="string"
+		resultType="com.finalprj.kess.dto.ApplyDetailDTO">
+	<![CDATA[
+		select 
+			aply_id,
+			clss_nm,
+			aply_cd,
+			aply_end_dt,
+			aply_start_dt as "aplyStartDd",
+			aply_end_dt as "aplyEndDd",
+			clss_start_dd,
+			clss_end_dd,
+			limit_cnt,
+			aply_cd,
+			cmcd.cmcd_nm,
+			aply.rgst_dt as "rgstDd",
+			aply.updt_dt as "updtDd"
+			FROM aply
+			JOIN cmcd on cmcd.cmcd_id = aply.aply_cd
+			JOIN clss on clss.clss_id = aply.clss_id
+			WHERE stdt_id=#{stdtId}
+			ORDER BY aply.rgst_dt DESC
+	]]>
+	</select>
+
+	<!-- 마이페이지 지원상태 수정 -->
+	<update id="updateaply"
+		parameterType="com.finalprj.kess.model.ApplyVO">
+	<![CDATA[
+		update aply
+		set 
+			aply_cd = #{aplyCd}
+		where aply_id=#{aplyId}
+	]]>
+	</update>
+
+	<!-- 수강 테이블 RegistrationId MAX값 가져오기 -->
+	<select id="getMaxRegistrationId" resultType="string">
+	<![CDATA[
+		select 'RGST'||LPAD((max(cast(substr(rgst_id,5) as number(6)))+1),6,'0')
+		from rgst
+	]]>
+	</select>
+
+
+	<!-- 마이페이지 수강내역 추가 -->
+	<insert id="insertRgst"
+		parameterType="com.finalprj.kess.model.RegistrationVO">
+		<![CDATA[
+		INSERT into rgst
+		values(#{maxRgstId}, #{stdtId}, (select
+            clss_id
+           from aply
+       where aply_id = #{aplyId}), 'RST0000001', 'CMP0000001',null,systimestamp, #{stdtId}, null, null)
+        
+		]]>
+	</insert>
+
+	<!-- 지원 테이블 fileSubId MAX값 가져오기 -->
+	<select id="getmaxSubId" resultType="int">
+	<![CDATA[
+		select LPAD(max (FILE_SUB_ID), 1, '0')
+		from flup
+		where file_id = (select file_id
+							from aply
+							where aply_id =#{aplyId})
+	]]>
+	</select>
+
+	<!-- 지원 테이블 파일 수정 -->
+	<insert id="updateAplyFile"
+		parameterType="com.finalprj.kess.model.FileVO">
+	<![CDATA[
+		update flup
+		set 
+		file_sub_id = #{maxFileSubId},
+		file_nm = #{fileVO.fileNm},
+		file_content = #{fileVO.fileContent},
+		file_size = #{fileVO.fileSize},
+		file_type = #{fileVO.fileType}
+		where file_id=
+			(select file_id
+			from aply
+			where aply_id = #{aplyId}	
+			)	
+	]]>
+	</insert>
+	
+	<!-- 지원 수정 날짜 업데이트 -->
+	<insert id="updateAplydt">
+	<![CDATA[
+		update aply
+		set 
+			updter_id = #{stdtId},
+			updt_dt = systimestamp
+		where aply_id = #{aplyId}	
+	]]>
+	</insert>
 
 </mapper>

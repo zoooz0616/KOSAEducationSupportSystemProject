@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>main page</title>
@@ -32,7 +33,7 @@
 		</div>
 		<div class="maincontent">
 			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				style="margin-bottom: 4%; text-align: center;padding: 3%;">
 				<div th:if="${session.userEmail==null}">
 					<h2>회원가입후 이용가능</h2>
 				</div>
@@ -58,7 +59,7 @@
 				</div>
 			</div>
 			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				style="margin-bottom: 4%; text-align: center; padding: 3%;">
 				<div th:if="${session.userEmail==null}">
 					<form th:action="@{/login}" method="post" class="">
 						<div class="">
@@ -109,7 +110,7 @@
 							th:href="@{/student/class/__${classVO.clssId}__}"
 							th:text="${classVO.clssNm}"></a></td>
 						<td style="width: 30%; text-align: right;"
-							th:utext="${classVO.aplyStartDd} + '~ ' +  ${classVO.aplyEndDd}"></td>
+							th:text="${classVO.aplyStartDd} +' ~ '+ ${classVO.aplyEndDd}"></td>
 					</tr>
 				</table>
 			</div>
@@ -130,6 +131,8 @@
 			</div>
 		</div>
 	</div>
+	<div th:replace="~{/include/student_footer :: footer}"
+		style="width: 100%;"></div>
 </body>
 <script src="/js/student/main.js"></script>
 </html>
