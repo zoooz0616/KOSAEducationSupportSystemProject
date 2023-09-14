@@ -483,17 +483,17 @@
 		parameterType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
 		update flup
-		set 
-		file_sub_id = #{maxFileSubId},
-		file_nm = #{fileVO.fileNm},
-		file_content = #{fileVO.fileContent},
-		file_size = #{fileVO.fileSize},
-		file_type = #{fileVO.fileType}
-		where file_id=
-			(select file_id
-			from aply
-			where aply_id = #{aplyId}	
-			)	
+			set 
+			file_sub_id = #{maxFileSubId},
+			file_nm = #{fileVO.fileNm},
+			file_content = #{fileVO.fileContent},
+			file_size = #{fileVO.fileSize},
+			file_type = #{fileVO.fileType}
+			where file_id=
+				(select file_id
+				from aply
+				where aply_id = #{aplyId}	
+				)	
 	]]>
 	</insert>
 	
