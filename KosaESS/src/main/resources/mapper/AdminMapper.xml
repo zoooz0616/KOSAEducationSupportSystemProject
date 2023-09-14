@@ -155,28 +155,12 @@
 	<![CDATA[
 		select *
 		from lctr
-		where delete_yn = 'N'
+		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
+		join prof on prof.prof_id = lctr.prof_id
+		where lctr.delete_yn = 'N'
 	]]>
 	</select>
-
-	<select id="getSubjectList"
-		resultType="com.finalprj.kess.model.SubjectVO">
-	<![CDATA[
-		select *
-		from sbjt
-		where delete_yn = 'N'
-	]]>
-	</select>
-
-	<select id="getProfessorList"
-		resultType="com.finalprj.kess.model.ProfessorVO">
-	<![CDATA[
-		select *
-		from prof
-		where delete_yn = 'N'
-	]]>
-	</select>
-
+	
 	<select id="getSubject"
 		resultType="com.finalprj.kess.model.SubjectVO" parameterType="string">
 	<![CDATA[
@@ -399,11 +383,23 @@
 	]]>
 	</select>
 
+	<select id="getProfessorList" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+		select *
+		from prof
+		where delete_yn = 'N'
+	]]>
+	</select>
 
-
-
-
-
+	<select id="getSubjectList"
+		resultType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+		select *
+		from sbjt
+		where delete_yn = 'N'
+	]]>
+	</select>
+	
 
 
 

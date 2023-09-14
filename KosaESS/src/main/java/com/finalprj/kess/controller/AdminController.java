@@ -1,6 +1,5 @@
 package com.finalprj.kess.controller;
 
-import java.net.http.HttpRequest;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -39,8 +38,6 @@ import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
-import com.finalprj.kess.repository.IUploadFileRepository;
-import com.finalprj.kess.service.AdminService;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -665,19 +662,37 @@ public class AdminController {
 
 	@RequestMapping("/professor")
 	public String professor(HttpSession session, Model model) {
-		//로그인 정보 저장
-		session.setAttribute("role", "admin");
-		session.setAttribute("id", "admin");
-
-		//title
-		String title = "강사 관리";
-		model.addAttribute("title", title);
-
 		//강사 리스트 객체 생성
-		//List<ProfessorVO> professorList = adminService.getProfessorList();
-		//model.addAttribute("professorList", professorList);
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+		model.addAttribute("professorList", professorList);
 
-		return "manager_professor_list";
+		return "admin/professor_list";
+	}
+
+	@RequestMapping("/subject")
+	public String subject(HttpSession session, Model model) {
+		//강사 리스트 객체 생성
+		List<SubjectVO> subjectList = adminService.getSubjectList();
+		model.addAttribute("subjectList", subjectList);
+
+		return "admin/subject_list";
+	}
+
+	@RequestMapping("/lecture")
+	public String lecture(HttpSession session, Model model) {
+		//강사 리스트  생성
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+		model.addAttribute("professorList", professorList);
+		
+		//과목 리스트 생성
+		List<SubjectVO> subjectList = adminService.getSubjectList();
+		model.addAttribute("subjectList", subjectList);
+		
+		//강의 리스트 생성
+		List<LectureVO> lectureList = adminService.getLectureList();
+		model.addAttribute("lectureList", lectureList);
+
+		return "admin/lecture_list";
 	}
 
 	@RequestMapping("/manager")
@@ -722,7 +737,7 @@ public class AdminController {
 
 		//교육과정 상태는 list<string>으로 전달하기(1개 혹은 전체)
 		List<String> statusList = new ArrayList<>();
-		
+
 		if(status.equals("all")) {
 			//교육상태 전체값을 리스트에 넣어 전달
 			List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");

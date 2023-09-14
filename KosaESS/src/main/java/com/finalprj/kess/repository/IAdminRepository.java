@@ -23,17 +23,11 @@ import com.finalprj.kess.model.SubjectVO;
 @Repository
 @Mapper
 public interface IAdminRepository {
-
-	
 	int getWaitClassCnt();
 	List<PostVO> getPostVOList(String postValue);
 	List<String> getClassSearch(String term);
 	
 
-
-	
-	
-	
 	int getNoticeCnt();
 	int getInquiryCnt();
 	int getCompanyCnt();
@@ -82,5 +76,8 @@ public interface IAdminRepository {
             @Param("aplyEndDt") Date aplyEndDt,
             @Param("classStartDd") Date classStartDd,
             @Param("classEndDd") Date classEndDd);
+	
+	List<ProfessorVO> getProfessorList();
+	List<SubjectVO> getSubjectList();
 
 }
