@@ -80,7 +80,8 @@
 				<button th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}"></button>
 			</span>
 			<table id="stdt_list_table">
-				<tr>
+			<thead>
+				<tr id="stdt_list_table_head">
 					<th><input type="checkbox" id="chkAllStdt"></th>
 					<th>번호</th>
 					<th>이름</th>
@@ -92,7 +93,9 @@
 					<th>연락처</th>
 					<th>이수여부</th>
 				</tr>
-				<tr th:each="stdt:${stdtList}" id="stdt_list_row">
+				</thead>
+				<tbody id="stdt_list_table_tbody">
+				<tr th:each="stdt:${stdtList}" id="stdt_list_table_row">
 					<td><input type="checkbox" id="chkStdt"></td>
 					<td th:text="${stdtStat.count}"></td>
 					<td th:text="${stdt.stdtNm}"></td>
@@ -101,10 +104,10 @@
 					<td th:text="${stdt.genderCd}">성별</td>
 					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:text="${stdt.userEmail}">이메일</td>
-					<td
-						th:text="|${#strings.substring(stdt.stdtTel,0,3)}-${#strings.substring(stdt.stdtTel,3,7)}-${#strings.substring(stdt.stdtTel,7,)}|">연락처</td>
+					<td th:text="${stdt.stdtTel}">연락처</td>
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
+				</tbody>
 			</table>
 			<!-- End 검색 필터 부분 -->
 		</div>
@@ -152,19 +155,39 @@
 			async:false,
 			success: function(stdtListResponse) {
 				//테이블의 모든 내용을 삭제
-				var stdtListTable = document.getElementById('stdt_list_table');
-				$('#stdt_list_table tr td').remove();
+				var stdtListTable = document.getElementById('stdt_list_table_tbody');
+// 				$('#stdt_list_table_tbody').remove();
+				while (stdtListTable.firstChild) {
+					stdtListTable.removeChild(stdtListTable.firstChild);
+				}
+// 				stdtListTable.empty();
+				
+				console.log(stdtListTable);
+				
+				console.log("asdasdadasadasdasdasdadsasd");
 
 				var stdtList = stdtListResponse.stdtList;
 				document.getElementById("stdtCnt").innerHTML=stdtList.length;
 
 				for(let i = 0; i < stdtList.length; i++){
-					var newRow = document.createElement('tr');
+// 					var newRow = $('<tr>');
+					var newRow = document.createElement("tr");
+					newRow.id="stdt_list_table_row";
+					
+					var rowChk = document.createElement('td');
+					var inputChk = document.createElement('input');
+					inputChk.id = 'chkStdt';
+					inputChk.type = 'checkBox';
+					rowChk.appendChild(inputChk);
+					newRow.appendChild(rowChk);
+					
 					var rowNum = document.createElement('td');
 					rowNum.innerHTML=i+1;
+					newRow.appendChild(rowNum);
+					
 					var rowName = document.createElement('td');
 					rowName.innerHTML=stdtList[i].stdtNm;
-					var rowWlog = document.createElement('td');
+					newRow.appendChild(rowName);
 					$.ajax({
 						type:'get',
 						url:'/manager/student/search/codename',
@@ -172,6 +195,9 @@
 						success: function(wlogResponse) {
 						wlogCodeNameList = wlogResponse.wlogCodeList;
 						for (let j = 0; j < wlogCodeNameList.length; j++) {
+							var rowWlog = document.createElement('td');
+							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
+							newRow.appendChild(rowWlog);
 						}
 						},error: function(error){console.log("error: ", error);}
 					})
@@ -185,16 +211,22 @@
 					rowTel.innerHTML=stdtList[i].stdtTel;
 					var rowJob = document.createElement('td');
 					rowJob.innerHTML=stdtList[i].jobCd;
-					newRow.appendChild(rowNum);
-					newRow.appendChild(rowName);
+					
 					newRow.appendChild(rowGender);
 					newRow.appendChild(rowBirth);
 					newRow.appendChild(rowEmail);
 					newRow.appendChild(rowTel);
 					newRow.appendChild(rowJob);
-					stdtListTable.appendChild(newRow);
+					
+					console.log(newRow);
+					console.log(stdtListTable);
+					
+// 					stdtListTable.appendChild(newRow);
+					stdtListTable.append(newRow);
+// 					$("#stdt_list_table_tbody").append(newRow);
+// 					stdtListTable.innerHTML=newRow;
 				}
-				$('#stdt_list_table').appendChild(stdtTableBody);
+
 			},error: function(error){
 				console.log("error: ", error);
 			}
