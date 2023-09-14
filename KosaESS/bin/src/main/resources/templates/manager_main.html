@@ -3,66 +3,153 @@
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
 <title>Main</title>
+
 </head>
 <head>
 <link th:href="@{/css/manager_main.css}" rel="stylesheet">
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+
 </head>
 <body>
+
 	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
 	<div class="home-section">
 		<!-- title -->
-		<div class="title" th:text="${title}" >Title</div>
-		
+		<div class="title" th:text="${title}">Title</div>
+
 		<!-- content wrap-->
 		<div class="content_wrap">
-			<!-- box wrap -->
-			<div class="bx_wait_wrap">
-				<!-- for문으로 받은만큼 돌리기 -->
-				<!-- box -->
-				<div class="bx_wait"> 
-					<!-- box sub title -->
-					<div class="bx_wait_sub_title">교육과정 접수중</div>
-					<!-- box content -->
-					<div class="bx_wait_content">
-						<!-- total count -->
-						<div class="total_cnt">
-							<a th:href="@{/admin/class}" ><span class="cnt" th:text="${cntList[0]}">count</span></a>
-							<span class="cnt_txt">건</span>
+			<!-- total content wrap -->
+			<div class="row">
+				<div class="col">
+					<div class="small-box bg-aqua">
+						<div class="inner">
+							<h3>150</h3>
+							<p>공지사항</p>
 						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/notice}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-aqua">
+						<div class="inner">
+							<h3>150</h3>
+							<p>문의사항</p>
+						</div>
+						<div class="icon">
+							<i class="fa-solid fa-user"></i>
+						</div>
+						<a th:href="@{/admin/inquiry}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
+					</div>
+				</div>
+
+				
+
+				<div class="col">
+					<div class="small-box bg-green">
+						<div class="inner">
+							<h3>150</h3>
+							<p>기업</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/company}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
 					</div>
 				</div>
 				
-				<!-- box -->
-				<div class="bx_wait"> 
-					<!-- box sub title -->
-					<div class="bx_wait_sub_title">이수완료 대기중</div>
-					<!-- box content -->
-					<div class="bx_wait_content">
-						<!-- total count -->
-						<div class="total_cnt">
-							<a th:href="@{/admin/class}" ><span class="cnt" th:text="${cntList[1]}">count</span></a>
-							<span class="cnt_txt">건</span>
+				<div class="col">
+					<div class="small-box bg-yellow">
+						<div class="inner">
+							<h3>150</h3>
+							<p>과목</p>
 						</div>
+						<div class="icon">
+							<i class="fa-solid fa-user"></i>
+						</div>
+						<a th:href="@{/admin/subject}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3>150</h3>
+							<p>강사</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/professor}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
 					</div>
 				</div>
 				
-				<!-- box -->
-				<div class="bx_wait"> 
-					<!-- box sub title -->
-					<div class="bx_wait_sub_title">문의답변 대기중</div>
-					<!-- box content -->
-					<div class="bx_wait_content">
-						<!-- total count -->
-						<div class="total_cnt">
-							<a th:href="@{/admin/inquiry}" ><span class="cnt" th:text="${cntList[2]}">count</span></a>
-							<span class="cnt_txt">건</span>
+				<div class="col">
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3>150</h3>
+							<p>업무 담당자</p>
 						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+						<a th:href="@{/admin/manager}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
 					</div>
 				</div>
+
+				<div class="col">
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3>150</h3>
+							<p>교육생</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-bag"></i>
+						</div>
+						<a th:href="@{/admin/student}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="small-box bg-yellow">
+						<div class="inner">
+							<h3>150</h3>
+							<p>교육과정</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+						<a th:href="@{/admin/class}" class="small-box-footer">More info <i
+							class="fa fa-arrow-circle-right"></i></a>
+					</div>
+				</div>
+
 				
-			<!-- End box wrap -->
 			</div>
-		<!-- End content wrap -->
+			<div class="section_wrap">
+				<section class="left_section">
+					<div class="section_content">
+					
+					</div>				
+				</section>
+				<section class="right_section">
+					<div class="section_content">
+					
+					</div>
+				</section>
+			</div>
+
 		</div>
 	</div>
 </body>

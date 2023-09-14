@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Manager Student List</title>
+<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
+</head>
+<head>
+<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title" th:text="|${title} : ${thisClassName}|">Title</div>
+
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<!-- 검색 필터 부분 -->
+			<div class="search_filter_wrap">
+				<!-- 아이콘 삽임 부분 -->
+				<div class="search_filter_icon">
+					<img class="search_filter_icon_img" th:src="@{/img/filter.png}">
+				</div>
+				<!-- 아이콘 삽임 부분 -->
+			<!-- 검색 필터 테이블 -->
+			<div class="search_filter_table_wrap">
+				<table class="search_filter_table" style="width: 100%;">
+					<tr>
+						<td style="width: 10%;">교육과정명</td>
+						<td style="width: 30%;"><select><option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
+<!-- 						<td><datalist id="search_option"><option th:each="class:${classList}" th:value = "${class.clssNm}"></datalist></td> -->
+						<td style="width: 10%;">상태</td>
+						<td style="width: 50%;"><span th:each="classCodeName:${classCodeNameList}"> <input type="checkbox" checked="checked" value="${classCodeName.cmcdId}"> <label th:text="${classCodeName.cmcdNm}"></label></span></td>
+					</tr>
+					<tr>
+						<td style="width: 5%;">학생 상태</td>
+						<td style="width: 30%;"><span th:each="stdtCodeName:${stdtCodeNameList}"> <input type="checkbox" checked="checked" value="${stdtCodeName.cmcdNm}"> <label th:text="${stdtCodeName.cmcdNm}"></label></span></td>
+						<td style="width: 10%;">기간</td>
+						<td style="width: 55%;"><input type="date"><span>~</span><input type="date"></td>
+					</tr>
+					<tr>
+						
+					</tr>
+				</table>
+			</div>
+				<!-- 검색 버튼 -->
+			</div>
+				<div class="search_filter_btn_wrap">
+					<button class="search_filter_btn">검색</button>
+				</div>
+				<!-- End 검색 버튼 -->
+				<span th:text="|${stdtCnt} 명|"></span> <span th:each="cmptCodeName:${cmptCodeNameList}"><button th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}"></button></span>
+				<table>
+					<tr>
+						<th><input type="checkbox"></th>
+						<th>번호</th>
+						<th>이름</th>
+						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
+						<th>성별</th>
+						<th>생년월일</th>
+						<th>이메일</th>
+						<th>연락처</th>
+						<th>이수여부</th>
+					</tr>
+					<tr th:each="stdt:${stdtList}">
+						<td><input type="checkbox"></td>
+						<td th:text="${stdtStat.count}"></td>
+						<td th:text="${stdt.stdtNm}"></td>
+						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
+<!-- 						<td th:text="${stdt.countLateArrive}"></td> -->
+<!-- 						<td th:text="${stdt.countLateArrive}"></td> -->
+<!-- 						<td th:text="${stdt.countLateArrive}"></td> -->
+						<td th:text="${stdt.genderCd}">성별</td>
+						<td th:text="${stdt.birthDd}">생년월일</td>
+						<td th:text="${stdt.userEmail}">이메일</td>
+						<td th:text="${stdt.stdtTel}">연락처</td>
+						<td th:text="${stdt.jobCd}">이수여부</td>
+					</tr>
+				</table>
+			<!-- End 검색 필터 부분 -->
+		</div>
+	</div>
+	
+</body>
+</html>

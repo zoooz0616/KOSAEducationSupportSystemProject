@@ -41,17 +41,15 @@
 					<td th:text="${clss.clssCd}"></td>
 					<td th:text="${clss.setInTm}"></td>
 					<td th:text="${clss.setOutTm}"></td>
-					<td><a th:text ="${clss.rgstCnt}" th:href="@{/manager/student-list/__${clss.clssId}__}"></a><span th:text="| / ${clss.limitCnt}|"></span></td><!--req_param 추가할것 -->
+					<td><a th:text="${clss.rgstCnt}" th:href="@{/manager/student-list?classId=__${clss.clssId}__}"></a><span th:text="|/ ${clss.limitCnt}|"></span></td>
 					<td th:text="${clss.mngrId}"></td>
 				</tr>
 			</table>
 			<div th:each="item:${fileIdList}">
 				<img th:src="@{/manager/fileId/__${item}__}">
 			</div>
-
 			<div th:utext="${clss.clssContent}"></div>
-			<a th:href="@{/manager/class}">
-				<p>목?록</p>
+			<a th:href="@{/manager/class}" th:text="목록">
 			</a>
 		</div>
 	</div>

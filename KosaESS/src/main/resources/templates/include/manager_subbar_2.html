@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Manager MainPage</title>
+</head>
+<body th:fragment="subbar" id="page-top">
+	<div class="sidebar">
+		<div class="logo-details">
+			<i class='bx bxl-c-plus-plus icon'></i>
+			<div class="logo_name">
+				<img class="logo" th:src="@{/img/logo_text.png}">
+			</div>
+			<i class='bx bx-menu' id="btn"><img class="open_icon"
+				th:src="@{/img/open.png}"></i>
+		</div>
+		<ul class="nav-list">
+		
+<!-- 			<li><a th:href="@{/__${session.role}__}"> <i class='bx bx-grid-alt'> <img th:src="@{/img/main_white.png}"> </i> <span class="links_name">메인</span> </a> <span class="tooltip">메인</span></li> -->
+			<li><a th:href="@{/__${session.role}__/class}"> <i class='bx bx-cart-alt'><img th:src="@{/img/class_white.png}"></i> <span class="links_name">교육과정 관리</span> </a> <span class="tooltip">교육과정 관리</span></li>
+			<li><a th:href="@{/__${session.role}__/student}"> <i class='bx bx-heart'><img th:src="@{/img/student_white.png}"></i> <span class="links_name">교육생 관리</span> </a> <span class="tooltip">교육생 관리</span></li>
+			<li><a th:href="@{/__${session.role}__/worklog}"> <i class='bx bx-heart'><img th:src="@{/img/worklog_white.png}"></i> <span class="links_name">출퇴근 관리</span> </a> <span class="tooltip">출퇴근 관리</span></li>
+			<li><a th:href="@{/__${session.role}__/mypage}"> <i class='bx bx-heart'><img th:src="@{/img/mypage_white.png}"></i> <span class="links_name">내 정보 관리</span> </a> <span class="tooltip">내 정보 관리</span></li>
+			
+			<li class="profile">
+				<div class="profile-details">
+					<img th:src="@{/img/manager_navy.png}" alt="profileImg">
+					<div class="name_job">
+						<div class="name" th:text="${session.userEmail}">userEmail</div>
+						<div class="job" th:text="${session.lastLoginDt}">lastLoginDt</div>
+						<div class="logout" >
+							
+						</div>
+					</div>
+					<i class='bx bx-log-out' id="log_out"><a th:href="@{/logout}"><img
+								style="width: 35px; object-fit: contain;margin-top: 5px;" class='bx bx-log-out'
+								id="log_out" th:src="@{/img/logout_white.png}"></a></i>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<script>
+		let sidebar = document.querySelector(".sidebar");
+		let closeBtn = document.querySelector("#btn");
+		closeBtn.addEventListener("click", ()=>{
+			sidebar.classList.toggle("open");
+			menuBtnChange();//calling the function(optional)
+		});
+		// following are the code to change sidebar button(optional)
+		function menuBtnChange() {
+			if(sidebar.classList.contains("open")){
+				closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+			}else {
+				closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+			}
+		}
+
+		//서브바 메뉴 event
+		const listItem = document.querySelectorAll('.nav-list li a');//모든 li안의 있는 a태그
+
+		listItem.forEach(item => {
+			//한 a태그의 자식 img객체를 얻어와야됨.
+			const img = item.querySelector('i img');
+			
+			// 이미지의 원본 소스 및 현재 소스 가져오기
+			const originalSrc = img.getAttribute('src');
+			const currentSrc = img.getAttribute('src');
+			
+			//hover event
+			item.addEventListener('mouseenter', () => {
+				const newSrc = originalSrc.replace('_white', '_navy'); // Assuming you have separate hover images 
+				img.setAttribute('src', newSrc);
+			});
+
+			item.addEventListener('mouseleave', () => {
+				// 클릭한 후에는 현재 상태를 고정
+				if (!currentSrc.includes('_navy')) {
+					img.setAttribute('src', originalSrc);
+				}
+			});
+		});
+		
+	</script>
+</body>
+</html>

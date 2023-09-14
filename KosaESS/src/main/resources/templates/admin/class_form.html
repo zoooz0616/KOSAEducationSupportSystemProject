@@ -492,155 +492,141 @@
 		var lectureCnt = 0;
 		function addLecture() {
 			if (lectureCnt < 4) {
-				$
-						.ajax({
-							url : "/admin/class/insert/getlecturelist", // 컨트롤러 엔드포인트
-							type : "POST",
-							data : {},
-							success : function(response) {
-								//서버에서 받은 응답 파싱하여 객체로 생성
-								var lectureList = response.lectureList;
+				$.ajax({
+					url : "/admin/class/insert/getlecturelist", // 컨트롤러 엔드포인트
+					type : "POST",
+					data : {},
+					success : function(response) {
+						//서버에서 받은 응답 파싱하여 객체로 생성
+						var lectureList = response.lectureList;
+		
+						//tr을 새로 생성하고 안의 내용 복제
+						// 새로운 행을 생성
+						var newRow = document.createElement('tr');
+						newRow.className = 'lecture_row'; // class 설정
+		
+						// 첫 번째 셀 (checkbox) 추가
+						var checkboxCell = document.createElement('td');
+						checkboxCell.innerHTML = '<input type="checkbox">';
+						newRow.appendChild(checkboxCell);
+		
+						// 두 번째 셀 (강의 선택) 추가
+						var lectureCell = document.createElement('td');
+						// 새로운 select 요소 생성
+						var select = document.createElement('select');
+		
+						// 옵션 요소 동적으로 생성
+						var defaultOption = document.createElement('option');
+						defaultOption.value = 'none';
+						defaultOption.text = '=== 강의를 선택하세요. ===';
+						select.appendChild(defaultOption);
+						select.setAttribute("name", "lctrId");
+		
+						for (var i = 0; i < lectureList.length; i++) {
+							var lecture = lectureList[i];
+							var option = document.createElement('option');
+							option.value = lecture.lctrId;
+							option.text = lecture.lctrNm + ' ('+ lecture.lctrTm + ')';
+							select.appendChild(option);
+						}
+		
+						lectureCell.appendChild(select);
+						newRow.appendChild(lectureCell);
+		
+						// 세 번째 셀 (과목명) 추가
+						var subjectCell = document.createElement('td');
+						subjectCell.innerHTML = '<input name="" type="text" value="subjectName" disabled>';
+						newRow.appendChild(subjectCell);
+		
+						// 네 번째 셀 (강사 이름) 추가
+						var professorCell = document
+								.createElement('td');
+						professorCell.innerHTML = '<input name="" type="text" value="professorName" disabled>';
+						newRow.appendChild(professorCell);
+		
+						// 다섯 번째 셀 (hidden lctrTm 갖는 input) 추가
+						var lctrTmCell = document.createElement('td');
+						lctrTmCell.innerHTML = '<input name="" class="lecture_tm" type="hidden" value="0" disabled>';
+						newRow.appendChild(lctrTmCell);
+		
+						select.onchange = function() {
+							var selectedLectureId = this.value;
+		
+							// select 요소의 부모 td 요소 찾기
+							var tdElement = this.parentElement;
+							var thirdTdElement = tdElement.nextElementSibling;
+							var fourthTdElement = thirdTdElement.nextElementSibling;
+							var fifthTdElement = fourthTdElement.nextElementSibling;
+		
+							var thirdInputElement = thirdTdElement.firstElementChild;
+							var fourthInputElement = fourthTdElement.firstElementChild;
+							var fifthInputElement = fifthTdElement.firstElementChild;
+		
+							// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
+							$.ajax({
+								url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
+								type : "POST",
+								data : {
+									lectureId : selectedLectureId
+								}, // 선택한 강의 ID를 전달
+								success : function(response) {
+									//서버에서 받은 응답 파싱하여 객체로 생성
 
-								//tr을 새로 생성하고 안의 내용 복제
-								// 새로운 행을 생성
-								var newRow = document.createElement('tr');
-								newRow.className = 'lecture_row'; // class 설정
+									var subject = response.subject;
+									var professor = response.professor;
+									var lecture = response.lecture;
 
-								// 첫 번째 셀 (checkbox) 추가
-								var checkboxCell = document.createElement('td');
-								checkboxCell.innerHTML = '<input type="checkbox">';
-								newRow.appendChild(checkboxCell);
+									var subjectId = subject.sbjtId;
+									var subjectNm = subject.sbjtNm;
+									var professorId = professor.profId;
+									var professorNm = professor.profNm;
 
-								// 두 번째 셀 (강의 선택) 추가
-								var lectureCell = document.createElement('td');
-								// 새로운 select 요소 생성
-								var select = document.createElement('select');
+									var lctrTm = lecture.lctrTm;
 
-								// 옵션 요소 동적으로 생성
-								var defaultOption = document
-										.createElement('option');
-								defaultOption.value = 'none';
-								defaultOption.text = '=== 강의를 선택하세요. ===';
-								select.appendChild(defaultOption);
-								select.setAttribute("name", "lctrId");
+									// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
+									thirdInputElement.value = subjectNm;
+									thirdInputElement.setAttribute("name",subjectId);
+									fourthInputElement.value = professorNm;
+									fourthInputElement.setAttribute("name",professorId);
 
-								for (var i = 0; i < lectureList.length; i++) {
-									var lecture = lectureList[i];
-									var option = document
-											.createElement('option');
-									option.value = lecture.lctrId;
-									option.text = lecture.lctrNm + ' ('
-											+ lecture.lctrTm + ')';
-									select.appendChild(option);
-								}
+									fifthInputElement.value = lctrTm;
 
-								lectureCell.appendChild(select);
-								newRow.appendChild(lectureCell);
+									//한 row안에 input hidden 애들만 가져와서 더하기
+									classTotalTm = 0;
+									var lctrTmInputList = document.querySelectorAll('.lecture_row input[type="hidden"]');
+									var clssTotalTm = 0; // 초기값 설정
 
-								// 세 번째 셀 (과목명) 추가
-								var subjectCell = document.createElement('td');
-								subjectCell.innerHTML = '<input name="" type="text" value="subjectName" disabled>';
-								newRow.appendChild(subjectCell);
-
-								// 네 번째 셀 (강사 이름) 추가
-								var professorCell = document
-										.createElement('td');
-								professorCell.innerHTML = '<input name="" type="text" value="professorName" disabled>';
-								newRow.appendChild(professorCell);
-
-								// 다섯 번째 셀 (hidden lctrTm 갖는 input) 추가
-								var lctrTmCell = document.createElement('td');
-								lctrTmCell.innerHTML = '<input name="" class="lecture_tm" type="hidden" value="0" disabled>';
-								newRow.appendChild(lctrTmCell);
-
-								select.onchange = function() {
-									var selectedLectureId = this.value;
-
-									// select 요소의 부모 td 요소 찾기
-									var tdElement = this.parentElement;
-									var thirdTdElement = tdElement.nextElementSibling;
-									var fourthTdElement = thirdTdElement.nextElementSibling;
-									var fifthTdElement = fourthTdElement.nextElementSibling;
-
-									var thirdInputElement = thirdTdElement.firstElementChild;
-									var fourthInputElement = fourthTdElement.firstElementChild;
-									var fifthInputElement = fifthTdElement.firstElementChild;
-
-									// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
-									$.ajax({
-												url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
-												type : "POST",
-												data : {
-													lectureId : selectedLectureId
-												}, // 선택한 강의 ID를 전달
-												success : function(response) {
-													//서버에서 받은 응답 파싱하여 객체로 생성
-
-													var subject = response.subject;
-													var professor = response.professor;
-													var lecture = response.lecture;
-
-													var subjectId = subject.sbjtId;
-													var subjectNm = subject.sbjtNm;
-													var professorId = professor.profId;
-													var professorNm = professor.profNm;
-
-													var lctrTm = lecture.lctrTm;
-
-													// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
-													thirdInputElement.value = subjectNm;
-													thirdInputElement
-															.setAttribute(
-																	"name",
-																	subjectId);
-													fourthInputElement.value = professorNm;
-													fourthInputElement
-															.setAttribute(
-																	"name",
-																	professorId);
-
-													fifthInputElement.value = lctrTm;
-
-													//한 row안에 input hidden 애들만 가져와서 더하기
-													classTotalTm = 0;
-													var lctrTmInputList = document
-															.querySelectorAll('.lecture_row input[type="hidden"]');
-													var clssTotalTm = 0; // 초기값 설정
-
-													lctrTmInputList
-															.forEach(function(
-																	lctrTmInput) {
-																var lctrTmValue = parseInt(lctrTmInput.value); // 문자열을 정수로 변환
-																clssTotalTm += lctrTmValue;
-															});
-
-													console.log('총 이수시간: '
-															+ clssTotalTm);
-
-													$(".class_total_tm").text(
-															clssTotalTm);
-													//clss_total_tm값 변경하면서 input의 value값 변경
-													$("#clss_total_tm").val(
-															clssTotalTm);
-												},
-												error : function() {
-													// 오류 처리 로직을 추가할 수 있습니다.
-												}
+									lctrTmInputList
+											.forEach(function(
+													lctrTmInput) {
+												var lctrTmValue = parseInt(lctrTmInput.value); // 문자열을 정수로 변환
+												clssTotalTm += lctrTmValue;
 											});
-								};
 
-								// 테이블에 새로운 행 추가
-								var table = document
-										.querySelector('.lecture_table');
+									console.log('총 이수시간: '+ clssTotalTm);
 
-								table.appendChild(newRow);
-
-								//select의 option을 lectureList로 추가.
-							},
-							error : function() {
-								// 오류 처리 로직을 추가할 수 있습니다.
-							}
-						});
+									$(".class_total_tm").text(clssTotalTm);
+									//clss_total_tm값 변경하면서 input의 value값 변경
+									$("#clss_total_tm").val(clssTotalTm);
+								},
+								error : function() {
+									// 오류 처리 로직을 추가할 수 있습니다.
+								}
+							});
+						};
+	
+					// 테이블에 새로운 행 추가
+					var table = document
+							.querySelector('.lecture_table');
+	
+					table.appendChild(newRow);
+	
+					//select의 option을 lectureList로 추가.
+				},
+				error : function() {
+					// 오류 처리 로직을 추가할 수 있습니다.
+				}
+			});
 				lectureCnt = lectureCnt + 1;
 			}
 		}

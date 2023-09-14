@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class CurriculumDetailDTO {
+	private String clssId;
 	private String lctrId;
 	private String lctrNm;
 	private String lctrTm;
