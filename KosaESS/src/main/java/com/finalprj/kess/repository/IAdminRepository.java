@@ -79,5 +79,14 @@ public interface IAdminRepository {
 	
 	List<ProfessorVO> getProfessorList();
 	List<SubjectVO> getSubjectList();
+	Integer getSubjectNmCnt(String sbjtNm);
+	String getMaxSubjectId();
+	void insertSubjectVO(SubjectVO subjectVO);
+	Integer getProfTelCnt(String profTel);
+	String getMaxProfId();
+	void insertProfessorVO(ProfessorVO professorVO);
+	Integer getLctrNmCnt(String lctrNm);
+	String getMaxLectureId();
+	void insertLectureVO(LectureVO lectureVO);
 
 }
