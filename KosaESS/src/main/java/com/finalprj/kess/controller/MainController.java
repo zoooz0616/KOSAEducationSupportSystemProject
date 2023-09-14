@@ -109,6 +109,7 @@ public class MainController {
 			session.setAttribute("mngrNm", managerVO.getMngrNm());
 			session.setAttribute("roleCd", managerVO.getRoleCd());
 			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
+			session.setAttribute("role", "manager");
 			mainService.updateLastLoginDt(managerVO.getUserEmail());
 			return "redirect:/manager";
 		} else {

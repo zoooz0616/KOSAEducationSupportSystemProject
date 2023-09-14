@@ -2,6 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.finalprj.kess.repository.IStudentRepository">
+	<resultMap id="studentResult"
+		type="com.finalprj.kess.model.StudentVO">
+		<result property="stdtId" column="STDT_ID" />
+		<result property="userEmail" column="STDT_EMAIL" />
+		<result property="stdtNm" column="STDT_NM" />
+		<result property="genderCd" column="GENDER_CD" />
+		<result property="birthDd" column="BIRTH_DD" />
+		<result property="stdtTel" column="STDT_TEL" />
+		<result property="jobCd" column="JOB_CD" />
+		<result property="rgstDt" column="RGST_DT" />
+		<result property="rgsterId" column="RGSTER_ID" />
+		<result property="updtDt" column="UPDT_DT" />
+		<result property="updterId" column="UPDTER_ID" />
+	</resultMap>
 
 	<!-- 교육생 회원가입 -->
 	<insert id="insertStudent"
@@ -17,13 +31,14 @@
 	</insert>
 
 	<!-- 교육생 로그인 -->
-	<select id="selectStudent" parameterType="string"
+	<select id="selectUser" parameterType="string"
 		resultType="com.finalprj.kess.model.StudentVO"
 		resultMap="studentResult">
 		<![CDATA[
-		SELECT *
-		FROM stdt
-		WHERE stdt_email=#{stdtEmail}
+		select *
+		from stdt
+		join lgin on lgin.user_email = stdt.user_email
+		where stdt.user_email=#{email}
 		]]>
 	</select>
 
@@ -36,7 +51,7 @@
 		WHERE stdt_id=#{stdtId}
 		]]>
 	</update>
-	
+
 	<!-- 교육생 탈퇴 -->
 	<delete id="deleteStudent"
 		parameterType="com.finalprj.kess.model.StudentVO">
@@ -63,15 +78,15 @@
 		SELECT *
 			  FROM (
 					SELECT 
-						post_id as "postId",
-						post_title as "postTitle",
-						post_cd as "postCd",
+						post_id,
+						post_title,
+						post_cd,
 						rgst_dt as "rgstDd"
 					FROM post
-					WHERE post_id LIKE 'NTC%' and post_cd=
-					(select tpcd_id||cmcd_id
-					from cmcd
-					where cmcd_nm='공개')
+					WHERE post_id LIKE 'NOTC%' and post_cd=
+						(select cmcd_id
+						from cmcd
+						where cmcd_id='PST0000001')
 					ORDER BY rgst_dt DESC
 				)
 				WHERE ROWNUM <= 5
@@ -83,16 +98,16 @@
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
 				SELECT 
-					post_id as "postId",
-					post_title as "postTitle",
-					post_hit as "postHit",
-					post_cd as "postCd",
+					post_id,
+					post_title,
+					post_cd,
+					post_hit,
 					rgst_dt as "rgstDd"
 				FROM post
-				WHERE post_id LIKE 'NTC%' and post_cd=
-				(select tpcd_id||cmcd_id
-				from cmcd
-				where cmcd_nm='공개')
+				WHERE post_id LIKE 'NOTC%' and post_cd=
+					(select cmcd_id
+					from cmcd
+					where cmcd_id='PST0000001')
 				ORDER BY rgst_dt DESC
 
 		]]>
@@ -112,16 +127,20 @@
 	<select id="selectAllInquiry" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
-			SELECT 
-					post_id as "postId",
-					post_title as "postTitle",
-					post_hit as "postHit",
-					post_cd as "postCd",
-					rgster_id as "rgsterId", 
-					rgst_dt as "rgstDd"
-				FROM post
-				WHERE post_id LIKE 'INQ%'
-				ORDER BY rgst_dt DESC
+		SELECT 
+		    post_id,
+		    post_title,
+		    post_cd,
+		    post_hit,
+		    rgster_id,
+		    rgst_dt as "rgstDd"
+		FROM post
+		WHERE post_id LIKE 'INQY%' AND post_cd IN (
+		    SELECT cmcd_id
+		    FROM cmcd
+		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
+		)
+		ORDER BY rgst_dt DESC
 		]]>
 	</select>
 
@@ -142,16 +161,16 @@
 			SELECT *
 			  FROM (
 				SELECT
-				    clss_id as "clssId",
-				    clss_nm as "clssNm",
+				    clss_id,
+				    clss_nm,
 				    aply_start_dt as "aplyStartDd",
-				    aply_end_dt as "aplyEndDd",
-				    clss_cd as "clssCd"
+			    	aply_end_dt as "aplyEndDd",
+				    clss_cd
 				FROM clss
 				WHERE clss_cd=
-					(select tpcd_id||cmcd_id
+					(select cmcd_id
 					from cmcd
-					where cmcd_nm='접수중')
+					where cmcd_id='CLS0000002')
 			)
 			WHERE ROWNUM <= 15
 		]]>
@@ -162,63 +181,114 @@
 		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
 			SELECT
-			   clss_id as "clssId",
-		       clss_nm as "clssNm",
+			   clss_id,
+		       clss_nm,
+		       clss.cmpy_id,
 		       aply_start_dt as "aplyStartDd",
-		       aply_end_dt as "aplyEndDd",
-		       clss_start_dd AS "clssStartDd",
-		       clss_end_dd AS "clssEndDd",
-		       substr(clss_adr, 1, 3) AS "clssAdr",
-		       cmcd.cmcd_nm AS "clssCd",
-		       flup.file_nm as "cmpyId"
-		   FROM
-		       clss
-		   JOIN cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd
-		   JOIN flup on flup.post_id = clss.cmpy_id
+			   aply_end_dt as "aplyEndDd",
+		       clss_start_dd,
+		       clss_end_dd,
+		       substr(clss_adr, 1, 3) as "clssAdr", 
+		       limit_cnt,
+		       cmcd.cmcd_nm as "clssCd",
+		       flup.file_nm as "clssContent" 
+		   FROM clss
+		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
+		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
+		   LEFT JOIN flup on flup.file_id = cmpy.file_id
 		   ORDER BY clss_id
 		]]>
 	</select>
 
 	<!-- 교육지원 상세 조회 -->
 	<select id="selectClass" parameterType="string"
-		resultType="com.finalprj.kess.model.ClassVO">
+		resultType="com.finalprj.kess.dto.ClassDetailDTO">
 		<![CDATA[
-			SELECT 
-				clss_id as "clssId",
-				clss_nm as "clssNm",
-				aply_start_dt as "aplyStartDd",
-				aply_end_dt as "aplyEndDd",
-				clss_start_dd as "clssStartDd",
-				clss_end_dd as "clssEndDd",
-				clss_adr as "clssAdr",
-				limit_cnt as "limitCnt",
-				set_in_tm as "setInTm",
-				set_out_tm as "setOutTm",
- 				cmcd.cmcd_nm as "clssCd",
-				cmpy_id as "cmpyId"
+			SELECT
+			    clss_id,
+			    clss_nm,
+			    clss_content,
+			    aply_start_dt as "aplyStartDd",
+			    aply_end_dt as "aplyEndDd",
+			    clss_start_dd,
+			    clss_end_dd,
+			    clss_adr,
+			    limit_cnt,
+			    TO_CHAR(set_in_tm, 'HH24') as "setInTm",
+    			TO_CHAR(set_out_tm, 'HH24') as "setOutTm",
+			    clss_etc,
+			    cmpy.cmpy_nm as "cmpyNm",
+			    cmcd.cmcd_nm as "clssCd"
 			FROM clss
-			JOIN (cmcd on cmcd.tpcd_id||cmcd.cmcd_id = clss.clss_cd)
-			WHERE clss_id=#{classId}
+			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
+			JOIN cmpy ON cmpy.cmpy_id = clss.cmpy_id
+			WHERE clss_id = #{clssId}
 		]]>
 	</select>
 
+
+	<!-- 교육지원 상세 조회(이미지) -->
+	<select id="selectAllClassFile" parameterType="string"
+		resultType="com.finalprj.kess.model.FileVO">
+		<![CDATA[
+		SELECT
+		    file_id,
+		    file_sub_id,
+		    file_nm,
+		    file_content,
+		    file_size,
+		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fileType"
+		FROM flup
+		WHERE file_id = (
+		    SELECT file_id
+		    FROM clss
+		    WHERE clss_id = #{clssId}
+		)
+		ORDER BY
+	    CASE
+	        WHEN file_type LIKE 'application%' THEN 0
+	        WHEN file_type LIKE 'text%' THEN 1
+	        ELSE 2
+	    END
+		]]>
+	</select>
+
+	<!-- 파일 다운로드 -->
+
+	<select id="getFile" parameterType="string"
+		resultType="com.finalprj.kess.model.FileVO">
+		<![CDATA[
+			SELECT *
+			FROM flup 
+			WHERE file_id = #{fileId} and file_sub_id = #{fileSubId}
+		]]>
+	</select>
+
+	<insert id="insertApply">
+	<![CDATA[
+			INSERT INTO aply
+			(stdt_id, clss_id, file_nm, file_content, file_size, file_type, rgster_id)
+		VALUES
+			(#{stdtId}, #{clssId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, #{stdtId})
+		]]>
+	</insert>
 
 
 	<!-- 이수완료건 출력 -->
 	<select id="getCmptClass" parameterType="string"
 		resultType="int">
 	<![CDATA[
-		select count(clss_id) as "cmptClassCnt"
+		select COALESCE(COUNT(clss_id), 0) as "cmptClassCnt"
 			from rgst
 			where stdt_id= (
 				SELECT stdt_id
-			FROM stdt
-			WHERE stdt_email=#{stdtEmail}
-			)
-	            and cmpt_CD=
-			(select tpcd_id||cmcd_id
+				FROM stdt
+				WHERE user_email=#{email}
+				)
+	            and cmpt_cd=
+			(select cmcd_id
 			from cmcd
-			where cmcd_nm='이수완료')
+			where cmcd_id='CMP0000002')
 	]]>
 	</select>
 
@@ -227,14 +297,43 @@
 	<select id="getAplyClass" parameterType="string"
 		resultType="int">
 	<![CDATA[
-		select count(clss_id) as "aplyClassCnt"
+		select COALESCE(COUNT(clss_id), 0) as "aplyClassCnt"
 			from aply
 			where stdt_id= (
 				SELECT stdt_id
 			FROM stdt
-			WHERE stdt_email=#{stdtEmail}
-			)
+			WHERE user_email=#{email}
+			) and aply_cd=
+			(select cmcd_id
+			from cmcd
+			where cmcd_id='APL0000002')
 	]]>
 	</select>
+	
+	<!-- 수강중인 수업명 출력 -->
+	<select id="getIngClass" parameterType="string"
+		resultType="string">
+	<![CDATA[
+		select clss_nm
+		from clss
+		where clss_id =(
+			select clss_id
+				from rgst
+				where stdt_id= (
+					SELECT stdt_id
+					FROM stdt
+					WHERE user_email=#{email}
+					)
+		            and cmpt_cd=
+				(select cmcd_id
+				from cmcd
+				where cmcd_id='CMP0000001')
+			) and clss_cd=
+			(select cmcd_id
+			from cmcd
+			where cmcd_id='CLS0000004')
+	]]>
+	</select>
+
 
 </mapper>

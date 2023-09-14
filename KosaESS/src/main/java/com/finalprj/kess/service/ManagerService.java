@@ -1,10 +1,12 @@
 package com.finalprj.kess.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -32,7 +34,7 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<StudentVO> getStudentListByClssId(String clssId) {
+	public List<StudentInfoDTO> getStudentListByClssId(String clssId) {
 		return managerRepository.getStudentListByClssId(clssId);
 	}
 
@@ -80,5 +82,20 @@ public class ManagerService implements IManagerService {
 	public int getCountAbsentByStdtId(String stdtId) {
 		return managerRepository.getCountAbsentByStdtId(stdtId);
 	}
+
+	@Override
+	public int getCountByClssIdWlogCdStdtId(String clssId, String wlogCd, String stdtId, String startDate, String endDate) {
+		return managerRepository.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId, startDate, endDate);
+	}
+
+	@Override
+	public String getLatestClassIdByMngrId(String mngrId) {
+		return managerRepository.getLatestClassIdByMngrId(mngrId);
+	}
+
+//	@Override
+//	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
+//		return managerRepository.getStudentListBySearch(classId, startDate, endDate);
+//	}
 
 }

@@ -25,7 +25,4 @@ public class StudentVO {
 	
 	private String clssNm;//교육과정 이름
 	private Timestamp lastLoginDt;//마지막 로그인 일시
-	private int countLateArrive;//지각 수
-	private int countEalryLeave;//조퇴 수
-	private int countAbsent;//결석 수
 }

@@ -763,7 +763,6 @@ public class AdminController {
 		ProfessorVO professorVO = adminService.getProfessor(lectureId);
 		LectureVO lectureVO = adminService.getLecture(lectureId);
 
-
 		Map<String, Object> response = new HashMap<>();
 		// subjectName과 professorName을 설정합니다.
 		response.put("subject", subjectVO);

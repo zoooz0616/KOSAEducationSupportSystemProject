@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link th:href="@{/css/student/class_detail.css}" rel="stylesheet">
+<meta charset="UTF-8">
+<title>class detail</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+	<div class="container" style="display: flex;">
+		<div style="width: 80%">
+			<div class="maintext">
+				<h1 style="color: #0E5881; margin-top: 3%;">교육 과정 지원 상세</h1>
+			</div>
+			<div class="content">
+				<table>
+					<tr>
+						<th>이름</th>
+						<td colspan="5" th:text="${classDetail.clssNm}"></td>
+					</tr>
+					<tr>
+						<th>지원 기간</th>
+						<td style="width: 40%"
+							th:text="${classDetail.aplyStartDd} + ' ~ ' + ${classDetail.aplyEndDd}"></td>
+
+						<th>교육 기간</th>
+						<td colspan="3"
+							th:text="${classDetail.clssStartDd}+ ' ~ ' + ${classDetail.clssEndDd}"></td>
+					</tr>
+					<tr>
+						<th>교육 장소</th>
+						<td th:text="${classDetail.clssAdr}"></td>
+						<th>회사</th>
+						<td style="width: 15%" th:text="${classDetail.cmpyNm}"></td>
+						<th>교육 상태</th>
+						<td th:text="${classDetail.clssCd}"></td>
+					</tr>
+					<tr>
+						<th>시작 시간</th>
+						<td th:text="${classDetail.setInTm} + '시'"></td>
+						<th>종료 시간</th>
+						<td th:text="${classDetail.setOutTm}+ '시'"></td>
+						<th>수강 정원</th>
+						<td th:text="${classDetail.limitCnt}+ '명'"></td>
+					</tr>
+				</table>
+				<div>
+					<ul th:each="ClassDetailDTO : ${classDetailList}">
+						<li>
+							<div class="icon"
+								th:if="${ClassDetailDTO.fileType == 'application' or ClassDetailDTO.fileType == 'text'}">
+								<a
+									th:href="@{/student/download/file/__${ClassDetailDTO.fileId}__/__${ClassDetailDTO.fileSubId}__}"
+									th:title="${ClassDetailDTO.fileNm}"> <img
+									style="width: 40px;" th:src="@{/img/file_icon.png}"
+									alt="file  아이콘"> <span th:text="${ClassDetailDTO.fileNm}"></span>
+								</a>
+							</div>
+							<div th:if="${ClassDetailDTO.fileType=='image'}">
+								<img style="width: 500px;"
+									th:src="@{/img/__${ClassDetailDTO.fileNm}__}">
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div
+			style="width: 20%; position: fixed; display: block; right: 8%; top: 25%; margin: 30px 0;">
+			<div>
+				<h2>최근에 조회한 교육</h2>
+				<ul>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div
+		style="position: fixed; display: block; right: 20px; bottom: 20px;">
+		<div class="btn">
+			<button class="back">목록으로</button>
+			<button class="openModalBtn">지원하기</button>
+			<button class="moveTopBtn"></button>
+		</div>
+	</div>
+	<div class="modal">
+		<div class="modal_body">
+			<button class="closeModalBtn">&times;</button>
+			<h2>지원서 제출</h2>
+			<form th:action="@{/student/upload/__${classDetail.clssId}__}"
+				method="post" id="uploadForm" enctype="multipart/form-data">
+				<input type="file" name="file" id="fileInput">
+				<button type="submit" class="aplyBtn">제출</button>
+			</form>
+		</div>
+	</div>
+	<script>
+        const modal = document.querySelector('.modal');
+        const openModalBtn = document.querySelector('.openModalBtn');
+        const closeModalBtn = document.querySelector('.closeModalBtn');
+		
+ 
+        openModalBtn.addEventListener('click', () => {
+        	 $.ajax({
+                 url: '/student/class/apply',
+                 async: true,
+                 method: 'GET',
+                 success: function(stdtId) {
+                	 if (stdtId == "") {
+                		 var result = confirm("로그인 후 지원이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
+                		 
+                		 if(result) {
+                	            location.replace('/login');
+                	        }
+                     } else {
+                     	modal.style.display = 'block';
+                     }
+                 }
+        	});
+        });
+        
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        const backBtn = document.querySelector('.back');
+
+        backBtn.addEventListener('click', () => {
+        	location.replace('/student/class');
+        });
+        
+        const topBtn = document.querySelector(".moveTopBtn");
+
+     	// 버튼 클릭 시 맨 위로 이동
+     	topBtn.addEventListener('click', () =>{
+       		window.scrollTo({ top: 0, behavior: "smooth" });  
+     });	
+        
+    </script>
+</body>
+</html>
