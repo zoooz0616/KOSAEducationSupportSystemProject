@@ -158,7 +158,8 @@
 		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
 		join prof on prof.prof_id = lctr.prof_id
 		where lctr.delete_yn = 'N'
-	]]>
+		order by lctr.rgst_dt desc
+	]]> 
 	</select>
 	
 	<select id="getSubject"
@@ -400,8 +401,79 @@
 	]]>
 	</select>
 	
+	<select id="getSubjectNmCnt" parameterType="string" resultType="int">
+	<![CDATA[
+	select count(sbjt_id)
+	from sbjt
+	where REPLACE(UPPER(sbjt_nm), ' ', '') = REPLACE(UPPER(#{sbjtNm}), ' ', '')
+	]]>
+	</select>
+	
+	<select id="getMaxSubjectId" resultType="string">
+	<![CDATA[
+		select 'SBJT'||LPAD((max(cast(substr(sbjt_id,5) as number(6)))+1),6,'0')
+		from sbjt
+	]]>
+	</select>
+	
+	<insert id="insertSubjectVO" parameterType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+	insert into sbjt
+	values (#{sbjtId}, #{sbjtNm}, systimestamp, 'MNGR000001', null, null, 'N')
+	]]>
+	</insert>
 
+	<select id="getProfTelCnt" parameterType="string" resultType="int">
+	<![CDATA[
+	select count(prof_id)
+	from prof
+	where prof_tel = #{profTel}
+	]]>
+	</select>
 
+	<select id="getMaxProfId" resultType="string">
+	<![CDATA[
+		select 'PROF'||LPAD((max(cast(substr(prof_id,5) as number(6)))+1),6,'0')
+		from prof
+	]]>
+	</select>
+
+	<insert id="insertProfessorVO" parameterType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+	insert into prof
+	values (#{profId}, #{profNm}, #{profTel}, #{profEmail}, systimestamp, 'MNGR000001', null, null, 'N')
+	]]>
+	</insert>
+	
+	<select id="getLctrNmCnt" parameterType="string" resultType="int">
+	<![CDATA[
+	select count(lctr_id)
+	from lctr
+	where REPLACE(UPPER(lctr_nm), ' ', '')= REPLACE(UPPER(#{lctrNm}), ' ', '')
+	]]>
+	</select>
+
+	<select id="getMaxLectureId" resultType="string">
+	<![CDATA[
+		select 'LCTR'||LPAD((max(cast(substr(lctr_id,5) as number(6)))+1),6,'0')
+		from lctr
+	]]>
+	</select>
+
+	<insert id="insertLectureVO" parameterType="com.finalprj.kess.model.LectureVO">
+	<![CDATA[
+	insert into lctr
+	values (#{lctrId}, #{sbjtId}, #{profId}, #{lctrNm}, #{lctrTm}, null, systimestamp, 'MNGR000001', null, null, 'N')
+	]]>
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 

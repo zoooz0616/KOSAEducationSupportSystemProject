@@ -247,8 +247,50 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSubjectList();
 	}
 
+	@Override
+	public Integer getSubjectNmCnt(String sbjtNm) {
+		return adminRepository.getSubjectNmCnt(sbjtNm);
+	}
 
+	@Override
+	public String getMaxSubjectId() {
+		return adminRepository.getMaxSubjectId();
+	}
 
+	@Override
+	public void insertSubjectVO(SubjectVO subjectVO) {
+		adminRepository.insertSubjectVO(subjectVO);
+	}
+
+	@Override
+	public Integer getProfTelCnt(String profTel) {
+		return adminRepository.getProfTelCnt(profTel);
+	}
+
+	@Override
+	public String getMaxProfId() {
+		return adminRepository.getMaxProfId();
+	}
+	
+	@Override
+	public void insertProfessorVO(ProfessorVO professorVO) {
+		adminRepository.insertProfessorVO(professorVO);
+	}
+
+	@Override
+	public Integer getLctrNmCnt(String lctrNm) {
+		return adminRepository.getLctrNmCnt(lctrNm);
+	}
+
+	@Override
+	public String getMaxLectureId() {
+		return adminRepository.getMaxLectureId();
+	}
+
+	@Override
+	public void insertLectureVO(LectureVO lectureVO) {
+		adminRepository.insertLectureVO(lectureVO);
+	}
 
 
 

@@ -42,22 +42,28 @@
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 강의 등록하기 -->
-					<div class="insert_professor insert" style="padding: 5px;">
+					<div class="insert_lecture insert" style="padding: 5px;">
 						<div>
-							<span>과목명</span> <select>
+							<span >과목명</span> 
+							<select id="subject_id_input">
 								<option th:each="subject: ${subjectList}"
 									th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}">
-							</select> <span>강사명</span> <select>
+							</select> 
+							
+							<span>강사명</span> 
+							<select id="professor_id_input">
 								<option th:each="professor: ${professorList}"
 									th:value="${professor.profId}" th:text="${professor.profNm}">
 							</select> 
-							<span>강의명</span> <input type="text" placeholder="강의명"
+							
+							<span>강의명</span> <input id="lecture_nm_input" value="" type="text" placeholder="강의명"
 								style="width: 150px;">
-							<span>이수시간</span> <input type="number" value="0"
+								
+							<span>이수시간</span> <input id="lecture_tm_input" type="number" value="0"
 								style="width: 100px;">
 						</div>
 						<div>
-							<button class="insert_btn" type="button">등록하기</button>
+							<button class="insert_btn" type="button" onclick="insertLecture()">등록하기</button>
 						</div>
 					</div>
 					<!-- 강의 등록하기 -->
@@ -106,15 +112,15 @@
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 과목 등록하기 -->
-					<div class="insert_professor insert" style="padding: 5px;">
+					<div class="insert_subject insert" style="padding: 5px;">
 						<div>
 							<span style="color: #0E5881;
 	font-weight: bold;">과목명</span>
-							<input type="text" placeholder="과목명">
+							<input id="subject_input" type="text" placeholder="과목명">
 						</div>
 
 						<div>
-							<button  class="insert_btn"type="button">등록하기</button>
+							<button class="insert_btn" type="button" onclick="insertSubject()">등록하기</button>
 						</div>
 					</div>
 					<!-- 과목 등록하기 -->
@@ -155,12 +161,15 @@
 					<!-- 강사 등록하기 -->
 					<div class="insert_professor insert" style="padding: 5px;">
 						<div>
-							<input type="text" placeholder="강사명" style="width: 100px;">
-							<input type="text" placeholder="전화번호" style="width: 150px;">
-							<input type="text" placeholder="이메일" style="width: 150px;">
+							<span>강사명</span>
+							<input id="professor_name_input" type="text" placeholder="강사명" style="width: 50px;">
+							<span>전화번호</span>
+							<input id="professor_tel_input" type="text" placeholder="전화번호" style="width: 100px;">
+							<span>이메일</span>
+							<input id="professor_email_input"type="email" placeholder="이메일" style="width: 150px;">
 						</div>
 						<div>
-							<button class="insert_btn" type="button">등록하기</button>
+							<button class="insert_btn" type="button" onclick="insertProfessor()">등록하기</button>
 						</div>
 					</div>
 					<!-- 강사 등록하기 -->
@@ -197,5 +206,103 @@
 		</div>
 		<!-- Content Middle-->
 	</div>
+	
+	<script>
+	//과목 등록하기
+	function insertSubject(){
+		//input에 과목명 입력했는지 확인
+		//입력 안 했으면 과목명을 입력해주세요 띄우기
+		var subjectInput = document.querySelector("#subject_input").value;
+		if(subjectInput === "" ){
+			alert("과목명을 입력해주세요.");
+		}else {
+			//비동기로 보내서 똑같은 과목명이 있는지 여부 확인
+			$.ajax({
+                url: '/admin/lecture/subject/insert',
+                method: 'POST',
+                data: { subjectInput: subjectInput },
+                success: function(response) {
+                	//실패면 alert(중복)띄우기
+                	if(response == "fail"){
+                		alert("이미 존재하는 과목입니다.");
+                	}else if(response =="success"){
+                		//성공하면 과목이 추가되었습니다. alert띄우고 location여기로 다시 이동
+                    	alert("과목이 추가되었습니다.");
+                    	window.location.href = "/admin/lecture";
+                	}
+                }
+            });
+		}
+	}
+	
+	//강사등록
+	function insertProfessor(){
+		//input에 강사명, 전화번호, 이메일을 모두 입력했는지 확인
+		var profNmInput = document.querySelector("#professor_name_input").value;
+		var profTelInput = document.querySelector("#professor_tel_input").value;
+		var profEmailInput = document.querySelector("#professor_email_input").value;
+		
+		if(profNmInput == "" || profTelInput =="" || profEmailInput==""){
+			alert("모든 필드를 입력해주세요.");
+		}else{
+			//3개의 값을 보내서 전화번호로 중복 확인
+			$.ajax({
+                url: '/admin/lecture/professor/insert',
+                method: 'POST',
+                data: {
+                	profNmInput: profNmInput,
+                	profTelInput: profTelInput,
+                	profEmailInput:profEmailInput
+                },
+                success: function(response) {
+                	//실패면 alert(중복)띄우기
+                	if(response == "fail"){
+                		alert("이미 존재하는 강사입니다.");
+                	}else if(response =="success"){
+                		//성공하면 과목이 추가되었습니다. alert띄우고 location여기로 다시 이동
+                    	alert("강사가 추가되었습니다.");
+                    	window.location.href = "/admin/lecture";
+                	}
+                }
+            });
+		}
+	}
+	
+	//강의 등록
+	function insertLecture(){
+		//강의명과 이수시간을 모두 등록했는지 확인
+		var subjectIdInput =document.querySelector("#subject_id_input").value;
+		var profIdInput=document.querySelector("#professor_id_input").value;
+		var lecturNmInput=document.querySelector("#lecture_nm_input").value;
+		var lectureTmInput=document.querySelector("#lecture_tm_input").value;
+		
+		console.log("오오옹");
+		if(lecturNmInput ==="" || lectureTmInput === "0"){
+			alert("모든 필드를 입력해주세요");
+		}else{
+			//값을 모두 보내고 lectureNm으로 중복확인
+			$.ajax({
+                url: '/admin/lecture/insert',
+                method: 'POST',
+                data: {
+                	subjectIdInput: subjectIdInput,
+                	profIdInput: profIdInput,
+                	lecturNmInput: lecturNmInput,
+                	lectureTmInput: lectureTmInput
+                },
+                success: function(response) {
+                	//실패면 alert(중복)띄우기
+                	if(response == "fail"){
+                		alert("이미 존재하는 강사입니다.");
+                	}else if(response =="success"){
+                		//성공하면 과목이 추가되었습니다. alert띄우고 location여기로 다시 이동
+                    	alert("강사가 추가되었습니다.");
+                    	window.location.href = "/admin/lecture";
+                	}
+                }
+            });
+		}
+	}
+	</script>
 </body>
 </html>
