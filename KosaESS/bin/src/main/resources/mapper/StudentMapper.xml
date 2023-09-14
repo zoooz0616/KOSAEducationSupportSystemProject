@@ -202,7 +202,7 @@
 
 	<!-- 교육지원 상세 조회 -->
 	<select id="selectClass" parameterType="string"
-		resultType="com.finalprj.kess.dto.ClassDetailDTO">
+		resultType="com.finalprj.kess.model.ClassVO">
 		<![CDATA[
 			SELECT
 			    clss_id,
