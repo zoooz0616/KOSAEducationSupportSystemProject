@@ -1,4 +1,13 @@
 .maincontent{
-	width:70%;
+	width:73%;
 	padding:0 5%;
+}
+
+.maincontent > div{
+	width:100%;
+}
+
+
+.applyList button{
+	
 }

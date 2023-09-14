@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -51,6 +52,14 @@ public interface IStudentRepository {
 	ClassVO selectviewClass(String viewClass);
 
 	List<CurriculumDetailDTO> getCurriculumList(String clssId);
+
+	List<ApplyDetailDTO> searchAplyList(String stdtId);
+
+	void  updateaply(String aplyCd, String aplyId);
+
+	void insertRgst(String aplyId, String maxRgstId, String stdtId);
+
+	String getMaxRegistrationId();
 
 		
 }

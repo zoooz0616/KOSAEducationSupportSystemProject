@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -150,11 +151,10 @@ public class StudentController {
 		// classDetail 객체를 가져와서 모델에 추가
 		ClassVO classDetail = studentService.selectClass(clssId);
 		model.addAttribute("classDetail", classDetail);
- 
+
 		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(clssId);
-		model.addAttribute("curriculumlist", curriculumlist );
-		
-		
+		model.addAttribute("curriculumlist", curriculumlist);
+
 		// classDetailList 객체를 가져와서 모델에 추가
 		List<ClassVO> classDetailList = studentService.selectAllClassFile(clssId);
 		model.addAttribute("classDetailList", classDetailList);
@@ -211,14 +211,6 @@ public class StudentController {
 		String stdtId = (String) session.getAttribute("stdtId");
 		return stdtId;
 	}
-
-	// 교욱 이력서 다운로드
-	/**
-	 * @author : dabin
-	 * @date : 2023. 8. 31.
-	 * @parameter :model
-	 * @return :
-	 */
 
 	// 교육 지원 중복 내여 체크
 	/**
@@ -289,9 +281,11 @@ public class StudentController {
 	 * @throws IOException
 	 */
 	@GetMapping("/mypage")
-	public String mypageMain(Model model) {
+	public String mypageMain(HttpSession session, Model model) {
 		model.addAttribute("student", student);
-
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
+		model.addAttribute("applyList", applyList);
 		return "student/mypage";
 	}
 
@@ -311,6 +305,57 @@ public class StudentController {
 		List<ClassVO> searchResults = studentService.searchClasses(keyword, ingClass);
 		model.addAttribute("classList", searchResults);
 		return searchResults;
+	}
+
+	// 마이페이지 지원내역 조회
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/mypage/aplyList")
+	@ResponseBody
+	public List<ApplyDetailDTO> searchAplyList(HttpSession session, Model model) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
+		model.addAttribute("applyList", applyList);
+		return applyList;
+	}
+
+	// 마이페이지 지원내역 업데이트
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@PostMapping("/mypage/aplyList/update")
+	@ResponseBody
+	public void updateaply(@RequestParam("aplyCd") String aplyCd, @RequestParam("aplyId") String aplyId,
+			HttpSession session) {
+		/* String stdtId = (String) session.getAttribute("stdtId"); */
+		studentService.updateaply(aplyCd, aplyId);
+	}
+	
+	// 마이페이지 수강내역 추가 
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@PostMapping("/insert/rgstList")
+	@ResponseBody
+	public void insertRgst(@RequestParam("aplyId") String aplyId,
+			HttpSession session) {
+		
+		String maxRgstId = studentService.getMaxRegistrationId();
+		String stdtId = (String) session.getAttribute("stdtId");
+		studentService.insertRgst(aplyId, maxRgstId, stdtId);
 	}
 
 }

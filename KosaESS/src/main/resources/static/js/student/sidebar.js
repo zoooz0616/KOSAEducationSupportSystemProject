@@ -1,7 +1,8 @@
 const liElements = document.querySelectorAll('.sidebar ul li');
+const contentDivs = document.querySelectorAll('.maincontent > div');
 
 // 각 li 요소를 클릭했을 때의 동작을 정의합니다.
-liElements.forEach(function(liElement) {
+liElements.forEach(function(liElement, index) {
 	liElement.addEventListener('click', function() {
 		// 모든 li 요소의 클래스를 초기화합니다.
 		liElements.forEach(function(element) {
@@ -17,6 +18,11 @@ liElements.forEach(function(liElement) {
 			}
 		});
 
+		// 모든 content를 숨깁니다.
+		contentDivs.forEach(function(content) {
+			content.style.display = 'none';
+		});
+
 		// 현재 클릭한 li 요소에 active 클래스를 추가합니다.
 		this.classList.add('active');
 
@@ -28,7 +34,10 @@ liElements.forEach(function(liElement) {
 		}
 
 		// 클릭한 li 요소의 배경색과 글씨 색상을 변경합니다.
-		this.style.backgroundColor = '#0E5881;';
-		this.style.color = 'white';
+		this.style.background = '#0E5881'; // 예: 'blue'
+		this.style.color = 'white'; // 예: 'white'
+
+		// 선택한 li 요소에 해당하는 content만 보여줍니다.
+		contentDivs[index].style.display = 'block';
 	});
 });

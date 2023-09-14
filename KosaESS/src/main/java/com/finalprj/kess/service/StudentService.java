@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -101,6 +102,27 @@ public class StudentService implements IStudentService {
 	@Override
 	public List<CurriculumDetailDTO> getCurriculumList(String clssId) {
 		return studentRepository.getCurriculumList(clssId);
+	}
+
+	@Override
+	public List<ApplyDetailDTO> searchAplyList(String stdtId) {
+		return studentRepository.searchAplyList(stdtId);
+	}
+
+	@Override
+	public void updateaply(String aplyCd, String aplyId) {
+		studentRepository.updateaply(aplyCd, aplyId);
+	}
+
+	@Override
+	public void insertRgst(String aplyId, String maxRgstId, String stdtId) {
+		studentRepository.insertRgst(aplyId, maxRgstId, stdtId);
+		
+	}
+
+	@Override
+	public String getMaxRegistrationId() {
+		return studentRepository.getMaxRegistrationId();
 	}
 
 

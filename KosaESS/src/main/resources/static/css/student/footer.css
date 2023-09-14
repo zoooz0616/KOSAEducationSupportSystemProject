@@ -6,7 +6,7 @@ footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 3% 0;
+	padding: 1.5% 0;
 }
 
 .footerBody h2 {
@@ -50,7 +50,11 @@ footer {
 
 .footerBody span {
 	padding-left: 5%;
-	font-size: 15px;
+	font-size: 14px;
+}
+
+.footerBody h2 {
+	font-size: 20px;
 }
 
 .footerBody input {
@@ -74,9 +78,8 @@ footer {
 
 .footerFoot{
 	background: #073C5A;
-	padding: 1%;
 	color: white;
-	padding: 1% 8%;
+	padding: 0.5% 8%;
 }
 
 .footerFoot a {

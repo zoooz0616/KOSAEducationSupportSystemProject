@@ -408,5 +408,63 @@
 	]]>
 	</select>
 
+	<!-- 지원내역 조회 -->
+	<select id="searchAplyList" parameterType="string"
+		resultType="com.finalprj.kess.dto.ApplyDetailDTO">
+	<![CDATA[
+		select 
+			aply_id,
+			clss_nm,
+			aply_cd,
+			aply_end_dt,
+			aply_start_dt as "aplyStartDd",
+			aply_end_dt as "aplyEndDd",
+			clss_start_dd,
+			clss_end_dd,
+			limit_cnt,
+			aply_cd,
+			cmcd.cmcd_nm,
+			aply.rgst_dt as "rgstDd",
+			aply.updt_dt as "updtDd"
+			FROM aply
+			JOIN cmcd on cmcd.cmcd_id = aply.aply_cd
+			JOIN clss on clss.clss_id = aply.clss_id
+			WHERE stdt_id=#{stdtId}
+			ORDER BY aply.rgst_dt DESC
+	]]>
+	</select>
+
+<!-- 마이페이지 지원상태 수정 -->
+	<update id="updateaply"
+		parameterType="com.finalprj.kess.model.ApplyVO">
+	<![CDATA[
+		update aply
+		set 
+			aply_cd = #{aplyCd}
+		where aply_id=#{aplyId}
+	]]>
+	</update>
+	
+	<!-- 수강 테이블 RegistrationId MAX값 가져오기 -->
+	<select id="getMaxRegistrationId" resultType="string">
+	<![CDATA[
+		select 'RGST'||LPAD((max(cast(substr(rgst_id,5) as number(6)))+1),6,'0')
+		from rgst
+	]]>
+	</select>
+
+
+<!-- 마이페이지 수강내역 추가 -->
+	<insert id="insertRgst"
+		parameterType="com.finalprj.kess.model.RegistrationVO">
+		<![CDATA[
+		INSERT into rgst
+		values(#{maxRgstId}, #{stdtId}, (select
+            clss_id
+           from aply
+       where aply_id = #{aplyId}), 'RST0000001', 'CMP0000001',null,systimestamp, #{stdtId}, null, null)
+        
+		]]>
+	</insert>
 
 </mapper>

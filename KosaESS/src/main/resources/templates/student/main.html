@@ -33,7 +33,7 @@
 		</div>
 		<div class="maincontent">
 			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				style="margin-bottom: 4%; text-align: center;padding: 3%;">
 				<div th:if="${session.userEmail==null}">
 					<h2>회원가입후 이용가능</h2>
 				</div>
@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; height: 42%; padding: 3%;">
+				style="margin-bottom: 4%; text-align: center; height: 45%; padding: 3%;">
 				<div th:if="${session.userEmail==null}">
 					<form th:action="@{/login}" method="post" class="">
 						<div class="">

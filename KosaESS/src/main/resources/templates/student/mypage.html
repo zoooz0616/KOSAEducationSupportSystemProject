@@ -5,6 +5,7 @@
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/subbar.css}" rel="stylesheet">
 <link th:href="@{/css/student/mypage.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -19,11 +20,60 @@
 		<div class="content">
 			<div th:replace="~{/include/student_subbar :: subbar}"></div>
 			<div class="maincontent">
-				<h3>개인 정보 조회/수정</h3>
+				<div class="personalData">
+					<h3>개인 정보 조회/수정</h3>
+					<p>비밀번호 확인</p>
+				</div>
+				<div class="applyList" style="display: none;">
+					<h3>교육 과정 지원 내역</h3>
+					<div>
+						<table class="applyTable">
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th>교육 과정 명</th>
+									<th>지원기간</th>
+									<th>교육기간</th>
+									<th>정원</th>
+									<th>지원 날짜</th>
+									<th>지원 상태</th>
+									<th colspan="2">수정하기</th>
+									<th colspan="2">수강하기</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="aplyRow"
+									th:each="ApplyDetailDTO , rowStat : ${applyList}">
+									<td><span th:text="${rowStat.index + 1}"></span></td>
+									<td th:text="${ApplyDetailDTO.clssNm}"></td>
+									<td
+										th:text="${ApplyDetailDTO.aplyStartDd} +' ~ '+ ${ApplyDetailDTO.aplyEndDd}"></td>
+									<td
+										th:text="${ApplyDetailDTO.clssStartDd} +' ~ '+ ${ApplyDetailDTO.clssEndDd}"></td>
+									<td th:text="${ApplyDetailDTO.limitCnt}"></td>
+									<td th:text="${ApplyDetailDTO.rgstDd}"></td>
+									<td th:text="${ApplyDetailDTO.cmcdNm}"></td>
+									<td><button class="update">수정</button></td>
+									<td><button class="cancel">지원취소</button></td>
+									<td><button class="apply">수강</button></td>
+									<td><button class="drop">수강포기</button></td>
+									<td style="display: none;"><span
+										th:text="${ApplyDetailDTO.aplyId}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="completeList" style="display: none;">
+					<h3>교육 과정 이수 내역</h3>
+				</div>
+				<div class="workLog" style="display: none;">
+					<h3>출퇴근 관리</h3>
+				</div>
 			</div>
 		</div>
 	</div>
-
+	<script src="/js/student/sidebar.js"></script>
+	<script src="/js/student/mypage.js"></script>
 </body>
-<script src="/js/student/sidebar.js"></script>
 </html>
