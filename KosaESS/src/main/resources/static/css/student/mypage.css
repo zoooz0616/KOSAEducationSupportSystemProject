@@ -7,8 +7,8 @@
 	width: 100%;
 }
 
-.applyList button {
-	
+.hidden {
+	display: none;
 }
 
 .modal {
@@ -45,6 +45,7 @@
 	justify-content: center;
 	background-color: #E7EFF3;
 }
+
 .upload-area {
 	margin: 5% auto;
 	border: none;

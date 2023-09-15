@@ -13,6 +13,7 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.repository.IStudentRepository;
 
 @Service
@@ -50,7 +51,7 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public List<ClassVO> selectAllClassFile(String clssId) {
+	public List<FileVO> selectAllClassFile(String clssId) {
 		return studentRepository.selectAllClassFile(clssId);
 	}
 
@@ -60,18 +61,18 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public int getCmptClass(String email) {
-		return studentRepository.getCmptClass(email);
+	public int getCmptClass(String stdtId) {
+		return studentRepository.getCmptClass(stdtId);
 	}
 
 	@Override
-	public int getAplyClass(String email) {
-		return studentRepository.getAplyClass(email);
+	public int getAplyClass(String stdtId) {
+		return studentRepository.getAplyClass(stdtId);
 	}
 
 	@Override
-	public String getIngClass(String email) {
-		return studentRepository.getIngClass(email);
+	public ClassVO getIngClass(String stdtId) {
+		return studentRepository.getIngClass(stdtId);
 	}
 
 	@Override
@@ -138,6 +139,16 @@ public class StudentService implements IStudentService {
 	@Override
 	public void updateAplydt(String aplyId, String stdtId) {
 		studentRepository.updateAplydt(aplyId, stdtId);
+	}
+
+	@Override
+	public List<RegistrationVO> searchRgstList(String stdtId) {
+		return studentRepository.searchRgstList(stdtId);
+	}
+
+	@Override
+	public int getRgstIngCnt(String stdtId) {
+		return studentRepository.getRgstIngCnt(stdtId);
 	}
 
 

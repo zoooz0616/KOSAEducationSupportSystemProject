@@ -10,6 +10,7 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.RegistrationVO;
 
 public interface IStudentService {
 
@@ -17,9 +18,9 @@ public interface IStudentService {
 
 	List<ClassVO> selectAllClass();
 
-	int getCmptClass(String email);
+	int getCmptClass(String stdtId);
 	
-	int getAplyClass(String email);
+	int getAplyClass(String stdtId);
 
 	List<PostVO> selectNoticeMain();
 
@@ -29,12 +30,12 @@ public interface IStudentService {
 
 	ClassVO selectClass(String clssId);
 
-	List<ClassVO> selectAllClassFile(String clssId);
+	List<FileVO> selectAllClassFile(String clssId);
 
 
 	LoginVO selectUser(String email);
 
-	String getIngClass(String email);
+	ClassVO getIngClass(String stdtId);
 
 	List<ClassVO> searchClasses(String keyword, String ingClass);
 
@@ -61,6 +62,11 @@ public interface IStudentService {
 	int getmaxSubId(String aplyId);
 
 	void updateAplydt(String aplyId, String stdtId);
+
+	List<RegistrationVO> searchRgstList(String stdtId);
+
+	int getRgstIngCnt(String stdtId);
+
 
 
 

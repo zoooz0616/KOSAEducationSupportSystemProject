@@ -93,8 +93,8 @@ $(document).ready(function() {
 
 						// 각 열에 해당하는 데이터를 행에 추가합니다.
 						row.append('<td><span class="className">' + classVO.cmcdNm + '</span></td>');
-						if (classVO.fileNm != null) {
-							row.append('<td class="classImg"><div><img src="/img/' + classVO.fileNm + '"></div>');
+						if (classVO.fileId != null) {
+							row.append('<td class="classImg"><div><img src="/student/file/' + classVO.fileId +'/' + classVO.fileSubId + '"></div>');
 						} else {
 							row.append('<td class="classImg"><div><img src="/img/logo.png"></div>');
 						}

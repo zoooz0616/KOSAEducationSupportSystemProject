@@ -4,6 +4,7 @@
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/class_list.css}" rel="stylesheet">
+<link rel="icon" href="/img/icon.png" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>main page</title>
@@ -85,10 +86,10 @@
 					<tr th:each="classVO, rowStat : ${classList}" class="classRow">
 						<td><span class="className" th:text="${classVO.cmcdNm}"></span></td>
 						<td class="classImg">
-							<div th:if="${classVO.fileNm!=null}">
-								<img th:src="@{/img/__${classVO.fileNm}__}">
+							<div th:if="${classVO.fileId!=null}">
+								<img th:src="@{/student/file/__${classVO.fileId}__/__${classVO.fileSubId}__}">
 							</div>
-							<div th:if="${classVO.fileNm==null}">
+							<div th:if="${classVO.fileId==null}">
 								<img th:src="@{/img/logo.png}">
 							</div>
 						</td>
