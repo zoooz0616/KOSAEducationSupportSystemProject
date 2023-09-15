@@ -79,8 +79,7 @@
 			<table id="class_list_table" style="border:1px solid #000000;">
 				<thead class="class_list_table_thead">
 					<tr>
-						<th th:if="${session.role == 'admin'}"><input type="checkbox"
-							name="chk" id="chkAll"></th>
+						<th th:if="${session.role == 'admin'}"><input type="checkbox"name="chk" id="chkAll"></th>
 						<th th:if="${session.role != 'admin'}">번호</th>
 						<th th:if="${session.role == 'admin'}">ID</th>
 						<th>프로그램명</th>

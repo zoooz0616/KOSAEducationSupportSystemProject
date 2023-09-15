@@ -18,7 +18,7 @@
 	<div class="home-section">
 		<!-- title -->
 		<div class="title_wrap">
-			<span class="title" th:text="|${title} : ${thisClassName}|"></span><a th:text="${thisClassName}" th:href="@{/manager/class/__${}__}"></a>
+			<span class="title" th:text="|${title} :|"></span><a class="title_a" th:text="${thisClassName}" th:href="@{/manager/class/__${thisClassId}__}"></a>
 		</div>
 
 		<!-- content wrap-->
@@ -59,12 +59,14 @@
 					<th><input type="checkbox" id="chkAllStdt"></th>
 					<th>번호</th>
 					<th>이름</th>
-					<th th:each="wlogCodeName:${wlogCodeNameList}"
-						th:text="${wlogCodeName.cmcdNm}"></th>
-					<th>성별</th>
-					<th>생년월일</th>
 					<th>이메일</th>
 					<th>연락처</th>
+					<th>성별</th>
+					<th>생년월일</th>
+					<th th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${wlogCodeName.cmcdNm}"></th>
+					<th>수강상태</th>
+					<th>이수율</th>
 					<th>이수여부</th>
 				</tr>
 				</thead>
@@ -73,11 +75,13 @@
 					<td><input type="checkbox" id="chkStdt"></td>
 					<td th:text="${stdtStat.count}"></td>
 					<td th:text="${stdt.stdtNm}"></td>
-					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
-					<td th:text="${stdt.genderCd}">성별</td>
-					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:text="${stdt.userEmail}">이메일</td>
 					<td th:text="${stdt.stdtTel}">연락처</td>
+					<td th:text="${stdt.genderCd}">성별</td>
+					<td th:text="${stdt.birthDd}">생년월일</td>
+					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+					<td th:text="엄">수강상태</td>
+					<td th:text="엄">이수율</td>
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
 				</tbody>
@@ -124,10 +128,6 @@
 					stdtListTable.removeChild(stdtListTable.firstChild);
 				}
 				
-				console.log(stdtListTable);
-				
-				console.log("asdasdadasadasdasdasdadsasd");
-
 				var stdtList = stdtListResponse.stdtList;
 				document.getElementById("stdtCnt").innerHTML=stdtList.length;
 
