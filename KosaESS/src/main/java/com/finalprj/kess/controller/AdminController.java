@@ -42,6 +42,7 @@ import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -61,16 +62,33 @@ public class AdminController {
 	IUploadFileService uploadFileService;
 
 	/**
+	 * 관리자 대시보드
 	 * @author : eunji
 	 * @date : 2023. 8. 22.
 	 * @parameter : session, model
 	 * @return : String
 	 */
 	@RequestMapping("")
-	public String main(HttpSession session, Model model) {
+	public String main(HttpSession session, Model model,HttpServletRequest request) {
 		if(session.getAttribute("mngrId")== null) {
 			return "redirect:/login";
+		}else {
+			if(!(((String)session.getAttribute("roleCd")).equals("ROL0000002"))){
+				// 이동하고자 하는 기본 URL 설정
+			    String defaultRedirectUrl = "/manager"; // 기본적으로 홈 페이지로 이동
+
+			    // 이전 페이지의 URL을 가져오기 시도
+			    String referer = request.getHeader("Referer");
+			    
+			    // 이전 페이지의 URL이 유효한 경우에만 사용
+			    if (referer != null && !referer.isEmpty()) {
+			        return "redirect:"+ referer;
+			    } else {
+			        return "redirect:"+ defaultRedirectUrl;
+			    }
+			}
 		}
+
 
 		//공지사항 개수
 		int noticeCnt = adminService.getNoticeCnt();
@@ -123,6 +141,14 @@ public class AdminController {
 		return "admin/dashboard";
 	}
 
+	/**
+	 * 문의사항
+	 * @author : eunji
+	 * @date : 2023. 9. 22.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	
 	@RequestMapping("/inquiry")
 	public String inquiry(HttpSession session, Model model) {
 		//로그인 정보 저장
@@ -151,6 +177,13 @@ public class AdminController {
 		return "manager_post_list";
 	}
 
+	/**
+	 * 공지사항
+	 * @author : eunji
+	 * @date : 2023. 9. 22.
+	 * @parameter : session, model
+	 * @return : String
+	 */
 	@RequestMapping("/notice")
 	public String notice(HttpSession session, Model model) {
 		//로그인 정보 저장
@@ -179,6 +212,13 @@ public class AdminController {
 		return "manager_post_list";
 	}
 
+	/**
+	 * 교육과정 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 4.
+	 * @parameter : session, model
+	 * @return : String
+	 */
 	@RequestMapping("/class")
 	public String classList(HttpSession session, Model model) {
 		//교육과정 리스트 객체 생성
@@ -192,6 +232,13 @@ public class AdminController {
 		return "admin/class_list";
 	}
 
+	/**
+	 * 교육과정 상세조회
+	 * @author : eunji
+	 * @date : 2023. 9. 6.
+	 * @parameter : clssId, session, model
+	 * @return : String
+	 */
 	@RequestMapping("/class/{clssId}")
 	public String classDetail(@PathVariable String clssId, HttpSession session, Model model) {
 		//title
@@ -229,6 +276,13 @@ public class AdminController {
 		return "admin/class_form";
 	}
 
+	/**
+	 * 교육과정 생성화면
+	 * @author : eunji
+	 * @date : 2023. 9. 10.
+	 * @parameter : session, model
+	 * @return : String
+	 */
 	@GetMapping("/class/insert")
 	public String insertClass(HttpSession session, Model model) {
 
@@ -265,6 +319,13 @@ public class AdminController {
 		return "admin/class_form";
 	}
 
+	/**
+	 * 교육과정 생성 로직
+	 * @author : eunji
+	 * @date : 2023. 9. 11.
+	 * @parameter : session, files, redirectAttrs, classInsertDTO, clssCd, cmpyId, mngrId, lctrIds
+	 * @return : String
+	 */
 	@PostMapping("/class/insert")
 	public String insertClass(HttpSession session,
 			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
@@ -396,7 +457,14 @@ public class AdminController {
 
 		return "redirect:/admin/class";
 	}
-
+	
+	/**
+	 * 교육과정 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 12.
+	 * @parameter : clssId,session, model
+	 * @return : String
+	 */
 	@GetMapping("/class/update/{clssId}")
 	public String updateClass(@PathVariable String clssId, Model model, HttpSession session) {
 		//title
@@ -464,6 +532,13 @@ public class AdminController {
 		return "admin/class_form";
 	}
 
+	/**
+	 * 교육과정 수정 로직
+	 * @author : eunji
+	 * @date : 2023. 9. 12.
+	 * @parameter : session, files, redirectAttrs, classInsertDTO, clssId, cmpyId, mngrId, lctrIds, fileSubIds
+	 * @return : String
+	 */
 	@PostMapping("/class/update")
 	public String updateClass(HttpSession session,
 			@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
@@ -614,6 +689,13 @@ public class AdminController {
 		return "redirect:/admin/class/"+classVO.getClssId();
 	}
 
+	/**
+	 * 교육과정 선택 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 12.
+	 * @parameter : clssId
+	 * @return : String
+	 */
 	@PostMapping("/cls/delete")
 	public String classDeleteAll(@RequestParam(name="chk")List<String> clssIds){
 		//선택한 교육과정 모두 update deleteYn='Y', updt
@@ -622,6 +704,13 @@ public class AdminController {
 		return "redirect:/admin/class";
 	}
 
+	/**
+	 * 교육과정 개별 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 12.
+	 * @parameter : clssId
+	 * @return : String
+	 */
 	@PostMapping("/cls/delete/{clssId}")
 	public @ResponseBody String classDelete(@PathVariable String clssId) {
 		List<String> clssIds = new ArrayList<String>();
@@ -630,6 +719,13 @@ public class AdminController {
 		return clssId;
 	}
 
+	/**
+	 * 교육과정 지원자 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 13.
+	 * @parameter : clssId, model, session
+	 * @return : String
+	 */
 	@GetMapping("/class/{clssId}/applicant")
 	public String applicant(@PathVariable String clssId, Model model, HttpSession session) {
 		//해당 교육과정VO 생성
@@ -644,6 +740,13 @@ public class AdminController {
 		return "admin/applicant_list";
 	}
 
+	/**
+	 * 교육과정 지원자 합불처리
+	 * @author : eunji
+	 * @date : 2023. 9. 13.
+	 * @parameter : clssId, session, action, aplyIds
+	 * @return : String
+	 */
 	@PostMapping("/class/{clssId}/applicant")
 	public String applicant(@PathVariable String clssId, HttpSession session,
 			@RequestParam("action") String action, @RequestParam(name="chk", required = false)List<String> aplyIds) {
@@ -660,40 +763,120 @@ public class AdminController {
 		return "redirect:/admin/class/"+clssId+"/applicant";
 	}
 
-	@RequestMapping("/professor")
-	public String professor(HttpSession session, Model model) {
-		//강사 리스트 객체 생성
-		List<ProfessorVO> professorList = adminService.getProfessorList();
-		model.addAttribute("professorList", professorList);
-
-		return "admin/professor_list";
-	}
-
-	@RequestMapping("/subject")
-	public String subject(HttpSession session, Model model) {
-		//강사 리스트 객체 생성
-		List<SubjectVO> subjectList = adminService.getSubjectList();
-		model.addAttribute("subjectList", subjectList);
-
-		return "admin/subject_list";
-	}
-
+	/**
+	 * 강의 관리
+	 * @author : eunji
+	 * @date : 2023. 9. 13.
+	 * @parameter : model, session
+	 * @return : String
+	 */
 	@RequestMapping("/lecture")
 	public String lecture(HttpSession session, Model model) {
 		//강사 리스트  생성
 		List<ProfessorVO> professorList = adminService.getProfessorList();
 		model.addAttribute("professorList", professorList);
-		
+
 		//과목 리스트 생성
 		List<SubjectVO> subjectList = adminService.getSubjectList();
 		model.addAttribute("subjectList", subjectList);
-		
+
 		//강의 리스트 생성
 		List<LectureVO> lectureList = adminService.getLectureList();
 		model.addAttribute("lectureList", lectureList);
 
 		return "admin/lecture_list";
 	}
+	
+	/**
+	 * 강의 생성
+	 * @author : eunji
+	 * @date : 2023. 9. 13.
+	 * @parameter : model, session
+	 * @return : String
+	 */
+	@PostMapping("/lecture/insert")
+	@ResponseBody
+	public String insertLecture(@RequestParam("subjectIdInput")String sbjtId, @RequestParam("profIdInput")String profId,
+			@RequestParam("lecturNmInput")String lctrNm, @RequestParam("lectureTmInput")int lctrTm) {
+		//강의명이 중복되는지 확인 후 중복 시 fail 리턴
+		Integer lctrNmCnt = adminService.getLctrNmCnt(lctrNm);
+		
+		if (lctrNmCnt != 0) {
+			return "fail";
+		}else {
+			LectureVO lectureVO = new LectureVO();
+			lectureVO.setLctrId(adminService.getMaxLectureId());
+			lectureVO.setSbjtId(sbjtId);
+			lectureVO.setProfId(profId);
+			lectureVO.setLctrNm(lctrNm);
+			lectureVO.setLctrTm(lctrTm);
+			
+			adminService.insertLectureVO(lectureVO);
+			
+			return "success";
+		}
+	}
+	
+	
+	
+	/**
+	 * 과목 생성
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : sbjtNm
+	 * @return : String
+	 */
+	@PostMapping("/lecture/subject/insert")
+	@ResponseBody
+	public String insertSubject(@RequestParam("subjectInput") String sbjtNm) {
+		//과목명이 중복되는지 확인 후 중복되면 return 실패보내기
+		//sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
+		Integer sbjtNmCnt = adminService.getSubjectNmCnt(sbjtNm);
+		if(sbjtNmCnt != 0) {
+			return "fail";
+		}else {
+			SubjectVO subjectVO = new SubjectVO();
+			subjectVO.setSbjtId(adminService.getMaxSubjectId());
+			subjectVO.setSbjtNm(sbjtNm);
+			adminService.insertSubjectVO(subjectVO);
+			
+			//없는 이름이면 객체 생성해서 insert하기
+			return "success";
+		}
+	}
+	
+	/**
+	 * 강사 생성
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@PostMapping("/lecture/professor/insert")
+	@ResponseBody
+	public String insertProfessor(@RequestParam("profNmInput") String profNm, @RequestParam("profTelInput") String profTel, 
+			@RequestParam("profEmailInput") String profEmail) {
+		//전화번호가 중복되는지 확인 후 중복되면 return 실패보내기
+		//sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
+		Integer profTelCnt = adminService.getProfTelCnt(profTel);
+		
+		if(profTelCnt != 0) {
+			return "fail";
+		}else {
+			ProfessorVO professorVO = new ProfessorVO();
+			professorVO.setProfId(adminService.getMaxProfId());
+			professorVO.setProfNm(profNm);
+			professorVO.setProfTel(profTel);
+			professorVO.setProfEmail(profEmail);
+			adminService.insertProfessorVO(professorVO);
+			
+			//없는 이름이면 객체 생성해서 insert하기
+			return "success";
+		}
+	}
+	
+	
+	
 
 	@RequestMapping("/manager")
 	public String manager(HttpSession session, Model model) {
