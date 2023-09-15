@@ -193,7 +193,8 @@
 		       limit_cnt,
 		       clss_cd,
 			   cmcd.cmcd_nm,
-		       flup.file_nm 
+		       flup.file_id,
+		        flup.file_sub_id
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -202,6 +203,7 @@
 		   ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
+
 
 	<!-- 교육지원목록 검색 -->
 	<select id="searchClasses" parameterType="string"
@@ -219,7 +221,8 @@
 			    limit_cnt,
 			    clss_cd,
 			    cmcd.cmcd_nm,
-			    flup.file_nm 
+			    flup.file_id,
+		        flup.file_sub_id
 			FROM clss
 			JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -283,7 +286,8 @@
 		    file_nm,
 		    file_content,
 		    file_size,
-		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fileType"
+		    file_type,
+		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fType"
 		FROM flup
 		WHERE file_id = (
 		    SELECT file_id
@@ -309,7 +313,8 @@
 		       clss.cmpy_id,
 		       clss_cd,
 			   cmcd.cmcd_nm,
-		   		flup.file_nm
+		   		flup.file_id,
+		        flup.file_sub_id
 		   FROM clss
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -353,15 +358,8 @@
 	<![CDATA[
 		select COALESCE(COUNT(clss_id), 0) as "cmptClassCnt"
 			from rgst
-			where stdt_id= (
-				SELECT stdt_id
-				FROM stdt
-				WHERE user_email=#{email}
-				)
-	            and cmpt_cd=
-			(select cmcd_id
-			from cmcd
-			where cmcd_id='CMP0000002')
+			where stdt_id= #{stdtId}
+	            and cmpt_cd='CMP0000002'
 	]]>
 	</select>
 
@@ -375,36 +373,29 @@
 			where stdt_id= (
 				SELECT stdt_id
 			FROM stdt
-			WHERE user_email=#{email}
-			) and aply_cd=
-			(select cmcd_id
-			from cmcd
-			where cmcd_id='APL0000002')
+			WHERE stdt_id=#{stdtId}
+			) and aply_cd='APL0000002'
 	]]>
 	</select>
 
-	<!-- 수강중인 수업명 출력 -->
+	<!-- 수강중인 수업VO 출력 -->
 	<select id="getIngClass" parameterType="string"
-		resultType="string">
+		resultType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
-		select clss_nm
+		select 
+		clss_id,
+		clss_nm,
+		clss_start_dd,
+		clss_end_dd, 
+		set_in_tm,
+		set_out_tm 
 		from clss
 		where clss_id =(
 			select clss_id
-				from rgst
-				where stdt_id= (
-					SELECT stdt_id
-					FROM stdt
-					WHERE user_email=#{email}
-					)
-		            and cmpt_cd=
-				(select cmcd_id
-				from cmcd
-				where cmcd_id='CMP0000001')
-			) and clss_cd=
-			(select cmcd_id
-			from cmcd
-			where cmcd_id='CLS0000004')
+			from rgst
+			where stdt_id= #{stdtId}
+		            and cmpt_cd ='CMP0000001'
+					and rgst_cd ='CLS0000005') 
 	]]>
 	</select>
 
@@ -462,7 +453,15 @@
 		values(#{maxRgstId}, #{stdtId}, (select
             clss_id
            from aply
-       where aply_id = #{aplyId}), 'RST0000001', 'CMP0000001',null,systimestamp, #{stdtId}, null, null)
+       where aply_id = #{aplyId}),(select 
+       clss_cd
+       from clss
+       where clss_id =
+       (select
+            clss_id
+           from aply
+       where aply_id = #{aplyId})),
+        'CMP0000001',null,systimestamp, #{stdtId}, null, null,null)
         
 		]]>
 	</insert>
@@ -496,7 +495,7 @@
 				)	
 	]]>
 	</insert>
-	
+
 	<!-- 지원 수정 날짜 업데이트 -->
 	<insert id="updateAplydt">
 	<![CDATA[
@@ -507,5 +506,44 @@
 		where aply_id = #{aplyId}	
 	]]>
 	</insert>
+
+
+	<!-- 이수내역 조회 -->
+	<select id="searchRgstList" parameterType="string"
+		resultType="com.finalprj.kess.model.RegistrationVO">
+	<![CDATA[
+		  select 
+			rgst_id,
+			clss.clss_id,
+			clss.clss_nm,
+			clss.clss_start_dd,
+			clss.clss_end_dd,
+			rgst_cd,
+			cmpt_cd,
+			(select cmcd_nm from cmcd where cmcd.cmcd_id = rgst.rgst_cd) as "rgstNm",
+			(select cmcd_nm from cmcd where cmcd.cmcd_id = rgst.cmpt_cd) as "cmptNm",
+			flup.file_id,
+			flup.file_sub_id,
+			flup.file_nm,
+            rgst.rgst_dt,
+			rgst.rgst_dt as "rgstDd"
+			FROM rgst
+			JOIN clss on clss.clss_id = rgst.clss_id
+			LEFT JOIN flup on flup.file_id = rgst.file_id
+			WHERE stdt_id=#{stdtId}
+			ORDER BY rgst.rgst_dt DESC
+	]]>
+	</select>
+
+
+	<!-- 이수중인 교육 내역 유무 -->
+	<select id="getRgstIngCnt" resultType="int">
+	<![CDATA[
+		select COALESCE(COUNT(rgst_id), 0) as "RgstIngCnt"
+		from rgst
+		WHERE stdt_id=#{stdtId} and (rgst_cd = 'CLS0000004'or rgst_cd = 'CLS0000005')
+	]]>
+	</select>
+
 
 </mapper>

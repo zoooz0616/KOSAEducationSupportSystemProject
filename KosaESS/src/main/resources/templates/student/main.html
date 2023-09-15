@@ -4,6 +4,7 @@
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link rel="icon" href="/img/icon.png" />
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -33,7 +34,7 @@
 		</div>
 		<div class="maincontent">
 			<div class="login con"
-				style="margin-bottom: 4%; text-align: center;padding: 3%;">
+				style="margin-bottom: 4%; text-align: center; padding: 3%;">
 				<div th:if="${session.userEmail==null}">
 					<h2>회원가입후 이용가능</h2>
 				</div>
@@ -78,25 +79,26 @@
 
 				</div>
 				<div th:if="${session.userEmail!=null}">
-					<form th:action="@{/wlog}" method="post" class="inoutform">
-						<h3 th:text="${ingClassNm}" style="margin: 0; width: 50%"></h3>
-						<div th:if="${ingClassNm != null}" class="inouttm">
-							<div>
-								<label for="intm"></label><span>출근 시간</span> <input type="text"
-									name="intm" id="intm" class="checktm" readonly>
-							</div>
-							<div>
-								<label for="outtm"></label><span>퇴근 시간</span> <input type="text"
-									name="outtm" id="outtm" class="checktm" readonly>
-							</div>
+					<div>
+						<h3 th:text="${ingClassVO == null}" style="margin: 0; width: 50%"></h3>
+					</div>
+					<div th:if="${ingClassVO != null}" class="inouttm">
+						<h3></h3>
+						<div>
+							<label for="intm"></label><span>출근 시간</span> <input type="text"
+								name="intm" id="intm" class="checktm" readonly>
 						</div>
-						<div class="submit"
-							style="margin-top: 0; display: grid; align-items: center;">
-							<!-- 토글 버튼 -->
-							<input class="wlogBtn" type="button" th:value="출근하기"
-								onclick="toggleInOut()">
+						<div>
+							<label for="outtm"></label><span>퇴근 시간</span> <input type="text"
+								name="outtm" id="outtm" class="checktm" readonly>
 						</div>
-					</form>
+					</div>
+					<div class="submit"
+						style="margin-top: 0; display: grid; align-items: center;">
+						<!-- 토글 버튼 -->
+						<input class="wlogBtn" type="button" th:value="출근하기"
+							onclick="toggleInOut()">
+					</div>
 				</div>
 			</div>
 			<div class="class con" style="width: 45%;">

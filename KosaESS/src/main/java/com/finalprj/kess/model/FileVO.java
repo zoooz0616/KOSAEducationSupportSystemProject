@@ -13,6 +13,8 @@ public class FileVO {
 	private String fileType;//파일타입
 	private String deleteYn; //삭제여부
 	
+	private String fType;//파일id
+	
 	@Override
 	public String toString() {
 		return "FileVO [fileId=" + fileId + ", fileSubId=" + fileSubId + ", fileNm=" + fileNm + ", fileSize=" + fileSize + ", fileType=" + fileType + ", deleteYn=" + deleteYn + "]";

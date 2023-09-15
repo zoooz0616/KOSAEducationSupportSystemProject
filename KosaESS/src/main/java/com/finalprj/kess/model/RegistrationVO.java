@@ -15,4 +15,13 @@ public class RegistrationVO {
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
+	private String fileId;//파일id
+
+	private String fileSubId;//파일id
+	private String fileNm;//파일id
+	private String clssNm;
+	private String rgstNm;
+	private String cmptNm;
+	private String clssStartDd;
+	private String clssEndDd;
 }

@@ -57,11 +57,11 @@ function toggleInOut() {
 	if (isAttendance) {
 		// 퇴근 처리
 		outtmInput.value = getCurrentTime();
-		wlogBtn.value = "출근하기";
+		wlogBtn.value = "출근하기";//변경되는 버튼 이름
 	} else {
 		// 출근 처리
 		intmInput.value = getCurrentTime();
-		wlogBtn.value = "퇴근하기";
+		wlogBtn.value = "퇴근하기"; //변경되는 버튼 이름
 	}
 
 	isAttendance = !isAttendance; // 상태를 토글
@@ -77,5 +77,6 @@ function getCurrentTime() {
 	var seconds = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
 	var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':'
 		+ minutes + ':' + seconds;
+		
 	return formattedTime;
 }

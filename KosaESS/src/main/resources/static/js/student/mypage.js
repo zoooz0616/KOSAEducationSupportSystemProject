@@ -20,10 +20,8 @@ $(document).ready(function() {
 					row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
 					row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
 					row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
-					row.append('<td><button class="update">수정</button></td>');
-					row.append('<td><button class="cancel">지원취소</button></td>');
-					row.append('<td><button class="apply">수강</button></td>');
-					row.append('<td><button class="drop">수강포기</button></td>');
+					row.append('<td><button class="update">수정</button><button class="apply">수강</button></td>');
+					row.append('<td><button class="cancel">지원취소</button><button class="drop">수강포기</button></td>');
 					row.append('<td style="display:none;"><span>' + ApplyDetailDTO.aplyId + '</span></td>')
 
 					var updateBtn = row.find('.update');
@@ -32,31 +30,31 @@ $(document).ready(function() {
 					var dropBtn = row.find('.drop');
 
 					if (ApplyDetailDTO.aplyCd === 'APL0000001' || ApplyDetailDTO.aplyCd === 'APL0000004' || ApplyDetailDTO.aplyCd === 'APL0000005' || ApplyDetailDTO.aplyCd === 'APL0000006') {
-						updateBtn.hide();
-						cancelBtn.hide();
-						aplyBtn.hide();
-						dropBtn.hide();
+						updateBtn.addClass('hidden');
+						cancelBtn.addClass('hidden');
+						aplyBtn.addClass('hidden');
+						dropBtn.addClass('hidden');
 					}
 
 					if (ApplyDetailDTO.aplyCd === 'APL0000002') {
-						if (ApplyDetailDTO.aplyDate < time) { // aplyDate가 time을 지났을 때
-							updateBtn.prop('disabled', true);
-							cancelBtn.prop('disabled', false);
-							aplyBtn.prop('disabled', true);
-							dropBtn.prop('disabled', true);
+						if (ApplyDetailDTO.aplyDate < time) {
+							updateBtn.addClass('hidden');
+							cancelBtn.removeClass('hidden');
+							aplyBtn.addClass('hidden');
+							dropBtn.addClass('hidden');
 						} else {
-							updateBtn.prop('disabled', false);
-							cancelBtn.prop('disabled', false);
-							aplyBtn.prop('disabled', true);
-							dropBtn.prop('disabled', true);
+							updateBtn.removeClass('hidden');
+							cancelBtn.removeClass('hidden');
+							aplyBtn.addClass('hidden');
+							dropBtn.addClass('hidden');
 						}
 					}
 
 					if (ApplyDetailDTO.aplyCd === 'APL0000003') {
-						updateBtn.prop('disabled', true);
-						cancelBtn.prop('disabled', true);
-						aplyBtn.prop('disabled', false);
-						dropBtn.prop('disabled', false);
+						updateBtn.addClass('hidden');
+						cancelBtn.addClass('hidden');
+						aplyBtn.removeClass('hidden');
+						dropBtn.removeClass('hidden');
 					}
 
 					tbody.append(row);
@@ -124,23 +122,19 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: 'POST',
-			url: '/student/mypage/aplyList/update',
+			url: '/student/mypage/aplyList/confirm',
 			data: {
 				aplyCd: 'APL0000005',
 				aplyId: aplyId
 			},
-			success: function() {
-				$.ajax({
-					type: 'POST',
-					url: '/student/insert/rgstList',
-					data: {
-						aplyId: aplyId
-					},
-					success: function() {
-						alert("수강이 확정되었습니다.");
-						updateTable();
-					}
-				});
+			success: function(response) {
+				if (response == true) {
+					alert("수강이 확정되었습니다.");
+					updateTable();
+				} else {
+					alert("진행중인 수업이 존재합니다. \n 한 개이상의 교육을 수강할 수 없습니다.");
+					updateTable(); // 성공한 후 테이블 업데이트
+				}
 			}
 		});
 	});
@@ -163,6 +157,3 @@ $(document).ready(function() {
 		});
 	});
 });
-
-
-

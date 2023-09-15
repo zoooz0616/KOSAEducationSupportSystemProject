@@ -1,5 +1,6 @@
 package com.finalprj.kess.controller;
 
+import java.io.Console;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -30,6 +31,7 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -66,13 +68,13 @@ public class StudentController {
 		classList = studentService.selectClassMain();
 		model.addAttribute("classList", classList);
 
-		int aplyClassCnt = studentService.getAplyClass((String) session.getAttribute("userEmail"));
-		int cmptClassCnt = studentService.getCmptClass((String) session.getAttribute("userEmail"));
-		String ingClassNm = studentService.getIngClass((String) session.getAttribute("userEmail"));
+		int aplyClassCnt = studentService.getAplyClass((String) session.getAttribute("stdtId"));
+		int cmptClassCnt = studentService.getCmptClass((String) session.getAttribute("stdtId"));
+		ClassVO ingClassVO = studentService.getIngClass((String) session.getAttribute("stdtId"));
 
 		model.addAttribute("aplyClassCnt", aplyClassCnt);
 		model.addAttribute("cmptClassCnt", cmptClassCnt);
-		model.addAttribute("ingClassNm", ingClassNm);
+		model.addAttribute("ingClassVO", ingClassVO);
 
 		return "student/main";
 	}
@@ -156,8 +158,8 @@ public class StudentController {
 		model.addAttribute("curriculumlist", curriculumlist);
 
 		// classDetailList 객체를 가져와서 모델에 추가
-		List<ClassVO> classDetailList = studentService.selectAllClassFile(clssId);
-		model.addAttribute("classDetailList", classDetailList);
+		List<FileVO> classFileList = studentService.selectAllClassFile(clssId);
+		model.addAttribute("classFileList", classFileList);
 
 		// viewClass1과 viewClass2, viewClass3 세션에서 가져와서 모델에 추가
 		String viewClass1 = (String) session.getAttribute("viewClass1");
@@ -195,6 +197,24 @@ public class StudentController {
 		model.addAttribute("class2", class2);
 
 		return "student/class_detail";
+	}
+
+	@GetMapping("file/{fileId}/{fileSubId}")
+	public ResponseEntity<byte[]> getFile(@PathVariable String fileId, @PathVariable String fileSubId,
+			HttpSession session) {
+		FileVO file = uploadFileService.getFile(fileId, fileSubId);
+
+		final HttpHeaders headers = new HttpHeaders();
+		String[] mtypes = file.getFileType().split("/");
+		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+		headers.setContentLength(file.getFileSize());
+		try {
+			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+			headers.setContentDispositionFormData("attachment", encodedFileName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
 
 	// 교욱 지원 모달창(로그인 유무 확인)
@@ -286,6 +306,10 @@ public class StudentController {
 		String stdtId = (String) session.getAttribute("stdtId");
 		List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
 		model.addAttribute("applyList", applyList);
+
+		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
+		model.addAttribute("rgstList", rgstList);
+
 		return "student/mypage";
 	}
 
@@ -334,41 +358,47 @@ public class StudentController {
 
 	@PostMapping("/mypage/aplyList/update")
 	@ResponseBody
-	public void updateAply(@RequestParam("aplyCd") String aplyCd, @RequestParam("aplyId") String aplyId,
-			HttpSession session) {
-		/* String stdtId = (String) session.getAttribute("stdtId"); */
+	public void updateAply(@RequestParam("aplyCd") String aplyCd, @RequestParam("aplyId") String aplyId) {
 		studentService.updateaply(aplyCd, aplyId);
 	}
 
-	// 마이페이지 수강내역 추가
+	// 마이페이지 지원내역 확정
 	/**
 	 * @author : dabin
+	 * @return
 	 * @date : 2023. 9 .13
 	 * @parameter : session, model
 	 * @return :
 	 */
 
-	@PostMapping("/insert/rgstList")
+	@PostMapping("/mypage/aplyList/confirm")
 	@ResponseBody
-	public void insertRgst(@RequestParam("aplyId") String aplyId, HttpSession session) {
-
-		String maxRgstId = studentService.getMaxRegistrationId();
+	public boolean confirmAply(@RequestParam("aplyCd") String aplyCd, @RequestParam("aplyId") String aplyId,
+			HttpSession session) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		studentService.insertRgst(aplyId, maxRgstId, stdtId);
+		int rgstIngCnt = studentService.getRgstIngCnt(stdtId);
+		if (rgstIngCnt == 0) {
+			studentService.updateaply(aplyCd, aplyId);
+			String maxRgstId = studentService.getMaxRegistrationId();
+			studentService.insertRgst(aplyId, maxRgstId, stdtId);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// 마이페이지 수강내역 업데이트
 	/**
 	 * @author : dabin
-	 * @return 
+	 * @return
 	 * @date : 2023. 9. 14
 	 * @parameter :model
 	 * @throws IOException
 	 */
 
 	@PostMapping("/mypage/uploadFile/{aplyId}")
-	public String updateAplyFile(@PathVariable String aplyId, @RequestParam("formData") MultipartFile file,HttpSession session)
-			throws IOException {
+	public String updateAplyFile(@PathVariable String aplyId, @RequestParam("formData") MultipartFile file,
+			HttpSession session) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
 		int maxFileSubId = studentService.getmaxSubId(aplyId);
@@ -380,7 +410,7 @@ public class StudentController {
 		fileVO.setFileContent(file.getBytes());
 		studentService.updateAplyFile(aplyId, fileVO, maxFileSubId);
 		studentService.updateAplydt(aplyId, stdtId);
-		
+
 		return "redirect:/student/mypage";
 	}
 }

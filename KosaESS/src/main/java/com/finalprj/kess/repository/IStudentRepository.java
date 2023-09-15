@@ -13,6 +13,7 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.RegistrationVO;
 
 @Mapper
 @Repository
@@ -21,9 +22,9 @@ public interface IStudentRepository {
 
 	List<ClassVO> selectAllClass();
 
-	int getAplyClass(String email);
+	int getAplyClass(String stdtId);
 
-	int getCmptClass(String email);
+	int getCmptClass(String stdtId);
 
 	List<PostVO> selectNoticeMain();
 
@@ -33,13 +34,13 @@ public interface IStudentRepository {
 
 	ClassVO selectClass(String clssId);
 
-	List<ClassVO> selectAllClassFile(String clssId);
+	List<FileVO> selectAllClassFile(String clssId);
 
 	FileVO getFile(String fileId, String fileSubId);
 
 	LoginVO selectUser(String email);
 
-	String getIngClass(String email);
+	ClassVO getIngClass(String stdtId);
 
 	List<ClassVO> searchClasses(String keyword, String ingClass);
 
@@ -66,6 +67,10 @@ public interface IStudentRepository {
 	int getmaxSubId(String aplyId);
 
 	void updateAplydt(String aplyId, String stdtId);
+
+	List<RegistrationVO> searchRgstList(String stdtId);
+
+	int getRgstIngCnt(String stdtId);
 
 
 		

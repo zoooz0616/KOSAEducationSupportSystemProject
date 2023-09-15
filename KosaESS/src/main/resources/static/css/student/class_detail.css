@@ -33,9 +33,34 @@ table th {
 	text-align: center;
 }
 
+.crclTable {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.crclTable table {
+	width: 80%;
+}
+
+.classFile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 ul {
-	list-style: none;
 	text-align: center;
+	list-style-type: none;
+	padding: 0;
+}
+
+.classFile li {
+	padding-bottom: 2%;
+}
+
+.classFile img {
+	width: 600px;
 }
 
 .btn {
@@ -47,7 +72,8 @@ ul {
 .btn button {
 	padding: 0 3%;
 }
-.crclTable th{
+
+.crclTable th {
 	background-color: #E7EFF3;
 }
 

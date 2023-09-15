@@ -28,6 +28,7 @@ public class ClassVO {
 
 	private int clssTotalTm;// 교육과정 이수시간
 	private String fileId;// 파일 id
+	private String fileSubId;// 파일 id
 
 	private String clssEtc;// 기타사항
 	private Timestamp rgstDt;// 등록일시
