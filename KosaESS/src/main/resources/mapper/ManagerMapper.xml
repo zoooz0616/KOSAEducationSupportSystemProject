@@ -14,7 +14,7 @@
 		JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
 	WHERE
 		mngr_id = #{mngtId}
-	ORDER BY clss_nm
+	ORDER BY clss_nm DESC
 	]]>
 	</select>
 

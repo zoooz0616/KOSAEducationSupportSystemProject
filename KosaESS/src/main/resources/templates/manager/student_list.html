@@ -3,11 +3,11 @@
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
 <title>Manager Student List</title>
-<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
 </head>
 <head>
-<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link th:href="@{/css/manager/manager_class_list.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<!-- 서브바 부분 -->
@@ -17,7 +17,9 @@
 	<!-- 컨텐츠 부분 -->
 	<div class="home-section">
 		<!-- title -->
-		<div class="title" th:text="|${title} : ${thisClassName}|">Title</div>
+		<div class="title_wrap">
+			<span class="title" th:text="|${title} : ${thisClassName}|"></span><a th:text="${thisClassName}" th:href="@{/manager/class/__${}__}"></a>
+		</div>
 
 		<!-- content wrap-->
 		<div class="content_wrap">
@@ -28,7 +30,13 @@
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;"><select id="classId"> <option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
+<!-- 							<td style="width: 30%;"><select id="classId"> <option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td> -->
+							<td style="width: 30%;">
+								<input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option">
+								<datalist id="search_option">
+									<option th:each="class:${classList}" th:value="${class.clssNm}">
+								</datalist>
+							</td>
 							<td style="width: 10%;">기간</td>
 							<td style="width: 30%;"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
 						</tr>
@@ -183,6 +191,78 @@
 		})
 	}
 
+	//검색 클릭 이벤트
+	const searchBtn = document.querySelector("#search_btn");
+	searchBtn.addEventListener("click", () => {
+		//교육과정명
+		var className = document.querySelector("#class_name").value;
+					
+		//교육과정 상태값 가져오기
+		var statusArray = new Array();
+		$('input:checkbox[name=chk_status]:checked').each(function(){
+			statusArray.push(this.value);			
+		});
+		
+		//교육과정 지원 시작
+		var aplyStartDt = document.querySelector("#aply_start_dt").value;
+		
+		//교육과정 지원 마감
+		var aplyEndDt = document.querySelector("#aply_end_dt").value;
+		
+		//교육과정 시작일
+		var classStartDd = document.querySelector("#class_start_dd").value;
+		
+		//교육과정 종료일
+		var classEndDd = document.querySelector("#class_end_dd").value;
+		
+		console.log("className: " +className);
+		console.log("statusArray: " +statusArray);
+		console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
+		console.log("class: "+classStartDd+"~"+classEndDd);
+
+	$.ajax({
+		url: '/admin/class/search',
+		async: true,
+		method: 'GET',
+		data: {
+			className: className, 
+			statusArray: statusArray,
+			aplyStartDt: aplyStartDt,
+			aplyEndDt: aplyEndDt,
+			classStartDd: classStartDd,
+			classEndDd: classEndDd},
+		success: function(response) {
+			var classListTable = document.querySelector("#class_list_table");
+			var classList = classListTable.querySelectorAll("#class_list");
+			classListTable.firstElementChild.remove();
+			var classListCode=
+				'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
+				'<th th:if="${session.role==\'admin\'}">ID</th>'+
+				'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
+				'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
+			for(var i = 0; i < response.length; i++){
+			classListCode += 
+				'<tr><td><input type="checkbox" name="chk" th:value="'+
+				response[i].clssId+'"></td>'+
+				'<td>'+response[i].clssId+'</td>'+
+				'<td><a class="content_title" th:href="@{/manager/class/__'+response[i].clssId +
+				'__}">'+response[i].clssNm+'</a></td>' +
+				'<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
+				'<span>'+response[i].aplyEndDt+'</span></td>'+
+				'<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
+				'<span>'+response[i].clssEndDd+'</span></td>'+
+				'<td>'+response[i].clssAdr+'</td>'+
+				'<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
+				'<td>'+response[i].clssCd+'</td></tr>';
+			}
+			classListTable.innerHTML=classListCode;
+		},
+		error: function(error){
+			console.log("error: ", error);
+		}
+	});
+});
+	
 </script>
 
 </body>
