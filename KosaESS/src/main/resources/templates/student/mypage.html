@@ -5,6 +5,7 @@
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/subbar.css}" rel="stylesheet">
 <link th:href="@{/css/student/mypage.css}" rel="stylesheet">
+<link rel="icon" href="/img/icon.png" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>main page</title>
@@ -37,8 +38,7 @@
 									<th>정원</th>
 									<th>지원 날짜</th>
 									<th>지원 상태</th>
-									<th colspan="2">수정하기</th>
-									<th colspan="2">수강하기</th>
+									<th colspan="2">수정/수강</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -53,10 +53,10 @@
 									<td th:text="${ApplyDetailDTO.limitCnt}"></td>
 									<td th:text="${ApplyDetailDTO.rgstDd}"></td>
 									<td th:text="${ApplyDetailDTO.cmcdNm}"></td>
-									<td><button class="update">수정</button></td>
-									<td><button class="cancel">지원취소</button></td>
-									<td><button class="apply">수강</button></td>
-									<td><button class="drop">수강포기</button></td>
+									<td><button class="update">수정</button>
+										<button class="apply">수강</button></td>
+									<td><button class="cancel">지원취소</button>
+										<button class="drop">수강포기</button></td>
 									<td style="display: none;"><span
 										th:text="${ApplyDetailDTO.aplyId}"></span></td>
 								</tr>
@@ -66,11 +66,42 @@
 				</div>
 				<div class="completeList" style="display: none;">
 					<h3>교육 과정 이수 내역</h3>
+					<div>
+						<table class="rgstTable">
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th>교육 과정 명</th>
+									<th>교육기간</th>
+									<th>수강상태</th>
+									<th>이수 상태</th>
+									<th>이수증 다운로드</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="aplyRow"
+									th:each="RegistrationVO , rowStat : ${rgstList}">
+									<td><span th:text="${rowStat.index + 1}"></span></td>
+									<td th:text="${RegistrationVO.clssNm}"></td>
+									<td
+										th:text="${RegistrationVO.clssStartDd} +' ~ '+ ${RegistrationVO.clssEndDd}"></td>
+									<td th:text="${RegistrationVO.rgstNm}"></td>
+									<td th:text="${RegistrationVO.cmptNm}"></td>
+									<td class="rgstPrint" style="display: none;"><a
+										th:href="@{/download/file/__${RegistrationVO.fileId}__/__${RegistrationVO.fileSubId}__}"
+										th:title="${RegistrationVO.fileNm}"> <img
+											style="width: 30px;" th:src="@{/img/file_icon.png}"
+											alt="file  아이콘"></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div class="workLog" style="display: none;">
 					<h3>출퇴근 관리</h3>
 				</div>
-				<div class="modal" style="display: none;">>
+				<div class="modal" style="display: none;">
+					>
 					<div class="modalBody">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
@@ -90,6 +121,19 @@
 			</div>
 		</div>
 	</div>
+	<script th:inline="javascript">
+		/* JavaScript에서 Java 모델의 값을 가져와서 처리 */
+		var rgstList = /*[[${rgstList}]]*/[];
+
+		for (var i = 0; i < rgstList.length; i++) { 
+			var cmptCd = rgstList[i].cmptCd;
+			var rgstPrintElement = $('.rgstPrint').eq(i);
+
+			if (cmptCd === 'CMP0000002') {
+				rgstPrintElement.css('display', 'block');
+			}
+		}
+	</script>
 	<script src="/js/student/sidebar.js"></script>
 	<script src="/js/student/mypage.js"></script>
 </body>
