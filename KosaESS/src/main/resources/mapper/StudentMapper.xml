@@ -478,7 +478,7 @@
 	</select>
 
 	<!-- 지원 테이블 파일 수정 -->
-	<insert id="updateAplyFile"
+	<update id="updateAplyFile"
 		parameterType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
 		update flup
@@ -494,10 +494,10 @@
 				where aply_id = #{aplyId}	
 				)	
 	]]>
-	</insert>
+	</update>
 
 	<!-- 지원 수정 날짜 업데이트 -->
-	<insert id="updateAplydt">
+	<update id="updateAplydt">
 	<![CDATA[
 		update aply
 		set 
@@ -505,7 +505,7 @@
 			updt_dt = systimestamp
 		where aply_id = #{aplyId}	
 	]]>
-	</insert>
+	</update>
 
 
 	<!-- 이수내역 조회 -->
@@ -545,5 +545,47 @@
 	]]>
 	</select>
 
+	<!-- 출퇴근 Id개수 가져오기 -->
+	<select id="getWlogIdCnt" resultType="int">
+	<![CDATA[
+		select COALESCE(COUNT(wlog_id), 0) as "countwlogId"
+		from wlog
+		where stdt_id = {#stdtId} and clss_id = {#clssId}
+	]]>
+	</select>
+
+	<!-- 학생의 출퇴근 Id MAX값 가져오기 -->
+	<select id="getLastWlogId" resultType="string">
+	<![CDATA[
+		select 'WLOG'||LPAD((max(cast(substr(wlog_id,5) as number(6)))),6,'0')
+		from wlog
+		where stdt_id = {#stdtId} and clss_id = {#clssId}
+	]]>
+	</select>
+	
+	<!-- 마지막 출퇴근 값 가져오기 -->
+	<select id="getLastWlogVO" resultType="com.finalprj.kess.model.WorklogVO">
+	<![CDATA[
+		select *
+		from wlog
+		where wlog_id = {#lastWlogId}
+	]]>
+	</select>
+	
+	<!-- 출퇴근 Id MAX값 가져오기 -->
+	<select id="getMaxWlogId" resultType="string">
+	<![CDATA[
+		select 'WLOG'||LPAD((max(cast(substr(wlog_id,5) as number(6)))+1),6,'0')
+		from wlog
+	]]>
+	</select>
+
+	<!-- 지원 수정 날짜 업데이트 -->
+	<insert id="insertNewWlog">
+	<![CDATA[
+		INSERT into wlog
+		values(#{maxWlogId}, #{clssId}, #{stdtId}, #{inlogTs}, null, #{wlogCd}, null, systimestamp, #{stdtId},null,null, 'N') 
+	]]>
+	</insert>
 
 </mapper>

@@ -14,6 +14,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.RegistrationVO;
+import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
 
 @Service
@@ -118,7 +119,7 @@ public class StudentService implements IStudentService {
 	@Override
 	public void insertRgst(String aplyId, String maxRgstId, String stdtId) {
 		studentRepository.insertRgst(aplyId, maxRgstId, stdtId);
-		
+
 	}
 
 	@Override
@@ -151,5 +152,29 @@ public class StudentService implements IStudentService {
 		return studentRepository.getRgstIngCnt(stdtId);
 	}
 
+	@Override
+	public int getWlogIdCnt(String stdtId, String clssId) {
+		return studentRepository.getWlogIdCnt(stdtId, clssId);
+	}
+
+	@Override
+	public String getLastWlogId(String stdtId, String clssId) {
+		return studentRepository.getLastWlogId(stdtId, clssId);
+	}
+
+	@Override
+	public WorklogVO getLastWlogVO(String lastWlogId) {
+		return studentRepository.getLastWlogVO(lastWlogId);
+	}
+
+	@Override
+	public String getMaxWlogId() {
+		return studentRepository.getMaxWlogId();
+	}
+
+	@Override
+	public WorklogVO insertNewWlog() {
+		return studentRepository.insertNewWlog();
+	}
 
 }

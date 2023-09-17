@@ -1,10 +1,18 @@
 package com.finalprj.kess.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.Console;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +41,7 @@ import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
 
@@ -41,6 +50,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	IStudentService studentService;
@@ -79,6 +89,151 @@ public class StudentController {
 		return "student/main";
 	}
 
+	// 출퇴근 토글
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9. 16.
+	 * @parameter : model
+	 * @return :
+	 * @throws ParseException
+	 */
+	@SuppressWarnings("null")
+	@GetMapping("/wlog/inlog")
+	public WorklogVO insertWlog(@RequestParam("indtlog") String inlog, @RequestParam("classVO") ClassVO classVO,
+			HttpSession session) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+		Date inlogDt = (Date) sdf.parse(inlog);
+		Timestamp inlogTs = new Timestamp(inlogDt.getTime());
+
+		logger.warn(inlog);
+
+		SimpleDateFormat sdfDd = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfTm = new SimpleDateFormat("HH:mm:ss");
+
+		Date inlogDd = (Date) sdfDd.parse(inlog); // 날짜 부분 파싱
+		Date inlogTm = (Date) sdfTm.parse(inlog); // 시간 부분 파싱
+
+		Date classinTm = (Date) sdfTm.parse(classVO.getSetInTime());
+
+		String stdtId = (String) session.getAttribute("stdtId");
+		String clssId = classVO.getClssId();
+		int wlogIdCnt = studentService.getWlogIdCnt(stdtId, clssId);
+		String wlogCd = null;
+
+		WorklogVO newInWlogVO = null;
+
+		if (wlogIdCnt == 0) { // 처음 버튼을 누른 경우
+			Date startDd = classVO.getClssStartDd();
+
+			long diffSec = (startDd.getTime() - inlogDd.getTime()) / 1000;
+			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+
+			if (diffDays > 1) {
+				// 시작일과 1일 이상 차이나는 경우
+				Calendar cal1 = Calendar.getInstance();
+				Calendar cal2 = Calendar.getInstance();
+
+				/* Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경 */
+				cal1.setTime(startDd);
+				cal2.setTime(inlogDd);
+
+				/* 시작날짜와 끝 날짜를 비교해, 시작날짜가 작은경우 출력 */
+
+				while (cal1.compareTo(cal2) != 1) {
+
+					/* 출력 */
+					Timestamp pastDd = new Timestamp(cal1.getTimeInMillis());
+					String maxWlogId = studentService.getMaxWlogId();
+					diffSec = (classinTm.getTime() - inlogTm.getTime()) / 1000;
+					wlogCd = "WOK0000004";
+					inlogTs = pastDd;
+
+					newInWlogVO.setWlogId(maxWlogId);
+					newInWlogVO.setClssId(clssId);
+					newInWlogVO.setStdtId(stdtId);
+					newInWlogVO.setInTm(inlogTs);
+					newInWlogVO.setWlogCd(wlogCd);
+
+					newInWlogVO = studentService.insertNewWlog();
+
+					/* 시작날짜 + 1 일 */
+					cal1.add(Calendar.DATE, 1);
+				}
+			} else {
+				String maxWlogId = studentService.getMaxWlogId();
+				diffSec = (classinTm.getTime() - inlogTm.getTime()) / 1000;
+				if (diffSec > 1)
+					wlogCd = "WOK0000002";
+
+				else
+					wlogCd = "WOK0000001";
+
+				newInWlogVO.setWlogId(maxWlogId);
+				newInWlogVO.setClssId(clssId);
+				newInWlogVO.setStdtId(stdtId);
+				newInWlogVO.setInTm(inlogTs);
+				newInWlogVO.setWlogCd(wlogCd);
+				newInWlogVO = studentService.insertNewWlog();
+			}
+
+		} else { // 이전 출석 로그가 있는 경우
+			String lastWlogId = studentService.getLastWlogId(stdtId, clssId);
+			WorklogVO lastWlogVO = studentService.getLastWlogVO(lastWlogId);
+			Date lastDd = lastWlogVO.getInTmDd();
+
+			long diffSec = (lastDd.getTime() - inlogDd.getTime()) / 1000;
+			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+
+			if (diffDays > 2) {
+				// 이전 출석 로그와 2일 이상 차이나는 경우
+				Calendar cal1 = Calendar.getInstance();
+				Calendar cal2 = Calendar.getInstance();
+
+				/* Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경 */
+				cal1.setTime(lastDd);
+				cal2.setTime(inlogDd);
+
+				/* 시작날짜와 끝 날짜를 비교해, 시작날짜가 작은경우 출력 */
+
+				while (!cal1.equals(cal2)) {
+
+					/* 출력 */
+					Timestamp pastDd = new Timestamp(cal1.getTimeInMillis());
+					String maxWlogId = studentService.getMaxWlogId();
+					diffSec = (classinTm.getTime() - inlogTm.getTime()) / 1000;
+					wlogCd = "WOK0000004";
+					inlogTs = pastDd;
+
+					newInWlogVO.setWlogId(maxWlogId);
+					newInWlogVO.setClssId(clssId);
+					newInWlogVO.setStdtId(stdtId);
+					newInWlogVO.setInTm(inlogTs);
+					newInWlogVO.setWlogCd(wlogCd);
+					newInWlogVO = studentService.insertNewWlog();
+
+					/* 시작날짜 + 1 일 */
+					cal1.add(Calendar.DATE, 1);
+				}
+			} else {
+				String maxWlogId = studentService.getMaxWlogId();
+				diffSec = (classinTm.getTime() - inlogTm.getTime()) / 1000;
+				if (diffSec > 1)
+					wlogCd = "WOK0000002";
+
+				else
+					wlogCd = "WOK0000001";
+
+				newInWlogVO.setWlogId(maxWlogId);
+				newInWlogVO.setClssId(clssId);
+				newInWlogVO.setStdtId(stdtId);
+				newInWlogVO.setInTm(inlogTs);
+				newInWlogVO.setWlogCd(wlogCd);
+				newInWlogVO = studentService.insertNewWlog();
+			}
+		}
+		return newInWlogVO;
+	}
 	// 공지사항 리스트확인
 
 	/**

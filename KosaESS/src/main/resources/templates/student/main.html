@@ -4,6 +4,7 @@
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="icon" href="/img/icon.png" />
 <meta charset="UTF-8">
 <title>main page</title>
@@ -134,6 +135,11 @@
 	</div>
 	<div th:replace="~{/include/student_footer :: footer}"
 		style="width: 100%;"></div>
+	<script th:inline="javascript">
+		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
+		var clssVO = /*[[${ingClassVO}]]*/'';
+	</script>
+	<script src="/js/student/main.js"></script>
+
 </body>
-<script src="/js/student/main.js"></script>
 </html>

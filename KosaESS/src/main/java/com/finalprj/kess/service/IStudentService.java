@@ -11,6 +11,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.RegistrationVO;
+import com.finalprj.kess.model.WorklogVO;
 
 public interface IStudentService {
 
@@ -66,6 +67,16 @@ public interface IStudentService {
 	List<RegistrationVO> searchRgstList(String stdtId);
 
 	int getRgstIngCnt(String stdtId);
+
+	int getWlogIdCnt(String stdtId, String clssId);
+
+	String getLastWlogId(String stdtId, String clssId);
+
+	WorklogVO getLastWlogVO(String lastWlogId);
+
+	String getMaxWlogId();
+
+	WorklogVO insertNewWlog();
 
 
 

@@ -56,18 +56,45 @@ function toggleInOut() {
 
 	if (isAttendance) {
 		// 퇴근 처리
-		outtmInput.value = getCurrentTime();
+
+		var outlog = getCurrentDt();
+
+		$.ajax({
+			url: '/student/wlog/outlog',
+			method: 'GET',
+			data: {
+				outlog: outlog,
+				classVO: classVO
+			},
+			success: function(data) {
+			}
+
+		});
+		outtmInput.value = getCurrentDt();
+
 		wlogBtn.value = "출근하기";//변경되는 버튼 이름
 	} else {
 		// 출근 처리
-		intmInput.value = getCurrentTime();
+		var inlog = getCurrentDt();
+
+		$.ajax({
+			url: '/student/wlog/inlog',
+			type: 'GET',
+			data: {
+				inlog: inlog,
+				classVO: classVO
+			},
+
+			success: function(newInWlogVO) {
+				intmInput.value = newInWlogVO.InTm;
+			}
+		});
 		wlogBtn.value = "퇴근하기"; //변경되는 버튼 이름
 	}
-
 	isAttendance = !isAttendance; // 상태를 토글
 }
 
-function getCurrentTime() {
+function getCurrentDt() {
 	var now = new Date();
 	var year = now.getFullYear();
 	var month = (now.getMonth() + 1 < 10 ? '0' : '') + (now.getMonth() + 1);
@@ -75,8 +102,7 @@ function getCurrentTime() {
 	var hours = (now.getHours() < 10 ? '0' : '') + now.getHours();
 	var minutes = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
 	var seconds = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
-	var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':'
-		+ minutes + ':' + seconds;
-		
+	var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
 	return formattedTime;
 }

@@ -1,5 +1,6 @@
 package com.finalprj.kess.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -12,6 +13,8 @@ public class WorklogVO {
 	private String clssId;//교육과정id
 	private Timestamp InTm;//출근시간
 	private Timestamp OutTm;//퇴근시간
+	private Date InTmDd;//출근시간
+	private Date OutTmDd;//퇴근시간
 	private String wlogCd;//출퇴근 상태
 	private int wlogTotalTm;//총 근무시간
 	private Timestamp rgstDt;//등록일시
