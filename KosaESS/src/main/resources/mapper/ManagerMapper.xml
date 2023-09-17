@@ -98,6 +98,7 @@
 		JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
 		JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
 	WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
+	ORDER BY s.stdt_nm
 	]]>
 	</select>
 	
