@@ -400,14 +400,39 @@ public class AdminController {
 
 		PostVO postVO = adminService.getPostVO(inquiryId);
 		model.addAttribute("postVO", postVO);
-
-
 		if (postVO.getFileId() != null) {
 			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
 			model.addAttribute("fileList", fileList);
 		}
+		
+		//답변
+		List<PostVO> replyList = adminService.getReplyList(postVO.getPostId());
+		model.addAttribute("replyList", replyList);
 
 		return "admin/inquiry_form";
+	}
+	
+	/**
+	 * 문의사항 답변등록
+	 * @author : eunji
+	 * @date : 2023. 9. 18.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@PostMapping("/inquiry/reply/{postId}")
+	public String insertReply(@PathVariable String postId, @RequestParam String replyTitle, @RequestParam String replyContent) {
+		PostVO postVO = new PostVO();
+		postVO.setPostId(adminService.getMaxReplyId());
+		postVO.setMasterId(postId);
+		postVO.setPostTitle(replyTitle);
+		postVO.setPostContent(replyContent);
+		postVO.setRgsterId("MNGR000001");
+		
+		adminService.insertReplyVO(postVO);
+		
+		adminService.updateInquiryStatus(postId);
+
+		return "redirect:/admin/inquiry/view/"+postId;
 	}
 
 	/**
@@ -420,10 +445,30 @@ public class AdminController {
 	@PostMapping("/inquiry/delete")
 	@ResponseBody
 	public String inquiryDeleteAll(@RequestParam("selectedInquiryIds[]") List<String> selectedInquiryIds) {
-		//공지사항 deleteYn='Y'로 업데이트
+		//문의사항 deleteYn='Y'로 업데이트
 		adminService.deleteAllInquiry(selectedInquiryIds);
 
 		return "success";
+	}
+	
+	/**
+	 * 문의사항 검색
+	 * @author : eunji
+	 * @date : 2023. 9. 18.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@PostMapping("/inquiry/search")
+	@ResponseBody
+	public Map<String, Object> inquirySearch(@RequestParam String searchInputCategory, @RequestParam String searchInput, @RequestParam("postStatusList[]") List<String> postStatusList) {
+		
+		Map<String, Object> response = new HashMap<String, Object>();
+
+		//문의사항 리스트 전달
+		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
+		
+		response.put("inquiryList", inquiryList);
+		return response;
 	}
 
 

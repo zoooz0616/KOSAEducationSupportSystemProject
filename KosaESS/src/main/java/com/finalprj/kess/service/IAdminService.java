@@ -108,4 +108,9 @@ public interface IAdminService {
 	void deleteAllInquiry(List<String> selectedInquiryIds);
 	void updateNoticeVO(List<FileVO> fileList, PostVO postVO);
 	List<PostVO> getSearchPostList(String searchInputCategory, String searchInput, List<String> postStatusList);
+	List<PostVO> getReplyList(String postId);
+	
+	String getMaxReplyId();
+	void insertReplyVO(PostVO postVO);
+	void updateInquiryStatus(String postId);
 }

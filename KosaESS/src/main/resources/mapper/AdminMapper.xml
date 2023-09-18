@@ -644,14 +644,49 @@
 		</foreach>
 		<choose>
 			<when test="searchInputCategory == 'post_title'">
-				AND post_title LIKE CONCAT(#{searchInput}, '%')
+				AND post_title LIKE '%'||#{searchInput}||'%'
 			</when>
 			<when test="searchInputCategory == 'post_content'">
-				AND post_content LIKE CONCAT(#{searchInput}, '%')
+				AND post_content LIKE '%'||#{searchInput}||'%'
 			</when>
 		</choose>
+			and post_id not like 'RPLY%'
+		order by post_id desc
 	</select>
 
+	<select id="getReplyList" parameterType="string" resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select *
+		from post
+		where master_id =#{postId}
+		order by rgst_dt
+	]]>
+	</select>
+	
+	<select id="getMaxReplyId" resultType="string">
+	<![CDATA[
+		select 'RPLY'||LPAD((max(cast(substr(post_id,5) as number(6)))+1),6,'0')
+		from post
+		where post_id like 'RPLY%'
+	]]>
+	</select>
+	
+	<insert id="insertReplyVO" parameterType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		insert into post
+		values(#{postId}, #{masterId}, #{postTitle}, #{postContent}, 0, 'PST0000001', null, systimestamp, #{rgsterId}, null, null, 'N')
+	]]>
+	</insert>
+	
+	<update id="updateInquiryStatus" parameterType="string">
+	<![CDATA[
+		update post
+		set post_cd = 'PST0000004'
+		where post_id = #{postId}
+	]]>
+	</update>
+	
+	
 
 
 

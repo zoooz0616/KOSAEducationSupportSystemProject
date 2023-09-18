@@ -192,11 +192,11 @@
 		//초기화 버튼
 		function resetInput() {
 			// 모든 요소를 선택
-			const inputElement1 = document.querySelector(".search_input");
-			inputElement1.value = "title";
+			const inputElement1 = document.querySelector(".search_input_category");
+			inputElement1.value = "post_title";
 
 			// 모든 요소를 선택
-			const inputElement2 = document.querySelector(".search_input_title");
+			const inputElement2 = document.querySelector(".search_input");
 			inputElement2.value = "";
 
 			// 모든 요소를 선택
@@ -310,7 +310,7 @@
 							
 							//rgstDt
 							var tdRgstDt = document.createElement("td");
-							tdRgstDt.textContent = notice.rgstDt;
+							tdRgstDt.textContent = formatTimestamp(notice.rgstDt);
 							tr.appendChild(tdRgstDt);
 							
 							//hits
@@ -330,9 +330,23 @@
 
 			}
 		}
-	</script>
-	<script>
 		
+		//날짜 형식
+		function formatTimestamp(timestamp) {
+			   const date = new Date(timestamp);
+
+			   const year = date.getFullYear();
+			   const month = String(date.getMonth() + 1).padStart(2, '0');
+			   const day = String(date.getDate()).padStart(2, '0');
+			   const hours = String(date.getHours()).padStart(2, '0');
+			   const minutes = String(date.getMinutes()).padStart(2, '0');
+			   const seconds = String(date.getSeconds()).padStart(2, '0');
+			   const milliseconds = date.getMilliseconds();
+
+			   const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+
+			   return formattedTimestamp;
+		}
 	</script>
 </body>
 </html>

@@ -132,8 +132,30 @@ a:hover{
 	margin: 10px 0 10px 0;
 }
 
-.reply_input {
-	border: 1px solid black;
-	width: 700px;
-	height: 100px;
+.reply_no {
+	display: flex;
+}
+
+
+.reply {
+	border-bottom: 1px solid #CFDEE6;
+	padding: 10px;
+}
+
+.reply .reply_date {
+	color: gray;
+}
+
+.reply .reply_title {
+	font-weight: bold;
+}
+
+.reply_btn {
+	width:100px;
+	border:none;
+	border-radius: 3px;
+	background: #0E5881;
+	color: white;
+	font-weight: bold;
+	padding: 5px;
 }
