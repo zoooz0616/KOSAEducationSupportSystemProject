@@ -62,28 +62,22 @@
 	</div>
 
 	<script>
-		//현재 체크된 체크박스 목록을 반환
-		
-		//목록 >>> "전체"를 제외한 체크박스 중 하나를 선택할 때, 모든 체크박스가 선택된게 아니라면 전체를 해제
-		//또는 모든 체크박스가 선택될 경우 전체를 체크
-		
 		$(document).ready(function () {
 			const chkAll = $("#chkAll");
 			const chkList = $("input[name=chk]");
-			const storedValue = sessionStorage.getItem('key');
 			// "전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
 			chkAll.on("change", function () {
 				const isChecked = chkAll.prop("checked");
 				chkList.prop("checked", isChecked);
+				fetchClassList();
 			});
 			//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
 			chkList.on("change", function () {
 				const allChecked = chkList.filter(":checked").length === chkList.length;
 				chkAll.prop("checked", allChecked);
+				fetchClassList();
 			});
 
-			const chkedList = getCheckedItems();
-			
 			//현재 체크된 목록을 반환
 			function getCheckedItems() {
 				const checkedItems = [];
@@ -96,19 +90,25 @@
 			}
 			
 			//체크된 목록을 받아 ajax로 class list 반환
-			function fetchClassList(getCheckedItems) {
-				const checkedItems = [];
-				chkList.each(function () {
-					if ($(this).prop("checked")) {
-						checkedItems.push($(this).val());
+			var filterString = getCheckedItems();
+			function fetchClassList() {
+				console.log(filterString);
+				$.ajax({
+					url : "/manager/class/filter", // 컨트롤러 엔드포인트
+					type : "GET",
+					data : {
+						filterString : filterString
+					},
+					success : function(classListResponse) {
+						//서버에서 받은 응답 파싱하여 객체로 생성
+						var filteredClassList = classListResponse.classList;
+						console.log(filteredClassList);
+					},
+					error : function(error) {
+						console.log("Error : ",error)
 					}
 				});
-				return checkedItems;
 			}
-			
-			//체크박스가 변경되면 해당 값에 해당하는 교육 목록을 반환
-			chkList.on("change", fetchClassList(getCheckedItems));
-			chkAll.on("change", fetchClassList(getCheckedItems));
 			
 		});
 		

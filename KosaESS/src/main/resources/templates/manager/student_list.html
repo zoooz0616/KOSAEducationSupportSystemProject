@@ -65,7 +65,6 @@
 					<th>생년월일</th>
 					<th th:each="wlogCodeName:${wlogCodeNameList}"
 						th:text="${wlogCodeName.cmcdNm}"></th>
-					<th>수강상태</th>
 					<th>이수율</th>
 					<th>이수여부</th>
 				</tr>
@@ -80,7 +79,6 @@
 					<td th:text="${stdt.genderCd}">성별</td>
 					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
-					<td th:text="엄">수강상태</td><!--asdasd -->
 					<td th:text="엄">이수율</td><!-- 구현 방법 : wlog 에서 totalTm가져오고 교육과정의 이수 시간을 가져와서 백분율을 출력 -->
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>

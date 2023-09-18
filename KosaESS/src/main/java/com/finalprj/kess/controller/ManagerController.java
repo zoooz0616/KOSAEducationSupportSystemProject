@@ -7,13 +7,12 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,24 +22,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
-import com.finalprj.kess.model.LectureVO;
-import com.finalprj.kess.model.ProfessorVO;
-import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
 
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -49,7 +42,7 @@ import jakarta.servlet.http.HttpSession;
 public class ManagerController {
 	LocalDate today = LocalDate.now();
 	LocalDate firstDay = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+//	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	IManagerService managerService;
@@ -287,5 +280,20 @@ public class ManagerController {
 		Map<String, Object> wlogResponse = new HashMap<>();
 		wlogResponse.put("wlogCodeList", wlogCodeList);
 		return wlogResponse;
+	}
+	
+	@GetMapping("/class/filter")
+	@ResponseBody
+	public Map<String, Object> fetchClassList(
+			HttpSession session,
+//			@RequestParam String[] filterString
+			@RequestParam List<String> filterString
+			) {
+		String mngrId = (String) session.getAttribute("mngrId");
+		System.out.println("mngrId : "+mngrId);
+		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString);
+		Map<String, Object> classListResponse = new HashMap<>();
+		classListResponse.put("classList", classList);
+		return classListResponse;
 	}
 }

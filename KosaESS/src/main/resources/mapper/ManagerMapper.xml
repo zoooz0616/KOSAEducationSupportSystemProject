@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.finalprj.kess.repository.IManagerRepository">
 
-
 	<select id="getClassListByMngrId" parameterType="string" resultType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
 	SELECT
@@ -46,14 +45,14 @@
 	<select id="getClassDetailByClssId" resultType="com.finalprj.kess.model.ClassVO" parameterType="string">
 	<![CDATA[
 	SELECT
-	    clss.clss_Id, mngr.mngr_Nm AS mngrId, cmpy.cmpy_nm as cmpy_Id, clss_Nm, clss_Content,
-	    limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
-	    set_In_Tm, set_Out_Tm, m.cmcd_nm as clss_Cd, clss.clss_Adr, clss_Total_Tm,
-	    clss.file_Id, clss_Etc
+		clss.clss_Id, mngr.mngr_Nm AS mngrId, NVL(cmpy.cmpy_nm,'') as cmpy_Id, clss_Nm, clss_Content,
+		limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
+		set_In_Tm, set_Out_Tm, m.cmcd_nm as clss_Cd, clss.clss_Adr, clss_Total_Tm,
+		clss.file_Id, clss_Etc
 	FROM clss
-	    JOIN cmcd m ON clss.clss_cd = m.cmcd_id
-	    JOIN mngr ON mngr.mngr_id=clss.mngr_id
-        JOIN cmpy ON clss.cmpy_id = cmpy.cmpy_id
+		JOIN cmcd m ON clss.clss_cd = m.cmcd_id
+		JOIN mngr ON mngr.mngr_id=clss.mngr_id
+		LEFT JOIN cmpy ON clss.cmpy_id = cmpy.cmpy_id
 	WHERE clss_id= #{clssId}
 	]]>
 	</select>
@@ -148,6 +147,46 @@
 		FROM clss
 		WHERE
 			mngr_id = #{mngrId}
+	]]>
+	</select>
+	
+	<select id="getFilteredClassListByMngrId" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+	SELECT
+		clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
+		limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
+		set_In_Tm, set_Out_Tm, 
+		m1.cmcd_nm as clss_Cd
+		, clss_Adr, clss_Total_Tm,
+		c.file_Id, clss_Etc
+	FROM clss c
+		JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
+	WHERE
+		mngr_id = #{mngrId}
+		AND c.clss_cd IN 
+	]]>
+		<![CDATA[
+		SELECT
+			clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
+			limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
+			set_In_Tm, set_Out_Tm, 
+			m1.cmcd_nm as clss_Cd
+			, clss_Adr, clss_Total_Tm,
+			c.file_Id, clss_Etc
+		FROM clss c
+			JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
+		WHERE
+			mngr_id = #{mngrId}
+			AND c.clss_cd IN 
+	]]>
+	<foreach collection="filterString" item="item" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+	<![CDATA[
+		ORDER BY clss_nm DESC;
+	]]>
+	<![CDATA[
+		ORDER BY clss_nm DESC;
 	]]>
 	</select>
 </mapper>

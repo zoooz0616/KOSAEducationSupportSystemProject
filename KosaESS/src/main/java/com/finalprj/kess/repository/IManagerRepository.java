@@ -47,5 +47,8 @@ public interface IManagerRepository {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
+	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString);
+//	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") String[] filterString);
+
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

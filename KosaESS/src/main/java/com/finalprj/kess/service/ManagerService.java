@@ -93,6 +93,15 @@ public class ManagerService implements IManagerService {
 		return managerRepository.getLatestClassIdByMngrId(mngrId);
 	}
 
+	@Override
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString) {
+		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString);
+	}
+//	@Override
+//	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString) {
+//		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString);
+//	}
+
 //	@Override
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
 //		return managerRepository.getStudentListBySearch(classId, startDate, endDate);
