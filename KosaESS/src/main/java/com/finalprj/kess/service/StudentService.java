@@ -1,5 +1,6 @@
 package com.finalprj.kess.service;
 
+import java.sql.Clob;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
@@ -175,6 +177,36 @@ public class StudentService implements IStudentService {
 	@Override
 	public WorklogVO insertNewWlog() {
 		return studentRepository.insertNewWlog();
+	}
+
+	@Override
+	public ClassVO getWlogClass(String clssId) {
+		return studentRepository.getWlogClass(clssId);
+	}
+
+	@Override
+	public List<WorklogVO> searchWlogList(String stdtId) {
+		return studentRepository.searchWlogList(stdtId);
+	}
+
+	@Override
+	public String getMaxResnId() {
+		return studentRepository.getMaxResnId();
+	}
+
+	@Override
+	public void uploadResnFile(ReasonVO resn) {
+		studentRepository.uploadResnFile(resn);
+	}
+
+	@Override
+	public void updateResnFile(String resnId, FileVO fileVO) {
+		studentRepository.updateResnFile(resnId,fileVO);
+	}
+
+	@Override
+	public void updateResndt(String resnId, String stdtId, Clob resnText) {
+		studentRepository.updateResndt(resnId,stdtId,resnText);
 	}
 
 }

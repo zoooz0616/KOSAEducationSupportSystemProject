@@ -53,6 +53,8 @@ function toggleInOut() {
 	var intmInput = document.getElementById('intm');
 	var outtmInput = document.getElementById('outtm');
 	var wlogBtn = document.querySelector('.wlogBtn');
+	
+	
 
 	if (isAttendance) {
 		// 퇴근 처리
@@ -61,10 +63,10 @@ function toggleInOut() {
 
 		$.ajax({
 			url: '/student/wlog/outlog',
-			method: 'GET',
+			method: 'POST',
 			data: {
-				outlog: outlog,
-				classVO: classVO
+				clssId: clssId,
+				outlog: outlog
 			},
 			success: function(data) {
 			}
@@ -79,10 +81,10 @@ function toggleInOut() {
 
 		$.ajax({
 			url: '/student/wlog/inlog',
-			type: 'GET',
+			type: 'POST',
 			data: {
-				inlog: inlog,
-				classVO: classVO
+				clssId: clssId,
+				inlog: inlog
 			},
 
 			success: function(newInWlogVO) {

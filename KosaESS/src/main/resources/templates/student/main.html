@@ -137,7 +137,7 @@
 		style="width: 100%;"></div>
 	<script th:inline="javascript">
 		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
-		var clssVO = /*[[${ingClassVO}]]*/'';
+		var clssId = /*[[${ingClassVO?.clssId}]]*/'';
 	</script>
 	<script src="/js/student/main.js"></script>
 

@@ -64,16 +64,16 @@ $(document).ready(function() {
 	}
 
 	updateTable();
-	var modal = $('.modal');
+	var modal1 = $('.modal1');
 	var applyTable = $('.applyTable');
 
 	applyTable.on('click', '.update', function() {
 		var clickedRow = $(this).closest('tr');
 		var aplyId = clickedRow.find('td:hidden span').text();
-		modal.show();
+		modal1.show();
 
 		// 모달 내부의 .aplyBtn 버튼 클릭 시
-		modal.on('click', '.aplyBtn', function() {
+		modal1.on('click', '.aplyBtn', function() {
 			let formData = new FormData();
 			let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
 			formData.append("formData", file); // FormData에 파일 추가
@@ -85,15 +85,15 @@ $(document).ready(function() {
 				processData: false,
 				contentType: false,
 				success: function() {
-					modal.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
+					modal1.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
 					alert("지원서를 수정하였습니다.");
 					updateTable(); // 성공한 후 테이블 업데이트
 				}
 			});
 		});
 	});
-	modal.on('click', '.closeModalBtn', function() {
-		modal.hide();
+	modal1.on('click', '.closeModalBtn', function() {
+		modal1.hide();
 	});
 
 	applyTable.on('click', '.cancel', function() {

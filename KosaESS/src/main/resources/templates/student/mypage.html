@@ -79,7 +79,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="aplyRow"
+								<tr class="rgstRow"
 									th:each="RegistrationVO , rowStat : ${rgstList}">
 									<td><span th:text="${rowStat.index + 1}"></span></td>
 									<td th:text="${RegistrationVO.clssNm}"></td>
@@ -99,9 +99,36 @@
 				</div>
 				<div class="workLog" style="display: none;">
 					<h3>출퇴근 관리</h3>
+					<div>
+						<table class="wlogTable">
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th>교육 과정 명</th>
+									<th>출근 시간</th>
+									<th>퇴근 시간</th>
+									<th>출퇴근 상태</th>
+									<th>사유서 제출</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="wlogRow" th:each="WorklogVO , rowStat : ${wlogList}">
+									<td><span th:text="${rowStat.index + 1}"></span></td>
+									<td th:text="${WorklogVO.clssNm}"></td>
+									<td th:text="${WorklogVO.InTm}"></td>
+									<td th:text="${WorklogVO.outTm}"></td>
+									<td th:text="${WorklogVO.cmcdNm}"></td>
+									<td><button class="submitResn" style="display: none;">제출</button>
+										<button class="updateResn" style="display: none;">제출</button>
+									</td>
+									<td style="display: none;" th:text="${WorklogVO.wlogId}" class="wlogId"></td>
+									<td style="display: none;" th:text="${WorklogVO.resnId}" class="resnId"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
-				<div class="modal" style="display: none;">
-					>
+				<div class="modal1" style="display: none;">
 					<div class="modalBody">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
@@ -118,14 +145,57 @@
 						</div>
 					</div>
 				</div>
+				<div class="modal2" style="display: none;">
+					<div class="modalBody">
+						<div class="modalHeader">
+							<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
+						</div>
+						<div class="modalContent">
+							<div class="upload-area">
+								<p>사유서파일을 첨부하세요.</p>
+								<input type="file" name="file" id="fileInput">
+							</div>
+							<div>
+								<label>사유서 내용을 작성하세요.</label> <input type="text"
+									class="resnText">
+							</div>
+						</div>
+
+						<div class="modalFooter">
+							<button type="reset" class="closeBtn">취소</button>
+							<button type="submit" class="sumbitBtn">제출하기</button>
+						</div>
+					</div>
+					<div class="modal3" style="display: none;">
+						<div class="modalBody">
+							<div class="modalHeader">
+								<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
+							</div>
+							<div class="modalContent">
+								<div class="upload-area">
+									<p>사유서파일을 첨부하세요.</p>
+									<input type="file" name="file" id="fileInput">
+								</div>
+								<div>
+									<label>사유서 내용을 작성하세요.</label> <input type="text"
+										class="resnText">
+								</div>
+							</div>
+
+							<div class="modalFooter">
+								<button type="reset" class="closeBtn">취소</button>
+								<button type="submit" class="sumbitBtn">수정하기</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<script th:inline="javascript">
+		<script th:inline="javascript">
 		/* JavaScript에서 Java 모델의 값을 가져와서 처리 */
 		var rgstList = /*[[${rgstList}]]*/[];
 
-		for (var i = 0; i < rgstList.length; i++) { 
+		for (var i = 0; i < rgstList.length; i++) {
 			var cmptCd = rgstList[i].cmptCd;
 			var rgstPrintElement = $('.rgstPrint').eq(i);
 
@@ -133,8 +203,88 @@
 				rgstPrintElement.css('display', 'block');
 			}
 		}
+
+		var wlogList = /*[[${wlogList}]]*/[];
+
+		for (var i = 0; i < wlogList.length; i++) {
+			var wlogCd = wlogList[i].wlogCd;
+			var wlogId = wlogList[i].wlogId;
+			var resnId = wlogList[i].resnId;
+			var j = null;
+			var submitResnElement = $('.submitResn').eq(i); // 클래스 이름 수정
+			var updateResnElement = $('.updateResn').eq(i);
+
+			if (wlogCd !== 'WOK0000001') {
+				if (resnId == null)
+					submitResnElement.css('display', 'block');
+				else
+					updateResnElement.css('display', 'block');
+			}
+		}
+		</script>
+		<script>
+		var modal2 = $('.modal2');
+		var wlogTable = $('.wlogTable');
+		wlogTable.on('click', '.submitResn', function() {
+			var clickedRow = $(this).closest('tr');
+			var resnId = clickedRow.find('td:hidden span').text();
+			modal2.show();
+
+			// 모달 내부의 .sumbitBtn 버튼 클릭 시
+			modal2.on('click', '.sumbitBtn', function() {
+				var clickedRow = $(this).closest('tr');
+				var wlogId = clickedRow.find('.wlogId').text();
+				var resnText = $('.resnText');
+				let formData = new FormData();
+				let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+				formData.append("formData", file); // FormData에 파일 추가
+
+				$.ajax({
+					type : 'POST',
+					url : '/student/mypage/sumbitResn' +wlogId,
+					data : {formData, resnText :resnText},// FormData 사용
+					processData : false,
+					contentType : false,
+					success : function() {
+						modal2.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
+						alert("사유서를 제출하였습니다.");
+					}
+				});
+			});
+			modal2.on('click', '.closeBtn', function() {
+				modal2.hide();
+		}); 
+			
+			var modal3 = $('.modal3');
+		wlogTable.on('click', '.updateResn', function() {
+				var clickedRow = $(this).closest('tr');
+				var resnId = clickedRow.find('resnId').text();
+				modal3.show();
+
+				// 모달 내부의 .sumbitBtn 버튼 클릭 시
+				modal3.on('click', '.sumbitBtn', function() {
+					var resnText = $('.resnText');
+					let formData = new FormData();
+					let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+					formData.append("formData", file); // FormData에 파일 추가
+
+					$.ajax({
+						type : 'POST',
+						url : '/student/mypage/uploadResn/' + resnId,
+						data : {formData, resnText :resnText},// FormData 사용
+						processData : false,
+						contentType : false,
+						success : function() {
+							modal2.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
+							alert("사유서를 제출하였습니다.");
+						}
+					});
+				});
+				modal3.on('click', '.closeBtn', function() {
+					modal3.hide();
+			}); 
 	</script>
-	<script src="/js/student/sidebar.js"></script>
-	<script src="/js/student/mypage.js"></script>
+		<script src="/js/student/sidebar.js"></script>
+		<script src="/js/student/mypage.js"></script>
 </body>
 </html>

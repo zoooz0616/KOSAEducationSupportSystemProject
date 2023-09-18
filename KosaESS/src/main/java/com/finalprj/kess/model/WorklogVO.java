@@ -23,6 +23,10 @@ public class WorklogVO {
 	private String updterId;//수정자id
 	private String deleteYn; //삭제여부
 	
+	private String resnId;//출퇴근 id
+	private String clssNm;//교육과정명
+	private String cmcdNm;//출퇴근 상태
+	
 	public String getInTmAsString() {
         if (InTm != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

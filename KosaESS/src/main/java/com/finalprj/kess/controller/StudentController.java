@@ -2,15 +2,14 @@ package com.finalprj.kess.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.Console;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Clob;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,10 +34,10 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
-import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
@@ -98,33 +97,32 @@ public class StudentController {
 	 * @throws ParseException
 	 */
 	@SuppressWarnings("null")
-	@GetMapping("/wlog/inlog")
-	public WorklogVO insertWlog(@RequestParam("indtlog") String inlog, @RequestParam("classVO") ClassVO classVO,
+	@PostMapping("/wlog/inlog")
+	@ResponseBody
+	public WorklogVO insertWlog(@RequestParam("clssId") String clssId, @RequestParam("inlog") String inlog,
 			HttpSession session) throws ParseException {
-
+		ClassVO clssVO = studentService.getWlogClass(clssId);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
-		Date inlogDt = (Date) sdf.parse(inlog);
-		Timestamp inlogTs = new Timestamp(inlogDt.getTime());
+		Timestamp inlogTs = Timestamp.valueOf(inlog);
 
 		logger.warn(inlog);
 
 		SimpleDateFormat sdfDd = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfTm = new SimpleDateFormat("HH:mm:ss");
 
-		Date inlogDd = (Date) sdfDd.parse(inlog); // 날짜 부분 파싱
-		Date inlogTm = (Date) sdfTm.parse(inlog); // 시간 부분 파싱
+		java.util.Date inlogDd = sdfDd.parse(inlog); // 날짜 부분 파싱
+		java.util.Date inlogTm = sdfTm.parse(inlog); // 시간 부분 파싱
 
-		Date classinTm = (Date) sdfTm.parse(classVO.getSetInTime());
+		java.util.Date classinTm = sdfTm.parse(clssVO.getSetInTime());
 
 		String stdtId = (String) session.getAttribute("stdtId");
-		String clssId = classVO.getClssId();
 		int wlogIdCnt = studentService.getWlogIdCnt(stdtId, clssId);
 		String wlogCd = null;
 
-		WorklogVO newInWlogVO = null;
+		WorklogVO newInWlogVO = new WorklogVO();
 
 		if (wlogIdCnt == 0) { // 처음 버튼을 누른 경우
-			Date startDd = classVO.getClssStartDd();
+			Date startDd = clssVO.getClssStartDd();
 
 			long diffSec = (startDd.getTime() - inlogDd.getTime()) / 1000;
 			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
@@ -234,6 +232,7 @@ public class StudentController {
 		}
 		return newInWlogVO;
 	}
+
 	// 공지사항 리스트확인
 
 	/**
@@ -465,6 +464,9 @@ public class StudentController {
 		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
 		model.addAttribute("rgstList", rgstList);
 
+		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		model.addAttribute("wlogList", wlogList);
+
 		return "student/mypage";
 	}
 
@@ -565,6 +567,72 @@ public class StudentController {
 		fileVO.setFileContent(file.getBytes());
 		studentService.updateAplyFile(aplyId, fileVO, maxFileSubId);
 		studentService.updateAplydt(aplyId, stdtId);
+
+		return "redirect:/student/mypage";
+	}
+	
+	// 마이페이지 사유서 제출
+		/**
+		 * @author : dabin
+		 * @date : 2023. 8. 31.
+		 * @parameter :model
+		 * @return :
+		 * @throws IOException
+		 */
+
+		@PostMapping("/mypage/sumbitResn/{wlogId}")
+		public String insertResnFile(@PathVariable String wlogId, @RequestParam("formData") MultipartFile file,
+				@RequestParam("resnText") Clob resnText, HttpSession session, Model model) throws IOException {
+			String stdtId = (String) session.getAttribute("stdtId");
+
+			// 업로드하기
+			String maxFileId = uploadFileService.getMaxFileId();
+			int subFileId = 1;
+			FileVO fileVO = new FileVO();
+			fileVO.setFileId(maxFileId);
+			fileVO.setFileSubId(subFileId);
+			fileVO.setFileNm(file.getOriginalFilename());
+			fileVO.setFileSize(file.getSize());
+			fileVO.setFileType(file.getContentType());
+			fileVO.setFileContent(file.getBytes());
+			uploadFileService.uploadFile(fileVO);
+			subFileId++;
+
+			// 이력서 내역 추가하기
+			String maxResnId = studentService.getMaxResnId();
+			ReasonVO resn = new ReasonVO();
+			resn.setResnId(maxResnId);
+			resn.setWlogId(wlogId);
+			resn.setResnContent(resnText);
+			resn.setResnCd("RES0000001");
+			resn.setFileId(maxFileId);
+			resn.setRgsterId(stdtId);
+			studentService.uploadResnFile(resn);
+
+			return "redirect:/student/class";
+		}
+
+	// 마이페이지 사유서 내역 업데이트
+	/**
+	 * @author : dabin
+	 * @return
+	 * @date : 2023. 9. 14
+	 * @parameter :model
+	 * @throws IOException
+	 */
+
+	@PostMapping("/mypage/uploadResn/{resnId}")
+	public String updateResnFile(@PathVariable String resnId, @RequestParam("formData") MultipartFile file,
+			@RequestParam("resnText") Clob resnText, HttpSession session) throws IOException {
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		FileVO fileVO = new FileVO();
+		fileVO.setFileNm(file.getOriginalFilename());
+		fileVO.setFileSize(file.getSize());
+		fileVO.setFileType(file.getContentType());
+		fileVO.setFileContent(file.getBytes());
+		studentService.updateResnFile(resnId, fileVO);
+		studentService.updateResndt(resnId, stdtId, resnText);
 
 		return "redirect:/student/mypage";
 	}
