@@ -152,20 +152,6 @@
 	</select>
 	
 	<select id="getFilteredClassListByMngrId" resultType="com.finalprj.kess.model.ClassVO">
-	<![CDATA[
-	SELECT
-		clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
-		limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
-		set_In_Tm, set_Out_Tm, 
-		m1.cmcd_nm as clss_Cd
-		, clss_Adr, clss_Total_Tm,
-		c.file_Id, clss_Etc
-	FROM clss c
-		JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
-	WHERE
-		mngr_id = #{mngrId}
-		AND c.clss_cd IN 
-	]]>
 		<![CDATA[
 		SELECT
 			clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
@@ -184,10 +170,7 @@
 		#{item}
 	</foreach>
 	<![CDATA[
-		ORDER BY clss_nm DESC;
-	]]>
-	<![CDATA[
-		ORDER BY clss_nm DESC;
+		ORDER BY clss_nm DESC
 	]]>
 	</select>
 </mapper>

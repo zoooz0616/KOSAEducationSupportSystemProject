@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +189,6 @@ public class ManagerController {
 			} else {
 				startDate = httpServletRequest.getParameter("startDate");
 			}
-
 			if (endDate == null) {
 				endDate = String.valueOf(YearMonth.now().atEndOfMonth());
 			} else {
@@ -286,14 +286,16 @@ public class ManagerController {
 	@ResponseBody
 	public Map<String, Object> fetchClassList(
 			HttpSession session,
-//			@RequestParam String[] filterString
-			@RequestParam List<String> filterString
+			@RequestParam("filterString[]") List<String> filterString
 			) {
 		String mngrId = (String) session.getAttribute("mngrId");
-		System.out.println("mngrId : "+mngrId);
 		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString);
+		for (ClassVO vo : classList) {
+			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
+		}
 		Map<String, Object> classListResponse = new HashMap<>();
 		classListResponse.put("classList", classList);
 		return classListResponse;
 	}
+	
 }

@@ -30,13 +30,13 @@
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-<!-- 							<td style="width: 30%;"><select id="classId"> <option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td> -->
-							<td style="width: 30%;">
-								<input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option">
-								<datalist id="search_option">
-									<option th:each="class:${classList}" th:value="${class.clssNm}">
-								</datalist>
-							</td>
+							<td style="width: 30%;"><select id="classId"> <option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
+<!-- 							<td style="width: 30%;"> -->
+<!-- <!-- 								<input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option"> -->
+<!-- 								<select id="classId" > -->
+<!-- 									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class.clssId}"> -->
+<!-- 								</select> -->
+<!-- 							</td> -->
 							<td style="width: 10%;">기간</td>
 							<td style="width: 30%;"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
 						</tr>
@@ -90,7 +90,7 @@
 
 	<script>
 	//전체 선택
-	const chkAll = document.getElementsById("chkAllStdt");
+	const chkAll = document.getElementById("chkAllStdt");
 	chkAll.addEventListener("change", () => {
 		const chkList = document.getElementsById("chkStdt");
 		for(chk of chkList){
@@ -99,7 +99,7 @@
 	});
 	
 	function search() {
-		var classId=document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
+		var classId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
 		var date = new Date();
@@ -122,9 +122,10 @@
 			success: function(stdtListResponse) {
 				//테이블의 모든 내용을 삭제
 				var stdtListTable = document.getElementById('stdt_list_table_tbody');
+				if(stdtListTable.firstChild != null){
 				while (stdtListTable.firstChild) {
 					stdtListTable.removeChild(stdtListTable.firstChild);
-				}
+				}}
 				
 				var stdtList = stdtListResponse.stdtList;
 				document.getElementById("stdtCnt").innerHTML=stdtList.length;
@@ -138,15 +139,28 @@
 					inputChk.id = 'chkStdt';
 					inputChk.type = 'checkBox';
 					rowChk.appendChild(inputChk);
-					newRow.appendChild(rowChk);
+					newRow.appendChild(rowChk);//체크박스
 					
 					var rowNum = document.createElement('td');
 					rowNum.innerHTML=i+1;
-					newRow.appendChild(rowNum);
+					newRow.appendChild(rowNum);//번호
 					
 					var rowName = document.createElement('td');
 					rowName.innerHTML=stdtList[i].stdtNm;
-					newRow.appendChild(rowName);
+					newRow.appendChild(rowName);//이름
+					var rowEmail = document.createElement('td');
+					rowEmail.innerHTML=stdtList[i].userEmail;
+					var rowTel = document.createElement('td');
+					rowTel.innerHTML=stdtList[i].stdtTel;
+					var rowGender = document.createElement('td');
+					rowGender.innerHTML=stdtList[i].genderCd;
+					var rowBirth = document.createElement('td');
+					rowBirth.innerHTML=stdtList[i].birthDd;
+
+					newRow.appendChild(rowEmail);
+					newRow.appendChild(rowTel);
+					newRow.appendChild(rowGender);
+					newRow.appendChild(rowBirth);
 					$.ajax({
 						type:'get',
 						url:'/manager/student/search/codename',
@@ -156,29 +170,19 @@
 						for (let j = 0; j < wlogCodeNameList.length; j++) {
 							var rowWlog = document.createElement('td');
 							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
-							newRow.appendChild(rowWlog);
+							newRow.appendChild(rowWlog);//출결상태
 						}
 						},error: function(error){console.log("error: ", error);}
 					})
-					var rowGender = document.createElement('td');
-					rowGender.innerHTML=stdtList[i].genderCd;
-					var rowBirth = document.createElement('td');
-					rowBirth.innerHTML=stdtList[i].birthDd;
-					var rowEmail = document.createElement('td');
-					rowEmail.innerHTML=stdtList[i].userEmail;
-					var rowTel = document.createElement('td');
-					rowTel.innerHTML=stdtList[i].stdtTel;
+
+					var cmptRate = document.createElement('td');
+					cmptRate.innerHTML="";
 					var rowJob = document.createElement('td');
 					rowJob.innerHTML=stdtList[i].jobCd;
 					
-					newRow.appendChild(rowGender);
-					newRow.appendChild(rowBirth);
-					newRow.appendChild(rowEmail);
-					newRow.appendChild(rowTel);
-					newRow.appendChild(rowJob);
 					
-					console.log(newRow);
-					console.log(stdtListTable);
+					newRow.appendChild(cmptRate);
+					newRow.appendChild(rowJob);
 					
 					stdtListTable.append(newRow);
 				}
@@ -188,79 +192,6 @@
 			}
 		})
 	}
-
-	//검색 클릭 이벤트
-	const searchBtn = document.querySelector("#search_btn");
-	searchBtn.addEventListener("click", () => {
-		//교육과정명
-		var className = document.querySelector("#class_name").value;
-					
-		//교육과정 상태값 가져오기
-		var statusArray = new Array();
-		$('input:checkbox[name=chk_status]:checked').each(function(){
-			statusArray.push(this.value);			
-		});
-		
-		//교육과정 지원 시작
-		var aplyStartDt = document.querySelector("#aply_start_dt").value;
-		
-		//교육과정 지원 마감
-		var aplyEndDt = document.querySelector("#aply_end_dt").value;
-		
-		//교육과정 시작일
-		var classStartDd = document.querySelector("#class_start_dd").value;
-		
-		//교육과정 종료일
-		var classEndDd = document.querySelector("#class_end_dd").value;
-		
-		console.log("className: " +className);
-		console.log("statusArray: " +statusArray);
-		console.log("aply: "+aplyStartDt+"~"+aplyEndDt);
-		console.log("class: "+classStartDd+"~"+classEndDd);
-
-	$.ajax({
-		url: '/admin/class/search',
-		async: true,
-		method: 'GET',
-		data: {
-			className: className, 
-			statusArray: statusArray,
-			aplyStartDt: aplyStartDt,
-			aplyEndDt: aplyEndDt,
-			classStartDd: classStartDd,
-			classEndDd: classEndDd},
-		success: function(response) {
-			var classListTable = document.querySelector("#class_list_table");
-			var classList = classListTable.querySelectorAll("#class_list");
-			classListTable.firstElementChild.remove();
-			var classListCode=
-				'<tr>'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
-				'<th th:if="${session.role==\'admin\'}">ID</th>'+
-				'<th>프로그램명</th>'+'	<th th:if="${session.role==\'admin\'}">지원기간</th>'+
-				'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>신청/최대</th>'+'<th>교육상태</th></tr>';
-			for(var i = 0; i < response.length; i++){
-			classListCode += 
-				'<tr><td><input type="checkbox" name="chk" th:value="'+
-				response[i].clssId+'"></td>'+
-				'<td>'+response[i].clssId+'</td>'+
-				'<td><a class="content_title" th:href="@{/manager/class/__'+response[i].clssId +
-				'__}">'+response[i].clssNm+'</a></td>' +
-				'<td><span>'+response[i].aplyStartDt+'</span> <br>~<br>'+
-				'<span>'+response[i].aplyEndDt+'</span></td>'+
-				'<td><span>'+response[i].clssStartDd+'</span> <br>~<br>'+
-				'<span>'+response[i].clssEndDd+'</span></td>'+
-				'<td>'+response[i].clssAdr+'</td>'+
-				'<td><span>' + response[i].aplyCnt + '</span> / <span>'+response[i].limitCnt+'</span></td>'+
-				'<td>'+response[i].clssCd+'</td></tr>';
-			}
-			classListTable.innerHTML=classListCode;
-		},
-		error: function(error){
-			console.log("error: ", error);
-		}
-	});
-});
-	
 </script>
 
 </body>
