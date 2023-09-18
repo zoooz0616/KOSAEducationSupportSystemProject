@@ -48,7 +48,7 @@
 			<div class="title">교육과정 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list}">교육과정
 					관리</a>
 			</div>
 		</div>
@@ -150,7 +150,7 @@
 				<div class="content_list">
 					<table class="content_list_table" id="class_list_table">
 						<tr class="content_list_th">
-							<th><input type="checkbox" id="chkAll"></th>
+							<th><input style="width:30px;"type="checkbox" id="chkAll"></th>
 							<th>ID</th>
 							<th>프로그램명</th>
 							<th>지원기간</th>
@@ -160,11 +160,11 @@
 							<th>교육상태</th>
 						</tr>
 						<tr id="class_list" th:each="class:${classList}">
-							<td><input type="checkbox" name="chk"
+							<td style="text-align:center;"><input type="checkbox" name="chk"
 								th:value="${class.clssId}"></td>
 							<td th:text="${class.clssId}"></td>
 							<td><a th:text="${class.clssNm}"
-								th:href="@{/admin/class/__${class.clssId}__}"
+								th:href="@{/admin/class/view/__${class.clssId}__}"
 								style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a></td>
 							<td th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
 							${#dates.format(class.aplyEndDt, 'yyyy-MM-dd HH:mm')}|"></td>
@@ -300,7 +300,7 @@
 		                           '<tr id="class_list"><td><input type="checkbox" name="chk" value="'+
 		                              response[i].clssId+'"></td>'+
 		                              '<td>'+response[i].clssId+'</td>'+
-		                              '<td>'+'<a class="content_title" href="/admin/class/'+response[i].clssId +
+		                              '<td>'+'<a class="content_title" href="/admin/class/view'+response[i].clssId +
 		                                 '">'+response[i].clssNm+'</a></td>' +      
 		                        '<td><span>'+formattedStartDate+'</span>~'+
 		                        '<span>'+formattedEndDate+'</span></td>'+

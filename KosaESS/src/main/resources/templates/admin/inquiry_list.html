@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Inquiry List</title>
+</head>
+<head>
+<link th:href="@{/css/admin/inquiry_list.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">문의사항 관리</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/inquiry/list}">문의사항
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- Search Filter wrap -->
+			<div class="search_filter_wrap">
+				<!-- 문의사항 명 -->
+				<div class="filter_box">
+					<div class="filter_box_title">
+						<select class="search_input">
+							<option th:value="title" th:text="제목"></option>
+							<option th:value="content" th:text="내용"></option>
+						</select>
+					</div>
+					<div>
+						<input class="search_input_title" id="class_name" value="" type="text" list="search_option"
+							required>
+					</div>
+				</div>
+
+				<!-- 문의사항 상태 -->
+				<div class="filter_box">
+					<div class="filter_box_title">답변상태</div>
+					<div>
+						<select class="search_input_status">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="classCommonCode: ${classCommonCodeList}"
+								th:value="${classCommonCode.cmcdId}"
+								th:text="${classCommonCode.cmcdNm}"></option>
+
+						</select>
+					</div>
+				</div>
+			</div>
+			<!-- Search Filter wrap -->
+
+			<!-- Search Button wrap -->
+			<div class="search_filter_btn_wrap">
+				<button type="button" class="search_reset_btn"
+					onclick="resetInput()">
+					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+				</button>
+				<button type="button" id="search_btn" class="search_filter_btn">
+					<img th:src="@{/img/search_white.png}"> <span>조회</span>
+				</button>
+			</div>
+			<!-- Search Button wrap -->
+		</div>
+		<!-- Content Middle-->
+
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+			<div class="content_info_wrap">
+				<div class="content_info">
+					<span>총 게시물 <span class="class_list_cnt"
+						th:text="${#lists.size(inquiryList)}">classListCnt</span>건
+					</span>
+				</div>
+				<div class="content_info_btn_wrap">
+					<!-- 선택삭제 버튼 -->
+					<button type="button"  id="delete_btn">
+						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+					</button>
+				</div>
+			</div>
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+
+			<!-- 컨텐츠 리스트 부분 -->
+			<div class="content_list">
+				<table class="content_list_table" id="class_list_table">
+					<thead>
+						<tr class="content_list_th">
+							<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
+							<th style="width: 40px;">번호</th>
+							<th style="width: 10%;">ID</th>
+							<th style="width: 40%;">제목</th>
+							<th style="width: 50px;">첨부파일</th>
+							<th style="width: 10%;">작성자</th>
+							<th style="width: 20%;">등록일시</th>
+							<th style="width: 40px;">조회수</th>
+							<th style="width: 50px;">답변상태</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="inquiry, iterStat: ${inquiryList}">
+							<td class="inquiry_check" style="text-align: center;"><input
+								class="input_check" type="checkbox" name="chk"
+								th:value="${inquiry.postId}"></td>
+							<td class="inquiry_num" th:text="${iterStat.index + 1}"></td>
+							<td th:text="${inquiry.postId}"></td>
+							<td><a th:href="@{/admin/inquiry/view/__${inquiry.postId}__}"
+								th:text="${inquiry.postTitle}"></a></td>
+							<td class="inquiry_file"><img style="width: 15px;"
+								th:if="${inquiry.fileId!=null}" class="file_img"
+								th:src="@{/img/file.png}"></td>
+							<td th:text="${inquiry.rgsterId}"></td>
+							<td th:text="${inquiry.rgstDt}"></td>
+							<td th:text="${inquiry.postHit}"></td>
+							<td th:text="${inquiry.cmcdNm}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- 컨텐츠 리스트 부분 -->
+		</div>
+		<!-- Content Bottom-->
+	</div>
+	<script>
+	//전체 선택
+	document.addEventListener("DOMContentLoaded", function() {
+		const chkAll = document.getElementById("chkAll");
+		const checkboxes = document
+				.querySelectorAll('input[type="checkbox"][name="chk"]');
+
+		chkAll.addEventListener("change", function() {
+			checkboxes.forEach(function(checkbox) {
+				checkbox.checked = chkAll.checked;
+			});
+		});
+	});
+	
+	//선택삭제
+	document.querySelector("#delete_btn").addEventListener(
+			"click",
+			function() {
+				var selectedInquiryIds = [];
+
+				// 선택된 체크박스를 모두 선택합니다.
+				var selectedCheckboxes = document
+						.querySelectorAll(".input_check:checked");
+
+				// 선택된 체크박스의 값을 배열에 추가합니다.
+				selectedCheckboxes.forEach(function(checkbox) {
+					selectedInquiryIds.push(checkbox.value);
+				});
+
+				console.log(selectedInquiryIds);
+				// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+				$.ajax({
+					url : '/admin/inquiry/delete',
+					method : 'POST',
+					data : {
+						selectedInquiryIds : selectedInquiryIds
+					},
+					success : function(response) {
+						console.log(response);
+						if (response == "success") {
+							alert("선택한 문의가 삭제되었습니다.");
+							window.location.href = "/admin/inquiry/list";
+						}
+					}
+				});
+			});
+	
+	
+	//초기화 버튼
+	function resetInput() {
+		// 모든 요소를 선택
+		const inputElement1 = document.querySelector(".search_input");
+		inputElement1.value = "title";
+
+		// 모든 요소를 선택
+		const inputElement2 = document
+				.querySelector(".search_input_title");
+		inputElement2.value = "";
+
+		// 모든 요소를 선택
+		const inputElement3 = document
+				.querySelector(".search_input_status");
+		inputElement3.value = "all";
+	}
+	</script>
+</body>
+</html>

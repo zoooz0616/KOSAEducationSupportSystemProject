@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Inquiry Form</title>
+</head>
+<head>
+<link th:href="@{/css/admin/inquiry_form.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">
+				문의사항 <span th:if="${act=='select'}">조회</span>
+			</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/inquiry}">문의사항
+					관리</a> > <a th:href="@{/admin/inquiry/__${postVO.postId}__}">문의사항<span
+					th:if="${act=='select'}">조회</span>
+				</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+
+		<!-- Content Middle-->
+		<form th:action="@{/admin/inquiry/reply/__${postVO.postId}__}"
+			method="post" onsubmit="submitPost();" enctype="multipart/form-data">
+			<!-- Content Middle-->
+			<div class="content_middle">
+				<table>
+					<tr th:if="${act=='select'}">
+						<th>등록자</th>
+						<td>
+							<div th:text="${postVO.rgsterId}"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>
+							<div th:if="${act=='select'}" th:text="${postVO.postTitle}"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>내용</th>
+						<td>
+							<div class="scroll"
+								style="width: 100%; height: 200px; overflow: scroll;"
+								th:if="${act=='select'}" th:utext="${postVO.postContent}"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>첨부파일</th>
+						<td>
+							<div th:if="${act=='select'}" th:each="file: ${fileList}">
+								<a
+									th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
+									th:text="${file.fileNm}"></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+
+
+				<!-- 답변 -->
+				<!-- 답변 있으면 div로 / 없으면 input으로 -->
+				<div class="reply">
+					<div class="reply_no">
+						<input class="reply_input" type="text">
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- Content Middle-->
+
+			<!-- Content Bottom-->
+			<div class="content_bottom">
+				<div class="btn_wrap" th:if="${act=='select'}">
+					<input class="notice_id" type="hidden" th:value="${postVO.postId}">
+					<button id="delete_btn" class="cancel_btn" type="button">삭제</button>
+					<button class="insert_btn" type="button"
+						onclick="location.href='/admin/inquiry/list'">목록</button>
+				</div>
+			</div>
+			<!-- Content Bottom-->
+		</form>
+
+
+
+
+	</div>
+	<!-- Content Wrap -->
+
+
+</body>
+</html>

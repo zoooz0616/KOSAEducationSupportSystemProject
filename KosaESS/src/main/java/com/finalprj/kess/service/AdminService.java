@@ -292,12 +292,96 @@ public class AdminService implements IAdminService {
 		adminRepository.insertLectureVO(lectureVO);
 	}
 
+	@Override
+	public void deleteLecture(List<String> lectureIds) {
+		adminRepository.deleteLecture(lectureIds);
+	}
 
+	@Override
+	public void deleteSubject(List<String> selectedSubjectIds) {
+		adminRepository.deleteSubject(selectedSubjectIds);
+	}
 
+	@Override
+	public void deleteProfessor(List<String> selectedProfessorIds) {
+		adminRepository.deleteProfessor(selectedProfessorIds);
+	}
+
+	@Override
+	public List<PostVO> getNoticeList() {
+		return adminRepository.getNoticeList();
+	}
+
+	@Override
+	public List<PostVO> getInquiryList() {
+		return adminRepository.getInquiryList();
+	}
+
+	@Override
+	public List<CommonCodeVO> getNoticeCommonCodeList(String string) {
+		return adminRepository.getNoticeCommonCodeList(string);
+	}
+	
+	@Override
+	public List<CommonCodeVO> getInquriyCommonCodeList(String string) {
+		return adminRepository.getInquriyCommonCodeList(string);
+	}
+
+	@Override
+	public void deleteAllNotice(List<String> selectedNoticeIds) {
+		adminRepository.deleteAllNotice(selectedNoticeIds);
+	}
+
+	@Override
+	public List<CommonCodeVO> getGroupCodeList() {
+		return adminRepository.getGroupCodeList();
+	}
+
+	@Override
+	public String getMaxNoticeId() {
+		return adminRepository.getMaxNoticeId();
+	}
+
+	@Override
+	@Transactional
+	public void insertNoticeVO(List<FileVO> fileList, PostVO postVO) {
+		if (fileList != null) {
+			for(FileVO fileVO : fileList) {
+				uploadFileRepository.uploadFile(fileVO);
+			}
+		}
+		
+		adminRepository.insertNoticeVO(postVO);
+	}
+	
+	
+	@Override
+	public PostVO getPostVO(String postId) {
+		return adminRepository.getPostVO(postId);
+	}
 	
 	
 	
+	@Override
+	public void deleteAllInquiry(List<String> selectedInquiryIds) {
+		adminRepository.deleteAllInquiry(selectedInquiryIds);
+	}
 	
+	@Override
+	public void updateNoticeVO(List<FileVO> fileList, PostVO postVO) {
+		if (fileList != null) {
+			for(FileVO fileVO : fileList) {
+				uploadFileRepository.uploadFile(fileVO);
+			}
+		}
+		
+		adminRepository.updateNoticeVO(postVO);
+	}
+	
+	@Override
+	public List<PostVO> getSearchPostList(String searchInputCategory, String searchInput, List<String> postStatusList) {
+		return adminRepository.getSearchPostList(searchInputCategory, searchInput, postStatusList);
+	}
 	
 	
 	
@@ -310,10 +394,6 @@ public class AdminService implements IAdminService {
 		return adminRepository.getWaitClassCnt();
 	}
 
-	@Override
-	public List<PostVO> getPostVOList(String postValue) {
-		return adminRepository.getPostVOList(postValue);
-	}
 
 	@Override
 	public List<String> getClassSearch(String term) {
