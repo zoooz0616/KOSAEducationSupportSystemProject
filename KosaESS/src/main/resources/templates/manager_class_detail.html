@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/include/manager_header :: header}">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link th:href="@{/css/student/class_detail.css}" rel="stylesheet">
 <meta charset="UTF-8">
 <title>Manager Class Detail</title>
 <link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
@@ -10,17 +13,16 @@
 </head>
 <body>
 	<!-- 서브바 부분 -->
-	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
 	<!-- End 서브바 -->
 
 	<!-- 컨텐츠 부분 -->
 	<div class="home-section">
-		<!-- title -->
+		title
 		<div class="title" th:text="${title}">Title</div>
 		<!-- content wrap-->
 		<div class="content_wrap">
 			<!-- 검색 필터 부분 -->
-			<div class="search_filter_wrap"></div>
 			<table>
 				<tr>
 					<th>이름</th>

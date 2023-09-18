@@ -3,11 +3,11 @@
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
 <title>Manager Student List</title>
-<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
 </head>
 <head>
-<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link th:href="@{/css/manager/manager_class_list.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<!-- 서브바 부분 -->
@@ -17,55 +17,29 @@
 	<!-- 컨텐츠 부분 -->
 	<div class="home-section">
 		<!-- title -->
-		<div class="title" th:text="|${title} : ${thisClassName}|">Title</div>
+		<div class="title_wrap">
+			<span class="title" th:text="|${title} :|"></span><a class="title_a" th:text="${thisClassName}" th:href="@{/manager/class/__${thisClassId}__}"></a>
+		</div>
 
 		<!-- content wrap-->
 		<div class="content_wrap">
 			<!-- 검색 필터 부분 -->
 			<div class="search_filter_wrap">
-				<!-- 아이콘 삽임 부분 -->
-				<!-- 				<div class="search_filter_icon"> -->
-				<!-- 					<img class="search_filter_icon_img" th:src="@{/img/filter.png}"> -->
-				<!-- 				</div> -->
-				<!-- 아이콘 삽임 부분 -->
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table_wrap">
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;"><select id="classId">
-									<option th:each="className:${classNameList}"
-										th:text="${className.clssNm}" th:value="${className.clssId}"></option>
-							</select></td>
-							<td style="width: 10%;">상태</td>
-							<td style="width: 50%;">
-								<!--리스트 전체선택 1 --> <span> <input type="checkbox"
-									checked="checked" id="chkAll1" name="chk1"> <label>전체</label>
-							</span> <span th:each="classCodeName:${classCodeNameList}"> <input
-									type="checkbox" checked="checked"
-									th:value="${classCodeName.cmcdId}" name="chk1"> <label
-									th:text="${classCodeName.cmcdNm}"></label>
-							</span>
-							</td>
-							<!-- regexp로 접근 -->
-						</tr>
-						<tr>
-							<td style="width: 5%;">학생 상태</td>
-							<td style="width: 30%;">
-								<!--리스트 전체선택 2 --> <span> <input type="checkbox"
-									checked="checked" id="chkAll2" name="chk"> <label>전체</label>
-							</span> <span th:each="stdtCodeName:${stdtCodeNameList}"> <input
-									type="checkbox" checked="checked"
-									th:value="${stdtCodeName.cmcdNm}" name="chk2"> <label
-									th:text="${stdtCodeName.cmcdNm}"></label>
-							</span>
-							</td>
-							<!-- regexp로 접근 -->
+							<td style="width: 30%;"><select id="classId"> <option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}"></option></select></td>
+<!-- 							<td style="width: 30%;"> -->
+<!-- <!-- 								<input id="class_name" placeholder="교육과정명" style="width: 100%;" type="text" list="search_option"> -->
+<!-- 								<select id="classId" > -->
+<!-- 									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class.clssId}"> -->
+<!-- 								</select> -->
+<!-- 							</td> -->
 							<td style="width: 10%;">기간</td>
-							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input
-								type="date" id="endDate"></td>
+							<td style="width: 30%;"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
 						</tr>
-
 					</table>
 					<!-- 검색 버튼 -->
 				</div>
@@ -85,12 +59,13 @@
 					<th><input type="checkbox" id="chkAllStdt"></th>
 					<th>번호</th>
 					<th>이름</th>
-					<th th:each="wlogCodeName:${wlogCodeNameList}"
-						th:text="${wlogCodeName.cmcdNm}"></th>
-					<th>성별</th>
-					<th>생년월일</th>
 					<th>이메일</th>
 					<th>연락처</th>
+					<th>성별</th>
+					<th>생년월일</th>
+					<th th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${wlogCodeName.cmcdNm}"></th>
+					<th>이수율</th>
 					<th>이수여부</th>
 				</tr>
 				</thead>
@@ -99,12 +74,12 @@
 					<td><input type="checkbox" id="chkStdt"></td>
 					<td th:text="${stdtStat.count}"></td>
 					<td th:text="${stdt.stdtNm}"></td>
-					<td th:each="wlogCodeName:${wlogCodeNameList}"
-						th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
-					<td th:text="${stdt.genderCd}">성별</td>
-					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:text="${stdt.userEmail}">이메일</td>
 					<td th:text="${stdt.stdtTel}">연락처</td>
+					<td th:text="${stdt.genderCd}">성별</td>
+					<td th:text="${stdt.birthDd}">생년월일</td>
+					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+					<td th:text="엄">이수율</td><!-- 구현 방법 : wlog 에서 totalTm가져오고 교육과정의 이수 시간을 가져와서 백분율을 출력 -->
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
 				</tbody>
@@ -114,26 +89,17 @@
 	</div>
 
 	<script>
-	//리스트 전체선택1
-	const chkAll1 = document.querySelector("#chkAll1");
-	chkAll1.addEventListener("change", () => {
-		const chkList1 = document.getElementsByName("chk1");
-		for(chk1 of chkList1){
-			chk1.checked = chkAll1.checked;
-		}
-	});
-	
-	//리스트 전체선택2
-	const chkAll2 = document.querySelector("#chkAll2");
-	chkAll2.addEventListener("change", () => {
-		const chkList2 = document.getElementsByName("chk2");
-		for(chk2 of chkList2){
-			chk2.checked = chkAll2.checked;
+	//전체 선택
+	const chkAll = document.getElementById("chkAllStdt");
+	chkAll.addEventListener("change", () => {
+		const chkList = document.getElementsById("chkStdt");
+		for(chk of chkList){
+			chk.checked = chkAll.checked;
 		}
 	});
 	
 	function search() {
-		var classId=document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
+		var classId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
 		var date = new Date();
@@ -156,21 +122,15 @@
 			success: function(stdtListResponse) {
 				//테이블의 모든 내용을 삭제
 				var stdtListTable = document.getElementById('stdt_list_table_tbody');
-// 				$('#stdt_list_table_tbody').remove();
+				if(stdtListTable.firstChild != null){
 				while (stdtListTable.firstChild) {
 					stdtListTable.removeChild(stdtListTable.firstChild);
-				}
-// 				stdtListTable.empty();
+				}}
 				
-				console.log(stdtListTable);
-				
-				console.log("asdasdadasadasdasdasdadsasd");
-
 				var stdtList = stdtListResponse.stdtList;
 				document.getElementById("stdtCnt").innerHTML=stdtList.length;
 
 				for(let i = 0; i < stdtList.length; i++){
-// 					var newRow = $('<tr>');
 					var newRow = document.createElement("tr");
 					newRow.id="stdt_list_table_row";
 					
@@ -179,15 +139,28 @@
 					inputChk.id = 'chkStdt';
 					inputChk.type = 'checkBox';
 					rowChk.appendChild(inputChk);
-					newRow.appendChild(rowChk);
+					newRow.appendChild(rowChk);//체크박스
 					
 					var rowNum = document.createElement('td');
 					rowNum.innerHTML=i+1;
-					newRow.appendChild(rowNum);
+					newRow.appendChild(rowNum);//번호
 					
 					var rowName = document.createElement('td');
 					rowName.innerHTML=stdtList[i].stdtNm;
-					newRow.appendChild(rowName);
+					newRow.appendChild(rowName);//이름
+					var rowEmail = document.createElement('td');
+					rowEmail.innerHTML=stdtList[i].userEmail;
+					var rowTel = document.createElement('td');
+					rowTel.innerHTML=stdtList[i].stdtTel;
+					var rowGender = document.createElement('td');
+					rowGender.innerHTML=stdtList[i].genderCd;
+					var rowBirth = document.createElement('td');
+					rowBirth.innerHTML=stdtList[i].birthDd;
+
+					newRow.appendChild(rowEmail);
+					newRow.appendChild(rowTel);
+					newRow.appendChild(rowGender);
+					newRow.appendChild(rowBirth);
 					$.ajax({
 						type:'get',
 						url:'/manager/student/search/codename',
@@ -197,34 +170,21 @@
 						for (let j = 0; j < wlogCodeNameList.length; j++) {
 							var rowWlog = document.createElement('td');
 							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
-							newRow.appendChild(rowWlog);
+							newRow.appendChild(rowWlog);//출결상태
 						}
 						},error: function(error){console.log("error: ", error);}
 					})
-					var rowGender = document.createElement('td');
-					rowGender.innerHTML=stdtList[i].genderCd;
-					var rowBirth = document.createElement('td');
-					rowBirth.innerHTML=stdtList[i].birthDd;
-					var rowEmail = document.createElement('td');
-					rowEmail.innerHTML=stdtList[i].userEmail;
-					var rowTel = document.createElement('td');
-					rowTel.innerHTML=stdtList[i].stdtTel;
+
+					var cmptRate = document.createElement('td');
+					cmptRate.innerHTML="";
 					var rowJob = document.createElement('td');
 					rowJob.innerHTML=stdtList[i].jobCd;
 					
-					newRow.appendChild(rowGender);
-					newRow.appendChild(rowBirth);
-					newRow.appendChild(rowEmail);
-					newRow.appendChild(rowTel);
+					
+					newRow.appendChild(cmptRate);
 					newRow.appendChild(rowJob);
 					
-					console.log(newRow);
-					console.log(stdtListTable);
-					
-// 					stdtListTable.appendChild(newRow);
 					stdtListTable.append(newRow);
-// 					$("#stdt_list_table_tbody").append(newRow);
-// 					stdtListTable.innerHTML=newRow;
 				}
 
 			},error: function(error){
@@ -232,7 +192,6 @@
 			}
 		})
 	}
-
 </script>
 
 </body>

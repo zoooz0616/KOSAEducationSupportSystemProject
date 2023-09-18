@@ -26,6 +26,15 @@ input, progress {
 	margin: 40px;
 }
 
+.title_a {
+	display: inline-block;
+	color: #333333;
+	font-size: 30px;
+	font-weight: bold;
+	margin: 40px;
+	text-decoration: none;
+}
+
 .content_wrap {
 	width: 95%;
 	margin-left: 40px;

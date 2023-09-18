@@ -42,5 +42,8 @@ public interface IManagerService {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString);
+//	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString);
+
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }
