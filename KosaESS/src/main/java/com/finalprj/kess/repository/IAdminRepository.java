@@ -14,6 +14,7 @@ import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
 import com.finalprj.kess.model.CurriculumVO;
+import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
@@ -24,7 +25,6 @@ import com.finalprj.kess.model.SubjectVO;
 @Mapper
 public interface IAdminRepository {
 	int getWaitClassCnt();
-	List<PostVO> getPostVOList(String postValue);
 	List<String> getClassSearch(String term);
 	
 
@@ -88,5 +88,20 @@ public interface IAdminRepository {
 	Integer getLctrNmCnt(String lctrNm);
 	String getMaxLectureId();
 	void insertLectureVO(LectureVO lectureVO);
+	void deleteLecture(List<String> lectureIds);
+	void deleteSubject(List<String> selectedSubjectIds);
+	void deleteProfessor(List<String> selectedProfessorIds);
+	List<PostVO> getNoticeList();
+	List<PostVO> getInquiryList();
+	List<CommonCodeVO> getNoticeCommonCodeList(String string);
+	List<CommonCodeVO> getInquriyCommonCodeList(String string);
+	void deleteAllNotice(List<String> selectedNoticeIds);
+	List<CommonCodeVO> getGroupCodeList();
+	String getMaxNoticeId();
+	void insertNoticeVO(PostVO postVO);
+	PostVO getPostVO(String postId);
+	void deleteAllInquiry(List<String> selectedInquiryIds);
+	void updateNoticeVO(PostVO postVO);
+	List<PostVO> getSearchPostList(String searchInputCategory, String searchInput, List<String> postStatusList);
 
 }

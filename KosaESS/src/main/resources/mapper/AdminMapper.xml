@@ -145,7 +145,8 @@
 		select *
 		from mngr
 		join lgin on lgin.user_email = mngr.user_email
-		where role_cd = 'ROL0000003' and user_cd = 'USR0000001'
+		join cmcd on cmcd.cmcd_id = lgin.user_cd
+		where role_cd = 'ROL0000003'
 		order by mngr_nm 
 	]]>
 	</select>
@@ -159,9 +160,9 @@
 		join prof on prof.prof_id = lctr.prof_id
 		where lctr.delete_yn = 'N'
 		order by lctr.rgst_dt desc
-	]]> 
+	]]>
 	</select>
-	
+
 	<select id="getSubject"
 		resultType="com.finalprj.kess.model.SubjectVO" parameterType="string">
 	<![CDATA[
@@ -329,36 +330,39 @@
 	</select>
 
 	<update id="updateAplyPass" parameterType="java.util.List">
-    <foreach collection="aplyIds" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
-        update aply
-        set 
-            aply_cd = 'APL0000003',
-            updt_dt = SYSTIMESTAMP,
-            updter_id = 'MNGR000001'			
-        where aply_id = #{item}
-    </foreach>
-</update>
+		<foreach collection="aplyIds" item="item" open="DECLARE BEGIN"
+			separator=";" close="; END;">
+			update aply
+			set
+			aply_cd = 'APL0000003',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where aply_id = #{item}
+		</foreach>
+	</update>
 
 	<update id="updateAplyFail" parameterType="java.util.List">
-		<foreach collection="aplyIds" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
-		update aply
-		set 
+		<foreach collection="aplyIds" item="item" open="DECLARE BEGIN"
+			separator=";" close="; END;">
+			update aply
+			set
 			aply_cd = 'APL0000004',
 			updt_dt = SYSTIMESTAMP,
-            updter_id = 'MNGR000001'
-		where aply_id = #{item}
+			updter_id = 'MNGR000001'
+			where aply_id = #{item}
 		</foreach>
 	</update>
 
 	<update id="deleteClass" parameterType="java.util.List">
-	<foreach collection="clssIds" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
-		update clss
-		set
+		<foreach collection="clssIds" item="item" open="DECLARE BEGIN"
+			separator=";" close="; END;">
+			update clss
+			set
 			delete_yn = 'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-		where clss_id = #{item}
-	</foreach>
+			where clss_id = #{item}
+		</foreach>
 	</update>
 
 	<select id="getSearchClassVOList"
@@ -384,7 +388,8 @@
 	]]>
 	</select>
 
-	<select id="getProfessorList" resultType="com.finalprj.kess.model.ProfessorVO">
+	<select id="getProfessorList"
+		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 		select *
 		from prof
@@ -400,30 +405,33 @@
 		where delete_yn = 'N'
 	]]>
 	</select>
-	
-	<select id="getSubjectNmCnt" parameterType="string" resultType="int">
+
+	<select id="getSubjectNmCnt" parameterType="string"
+		resultType="int">
 	<![CDATA[
 	select count(sbjt_id)
 	from sbjt
 	where REPLACE(UPPER(sbjt_nm), ' ', '') = REPLACE(UPPER(#{sbjtNm}), ' ', '')
 	]]>
 	</select>
-	
+
 	<select id="getMaxSubjectId" resultType="string">
 	<![CDATA[
 		select 'SBJT'||LPAD((max(cast(substr(sbjt_id,5) as number(6)))+1),6,'0')
 		from sbjt
 	]]>
 	</select>
-	
-	<insert id="insertSubjectVO" parameterType="com.finalprj.kess.model.SubjectVO">
+
+	<insert id="insertSubjectVO"
+		parameterType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
 	insert into sbjt
 	values (#{sbjtId}, #{sbjtNm}, systimestamp, 'MNGR000001', null, null, 'N')
 	]]>
 	</insert>
 
-	<select id="getProfTelCnt" parameterType="string" resultType="int">
+	<select id="getProfTelCnt" parameterType="string"
+		resultType="int">
 	<![CDATA[
 	select count(prof_id)
 	from prof
@@ -438,14 +446,16 @@
 	]]>
 	</select>
 
-	<insert id="insertProfessorVO" parameterType="com.finalprj.kess.model.ProfessorVO">
+	<insert id="insertProfessorVO"
+		parameterType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 	insert into prof
 	values (#{profId}, #{profNm}, #{profTel}, #{profEmail}, systimestamp, 'MNGR000001', null, null, 'N')
 	]]>
 	</insert>
-	
-	<select id="getLctrNmCnt" parameterType="string" resultType="int">
+
+	<select id="getLctrNmCnt" parameterType="string"
+		resultType="int">
 	<![CDATA[
 	select count(lctr_id)
 	from lctr
@@ -460,20 +470,190 @@
 	]]>
 	</select>
 
-	<insert id="insertLectureVO" parameterType="com.finalprj.kess.model.LectureVO">
+	<insert id="insertLectureVO"
+		parameterType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
 	insert into lctr
 	values (#{lctrId}, #{sbjtId}, #{profId}, #{lctrNm}, #{lctrTm}, null, systimestamp, 'MNGR000001', null, null, 'N')
 	]]>
 	</insert>
-	
-	
-	
-	
-	
-	
-	
-	
+
+	<update id="deleteLecture" parameterType="java.util.List">
+		<foreach collection="lectureIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update lctr
+			set
+			delete_yn = 'Y',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where lctr_id = #{item}
+		</foreach>
+	</update>
+
+	<update id="deleteSubject" parameterType="java.util.List">
+		<foreach collection="selectedSubjectIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update sbjt
+			set
+			delete_yn = 'Y',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where sbjt_id = #{item}
+		</foreach>
+	</update>
+
+	<update id="deleteProfessor" parameterType="java.util.List">
+		<foreach collection="selectedProfessorIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update prof
+			set
+			delete_yn = 'Y',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where prof_id = #{item}
+		</foreach>
+	</update>
+
+	<select id="getNoticeList"
+		resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select *
+		from post
+		join cmcd on cmcd.cmcd_id = post.post_cd
+		where post.post_id like 'NOTC%' and post.delete_yn='N'
+		order by post_id desc
+	]]>
+	</select>
+
+	<select id="getInquiryList"
+		resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select *
+		from post
+		join cmcd on cmcd.cmcd_id = post.post_cd
+		where post_id like 'INQY%' and delete_yn='N'
+		order by post_id desc
+		]]>
+	</select>
+
+	<select id="getNoticeCommonCodeList"
+		resultType="com.finalprj.kess.model.CommonCodeVO"
+		parameterType="string">
+	<![CDATA[
+		select * 
+		from cmcd
+		where tpcd_id = #{tpcdId} and cmcd_id in ('PST0000001', 'PST0000002')
+	]]>
+	</select>
+
+	<select id="getInquriyCommonCodeList"
+		resultType="com.finalprj.kess.model.CommonCodeVO"
+		parameterType="string">
+	<![CDATA[
+		select * 
+		from cmcd
+		where tpcd_id = #{tpcdId} and cmcd_id in ('PST0000003', 'PST0000004')
+	]]>
+	</select>
+
+	<update id="deleteAllNotice" parameterType="java.util.List">
+		<foreach collection="selectedNoticeIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update post
+			set
+			delete_yn = 'Y',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where post_id = #{item}
+		</foreach>
+	</update>
+
+	<select id="getGroupCodeList"
+		resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+	select *
+	from cmcd
+	where cmcd_id like 'GRP%'
+	]]>
+	</select>
+
+	<select id="getMaxNoticeId" resultType="string">
+	<![CDATA[
+		select 'NOTC'||LPAD((max(cast(substr(post_id,5) as number(6)))+1),6,'0')
+		from post
+		where post_id like 'NOTC%'
+	]]>
+	</select>
+
+	<insert id="insertNoticeVO"
+		parameterType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		insert into post
+		values(#{postId}, null, #{postTitle}, #{postContent},0, 'PST0000001', #{fileId}, systimestamp, #{rgsterId}, null, null, 'N')
+	]]>
+	</insert>
+
+	<select id="getPostVO" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select *
+		from post
+		join cmcd on cmcd.cmcd_id = post.post_cd
+		where post_id = #{postId}
+	]]>
+	</select>
+
+	<update id="deleteAllInquiry" parameterType="java.util.List">
+		<foreach collection="selectedInquiryIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update post
+			set
+			delete_yn = 'Y',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where post_id = #{item}
+		</foreach>
+	</update>
+
+	<update id="updateNoticeVO"
+		parameterType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		update post
+		set post_title = #{postTitle},
+			post_content = #{postContent},
+			file_id = #{fileId},
+			updt_dt = systimestamp,
+			updter_id = 'MNGR000001'
+		where post_id=#{postId}
+	]]>
+	</update>
+
+	<select id="getSearchPostList"
+		resultType="com.finalprj.kess.model.PostVO"> 
+	<![CDATA[
+		select *
+		from post
+		where 
+			delete_yn='N'
+			and post_cd in
+	]]>
+		<foreach collection="postStatusList" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		<choose>
+			<when test="searchInputCategory == 'post_title'">
+				AND post_title LIKE CONCAT(#{searchInput}, '%')
+			</when>
+			<when test="searchInputCategory == 'post_content'">
+				AND post_content LIKE CONCAT(#{searchInput}, '%')
+			</when>
+		</choose>
+	</select>
+
+
+
+
 
 
 
@@ -495,26 +675,6 @@
 		(select tpcd_id||cmcd_id
 		from cmcd
 		where cmcd_nm='접수중')
-	]]>
-	</select>
-
-	<select id="getPostVOList" parameterType="string"
-		resultType="com.finalprj.kess.model.PostVO">
-	<![CDATA[
-		select
-			post.post_id,
-			post.master_id,
-			post.post_title,
-			post.post_content,
-			post.post_hit,
-			cmcd.cmcd_nm,
-			post.rgst_dt,
-			post.rgster_id,
-			post.updt_dt,
-			post.updter_id
-		from post
-		join cmcd on cmcd.tpcd_id||cmcd.cmcd_id = post.post_cd
-		where post_id like CONCAT(#{postValue}, '%') and master_id is null
 	]]>
 	</select>
 

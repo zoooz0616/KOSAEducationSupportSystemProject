@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>기업 관리</title>
+</head>
+<head>
+<link th:href="@{/css/admin/commoncode_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">기준정보 관리</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/commoncode/list}">기준정보
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- left section -->
+			<div class="left_section">
+				<!-- 그룹코드 관리 -->
+				<div class="lecture_wrap" style="height: 100%;">
+
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						공통코드 총 <span class="cnt"></span> 건
+						<button id="lecture_delete_btn">선택삭제</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 그룹코드 등록하기 -->
+					<div class="insert_lecture insert" style="padding: 5px;">
+						<div>
+							<span>코드구분</span> <input type="text" placeholder="ex)NTC">
+							<span>코드구분명</span> <input type="text" placeholder="ex)ㅇㅇㅇㅇ상태">
+						</div>
+						<div>
+							<button class="insert_btn" type="button"
+								onclick="insertLecture()">등록하기</button>
+						</div>
+					</div>
+					<!-- 그룹코드 등록하기 -->
+
+					<!-- 리스트 -->
+					<div class="table_wrap"
+						style="height: 80%; border: 1px solid #CFDEE6;">
+						<table>
+							<thead>
+								<tr class="content_list_th">
+									<th style="width: 30px;"><input type="checkbox"
+										class="lecture_checkbox_all"></th>
+									<th>공통코드ID</th>
+									<th>코드구분</th>
+									<th>코드구분명</th>
+									<th>사용여부</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="groupCode: ${groupCodeList}">
+									<td><input type="checkbox"></td>
+									<td th:text="${groupCode.cmcdId}"></td>
+									<td th:text="${groupCode.tpcdId}"></td>
+									<td th:text="${groupCode.cmcdNm}"></td>
+									<td th:text="${groupCode.useYn}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 그룹코드 관리 -->
+			</div>
+			<!-- left section -->
+
+			<!-- right section -->
+			<div class="right_section">
+				<!-- 상세코드 관리 -->
+				<div class="lecture_wrap" style="height: 100%;">
+
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						상세코드 총 <span class="cnt"></span> 건
+						<button id="lecture_delete_btn">선택삭제</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 상세코드 등록하기 -->
+					<div class="insert_lecture insert" style="padding: 5px;">
+						<div>
+							<span>공통코드</span> <select>
+								<option value="전체">전체</option>
+							</select> <span>상세코드명</span> <input type="text" placeholder="ex)ㅇㅇㅇㅇ상태">
+						</div>
+						<div>
+							<button class="insert_btn" type="button"
+								onclick="insertLecture()">등록하기</button>
+						</div>
+					</div>
+					<!-- 상세코드 등록하기 -->
+
+					<!-- 리스트 -->
+					<div class="table_wrap"
+						style="height: 80%; border: 1px solid #CFDEE6;">
+
+						<div>
+							<div style="display: none;width:100%; height: 100%; text-align:center;padding-top: 40%;">조회 결과가 없습니다.</div>
+							<table>
+								<thead>
+									<tr class="content_list_th">
+									<th style="width: 30px;"><input type="checkbox"
+										class="lecture_checkbox_all"></th>
+									<th>상세코드ID</th>
+									<th>상세코드명</th>
+									<th>사용여부</th>
+								</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 상세코드 관리 -->
+			</div>
+			<!-- right section -->
+		</div>
+		<!-- Content Middle-->
+	</div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>Notice Form</title>
+</head>
+<head>
+<link th:href="@{/css/admin/notice_form.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">
+				공지사항 <span th:if="${act=='insert'}">등록</span> <span
+					th:if="${act=='select'}">조회</span> <span th:if="${act=='update'}">수정</span>
+			</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/notice/list}">공지사항
+					관리</a> > <a th:href="@{/admin/notice/__${act}__}">공지사항 <span
+					th:if="${act=='insert'}">등록</span> <span th:if="${act=='select'}">조회</span>
+					<span th:if="${act=='update'}">수정</span>
+				</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<form th:action="@{/admin/notice/__${act}__}" method="post"
+			onsubmit="submitPost();" enctype="multipart/form-data">
+			<!-- Content Middle-->
+			<div class="content_middle">
+				<table>
+					<tr th:if="${act=='select'}">
+						<th>등록자</th>
+						<td>
+							<div th:text="${postVO.rgsterId}"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>제목<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></th>
+						<td><input style="width: 50%;" th:if="${act=='insert'}"
+							type="text" name="noticeTitle"> <input
+							style="width: 50%;" th:if="${act=='update'}" type="text"
+							name="noticeTitle" th:value="${postVO.postTitle}">
+
+							<div th:if="${act=='select'}" th:text="${postVO.postTitle}"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>내용<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></th>
+						<td><textarea th:if="${act=='insert'}" name="editorTxt"
+								id="edit_text" rows="20" cols="10" placeholder="내용을 입력해주세요"
+								style="width: 100%;"></textarea> 
+							<textarea
+								th:if="${act=='update'}" name="editorTxt" id="edit_text"
+								rows="20" cols="10" style="width: 100%;"
+								placeholder="내용을 입력해주세요" th:utext="${postVO.postContent}"></textarea>
+
+
+
+							<div class="scroll"
+								style="width: 100%; height: 400px; overflow: scroll;"
+								th:if="${act=='select'}" th:utext="${postVO.postContent}"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>첨부파일</th>
+						<td><input th:if="${act=='insert'}" type="file" name="files" multiple>
+
+							<input th:if="${act=='update'}" type="file" name="files" multiple>
+
+							<div th:if="${act=='select'}">
+								<div th:if="${fileList == null}">첨부파일 없음</div>
+								<div th:each="file: ${fileList}">
+								<a 
+									th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
+									th:text="${file.fileNm}"></a></div>
+							</div></td>
+					</tr>
+				</table>
+			</div>
+			<!-- Content Middle-->
+
+			<!-- Content Bottom-->
+			<div class="content_bottom">
+				<div class="btn_wrap" th:if="${act=='insert'}">
+					<button class="cancel_btn" type="button"
+						onclick="location.href='/admin/notice/list'">취소</button>
+					<button class="insert_btn" type="submit">등록하기</button>
+				</div>
+
+				<div class="btn_wrap" th:if="${act=='select'}">
+					<input class="notice_id" type="hidden" th:value="${postVO.postId}">
+					<button id="delete_btn" class="cancel_btn" type="button">삭제</button>
+					<button class="insert_btn" type="button"
+						th:onclick="|location.href='@{/admin/notice/update/__${postVO.postId}__}'|">수정</button>
+					<button class="insert_btn" type="button"
+						onclick="location.href='/admin/notice/list'">목록</button>
+				</div>
+
+				<div class="btn_wrap" th:if="${act=='update'}">
+					<input class="notice_id" name="noticeId" type="hidden" th:value="${postVO.postId}">
+					<button class="cancel_btn" type="button"
+						onclick="location.href='/admin/notice/list'">취소</button>
+					<button class="insert_btn" type="submit">수정</button>
+				</div>
+			</div>
+			<!-- Content Bottom-->
+		</form>
+	</div>
+
+	<!-- 네이버 스마트에디터 -->
+	<script type="text/javascript"
+		th:src="@{/res/smarteditor/js/HuskyEZCreator.js}" charset="utf-8">
+	</script>
+	<script>
+		var act = document.querySelector('.title span').textContent;
+		console.log(act);
+		
+		if((act == "등록")||(act="수정")){
+	
+		//text area에 smartEditor 연결
+		let oEditors = [];
+		smartEditor = function() {
+			console.log("Naver SmartEditor");
+			nhn.husky.EZCreator.createInIFrame({
+				oAppRef : oEditors,
+				elPlaceHolder : "edit_text",
+				sSkinURI : "/res/smarteditor/SmartEditor2Skin.html",
+				fCreator : "cretaeSEditor2"
+			});
+		};
+
+		$(document).ready(function() {
+			smartEditor();
+		});
+		
+		function submitPost(){
+			oEditors.getById["edit_text"].exec("UPDATE_CONTENTS_FIELD", []);
+			let content = document.getElementById("edit_text").value;
+			if(content == ''){
+				alert("내용을 입력해주세요.");
+				oEditors.getById["edit_text"].exec("FOCUS");
+				return
+			}else{
+				document.getElementById("edit_text").value = content;
+				console.log(content);
+		
+			}
+		}
+		}
+	</script>
+
+	<!-- 삭제하기 -->
+	<script>
+	document.querySelector("#delete_btn").addEventListener("click",function() {
+				var selectedNoticeIds = [];
+				var noticeId = document.querySelector(".notice_id").value;
+				
+				
+				
+				selectedNoticeIds.push(noticeId);
+				console.log(selectedNoticeIds);
+				// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+				$.ajax({
+					url : '/admin/notice/delete',
+					method : 'POST',
+					data : {
+						selectedNoticeIds : selectedNoticeIds
+					},
+					success : function(response) {
+						console.log(response);
+						if (response == "success") {
+							alert("공지가 삭제되었습니다.");
+							window.location.href = "/admin/notice/list";
+						}
+					}
+				});
+			});
+	</script>
+</body>
+</html>

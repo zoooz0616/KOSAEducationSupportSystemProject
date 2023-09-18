@@ -16,6 +16,7 @@
 
 .home-section .content_top {
 	display: flex;
+	justify-content: space-between;
 	margin: 40px;
 }
 
@@ -23,7 +24,6 @@
 	font-size: 20px;
 	color: #333333;
 	font-weight: bold;
-	width: 88%;
 }
 
 .home-section .content_top .route a {
@@ -79,7 +79,7 @@
 .insert {
 	border-top: 2px solid #0E5881;
 	border-bottom: 1px solid #CFDEE6;
-	background: #F3F6F8;
+	background: #E7EFF3;
 	display: flex;
 }
 
