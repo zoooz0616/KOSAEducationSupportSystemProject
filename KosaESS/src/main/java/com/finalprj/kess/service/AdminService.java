@@ -383,6 +383,28 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSearchPostList(searchInputCategory, searchInput, postStatusList);
 	}
 	
+	@Override
+	public List<PostVO> getReplyList(String postId) {
+		return adminRepository.getReplyList(postId);
+	}
+	
+	@Override
+	public String getMaxReplyId() {
+		return adminRepository.getMaxReplyId();
+	}
+	
+	@Override
+	public void insertReplyVO(PostVO postVO) {
+		adminRepository.insertReplyVO(postVO);
+	}
+	
+	@Override
+	public void updateInquiryStatus(String postId) {
+		adminRepository.updateInquiryStatus(postId);
+	}
+	
+	
+	
 	
 	
 	
