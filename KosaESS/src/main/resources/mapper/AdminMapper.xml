@@ -633,6 +633,7 @@
 	<![CDATA[
 		select *
 		from post
+		join cmcd on cmcd.cmcd_id = post.post_cd
 		where 
 			delete_yn='N'
 			and post_cd in
