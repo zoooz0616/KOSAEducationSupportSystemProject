@@ -44,6 +44,7 @@ import com.finalprj.kess.service.IUploadFileService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 
 
 
@@ -75,17 +76,17 @@ public class AdminController {
 		}else {
 			if(!(((String)session.getAttribute("roleCd")).equals("ROL0000002"))){
 				// 이동하고자 하는 기본 URL 설정
-			    String defaultRedirectUrl = "/manager"; // 기본적으로 홈 페이지로 이동
+				String defaultRedirectUrl = "/manager"; // 기본적으로 홈 페이지로 이동
 
-			    // 이전 페이지의 URL을 가져오기 시도
-			    String referer = request.getHeader("Referer");
-			    
-			    // 이전 페이지의 URL이 유효한 경우에만 사용
-			    if (referer != null && !referer.isEmpty()) {
-			        return "redirect:"+ referer;
-			    } else {
-			        return "redirect:"+ defaultRedirectUrl;
-			    }
+				// 이전 페이지의 URL을 가져오기 시도
+				String referer = request.getHeader("Referer");
+
+				// 이전 페이지의 URL이 유효한 경우에만 사용
+				if (referer != null && !referer.isEmpty()) {
+					return "redirect:"+ referer;
+				} else {
+					return "redirect:"+ defaultRedirectUrl;
+				}
 			}
 		}
 
@@ -142,75 +143,289 @@ public class AdminController {
 	}
 
 	/**
-	 * 문의사항
+	 * 공지사항 목록조회
 	 * @author : eunji
-	 * @date : 2023. 9. 22.
+	 * @date : 2023. 9. 14.
 	 * @parameter : session, model
 	 * @return : String
 	 */
+	@GetMapping("/notice/list")
+	public String noticeList(HttpSession session, Model model) {
+		//공지사항 상태 리스트 전달
+		List<CommonCodeVO> classCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
+		model.addAttribute("classCommonCodeList", classCommonCodeList);
+
+		//공지사항 리스트 전달
+		List<PostVO> noticeList = adminService.getNoticeList();
+		model.addAttribute("noticeList", noticeList);
+		return "admin/notice_list";
+	}
 	
-	@RequestMapping("/inquiry")
-	public String inquiry(HttpSession session, Model model) {
-		//로그인 정보 저장
-		session.setAttribute("role", "admin");
-		session.setAttribute("id", "admin");
+	/**
+	 * 공지사항 상세조회
+	 * @author : eunji
+	 * @date : 2023. 9. 17.
+	 * @parameter :noticeId, model
+	 * @return : String
+	 */
+	@GetMapping("/notice/view/{noticeId}")
+	public String noticeDetail(@PathVariable String noticeId, Model model) {
+		String act="select";
+		model.addAttribute("act", act);
 
-		//title
-		String title ="문의사항 관리";
-		model.addAttribute("title", title);
-
-		//link 연결시 필요한 값
-		String url="inquiry";
-		model.addAttribute("url", url);
-
-		//문의사항 리스트 객체 생성
-		List<PostVO> postVOList = new ArrayList<PostVO>();
-
-		//service로부터 문의사항 전체 리스트 가져오기
-		//id가 INQ-----인것만
-		String postValue = "INQ";
-		postVOList = adminService.getPostVOList(postValue);
-		//logger.warn(postVOList.toString());
-		model.addAttribute("postVOList", postVOList);
+		PostVO postVO = adminService.getPostVO(noticeId);
+		model.addAttribute("postVO", postVO);
 
 
-		return "manager_post_list";
+		if (postVO.getFileId() != null) {
+			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
+			model.addAttribute("fileList", fileList);
+		}
+
+		return "admin/notice_form";
+	}	
+
+	/**
+	 * 공지사항 등록 GET
+	 * @author : eunji
+	 * @date : 2023. 9. 17.
+	 * @parameter :model
+	 * @return : String
+	 */
+	@GetMapping("/notice/insert")
+	public String noticeInsert(Model model) {
+		String act="insert";
+		model.addAttribute("act", act);
+
+		return "admin/notice_form";
 	}
 
 	/**
-	 * 공지사항
+	 * 공지사항 등록 POST
 	 * @author : eunji
-	 * @date : 2023. 9. 22.
+	 * @date : 2023. 9. 17.
+	 * @parameter : files, redirectAttrs, noticeTitle, editorTxt
+	 * @return : String
+	 */
+	@PostMapping("/notice/insert")
+	public String noticeCreate(@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
+			@RequestParam String noticeTitle, @RequestParam String editorTxt) {
+
+		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
+		String maxFileId = null;
+		List<FileVO> fileList = null;
+
+		//파일을 첨부했다면 List생성해서 전달
+		if(files[0]!=null && !files[0].isEmpty()) {
+			maxFileId = uploadFileService.getMaxFileId();
+			int subFileId=1;
+			fileList = new ArrayList<FileVO>();
+			try {
+				for(MultipartFile file: files) {
+					if(file!=null && !file.isEmpty()) {
+						FileVO fileVO = new FileVO();
+						fileVO.setFileId(maxFileId);
+						fileVO.setFileSubId(subFileId);
+						fileVO.setFileNm(file.getOriginalFilename());
+						fileVO.setFileSize(file.getSize());
+						fileVO.setFileType(file.getContentType());
+						fileVO.setFileContent(file.getBytes());
+						fileList.add(fileVO);
+						subFileId++;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				redirectAttrs.addFlashAttribute("message", e.getMessage());
+			}
+		}
+
+		//notice 객체 생성
+
+		PostVO postVO = new PostVO();
+		postVO.setPostId(adminService.getMaxNoticeId());
+		postVO.setPostTitle(noticeTitle);
+		postVO.setPostContent(editorTxt);
+		postVO.setFileId(maxFileId);
+		postVO.setRgsterId("MNGR000001");
+
+		adminService.insertNoticeVO(fileList, postVO);
+
+		return "redirect:/admin/notice/list";
+	}
+
+	/**
+	 * 공지사항 수정 GET
+	 * @author : eunji
+	 * @date : 2023. 9. 17.
+	 * @parameter :postId, model
+	 * @return : String
+	 */
+	@GetMapping("/notice/update/{noticeId}")
+	public String noticeUpdate(@PathVariable String noticeId, Model model) {
+		String act="update";
+		model.addAttribute("act", act);
+
+		PostVO postVO = adminService.getPostVO(noticeId);
+		model.addAttribute("postVO", postVO);
+
+
+		if (postVO.getFileId() != null) {
+			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
+			model.addAttribute("fileList", fileList);
+		}
+
+		return "admin/notice_form";
+	}
+
+	/**
+	 * 공지사항 수정 POST
+	 * @author : eunji
+	 * @date : 2023. 9. 18.
+	 * @parameter :postId, model
+	 * @return : String
+	 */
+	@PostMapping("/notice/update")
+	public String noticeUpdate(@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
+			@RequestParam String noticeTitle, @RequestParam String editorTxt, @RequestParam String noticeId) {
+
+		PostVO postVO = adminService.getPostVO(noticeId);
+		postVO.setPostTitle(noticeTitle);
+		postVO.setPostContent(editorTxt);
+
+		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
+		String maxFileId = null;
+		List<FileVO> fileList = null;
+
+		//파일을 첨부했다면 List생성해서 전달
+		if(files[0]!=null && !files[0].isEmpty()) {
+			maxFileId = uploadFileService.getMaxFileId();
+			int subFileId=1;
+			fileList = new ArrayList<FileVO>();
+			try {
+				for(MultipartFile file: files) {
+					if(file!=null && !file.isEmpty()) {
+						FileVO fileVO = new FileVO();
+						fileVO.setFileId(maxFileId);
+						fileVO.setFileSubId(subFileId);
+						fileVO.setFileNm(file.getOriginalFilename());
+						fileVO.setFileSize(file.getSize());
+						fileVO.setFileType(file.getContentType());
+						fileVO.setFileContent(file.getBytes());
+						fileList.add(fileVO);
+						subFileId++;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				redirectAttrs.addFlashAttribute("message", e.getMessage());
+			}
+		}
+		
+		postVO.setFileId(maxFileId);
+		
+		adminService.updateNoticeVO(fileList, postVO);
+
+		return "redirect:/admin/notice/view/"+postVO.getPostId();
+	}
+
+	/**
+	 * 공지사항 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 15.
+	 * @parameter : selectedNoticeIds
+	 * @return : String
+	 */
+	@PostMapping("/notice/delete")
+	@ResponseBody
+	public String noticeDeleteAll(@RequestParam("selectedNoticeIds[]") List<String> selectedNoticeIds) {
+		//공지사항 deleteYn='Y'로 업데이트
+		System.out.println("qssssssssss");
+		adminService.deleteAllNotice(selectedNoticeIds);
+
+		return "success";
+	}
+
+	/**
+	 * 공지사항 검색
+	 * @author : eunji
+	 * @date : 2023. 9. 18.
 	 * @parameter : session, model
 	 * @return : String
 	 */
-	@RequestMapping("/notice")
-	public String notice(HttpSession session, Model model) {
-		//로그인 정보 저장
-		session.setAttribute("role", "admin");
-		session.setAttribute("id", "admin");
+	@PostMapping("/notice/search")
+	@ResponseBody
+	public Map<String, Object> noticeSearch(@RequestParam String searchInputCategory, @RequestParam String searchInput, @RequestParam("postStatusList[]") List<String> postStatusList) {
+		
+		Map<String, Object> response = new HashMap<String, Object>();
 
-		//title
-		String title ="공지사항 관리";
-		model.addAttribute("title", title);
-
-		//link 연결시 필요한 값
-		String url="inquiry";
-		model.addAttribute("url", url);
-
-		//공지사항 리스트 객체 생성
-		List<PostVO> postVOList = new ArrayList<PostVO>();
-
-		//service로부터 문의사항 전체 리스트 가져오기
-		//id가 INQ-----인것만
-		String postValue = "NTC";
-		postVOList = adminService.getPostVOList(postValue);
-		//logger.warn(postVOList.toString());
-		model.addAttribute("postVOList", postVOList);
-
-
-		return "manager_post_list";
+		//공지사항 리스트 전달
+		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
+		
+		response.put("noticeList", noticeList);
+		return response;
 	}
+	
+	/**
+	 * 문의사항 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 17.
+	 * @parameter :session, model
+	 * @return : String
+	 */
+	@RequestMapping("/inquiry/list")
+	public String inquiry(HttpSession session, Model model) {
+		//문의사항 상태 리스트 전달
+		List<CommonCodeVO> classCommonCodeList = adminService.getInquriyCommonCodeList("GRP0000001");
+		model.addAttribute("classCommonCodeList", classCommonCodeList);
+
+
+		//문의사항 리스트 전달
+		List<PostVO> inquiryList = adminService.getInquiryList();
+		model.addAttribute("inquiryList", inquiryList);
+		return "admin/inquiry_list";
+	}
+
+	/**
+	 * 문의사항 상세조회
+	 * @author : eunji
+	 * @date : 2023. 9. 17.
+	 * @parameter :noticeId, model
+	 * @return : String
+	 */
+	@GetMapping("/inquiry/view/{inquiryId}")
+	public String inquiryDetail(@PathVariable String inquiryId, Model model) {
+		String act="select";
+		model.addAttribute("act", act);
+
+		PostVO postVO = adminService.getPostVO(inquiryId);
+		model.addAttribute("postVO", postVO);
+
+
+		if (postVO.getFileId() != null) {
+			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
+			model.addAttribute("fileList", fileList);
+		}
+
+		return "admin/inquiry_form";
+	}
+
+	/**
+	 * 문의사항 선택 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 15.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@PostMapping("/inquiry/delete")
+	@ResponseBody
+	public String inquiryDeleteAll(@RequestParam("selectedInquiryIds[]") List<String> selectedInquiryIds) {
+		//공지사항 deleteYn='Y'로 업데이트
+		adminService.deleteAllInquiry(selectedInquiryIds);
+
+		return "success";
+	}
+
 
 	/**
 	 * 교육과정 목록조회
@@ -219,7 +434,7 @@ public class AdminController {
 	 * @parameter : session, model
 	 * @return : String
 	 */
-	@RequestMapping("/class")
+	@RequestMapping("/class/list")
 	public String classList(HttpSession session, Model model) {
 		//교육과정 리스트 객체 생성
 		List<ClassVO> classList = adminService.getClassList();
@@ -239,7 +454,7 @@ public class AdminController {
 	 * @parameter : clssId, session, model
 	 * @return : String
 	 */
-	@RequestMapping("/class/{clssId}")
+	@RequestMapping("/class/view/{clssId}")
 	public String classDetail(@PathVariable String clssId, HttpSession session, Model model) {
 		//title
 		String title = "교육과정 상세";
@@ -277,7 +492,7 @@ public class AdminController {
 	}
 
 	/**
-	 * 교육과정 생성화면
+	 * 교육과정 생성 GET
 	 * @author : eunji
 	 * @date : 2023. 9. 10.
 	 * @parameter : session, model
@@ -320,7 +535,7 @@ public class AdminController {
 	}
 
 	/**
-	 * 교육과정 생성 로직
+	 * 교육과정 생성 POST
 	 * @author : eunji
 	 * @date : 2023. 9. 11.
 	 * @parameter : session, files, redirectAttrs, classInsertDTO, clssCd, cmpyId, mngrId, lctrIds
@@ -457,9 +672,9 @@ public class AdminController {
 
 		return "redirect:/admin/class";
 	}
-	
+
 	/**
-	 * 교육과정 수정
+	 * 교육과정 수정 GET
 	 * @author : eunji
 	 * @date : 2023. 9. 12.
 	 * @parameter : clssId,session, model
@@ -533,7 +748,7 @@ public class AdminController {
 	}
 
 	/**
-	 * 교육과정 수정 로직
+	 * 교육과정 수정 POST
 	 * @author : eunji
 	 * @date : 2023. 9. 12.
 	 * @parameter : session, files, redirectAttrs, classInsertDTO, clssId, cmpyId, mngrId, lctrIds, fileSubIds
@@ -764,13 +979,13 @@ public class AdminController {
 	}
 
 	/**
-	 * 강의 관리
+	 * 강의 목록조회
 	 * @author : eunji
 	 * @date : 2023. 9. 13.
 	 * @parameter : model, session
 	 * @return : String
 	 */
-	@RequestMapping("/lecture")
+	@RequestMapping("/lecture/list")
 	public String lecture(HttpSession session, Model model) {
 		//강사 리스트  생성
 		List<ProfessorVO> professorList = adminService.getProfessorList();
@@ -786,7 +1001,7 @@ public class AdminController {
 
 		return "admin/lecture_list";
 	}
-	
+
 	/**
 	 * 강의 생성
 	 * @author : eunji
@@ -800,7 +1015,7 @@ public class AdminController {
 			@RequestParam("lecturNmInput")String lctrNm, @RequestParam("lectureTmInput")int lctrTm) {
 		//강의명이 중복되는지 확인 후 중복 시 fail 리턴
 		Integer lctrNmCnt = adminService.getLctrNmCnt(lctrNm);
-		
+
 		if (lctrNmCnt != 0) {
 			return "fail";
 		}else {
@@ -810,15 +1025,13 @@ public class AdminController {
 			lectureVO.setProfId(profId);
 			lectureVO.setLctrNm(lctrNm);
 			lectureVO.setLctrTm(lctrTm);
-			
+
 			adminService.insertLectureVO(lectureVO);
-			
+
 			return "success";
 		}
 	}
-	
-	
-	
+
 	/**
 	 * 과목 생성
 	 * @author : eunji
@@ -839,12 +1052,12 @@ public class AdminController {
 			subjectVO.setSbjtId(adminService.getMaxSubjectId());
 			subjectVO.setSbjtNm(sbjtNm);
 			adminService.insertSubjectVO(subjectVO);
-			
+
 			//없는 이름이면 객체 생성해서 insert하기
 			return "success";
 		}
 	}
-	
+
 	/**
 	 * 강사 생성
 	 * @author : eunji
@@ -859,7 +1072,7 @@ public class AdminController {
 		//전화번호가 중복되는지 확인 후 중복되면 return 실패보내기
 		//sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
 		Integer profTelCnt = adminService.getProfTelCnt(profTel);
-		
+
 		if(profTelCnt != 0) {
 			return "fail";
 		}else {
@@ -869,27 +1082,124 @@ public class AdminController {
 			professorVO.setProfTel(profTel);
 			professorVO.setProfEmail(profEmail);
 			adminService.insertProfessorVO(professorVO);
-			
+
 			//없는 이름이면 객체 생성해서 insert하기
 			return "success";
 		}
 	}
-	
-	
-	
 
-	@RequestMapping("/manager")
-	public String manager(HttpSession session, Model model) {
-		//로그인 정보 저장
-		session.setAttribute("role", "admin");
-		session.setAttribute("id", "admin");
 
-		//title
-		String title = "업무담당자 관리";
-		model.addAttribute("title", title);
+	/**
+	 * 강의 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@PostMapping("/lecture/lecture/deleteall")
+	@ResponseBody
+	public String deleteAllLectures(
+			@RequestParam("selectedLectureIds[]") List<String> selectedLectureIds) {
+		//선택된 lectureIds 를 가지고 모두 update deletYn='Y'로 변경해줌
+		adminService.deleteLecture(selectedLectureIds);
 
-		return "manager_manager_list";
+		return "success";
+
 	}
+
+
+	/**
+	 * 과목 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@PostMapping("/lecture/subject/deleteall")
+	@ResponseBody
+	public String deleteAllSubjects(
+			@RequestParam("selectedSubjectIds[]") List<String> selectedSubjectIds) {
+		//선택된 lectureIds 를 가지고 모두 update deletYn='Y'로 변경해줌
+		adminService.deleteSubject(selectedSubjectIds);
+
+		return "success";
+
+	}
+
+	/**
+	 * 강사 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@PostMapping("/lecture/professor/deleteall")
+	@ResponseBody
+	public String deleteAllProfessors(
+			@RequestParam("selectedProfessorIds[]") List<String> selectedProfessorIds) {
+		//선택된 lectureIds 를 가지고 모두 update deletYn='Y'로 변경해줌
+		adminService.deleteProfessor(selectedProfessorIds);
+
+		return "success";
+
+	}
+
+	/**
+	 * 기업 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 15.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@RequestMapping("/company/list")
+	public String company(Model model) {
+		//기업 리스트 전달
+		List<CompanyVO> companyList = adminService.getCompanyList();
+		model.addAttribute("companyList", companyList);
+
+		return "admin/company_list";
+	}
+
+
+	/**
+	 * 업무담당자 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 15.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@RequestMapping("/manager/list")
+	public String manager(HttpSession session, Model model) {
+		List<ManagerVO> managerList = adminService.getManagerList();
+		model.addAttribute("managerList", managerList);
+
+		return "admin/manager_list";
+	}
+
+	/**
+	 * 기준정보 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 15.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/commoncode/list")
+	public String commoncode(Model model) {
+		//그룹코드 리스트 전달
+		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
+		model.addAttribute("groupCodeList", groupCodeList);
+
+		//상세 코드 리스트 전달
+
+
+		return "admin/commoncode_list";
+	}
+
+
+
+
+
+
 
 	@GetMapping("/class/autocomplete")
 	@ResponseBody

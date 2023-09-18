@@ -1,0 +1,157 @@
+a {
+	text-decoration-line: none;	
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .content_top {
+	display: flex;
+	justify-content: space-between;
+	margin: 40px;
+}
+
+.home-section .content_top .title {
+	font-size: 20px;
+	color: #333333;
+	font-weight: bold;
+}
+
+.home-section .content_top .route a {
+	width: 12%;
+	color: #0E5881;
+	text-decoration-line: none;
+	font-weight: bold;
+}
+
+.content_middle {
+	height: 80vh;
+	display: flex;
+	margin: 40px 40px 0 40px;
+}
+
+.content_middle .left_section {
+	width: 55%;
+	height: 100%;
+	margin-right: 20px;
+}
+
+.content_middle .right_section {
+	width: 45%;
+	height: 100%;
+}
+
+.content_middle div div table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-top: 2px solid #0E5881;
+}
+
+.content_middle div div table tr {
+	border-bottom: 1px solid #CFDEE6;
+	height: 30px;
+}
+
+.content_middle div div table tr th {
+	border: 1px solid #CFDEE6;
+}
+
+.content_middle div div table tr td {
+	border: 1px solid #CFDEE6;
+	padding: 5px;
+}
+
+.content_list_th {
+	background: #F3F6F8;
+	color: #0E5881;
+}
+
+.insert {
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #CFDEE6;
+	background: #E7EFF3;
+	display: flex;
+}
+
+.insert div span{
+	color: #0E5881;
+    font-weight: bold;
+}
+
+.table_wrap {
+	margin-top: 10px;
+}
+
+.content_info_wrap {
+	font-weight: bold;
+	display:flex;
+	justify-content: space-between;
+}
+
+.content_info_wrap .cnt {
+	color: #0E5881;
+}
+
+.content_info_wrap button {
+	width: 60px;
+	border: none;
+	border-radius: 3px;
+	background: #0E5881;
+	color: white;
+	font-size: 15px;
+	font-weight: bold;
+	margin: 5px;
+	height: 30px;
+}
+
+.insert_professor div span {
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.insert_btn {
+	width: 60px;
+	border: none;
+	border-radius: 3px;
+	background: #0E5881;
+	color: white;
+	font-weight: bold;
+	padding: 5px;
+	margin-left: 5px;
+}
+
+.table_wrap table tr td button {
+	font-weight: bold;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	padding: 5px;
+}
+
+.update_btn {
+	background-color: #3E799A;
+}
+
+.delete_btn {
+	background-color: #9FBCCD;
+}
+
+.company_detail_table tr th{
+	background:#F3F6F8;
+}

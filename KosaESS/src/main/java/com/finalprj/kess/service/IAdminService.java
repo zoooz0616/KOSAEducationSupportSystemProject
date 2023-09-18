@@ -24,9 +24,7 @@ import com.finalprj.kess.model.SubjectVO;
 public interface IAdminService {
 	
 	int getWaitClassCnt();
-	
-	List<PostVO> getPostVOList(String postValue);
-	List<String> getClassSearch(String term);
+		List<String> getClassSearch(String term);
 	
 
 	
@@ -92,4 +90,22 @@ public interface IAdminService {
 	Integer getLctrNmCnt(String lctrNm);
 	String getMaxLectureId();
 	void insertLectureVO(LectureVO lectureVO);
+
+	void deleteLecture(List<String> lectureIds);
+	void deleteSubject(List<String> selectedSubjectIds);
+	void deleteProfessor(List<String> selectedProfessorIds);
+
+	List<PostVO> getNoticeList();
+	List<PostVO> getInquiryList();
+	List<CommonCodeVO> getNoticeCommonCodeList(String string);
+	List<CommonCodeVO> getInquriyCommonCodeList(String string);
+	
+	void deleteAllNotice(List<String> selectedNoticeIds);
+	List<CommonCodeVO> getGroupCodeList();
+	String getMaxNoticeId();
+	void insertNoticeVO(List<FileVO> fileList, PostVO postVO);
+	PostVO getPostVO(String postId);
+	void deleteAllInquiry(List<String> selectedInquiryIds);
+	void updateNoticeVO(List<FileVO> fileList, PostVO postVO);
+	List<PostVO> getSearchPostList(String searchInputCategory, String searchInput, List<String> postStatusList);
 }

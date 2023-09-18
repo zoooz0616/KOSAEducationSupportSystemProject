@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>기업 관리</title>
+</head>
+<head>
+<link th:href="@{/css/admin/company_list.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">기업 관리</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/company/list}">기업
+					관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- left section -->
+			<div class="left_section">
+				<!-- 기업 관리 -->
+				<div class="lecture_wrap" style="height: 100%;">
+
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						<div>
+							기업 총 <span class="cnt" th:text="${#lists.size(companyList)}"></span>
+							개
+						</div>
+						<button id="lecture_delete_btn">선택삭제</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 기업 등록하기 -->
+					<div class="insert_lecture insert" style="padding: 5px;">
+						<div>
+							<span>기업명</span> <input type="text" placeholder="기업명"> <span>전화번호</span>
+							<input type="text" placeholder="전화번호"> <br> <span>주소</span>
+							<input type="text" id="streetAdr" class="form-control"
+								onclick="findAddr()" placeholder="도로명 주소를 입력하세요" readonly>
+							<span>기업로고</span> <input id="lecture_tm_input" type="file">
+						</div>
+						<div>
+							<button class="insert_btn" type="button"
+								onclick="insertLecture()">등록하기</button>
+						</div>
+					</div>
+					<!-- 기업 등록하기 -->
+
+					<!-- 리스트 -->
+					<div class="table_wrap"
+						style="height: 90%; border: 1px solid #CFDEE6;">
+						<table>
+							<thead>
+								<tr class="content_list_th">
+									<th style="width: 30px;"><input type="checkbox"
+										class="lecture_checkbox_all"></th>
+									<th style="width: 10%;">ID</th>
+									<th style="width: 25%;">기업명</th>
+									<th style="width: 10%;">전화번호</th>
+									<th>주소</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="company: ${companyList}">
+									<td><input type="checkbox" class="lecture_checkbox_all"
+										th:value="${company.cmpyId}"></td>
+									<td th:text="${company.cmpyId}"></td>
+									<td><a th:href="@{/admin}" th:text="${company.cmpyNm}"></a></td>
+									<td th:text="${company.cmpyTel}"></td>
+									<td th:text="${company.cmpyAdr}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 기업 관리 -->
+			</div>
+			<!-- left section -->
+
+			<!-- right section -->
+			<div class="right_section">
+				<!-- 기업 관리 -->
+				<div class="lecture_wrap" style="height: 100%;">
+
+					<!-- 총 개수 및 버튼-->
+					<div class="content_info_wrap">
+						기업 상세보기
+						<button id="lecture_delete_btn">수정하기</button>
+					</div>
+					<!-- 총 개수 및 버튼-->
+
+					<!-- 리스트 -->
+					<div class="table_wrap"
+						style="height: 100%; border: 1px solid #CFDEE6; margin-top: 0px;">
+						<div
+							style="display: none; width: 100%; height: 100%; text-align: center; margin-top: 45%;">
+							조회 결과가 없습니다.
+							</div>
+						<div>
+							<div>
+								<div style="display: flex;">
+									<table class="company_detail_table">
+										<tr>
+											<th>기업ID</th>
+											<td>CMP0000002</td>
+											<th>기업명</th>
+											<td>KCC정보통신</td>
+										</tr>
+										<tr>
+											<th>전화번호</th>
+											<td>0260907800</td>
+											<th>주소</th>
+											<td>서울시 용산구 청파로 61길 5</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<div style="padding: 20px;">
+								<div id="map" style="width: 100%; height: 350px;"></div>
+							</div>
+						</div>
+
+					</div>
+					<!-- 리스트 -->
+				</div>
+				<!-- 기업 관리 -->
+			</div>
+			<!-- right section -->
+		</div>
+		<!-- Content Middle-->
+	</div>
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09ec69ddf5b6f0163e112eee3e0d931f&libraries=services"></script>
+	<script>
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		mapOption = {
+			center : new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+			level : 3
+		// 지도의 확대 레벨
+		};
+
+		// 지도를 생성합니다    
+		var map = new kakao.maps.Map(mapContainer, mapOption);
+
+		// 주소-좌표 변환 객체를 생성합니다
+		var geocoder = new kakao.maps.services.Geocoder();
+
+		// 주소로 좌표를 검색합니다
+		geocoder
+				.addressSearch(
+						'서울시 용산구 청파로 61길 5',
+						function(result, status) {
+
+							// 정상적으로 검색이 완료됐으면 
+							if (status === kakao.maps.services.Status.OK) {
+
+								var coords = new kakao.maps.LatLng(result[0].y,
+										result[0].x);
+
+								// 결과값으로 받은 위치를 마커로 표시합니다
+								var marker = new kakao.maps.Marker({
+									map : map,
+									position : coords
+								});
+
+								// 인포윈도우로 장소에 대한 설명을 표시합니다
+								var infowindow = new kakao.maps.InfoWindow(
+										{
+											content : '<div style="width:150px;text-align:center;padding:6px 0;">KCC정보통신</div>'
+										});
+								infowindow.open(map, marker);
+
+								// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+								map.setCenter(coords);
+							}
+						});
+	</script>
+
+	<script>
+		function findAddr() {
+			new daum.Postcode(
+					{
+						oncomplete : function(data) {
+
+							var addr = ''; // 주소 변수
+							var extraAddr = ''; // 참고항목 변수
+
+							if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+								addr = data.roadAddress;
+							} else { // 사용자가 지번 주소를 선택했을 경우(J)
+								addr = data.jibunAddress;
+							}
+
+							if (data.userSelectedType === 'R') {
+								if (data.bname !== ''
+										&& /[동|로|가]$/g.test(data.bname)) {
+									extraAddr += data.bname;
+								}
+								if (data.buildingName !== ''
+										&& data.apartment === 'Y') {
+									extraAddr += (extraAddr !== '' ? ', '
+											+ data.buildingName
+											: data.buildingName);
+								}
+								if (extraAddr !== '') {
+									extraAddr = ' (' + extraAddr + ')';
+								}
+								//document.getElementById("detailAdr").value = extraAddr;
+							} else {
+								//document.getElementById("detailAdr").value = '';
+							}
+							document.getElementById("streetAdr").value = addr;
+						}
+					}).open();
+		}
+	</script>
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+</body>
+</html>

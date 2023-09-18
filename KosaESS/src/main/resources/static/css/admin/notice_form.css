@@ -1,0 +1,130 @@
+/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll {
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+
+
+/* 스크롤바 생성 */
+.scroll {
+  width: 300px;
+  height: 300px;
+  overflow-y: scroll;
+}
+
+.scroll p {
+  font-size: 2rem;
+  padding: 0.6rem 1rem;
+}
+
+a {
+	text-decoration: none;
+	color: #0E5881;
+	font-weight: bold;
+}
+
+a:hover{
+	border-bottom: 2px solid #0E5881;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .content_top {
+	display: flex;
+	justify-content: space-between;
+	margin: 40px;
+}
+
+.home-section .content_top .title {
+	font-size: 20px;
+	color: #333333;
+	font-weight: bold;
+}
+
+.home-section .content_top .route a {
+	color: #0E5881;
+	text-decoration-line: none;
+	font-weight: bold;
+}
+
+.home-section .content_middle {
+	margin: 40px;
+	display: flex;
+	padding: 5px;
+}
+
+.home-section .content_middle table {
+	width: 100%;
+	border: 1px solid #CFDEE6;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+	border-collapse: collapse;
+}
+
+.home-section .content_middle table tr th {
+	width: 200px;
+	border-bottom: 1px solid #CFDEE6;
+	background: #F3F6F8;
+	padding-left: 5px;
+}
+
+.home-section .content_middle table tr th .star {
+	color: red;
+}
+
+.home-section .content_middle table tr td {
+	border: 1px solid #CFDEE6;
+	padding: 5px;
+}
+
+.home-section .content_middle table tr td input {
+	padding: 5px;
+	margin: 5px;
+}
+
+.home-section .content_middle table tr td div {
+	margin: 5px;
+}
+
+.home-section .content_bottom {
+	margin: 40px;
+	display: flex;
+	justify-content: center;
+}
+
+.home-section .content_bottom div button {
+	width: 180px;
+	height: 40px;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	font-size: 20px;
+	color: white;
+	margin: 10px;
+}
+
+.home-section .content_bottom .btn_wrap .cancel_btn {
+	background: #CFDEE6;
+}
+
+.home-section .content_bottom .btn_wrap .insert_btn {
+	background: #0E5881;
+}

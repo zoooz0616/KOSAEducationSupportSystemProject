@@ -18,4 +18,6 @@ public class ManagerVO {
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
 	private Timestamp lastLoginDt;//마지막 로그인 일시
+	
+	private String cmcdNm;//계정상태이름
 }
