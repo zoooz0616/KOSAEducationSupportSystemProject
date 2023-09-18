@@ -23,8 +23,9 @@
 			</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/inquiry}">문의사항
-					관리</a> > <a th:href="@{/admin/inquiry/__${postVO.postId}__}">문의사항<span
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/inquiry/list}">문의사항 관리</a> > <a
+					th:href="@{/admin/inquiry/view/__${postVO.postId}__}">문의사항<span
 					th:if="${act=='select'}">조회</span>
 				</a>
 			</div>
@@ -33,69 +34,89 @@
 
 
 		<!-- Content Middle-->
-		<form th:action="@{/admin/inquiry/reply/__${postVO.postId}__}"
-			method="post" onsubmit="submitPost();" enctype="multipart/form-data">
-			<!-- Content Middle-->
-			<div class="content_middle">
-				<table>
-					<tr th:if="${act=='select'}">
-						<th>등록자</th>
-						<td>
-							<div th:text="${postVO.rgsterId}"></div>
-						</td>
-					</tr>
-					<tr>
-						<th>제목</th>
-						<td>
-							<div th:if="${act=='select'}" th:text="${postVO.postTitle}"></div>
-						</td>
-					</tr>
-					<tr>
-						<th>내용</th>
-						<td>
-							<div class="scroll"
-								style="width: 100%; height: 200px; overflow: scroll;"
-								th:if="${act=='select'}" th:utext="${postVO.postContent}"></div>
-						</td>
-					</tr>
-					<tr>
-						<th>첨부파일</th>
-						<td>
-							<div th:if="${act=='select'}" th:each="file: ${fileList}">
-								<a
-									th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
-									th:text="${file.fileNm}"></a>
-							</div>
-						</td>
-					</tr>
-				</table>
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<table>
+				<tr th:if="${act=='select'}">
+					<th>등록자</th>
+					<td>
+						<div th:text="${postVO.rgsterId}"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>제목</th>
+					<td>
+						<div th:if="${act=='select'}" th:text="${postVO.postTitle}"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td>
+						<div class="scroll"
+							style="width: 100%; height: 200px; overflow: scroll;"
+							th:if="${act=='select'}" th:utext="${postVO.postContent}"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>첨부파일</th>
+					<td>
+						<div th:if="${act=='select'}" th:each="file: ${fileList}">
+							<a
+								th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
+								th:text="${file.fileNm}"></a>
+						</div>
+					</td>
+				</tr>
+			</table>
 
 
-
+			<form th:action="@{/admin/inquiry/reply/__${postVO.postId}__}"
+				method="post">
 				<!-- 답변 -->
 				<!-- 답변 있으면 div로 / 없으면 input으로 -->
-				<div class="reply">
+				<div class="reply_wrap">
+					<div class="reply" th:each="reply: ${replyList}">
+						<div class="reply_date" th:text="${reply.rgstDt}"></div>
+						<div class="reply_title" th:text="${reply.postTitle}"></div>
+						<div class="reply_content" th:text="${reply.postContent}"></div>
+					</div>
+
 					<div class="reply_no">
-						<input class="reply_input" type="text">
+						<table>
+							<tr>
+								<td style="width: 200px;background: #F3F6F8; text-align:center;"><div style="font-weight: bold;">답변 제목</div></td>
+								<td><input name="replyTitle" class="reply_input"
+									type="text" style="width: 50%;"></td>
+							</tr>
+
+							<tr>
+								<td style="width: 200px;background: #F3F6F8; text-align:center;"><div style="font-weight: bold;">답변 내용</div></td>
+								<td><input name="replyContent" class="reply_input"
+									type="text" style="width: 90%;"></td>
+							</tr>
+						</table>
+						<button class="reply_btn">등록하기</button>
 					</div>
 				</div>
+			</form>
+		</div>
+
+
+
+		<!-- Content Middle-->
+
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+			<div class="btn_wrap" th:if="${act=='select'}">
+				<input class="inquiry_id" type="hidden" th:value="${postVO.postId}">
+				<button id="delete_btn" class="cancel_btn" type="button">삭제</button>
+				<button class="insert_btn" type="button"
+					onclick="location.href='/admin/inquiry/list'">목록</button>
 			</div>
+		</div>
+		<!-- Content Bottom-->
 
-
-
-			<!-- Content Middle-->
-
-			<!-- Content Bottom-->
-			<div class="content_bottom">
-				<div class="btn_wrap" th:if="${act=='select'}">
-					<input class="notice_id" type="hidden" th:value="${postVO.postId}">
-					<button id="delete_btn" class="cancel_btn" type="button">삭제</button>
-					<button class="insert_btn" type="button"
-						onclick="location.href='/admin/inquiry/list'">목록</button>
-				</div>
-			</div>
-			<!-- Content Bottom-->
-		</form>
 
 
 
@@ -103,6 +124,35 @@
 	</div>
 	<!-- Content Wrap -->
 
+	<script>
+		//삭제
+		document.querySelector("#delete_btn").addEventListener(
+						"click",
+						function() {
+							var selectedInquiryIds = [];
+							var inquiryId = document
+									.querySelector(".inquiry_id").value;
 
+							selectedInquiryIds.push(inquiryId);
+
+							console.log(selectedInquiryIds);
+							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+							$
+									.ajax({
+										url : '/admin/inquiry/delete',
+										method : 'POST',
+										data : {
+											selectedInquiryIds : selectedInquiryIds
+										},
+										success : function(response) {
+											console.log(response);
+											if (response == "success") {
+												alert("선택한 문의가 삭제되었습니다.");
+												window.location.href = "/admin/inquiry/list";
+											}
+										}
+									});
+						});
+	</script>
 </body>
 </html>
