@@ -112,6 +112,7 @@ public class ManagerController {
 		// classDetail 객체를 가져와서 모델에 추가
 		ClassVO classDetail = studentService.selectClass(classId);
 		classDetail.setRgstCnt(managerService.getClassDetailByClssId(classId).getRgstCnt());
+		classDetail.setRgstCnt(managerService.getRgstCountByClssId(classId));
 		model.addAttribute("clss", classDetail);
 
 		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(classId);
