@@ -9,7 +9,7 @@ import lombok.Data;
 public class ReasonVO {
 	private String resnId;//사유서 id
 	private String wlogId;//출퇴근 id
-	private Clob resnContent;//사유서 내용
+	private String resnContent;//사유서 내용
 	private String resnCd;//사유서 상태
 	private String fileId;//파일id
 	private Timestamp rgstDt;//등록일시
