@@ -1,5 +1,8 @@
 package com.finalprj.kess.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -13,6 +16,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1264,16 +1271,114 @@ public class AdminController {
 	 * 기업 목록조회
 	 * @author : eunji
 	 * @date : 2023. 9. 15.
-	 * @parameter : profNm, profTel, profEmail
+	 * @parameter : model
 	 * @return : String
 	 */
 	@RequestMapping("/company/list")
-	public String company(Model model) {
+	public String companyList(Model model) {
 		//기업 리스트 전달
 		List<CompanyVO> companyList = adminService.getCompanyList();
 		model.addAttribute("companyList", companyList);
 
 		return "admin/company_list";
+	}
+	
+	/**
+	 * 기업 상세조회
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : cmpyId
+	 * @return : String
+	 */
+	@PostMapping("/company/view")
+	@ResponseBody
+	public Map<String, Object> companySelect(@RequestParam String cmpyId) {
+		//기업 객체 생성
+		CompanyVO companyVO = adminService.getCompanyVO(cmpyId);
+		
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("companyVO", companyVO);
+		
+		
+
+		return response;
+	}
+	
+	@GetMapping("file/{fileId}/1")
+	public ResponseEntity<byte[]> getFile(@PathVariable String fileId) {
+		FileVO file = uploadFileService.getFile(fileId, "1");
+
+		final HttpHeaders headers = new HttpHeaders();
+		String[] mtypes = file.getFileType().split("/");
+		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+		headers.setContentLength(file.getFileSize());
+		try {
+			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+			headers.setContentDispositionFormData("attachment", encodedFileName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
+	}
+	
+	
+	
+	/**
+	 * 기업 생성
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : file,redirectAttrs,cmpyNm,cmpyTel,cmpyAdr
+	 * @return : String
+	 * @throws IOException 
+	 */
+	@PostMapping("/company/insert")
+	public String companyInsert(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttrs,
+			@RequestParam String cmpyNm, @RequestParam String cmpyTel, 
+			@RequestParam String cmpyAdr) throws IOException {
+		
+		String fileId = null; 
+		FileVO fileVO = null;
+		//파일 처리
+		
+	    if (file != null && !file.isEmpty()) {
+	        fileVO = new FileVO();
+	        fileId = uploadFileService.getMaxFileId();
+	        fileVO.setFileId(fileId);
+	        fileVO.setFileSubId(1);
+			fileVO.setFileNm(file.getOriginalFilename());
+			fileVO.setFileSize(file.getSize());
+			fileVO.setFileType(file.getContentType());
+			fileVO.setFileContent(file.getBytes());
+	    }
+	    
+	    CompanyVO companyVO = new CompanyVO();
+	    companyVO.setCmpyId(adminService.getMaxCompanyId());
+	    companyVO.setCmpyNm(cmpyNm);
+	    companyVO.setCmpyTel(cmpyTel);
+	    companyVO.setCmpyAdr(cmpyAdr);
+	    companyVO.setFileId(fileId);
+	    
+	    adminService.insertCompanyVO(fileVO, companyVO);
+
+
+		//파일 업로드 후 파일 아이디 값으로 객체 생성
+
+		return "redirect:/admin/company/list";
+	}
+	
+	/**
+	 * 기업 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : selectedCompanyIds
+	 * @return : String
+	 */
+	@PostMapping("/company/delete")
+	@ResponseBody
+	public String companyDelete(@RequestParam("selectedCompanyIds[]") List<String> selectedCompanyIds) {
+		adminService.deleteCompany(selectedCompanyIds);
+		
+		return "success";
 	}
 
 

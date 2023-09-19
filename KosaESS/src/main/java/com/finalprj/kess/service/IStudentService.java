@@ -1,5 +1,7 @@
 package com.finalprj.kess.service;
 
+import java.sql.Clob;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
@@ -10,7 +12,10 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
+import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 
 public interface IStudentService {
 
@@ -67,7 +72,36 @@ public interface IStudentService {
 
 	int getRgstIngCnt(String stdtId);
 
+	int getWlogIdCnt(String stdtId, String clssId);
 
+	String getLastWlogId(String stdtId, String clssId);
 
+	WorklogVO getLastWlogVO(String lastWlogId);
+
+	String getMaxWlogId();
+
+	void insertNewWlog(WorklogVO inWlogVO);
+
+	ClassVO getWlogClass(String clssId);
+
+	List<WorklogVO> searchWlogList(String stdtId);
+
+	String getMaxResnId();
+
+	void uploadResnFile(ReasonVO resn);
+
+	void updateResnFile(String resnId, FileVO fileVO);
+
+	void updateResndt(String resnId, String stdtId, String resnText);
+
+	StudentVO getstdtInfo(String stdtId);
+
+	String getPassword(String stdtId);
+	
+	WorklogVO getNewWlog(String maxWlogId);
+
+	void insertPastWlog(WorklogVO pastwlogVO);
+
+	void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId, Double totalTm);
 
 }

@@ -82,14 +82,17 @@ a {
 	color: #0E5881;
 }
 
-.insert {
+.company_insert {
 	border-top: 2px solid #0E5881;
 	border-bottom: 1px solid #CFDEE6;
 	background: #E7EFF3;
-	display: flex;
 }
 
-.insert div span{
+.company_insert *{
+	margin: 5px;
+}
+
+.company_insert span{
 	color: #0E5881;
     font-weight: bold;
 }
@@ -102,6 +105,7 @@ a {
 	font-weight: bold;
 	display:flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 .content_info_wrap .cnt {
@@ -118,11 +122,6 @@ a {
 	font-weight: bold;
 	margin: 5px;
 	height: 30px;
-}
-
-.insert_professor div span {
-	color: #0E5881;
-	font-weight: bold;
 }
 
 .insert_btn {
@@ -154,4 +153,33 @@ a {
 
 .company_detail_table tr th{
 	background:#F3F6F8;
+}
+
+.cmpy_nm{
+	text-decoration-line: none;	
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.cmpy_nm:hover{
+	border-bottom: 2px solid #0E5881;
+	color: #0E5881;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.not_selected{
+	width: 100%; 
+	height: 100%; 
+	text-align: center; 
+	margin-top: 45%;
+}
+
+.cmpy_img_div{
+	text-align: center;
+    margin: 20px;
+}
+
+.cmpy_img_div .cmpy_img{
+	width:400px;
 }

@@ -4,6 +4,7 @@
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="icon" href="/img/icon.png" />
 <meta charset="UTF-8">
 <title>main page</title>
@@ -78,11 +79,11 @@
 					</form>
 				</div>
 				<div th:if="${session.userEmail!=null}">
-					<div>
-						<h3 th:text="${ingClassVO == null}" style="margin: 0; width: 50%"></h3>
+					<div th:if="${ingClassVO == null}">
+						<h3></h3>
 					</div>
 					<div th:if="${ingClassVO != null}" class="inouttm">
-						<h3></h3>
+						<h3 th:text="${ingClassVO.clssNm}" ></h3>
 						<div>
 							<label for="intm"></label><span>출근 시간</span> <input type="text"
 								name="intm" id="intm" class="checktm" readonly>
@@ -95,7 +96,7 @@
 					<div class="submit"
 						style="margin-top: 0; display: grid; align-items: center;">
 						<!-- 토글 버튼 -->
-						<input class="wlogBtn" type="button" th:value="출근하기"
+						<input class="wlogBtn" type="button"
 							onclick="toggleInOut()">
 					</div>
 				</div>
@@ -134,6 +135,17 @@
 	</div>
 	<div th:replace="~{/include/student_footer :: footer}"
 		style="width: 100%;"></div>
+	<script th:inline="javascript">
+		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
+		var clssId = /*[[${ingClassVO?.clssId}]]*/'';
+		var lastVO = /*[[${lastWlogVO}]]*/'';
+		console.log(lastVO);
+		var lastInTm = /*[[${lastWlogVO?.inTm}]]*/'';
+		var lastOutTm = /*[[${lastWlogVO?.outTm}]]*/'';
+		
+		console.log(lastInTm + lastOutTm);
+	</script>
+	<script src="/js/student/main.js"></script>
+
 </body>
-<script src="/js/student/main.js"></script>
 </html>

@@ -127,4 +127,8 @@ public interface IAdminService {
 	void updateSubject(SubjectVO subjectVO);
 	ProfessorVO getProfessorVO(String professorId);
 	void updateProfessor(ProfessorVO professorVO);
+	String getMaxCompanyId();
+	void insertCompanyVO(FileVO fileVO, CompanyVO companyVO);
+	CompanyVO getCompanyVO(String cmpyId);
+	void deleteCompany(List<String> selectedCompanyIds);
 }

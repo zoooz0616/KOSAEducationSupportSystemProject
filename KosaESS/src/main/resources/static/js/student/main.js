@@ -47,36 +47,76 @@ const getInterval = () => {
 
 let interval = getInterval(); // interval 등록
 
-var isAttendance = false; // 출근 상태를 저장하는 변수
+var intmInput = document.getElementById('intm');
+var outtmInput = document.getElementById('outtm');
+var wlogBtn = document.querySelector('.wlogBtn');
 
+if (lastVO != null) {
+	var lastInTmDate = timestampToFormattedString(lastInTm);
+	if (lastOutTm === null) {
+		intmInput.value = lastInTmDate;
+		outtmInput.value = '';
+		isAttendance = true;
+		wlogBtn.value = "퇴근하기";
+	} else {
+		var lastOutTmDate = timestampToFormattedString(lastOutTm);
+		intmInput.value = lastInTmDate;
+		outtmInput.value = lastOutTmDate;
+		wlogBtn.value = "출근하기";
+		var isAttendance = false; // 출근 상태를 저장하는 변수
+	}
+} else {
+	outtmInput.value = '';
+	outtmInput.value = '';
+	wlogBtn.value = "출근하기";
+}
 function toggleInOut() {
-	var intmInput = document.getElementById('intm');
-	var outtmInput = document.getElementById('outtm');
-	var wlogBtn = document.querySelector('.wlogBtn');
-
 	if (isAttendance) {
 		// 퇴근 처리
-		outtmInput.value = getCurrentTime();
+		$.ajax({
+			url: '/student/wlog/outlog',
+			method: 'POST',
+			data: {
+				clssId: clssId,
+			},
+			success: function(newOutWlogVO) {
+				var outTmdate = timestampToFormattedString(newOutWlogVO.outTm);
+				outtmInput.value = outTmdate;
+			}
+
+		});
 		wlogBtn.value = "출근하기";//변경되는 버튼 이름
 	} else {
 		// 출근 처리
-		intmInput.value = getCurrentTime();
+		$.ajax({
+			url: '/student/wlog/inlog',
+			type: 'POST',
+			data: {
+				clssId: clssId,
+			},
+
+			success: function(newInWlogVO) {
+				var inTmdate = timestampToFormattedString(newInWlogVO.inTm);
+				intmInput.value = inTmdate;
+				outtmInput.value = '';
+			}
+		});
 		wlogBtn.value = "퇴근하기"; //변경되는 버튼 이름
 	}
-
 	isAttendance = !isAttendance; // 상태를 토글
 }
 
-function getCurrentTime() {
-	var now = new Date();
-	var year = now.getFullYear();
-	var month = (now.getMonth() + 1 < 10 ? '0' : '') + (now.getMonth() + 1);
-	var day = (now.getDate() < 10 ? '0' : '') + now.getDate();
-	var hours = (now.getHours() < 10 ? '0' : '') + now.getHours();
-	var minutes = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-	var seconds = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
-	var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':'
-		+ minutes + ':' + seconds;
-		
-	return formattedTime;
+
+function timestampToFormattedString(timestamp) {
+	var date = new Date(timestamp);
+
+	var year = date.getFullYear();
+	var month = String(date.getMonth() + 1).padStart(2, '0');
+	var day = String(date.getDate()).padStart(2, '0');
+	var hours = String(date.getHours()).padStart(2, '0');
+	var minutes = String(date.getMinutes()).padStart(2, '0');
+	var seconds = String(date.getSeconds()).padStart(2, '0');
+
+	var formattedString = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+	return formattedString;
 }
