@@ -23,6 +23,20 @@
 			<div class="maincontent">
 				<div class="personalData">
 					<h3>개인 정보 조회/수정</h3>
+					<h1>비밀번호 확인</h1>
+					<label for="password">비밀번호:</label> <input type="password"
+						id="password" placeholder="비밀번호를 입력하세요">
+					<button id="checkPassword">확인</button>
+
+					<div id="userInfo" style="display: none;">
+						<h2>회원 정보</h2>
+						<table>
+							<tr>
+								<th></th>
+								<th></th>
+							</tr>
+						</table>
+					</div>
 					<p>비밀번호 확인</p>
 				</div>
 				<div class="applyList" style="display: none;">
@@ -109,21 +123,22 @@
 									<th>퇴근 시간</th>
 									<th>출퇴근 상태</th>
 									<th>사유서 제출</th>
+									<th>사유서 상태</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="wlogRow" th:each="WorklogVO , rowStat : ${wlogList}">
+								<!-- <tr class="wlogRow" th:each="WorklogVO , rowStat : ${wlogList}">
 									<td><span th:text="${rowStat.index + 1}"></span></td>
 									<td th:text="${WorklogVO.clssNm}"></td>
-									<td th:text="${WorklogVO.InTm}"></td>
+									<td th:text="${WorklogVO.inTm}"></td>
 									<td th:text="${WorklogVO.outTm}"></td>
-									<td th:text="${WorklogVO.cmcdNm}"></td>
-									<td><button class="submitResn" style="display: none;">제출</button>
-										<button class="updateResn" style="display: none;">제출</button>
+									<td th:text="${WorklogVO.wlogNm}"></td>
+									<td><button class="submitResn">제출</button>
+										<button class="updateResn">수정</button>
 									</td>
-									<td style="display: none;" th:text="${WorklogVO.wlogId}" class="wlogId"></td>
-									<td style="display: none;" th:text="${WorklogVO.resnId}" class="resnId"></td>
-								</tr>
+									<td class="resnStstus"
+										th:text="${WorklogVO.resnNm}"></td>
+								</tr> -->
 							</tbody>
 						</table>
 					</div>
@@ -136,7 +151,7 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>지원서파일을 여기에 첨부하세요.</p>
-								<input type="file" name="file" id="fileInput">
+								<input type="file" name="file" id="fileInput1">
 							</div>
 						</div>
 						<div class="modalFooter">
@@ -148,50 +163,51 @@
 				<div class="modal2" style="display: none;">
 					<div class="modalBody">
 						<div class="modalHeader">
-							<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
+							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
 						</div>
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
-								<input type="file" name="file" id="fileInput">
+								<input type="file" name="file" id="fileInput2">
 							</div>
 							<div>
 								<label>사유서 내용을 작성하세요.</label> <input type="text"
-									class="resnText">
+									class="resnText1">
 							</div>
 						</div>
 
 						<div class="modalFooter">
 							<button type="reset" class="closeBtn">취소</button>
-							<button type="submit" class="sumbitBtn">제출하기</button>
+							<button type="button" class="submitBtn">제출하기</button>
 						</div>
 					</div>
-					<div class="modal3" style="display: none;">
-						<div class="modalBody">
-							<div class="modalHeader">
-								<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
+				</div>
+				<div class="modal3" style="display: none;">
+					<div class="modalBody">
+						<div class="modalHeader">
+							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
+						</div>
+						<div class="modalContent">
+							<div class="upload-area">
+								<p>사유서파일을 첨부하세요.</p>
+								<input type="file" name="file" id="fileInput3">
 							</div>
-							<div class="modalContent">
-								<div class="upload-area">
-									<p>사유서파일을 첨부하세요.</p>
-									<input type="file" name="file" id="fileInput">
-								</div>
-								<div>
-									<label>사유서 내용을 작성하세요.</label> <input type="text"
-										class="resnText">
-								</div>
+							<div>
+								<label>사유서 내용을 작성하세요.</label> <input type="text"
+									class="resnText2">
 							</div>
+						</div>
 
-							<div class="modalFooter">
-								<button type="reset" class="closeBtn">취소</button>
-								<button type="submit" class="sumbitBtn">수정하기</button>
-							</div>
+						<div class="modalFooter">
+							<button type="reset" class="closeBtn">취소</button>
+							<button type="submit" class="submitBtn">수정하기</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<script th:inline="javascript">
+	</div>
+	<script th:inline="javascript">
 		/* JavaScript에서 Java 모델의 값을 가져와서 처리 */
 		var rgstList = /*[[${rgstList}]]*/[];
 
@@ -203,88 +219,33 @@
 				rgstPrintElement.css('display', 'block');
 			}
 		}
-
-		var wlogList = /*[[${wlogList}]]*/[];
-
-		for (var i = 0; i < wlogList.length; i++) {
-			var wlogCd = wlogList[i].wlogCd;
-			var wlogId = wlogList[i].wlogId;
-			var resnId = wlogList[i].resnId;
-			var j = null;
-			var submitResnElement = $('.submitResn').eq(i); // 클래스 이름 수정
-			var updateResnElement = $('.updateResn').eq(i);
-
-			if (wlogCd !== 'WOK0000001') {
-				if (resnId == null)
-					submitResnElement.css('display', 'block');
-				else
-					updateResnElement.css('display', 'block');
-			}
-		}
-		</script>
-		<script>
-		var modal2 = $('.modal2');
-		var wlogTable = $('.wlogTable');
-		wlogTable.on('click', '.submitResn', function() {
-			var clickedRow = $(this).closest('tr');
-			var resnId = clickedRow.find('td:hidden span').text();
-			modal2.show();
-
-			// 모달 내부의 .sumbitBtn 버튼 클릭 시
-			modal2.on('click', '.sumbitBtn', function() {
-				var clickedRow = $(this).closest('tr');
-				var wlogId = clickedRow.find('.wlogId').text();
-				var resnText = $('.resnText');
-				let formData = new FormData();
-				let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
-				formData.append("formData", file); // FormData에 파일 추가
-
-				$.ajax({
-					type : 'POST',
-					url : '/student/mypage/sumbitResn' +wlogId,
-					data : {formData, resnText :resnText},// FormData 사용
-					processData : false,
-					contentType : false,
-					success : function() {
-						modal2.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
-						alert("사유서를 제출하였습니다.");
-					}
-				});
-			});
-			modal2.on('click', '.closeBtn', function() {
-				modal2.hide();
-		}); 
-			
-			var modal3 = $('.modal3');
-		wlogTable.on('click', '.updateResn', function() {
-				var clickedRow = $(this).closest('tr');
-				var resnId = clickedRow.find('resnId').text();
-				modal3.show();
-
-				// 모달 내부의 .sumbitBtn 버튼 클릭 시
-				modal3.on('click', '.sumbitBtn', function() {
-					var resnText = $('.resnText');
-					let formData = new FormData();
-					let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
-					formData.append("formData", file); // FormData에 파일 추가
-
-					$.ajax({
-						type : 'POST',
-						url : '/student/mypage/uploadResn/' + resnId,
-						data : {formData, resnText :resnText},// FormData 사용
-						processData : false,
-						contentType : false,
-						success : function() {
-							modal2.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
-							alert("사유서를 제출하였습니다.");
-						}
-					});
-				});
-				modal3.on('click', '.closeBtn', function() {
-					modal3.hide();
-			}); 
 	</script>
-		<script src="/js/student/sidebar.js"></script>
-		<script src="/js/student/mypage.js"></script>
+	<script>
+	$(document).ready(function() {
+        $("#checkPassword").click(function() {
+            const password = $("#password").val();
+
+            // 비밀번호 비교를 위해 서버로 요청 보내기
+            $.ajax({
+                type: "POST",
+                url: "/student/check/password",
+                contentType: "application/json",
+                data: JSON.stringify({ password }),
+                success: function(data) {
+                    if (data.success) {
+                        $("#userInfo").show();
+                    } else {
+                        alert("비밀번호가 일치하지 않습니다.");
+                    }
+                },
+                error: function(error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        });
+    });
+    </script>
+	<script src="/js/student/sidebar.js"></script>
+	<script src="/js/student/mypage.js"></script>
 </body>
 </html>

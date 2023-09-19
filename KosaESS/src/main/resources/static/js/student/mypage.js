@@ -1,11 +1,10 @@
 $(document).ready(function() {
-	function updateTable() {
+	function updateAplyTable() {
 		$.ajax({
 			type: 'GET',
 			url: '/student/mypage/aplyList',
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
-				const time = Date.now();
 				var tbody = $('.applyTable tbody');
 				tbody.empty(); // tbody 내용을 비웁니다.
 
@@ -63,7 +62,6 @@ $(document).ready(function() {
 		});
 	}
 
-	updateTable();
 	var modal1 = $('.modal1');
 	var applyTable = $('.applyTable');
 
@@ -87,7 +85,7 @@ $(document).ready(function() {
 				success: function() {
 					modal1.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
 					alert("지원서를 수정하였습니다.");
-					updateTable(); // 성공한 후 테이블 업데이트
+					updateAplyTable();// 성공한 후 테이블 업데이트
 				}
 			});
 		});
@@ -109,7 +107,7 @@ $(document).ready(function() {
 			},
 			success: function() {
 				alert("지원을 취소하셨습니다.");
-				updateTable(); // 성공한 후 테이블 업데이트
+				updateAplyTable();; // 성공한 후 테이블 업데이트
 			}
 		});
 	});
@@ -130,10 +128,10 @@ $(document).ready(function() {
 			success: function(response) {
 				if (response == true) {
 					alert("수강이 확정되었습니다.");
-					updateTable();
+					updateAplyTable();
 				} else {
 					alert("진행중인 수업이 존재합니다. \n 한 개이상의 교육을 수강할 수 없습니다.");
-					updateTable(); // 성공한 후 테이블 업데이트
+					updateAplyTable();// 성공한 후 테이블 업데이트
 				}
 			}
 		});
@@ -152,8 +150,155 @@ $(document).ready(function() {
 			},
 			success: function() {
 				alert("수강을 포기하셨습니다.");
-				updateTable(); // 성공한 후 테이블 업데이트
+				updateAplyTable(); // 성공한 후 테이블 업데이트
 			}
 		});
 	});
+
+	function updateWlogTable() {
+		$.ajax({
+			type: 'GET',
+			url: '/student/mypage/wlogList',
+			success: function(data) {
+				// 받은 데이터로 테이블을 업데이트합니다.
+				var tbody = $('.wlogTable tbody');
+				tbody.empty(); // tbody 내용을 비웁니다.
+
+				for (var i = 0; i < data.length; i++) {
+					var WorklogVO = data[i];
+					var row = $('<tr class="wlogRow"></tr>');
+					var inTmDd = formatTimestamp(WorklogVO.inTm);
+					console.log(inTmDd);
+					var outTmDd = formatTimestamp(WorklogVO.outTm);
+
+					row.append('<td><span >' + (i + 1) + '</span></td>');
+					row.append('<td>' + WorklogVO.clssNm + '</td>');
+					row.append('<td>' + inTmDd + '</td>');
+					row.append('<td>' + outTmDd + '</td>');
+					row.append('<td>' + WorklogVO.wlogNm + '</td>');
+					row.append('<td><button class="submitResn" >제출</button><button class="updateResn">수정</button></td>');
+					row.append('<td class="resnStstus">' + WorklogVO.resnNm + '</td>');
+					row.append('<td class="wlogId" style="display:none;">' + WorklogVO.wlogId + '</td>');
+					row.append('<td class="resnId" style="display:none;">' + WorklogVO.resnId + '</td>');
+					
+					var wlogCd = WorklogVO.wlogCd;
+					var resnId = WorklogVO.resnId;
+					var submitResnElement = row.find('.submitResn');
+					var updateResnElement = row.find('.updateResn');
+					var resnStstusElement = row.find('.resnStstus');
+
+					if (wlogCd !== 'WOK0000001') {
+						if (resnId == null) {
+							submitResnElement.removeClass('hidden');
+							updateResnElement.addClass('hidden');
+							resnStstusElement.addClass('hidden');
+						}
+						else {
+							submitResnElement.addClass('hidden');
+							updateResnElement.removeClass('hidden');
+							resnStstusElement.removeClass('hidden');
+						}
+					} else {
+						submitResnElement.addClass('hidden');
+						updateResnElement.addClass('hidden');
+						resnStstusElement.addClass('hidden');
+					}
+					tbody.append(row);
+				}
+			}
+		});
+	}
+
+	updateWlogTable();
+	var modal2 = $('.modal2');
+	var wlogTable = $('.wlogTable');
+
+	wlogTable.on('click', '.submitResn', function() {
+		var clickedRow = $(this).closest('tr');
+		var wlogId = clickedRow.find('td.wlogId').text();
+		modal2.show();
+
+		// 모달 내부의 .submitBtn 버튼 클릭 시
+		modal2.on('click', '.submitBtn', function() {
+
+			var resnText = $('.resnText1').val();
+			var formData = new FormData();
+			var file = document.querySelector("#fileInput2").files[0];
+			formData.append("file", file);
+			formData.append("resnText", resnText)
+			console.log(resnText);
+			console.log(formData);
+			console.log(file);
+			$.ajax({
+				type: 'POST',
+				url: '/student/mypage/submitResn/' + wlogId,
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function() {
+					modal2.hide();
+					alert("사유서를 제출하였습니다.");
+					updateWlogTable();
+
+				}
+			});
+		});
+
+		modal2.on('click', '.closeBtn', function() {
+			modal2.hide();
+		});
+	});
+
+	var modal3 = $('.modal3');
+
+	wlogTable.on('click', '.updateResn', function() {
+		var clickedRow = $(this).closest('tr');
+		var resnId = clickedRow.find('td.resnId').text();
+		modal3.show();
+
+		// 모달 내부의 .submitBtn 버튼 클릭 시
+		modal3.on('click', '.submitBtn', function() {
+			var resnText = $('.resnText2').val();
+			var formData = new FormData();
+			var file = document.querySelector("#fileInput3").files[0];
+			formData.append("file", file);
+			formData.append("resnText", resnText)
+			console.log(resnText);
+			console.log(formData);
+			console.log(file);
+
+			$.ajax({
+				type: 'POST',
+				url: '/student/mypage/uploadResn/' + resnId,
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function() {
+					modal3.hide();
+					alert("사유서를 업데이트하였습니다.");
+					updateWlogTable();
+
+				}
+			});
+		});
+
+		modal3.on('click', '.closeBtn', function() {
+			modal3.hide();
+		});
+	});
 });
+
+function formatTimestamp(timestamp) {
+	const date = new Date(timestamp);
+
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	const hours = String(date.getHours()).padStart(2, '0');
+	const minutes = String(date.getMinutes()).padStart(2, '0');
+	const seconds = String(date.getSeconds()).padStart(2, '0');
+
+	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+	return formattedTimestamp;
+}

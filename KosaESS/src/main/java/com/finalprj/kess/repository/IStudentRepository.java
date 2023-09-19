@@ -1,6 +1,7 @@
 package com.finalprj.kess.repository;
 
 import java.sql.Clob;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -16,6 +17,7 @@ import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 
 @Mapper
@@ -83,7 +85,7 @@ public interface IStudentRepository {
 
 	String getMaxWlogId();
 
-	WorklogVO insertNewWlog();
+	void insertNewWlog(WorklogVO inWlogVO);
 
 	ClassVO getWlogClass(String clssId);
 
@@ -95,6 +97,16 @@ public interface IStudentRepository {
 
 	void updateResnFile(String resnId, FileVO fileVO);
 
-	void updateResndt(String resnId, String stdtId, Clob resnText);
+	void updateResndt(String resnId, String stdtId, String resnTexts);
+
+	StudentVO getstdtInfo(String stdtId);
+
+	String getPassword(String stdtId);
+
+	WorklogVO getNewWlog(String maxWlogId);
+
+	void insertPastWlog(WorklogVO pastwlogVO);
+
+	void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId, Double totalTm);
 
 }

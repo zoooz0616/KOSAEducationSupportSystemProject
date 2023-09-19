@@ -1,6 +1,7 @@
 package com.finalprj.kess.service;
 
 import java.sql.Clob;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
 
@@ -175,8 +177,8 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public WorklogVO insertNewWlog() {
-		return studentRepository.insertNewWlog();
+	public void insertNewWlog(WorklogVO inWlogVO) {
+		studentRepository.insertNewWlog(inWlogVO);
 	}
 
 	@Override
@@ -201,12 +203,38 @@ public class StudentService implements IStudentService {
 
 	@Override
 	public void updateResnFile(String resnId, FileVO fileVO) {
-		studentRepository.updateResnFile(resnId,fileVO);
+		studentRepository.updateResnFile(resnId, fileVO);
 	}
 
 	@Override
-	public void updateResndt(String resnId, String stdtId, Clob resnText) {
-		studentRepository.updateResndt(resnId,stdtId,resnText);
+	public void updateResndt(String resnId, String stdtId, String resnText) {
+		studentRepository.updateResndt(resnId, stdtId, resnText);
+	}
+
+	@Override
+	public StudentVO getstdtInfo(String stdtId) {
+		return studentRepository.getstdtInfo(stdtId);
+	}
+
+	@Override
+	public String getPassword(String stdtId) {
+		return studentRepository.getPassword(stdtId);
+	}
+
+
+	@Override
+	public WorklogVO getNewWlog(String maxWlogId) {
+		return studentRepository.getNewWlog(maxWlogId);
+	}
+
+	@Override
+	public void insertPastWlog(WorklogVO pastwlogVO) {
+		studentRepository.insertPastWlog(pastwlogVO);
+	}
+
+	@Override
+	public void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId,Double totalTm) {
+		studentRepository.getUpdateOutlog(newOutTm,outlogCd,lastWlogId,totalTm);
 	}
 
 }

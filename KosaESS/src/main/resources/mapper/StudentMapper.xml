@@ -65,9 +65,11 @@
 	<select id="getPassword" parameterType="string"
 		resultType="string">
 		<![CDATA[
-		SELECT stdt_pwd
-		FROM stdt
-		WHERE stdt_id=#{stdtId}
+		SELECT user_pwd
+		FROM lgin
+		where user_email = (SELECT user_email
+		from stdt
+		WHERE stdt_id=#{stdtId})
 		]]>
 	</select>
 
@@ -323,6 +325,16 @@
 		]]>
 	</select>
 
+	<!-- 개인정보 조회하기 -->
+	<select id="getstdtInfo" parameterType="string"
+		resultType="com.finalprj.kess.model.StudentVO">
+	<![CDATA[
+		select *
+			from stdt
+			where stdt_id = #{stdtId}
+	]]>
+	</select>
+
 	<!-- 중복지원 내역 확인하기 -->
 	<select id="getAplyYN" parameterType="string" resultType="int">
 	<![CDATA[
@@ -570,10 +582,11 @@
 			wlog.wlog_id,
 			clss.clss_nm,
 			resn.resn_id,
-			In_tm,
+			in_tm,
 			out_tm,
 			wlog_cd,
-			cmcd.cmcd_nm,
+			(select cmcd_nm from cmcd where cmcd.cmcd_id = wlog.wlog_cd) as "wlogNm",
+			(select cmcd_nm from cmcd where cmcd.cmcd_id = resn.resn_cd) as "resnNm",
 			wlog.rgst_dt as "rgstDd"
 			FROM wlog
 			JOIN cmcd on cmcd.cmcd_id = wlog.wlog_cd
@@ -583,24 +596,25 @@
 			ORDER BY wlog.rgst_dt DESC
 	]]>
 	</select>
-	
-	
+
+
 	<!-- 사유서 Id MAX값 가져오기 -->
 	<select id="getMaxResnId" resultType="string">
 	<![CDATA[
-		select 'RESN'||LPAD((max(cast(substr(resn_id,5) as number(6)))+1),6,'0')
-		from wlog
+		SELECT 'RESN' || LPAD(
+    COALESCE(MAX(CAST(SUBSTR(resn_id, 5) AS NUMBER(6))), 0) + 1, 6, '0')
+	FROM resn
 	]]>
 	</select>
-	
+
 	<!-- 사유서 제출 -->
 	<insert id="uploadResnFile">
 	<![CDATA[
 		INSERT into resn
-		values(#{resnId}, #{wlogId}, #{resnContent}, #{resnCd},#{fileId},systimestamp, #{stdtId},null,null, 'N') 
+		values(#{resnId}, #{wlogId}, #{resnContent}, #{resnCd},#{fileId},systimestamp, #{rgsterId},null,null, 'N') 
 	]]>
 	</insert>
-	
+
 	<!-- 사유서 테이블 파일 수정 -->
 	<update id="updateResnFile"
 		parameterType="com.finalprj.kess.model.FileVO">
@@ -618,7 +632,7 @@
 				)	
 	]]>
 	</update>
-	
+
 	<!-- 사유서 수정 날짜 업데이트 -->
 	<update id="updateResndt">
 	<![CDATA[
@@ -636,7 +650,7 @@
 	<![CDATA[
 		select COALESCE(COUNT(wlog_id), 0) as "countwlogId"
 		from wlog
-		where stdt_id = #{stdtId} and clss_id = #{clssId}
+		where stdt_id = #{stdtId} and clss_id = #{clssId} and delete_yn ='N'
 	]]>
 	</select>
 
@@ -667,12 +681,33 @@
 	]]>
 	</select>
 
-	<!-- 지원 수정 날짜 업데이트 -->
+	<!-- 출근 시간 insert -->
 	<insert id="insertNewWlog">
 	<![CDATA[
 		INSERT into wlog
-		values(#{maxWlogId}, #{clssId}, #{stdtId}, #{inlogTs}, null, #{wlogCd}, null, systimestamp, #{stdtId},null,null, 'N') 
+		values(#{wlogId}, #{stdtId}, #{clssId}, systimestamp, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
 	]]>
 	</insert>
+	
+	<!-- 과거 시간 insert -->
+	<insert id="insertPastWlog">
+	<![CDATA[
+		INSERT into wlog
+		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm}, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
+	]]>
+	</insert>
+	
+	
+	<!-- 퇴근 시간 업데이트 -->
+	<update id="getUpdateOutlog">
+	<![CDATA[
+		update wlog
+		set 
+		wlog_total_tm = #{totalTm},
+			wlog_cd = #{outlogCd},
+			out_tm = #{newOutTm}
+		where wlog_id = #{lastWlogId}	
+	]]>
+	</update>
 
 </mapper>
