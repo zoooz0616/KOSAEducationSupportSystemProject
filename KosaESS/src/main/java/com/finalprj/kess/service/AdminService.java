@@ -480,7 +480,31 @@ public class AdminService implements IAdminService {
 	public void updateProfessor(ProfessorVO professorVO) {
 		adminRepository.updateProfessor(professorVO);
 	}
+
+	@Override
+	public String getMaxCompanyId() {
+		return adminRepository.getMaxCompanyId();
+	}
 	
+	@Override
+	@Transactional
+	public void insertCompanyVO(FileVO fileVO, CompanyVO companyVO) {
+		if(fileVO != null) {
+			uploadFileRepository.uploadFile(fileVO);
+		}
+		
+		adminRepository.insertCompanyVO(companyVO);
+	}
+	
+	@Override
+	public CompanyVO getCompanyVO(String cmpyId) {
+		return adminRepository.getCompanyVO(cmpyId);
+	}
+	
+	@Override
+	public void deleteCompany(List<String> selectedCompanyIds) {
+		adminRepository.deleteCompany(selectedCompanyIds);
+	}
 	
 	
 	
