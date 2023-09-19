@@ -5,6 +5,7 @@
 <title>Manager Student List</title>
 </head>
 <head>
+	<link th:href="@{/css/manager/manager_student_list.css}" rel="stylesheet" />
 	<link th:href="@{/css/manager/manager_class_list.css}" rel="stylesheet" />
 	<link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -18,7 +19,7 @@
 	<div class="home-section">
 		<!-- title -->
 		<div class="title_wrap">
-			<span class="title" th:text="|${title} : |"></span><a class="title_a" th:text="${thisClassName}" th:href="@{/manager/class/__${thisClassId}__}"></a>
+			<span class="title" th:text="|${title} : |"></span><a class="title_a" id="className" th:if="${thisClass.clssId!=null}" th:text="${thisClass.clssNm}" th:href="@{/manager/class/__${thisClass.clssId}__}" th:value="${thisClass.clssId}"></a>
 		</div>
 
 		<!-- content wrap-->
@@ -31,7 +32,8 @@
 							<td style="width: 10%;">교육과정명</td>
 							<td style="width: 30%;">
 								<select id="classId">
-									<option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}">
+									<option value="" disabled selected>교육과정명을 선택하세요</option>
+									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class.clssId}" >
 									</option>
 								</select>
 							</td>
@@ -95,174 +97,63 @@
 		</div>
 	</div>
 
-	<script>
-// 	$(document).ready(function () {});
-	const chkAll = $("#chkAllStdt");
-	const chkList = $("input[name=checkedStdt]");
-	
-	// "전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
-	chkAll.on("change", function () {
-		const isChecked = chkAll.prop("checked");
-		chkList.prop("checked", isChecked);
-	});
-	//End
-	
-	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
-	chkList.on("change", function () {
-		const allChecked = chkList.filter(":checked").length === chkList.length;
-		chkAll.prop("checked", allChecked);
-	});
-	//End
-	
-	//현재 체크된 목록을 반환
-	function getCheckedStdt() {
-		const checkedStdts = [];
-		chkList.each(function () {
-			if ($(this).prop("checked")) {
-				checkedStdts.push($(this).val());
-			}
-		});
-		return checkedStdts;
-	}
-	//End
-	
-	function cmptUpdate(button){
-		//1. 선택받은 아이들을 가져온다(var targetList)
-		var targetList = getCheckedStdt();
-		//2. 바꿀 값이 뭔지 가져온다(var cmptValue)+어떤 수업인지도 가져온다
-		var targetCmptId = button.value;
-		var thisClassId = "[[${thisClassId}]]";
-		
-		console.log(thisClassId);
-		//3. target이랑 cmptValue를 넘긴다
-		$.ajax({
-			//4. update한다
-			url : '/manager/student/updateCmpt',
-			type :'post',
-			data : {
-				targetList:targetList
-				,clssId:thisClassId
-				,targetCmptId:targetCmptId
-			},
-			success: function(updatedStdtList){
-				clearTable();
-				fetchNewTable();
-			}
-			,error: function(error){
-				console.log("error: ", error);
-			}
-		});
-	}
-	
-	var stdtListTable = document.getElementById('stdt_list_table_tbody');
-	//테이블의 모든 내용을 삭제
-	function clearTable(){
-		if(stdtListTable.firstChild != null){
+<script>
+var chkAll = $("#chkAllStdt");
+var chkList = $("input[name=checkedStdt]");
+var isChecked = chkAll.prop("checked");
+var allChecked = chkList.filter(":checked").length === chkList.length;
+var stdtListTable = document.getElementById('stdt_list_table_tbody');
+
+//테이블의 모든 내용을 삭제
+function clearTable(){
+	if(stdtListTable.firstChild != null){
 		while (stdtListTable.firstChild) {
 			stdtListTable.removeChild(stdtListTable.firstChild);
-		}}
+		}
 	}
-	//End
-	
-	function search() {
-		fetchNewTable();
-	}
-	
-	function fetchNewTable() {
+}
+//End
+
+
+//---------------------------------------------------------------------------
+// 1. 체크박스 컨트롤
+	$(document).ready(
+		//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
+		//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
+		chkAll.on("change", function () {
+			isChecked = chkAll.prop("checked");
+			chkList.prop("checked", isChecked);
+		}),
+		//End
+		//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
+		chkList.on("change", function () {
+			allChecked = chkList.filter(":checked").length === chkList.length;
+			chkAll.prop("checked", allChecked);
+		})
+		//End
+	);
+//End : 체크박스 컨트롤
+
+// 2. 검색 누르면 검색하세요
+	function search(){
+		//1) tbody의 내용물을 비운다
+		clearTable();
+		//2) tbody에 붙일 내용물을 만든다
 		var classId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
 		var title = document.getElementById("endDate").value;
 		var date = new Date();
 		var year = date.getFullYear();
-	 	function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
-	 	function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var lastDay = new Date(year,month, 0).getDate();return year + "-" + month + "-" + lastDay;}
-	 	if(startDate==''){startDate=getFirstDay();}
-	 	if(endDate==''){endDate=getLastDay();}
-	 	
-		$.ajax({
-			type:'get',
-			url:'/manager/student/search', // 서버의 엔드포인트 URL
-// 			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
-			data: {
-				classId:classId
- 				, startDate:startDate
- 				, endDate:endDate
-			},
-			async:false,
-			success: function(stdtListResponse) {
-				clearTable();
-
-				//인원 수 입력
-				var stdtList = stdtListResponse.stdtList;
-				document.getElementById("stdtCnt").innerHTML=stdtList.length;
-				//End
-
-				//입력 시작
-				for(let i = 0; i < stdtList.length; i++){
-					var newRow = document.createElement("tr");
-					newRow.id="stdt_list_table_row";
-					
-					//체크박스 생성
-					var inputChk = document.createElement('input');
-					inputChk.id = 'chkStdt';
-					inputChk.type = 'checkBox';
-					
-					var rowChk = document.createElement('td');
-					rowChk.appendChild(inputChk);//체크박스
-					var rowNum = document.createElement('td');
-					rowNum.innerHTML=i+1;//행 번호
-					var rowName = document.createElement('td');
-					rowName.innerHTML=stdtList[i].stdtNm;//이름
-					var rowEmail = document.createElement('td');
-					rowEmail.innerHTML=stdtList[i].userEmail;//이메일
-					var rowTel = document.createElement('td');
-					rowTel.innerHTML=stdtList[i].stdtTel;//전화번호
-					var rowGender = document.createElement('td');
-					rowGender.innerHTML=stdtList[i].genderCd;//성
-					var rowBirth = document.createElement('td');
-					rowBirth.innerHTML=stdtList[i].birthDd;//생일
-
-					newRow.appendChild(rowChk);
-					newRow.appendChild(rowNum);
-					newRow.appendChild(rowName);
-					newRow.appendChild(rowEmail);
-					newRow.appendChild(rowTel);
-					newRow.appendChild(rowGender);
-					newRow.appendChild(rowBirth);
-					$.ajax({
-						type:'get',
-						url:'/manager/student/search/codename',
-						async:false,
-						success: function(wlogResponse) {
-						wlogCodeNameList = wlogResponse.wlogCodeList;
-						for (let j = 0; j < wlogCodeNameList.length; j++) {
-							var rowWlog = document.createElement('td');
-							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
-							newRow.appendChild(rowWlog);//출결상태
-						}
-						},error: function(error){console.log("error: ", error);}
-					})
-					
-					//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
-					var cmptRate = document.createElement('td');
-					cmptRate.innerHTML="";
-					//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
-					
-					var rowJob = document.createElement('td');
-					rowJob.innerHTML=stdtList[i].jobCd;
-					
-					newRow.appendChild(cmptRate);
-					newRow.appendChild(rowJob);
-					
-					stdtListTable.append(newRow);
-				}
-				//End
-			},error: function(error){
-				console.log("error: ", error);
-			}
-		})
+		function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
+		function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var lastDay = new Date(year,month, 0).getDate();return year + "-" + month + "-" + lastDay;}
+		if(startDate==''){startDate=getFirstDay();}
+		if(endDate==''){endDate=getLastDay();}
+		//3) tbody에 붙인다
 	}
+//End : 검색 버튼 누르면 검색
+
+// 3. 이수 여부를 변경시키세요
 </script>
 
 </body>
