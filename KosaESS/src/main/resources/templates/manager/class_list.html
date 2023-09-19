@@ -22,11 +22,13 @@
 			<div class="search_filter_wrap">
 				<span>교육과정 상태</span>
 				<ul class="search_filter_list">
-					<li><span> <label th:text="전체"></label><input
-							type="checkbox" checked="checked" id="chkAll"></span></li>
-					<li th:each="classCodeName:${classCodeNameList}"><label
-						th:text="${classCodeName.cmcdNm}"></label> <input type="checkbox"
-						checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
+					<li><span>
+						<label th:text="전체"></label>
+						<input type="checkbox" checked="checked" id="chkAll">
+					</span></li>
+					<li th:each="classCodeName:${classCodeNameList}">
+						<label th:text="${classCodeName.cmcdNm}"></label>
+						<input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
 					</li>
 				</ul>
 			</div>

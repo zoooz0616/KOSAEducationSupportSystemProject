@@ -17,7 +17,8 @@ import com.finalprj.kess.model.StudentVO;
 @Repository
 public interface IManagerRepository {
 
-	public List<ClassVO> getClassListByMngrId(String mngrId);
+//	public List<ClassVO> getClassListByMngrId(String mngrId);
+	public List<ClassVO> getClassListByMngrId(@Param("mngrId") String mngrId, @Param("sortBy")String sortBy, @Param("order")String order);
 
 	public int getApplyCountByClssId(String clssId);
 
@@ -49,6 +50,8 @@ public interface IManagerRepository {
 
 	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString);
 //	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") String[] filterString);
+
+	public void updateStdtCmptCd(@Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }
