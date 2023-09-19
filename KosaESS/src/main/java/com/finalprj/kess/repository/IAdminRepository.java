@@ -116,5 +116,13 @@ public interface IAdminRepository {
 	ManagerVO getManager(String mngrId);
 	void updateLgin(ManagerVO managerVO);
 	void updateManager(ManagerVO managerVO);
+	List<SubjectVO> getYSubjectList();
+	List<ProfessorVO> getYProfessorList();
+	void updateLecture(LectureVO lectureVO);
+	List<LectureVO> getYLectureList();
+	SubjectVO getSubjectVO(String subjectId);
+	void updateSubject(SubjectVO subjectVO);
+	ProfessorVO getProfessorVO(String professorId);
+	void updateProfessor(ProfessorVO professorVO);
 
 }

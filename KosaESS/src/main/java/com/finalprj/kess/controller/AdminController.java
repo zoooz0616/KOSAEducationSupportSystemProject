@@ -573,7 +573,7 @@ public class AdminController {
 		model.addAttribute("managerList", managerList);
 
 		//강의 리스트
-		List<LectureVO> lectureList = adminService.getLectureList();
+		List<LectureVO> lectureList = adminService.getYLectureList();
 		model.addAttribute("lectureList", lectureList);
 
 		return "admin/class_form";
@@ -1043,7 +1043,15 @@ public class AdminController {
 		//강의 리스트 생성
 		List<LectureVO> lectureList = adminService.getLectureList();
 		model.addAttribute("lectureList", lectureList);
-
+		
+		//강의를 만들기 위한 과목 리스트
+		List<SubjectVO> ySubjectList = adminService.getYSubjectList();
+		model.addAttribute("ySubjectList", ySubjectList);
+		
+		//강의를 만들기 위한 강사 리스트
+		List<ProfessorVO> yProfessorList = adminService.getYProfessorList();
+		model.addAttribute("yProfessorList", yProfessorList);
+		
 		return "admin/lecture_list";
 	}
 
@@ -1133,6 +1141,69 @@ public class AdminController {
 		}
 	}
 
+	/**
+	 * 강의 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : lectureId, lectureNm, lectureTm
+	 * @return : String
+	 */
+	@PostMapping("/lecture/update")
+	@ResponseBody
+	public String updateLecture(@RequestParam String lectureId, @RequestParam String lectureNm, @RequestParam int lectureTm) {
+		LectureVO lectureVO = adminService.getLecture(lectureId);
+		lectureVO.setLctrNm(lectureNm);
+		lectureVO.setLctrTm(lectureTm);
+		
+		adminService.updateLecture(lectureVO);
+
+		return "success";
+
+	}
+	
+	/**
+	 * 과목 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : lectureId, lectureNm, lectureTm
+	 * @return : String
+	 */
+	@PostMapping("/lecture/subject/update")
+	@ResponseBody
+	public String updateSubject(@RequestParam String subjectId, @RequestParam String subjectNm) {
+		SubjectVO subjectVO = adminService.getSubjectVO(subjectId);
+		subjectVO.setSbjtNm(subjectNm);
+		
+		adminService.updateSubject(subjectVO);
+
+		return "success";
+
+	}
+	
+	/**
+	 * 강사 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : professorId, professorNm, professorTel, professorEmail
+	 * @return : String
+	 */
+	@PostMapping("/lecture/professor/update")
+	@ResponseBody
+	public String updateProfessor(@RequestParam String professorId, @RequestParam String professorNm,
+			@RequestParam String professorTel, @RequestParam String professorEmail) {
+		ProfessorVO professorVO = adminService.getProfessorVO(professorId);
+		
+		professorVO.setProfNm(professorNm);
+		professorVO.setProfTel(professorTel);
+		professorVO.setProfEmail(professorEmail);
+		
+		adminService.updateProfessor(professorVO);
+
+		return "success";
+
+	}
+	
+	
 
 	/**
 	 * 강의 선택삭제

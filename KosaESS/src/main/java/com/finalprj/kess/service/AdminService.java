@@ -440,15 +440,46 @@ public class AdminService implements IAdminService {
 		adminRepository.updateLgin(managerVO);
 		adminRepository.updateManager(managerVO);
 	}
+
+	@Override
+	public List<SubjectVO> getYSubjectList() {
+		return adminRepository.getYSubjectList();
+	}
+
+	@Override
+	public List<ProfessorVO> getYProfessorList() {
+		return adminRepository.getYProfessorList();
+	}
 	
+	@Override
+	public void updateLecture(LectureVO lectureVO) {
+		adminRepository.updateLecture(lectureVO);	
+	}
 	
+	@Override
+	public List<LectureVO> getYLectureList() {
+		return adminRepository.getYLectureList();
+	}
 	
+	@Override
+	public SubjectVO getSubjectVO(String subjectId) {
+		return adminRepository.getSubjectVO(subjectId);
+	}
 	
+	@Override
+	public void updateSubject(SubjectVO subjectVO) {
+		adminRepository.updateSubject(subjectVO);
+	}
 	
+	@Override
+	public ProfessorVO getProfessorVO(String professorId) {
+		return adminRepository.getProfessorVO(professorId);
+	}
 	
-	
-	
-	
+	@Override
+	public void updateProfessor(ProfessorVO professorVO) {
+		adminRepository.updateProfessor(professorVO);
+	}
 	
 	
 	
