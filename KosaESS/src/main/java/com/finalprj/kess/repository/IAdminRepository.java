@@ -107,5 +107,14 @@ public interface IAdminRepository {
 	String getMaxReplyId();
 	void insertReplyVO(PostVO postVO);
 	void updateInquiryStatus(String postId);
+	String getMaxManagerId();
+	void insertLgin(ManagerVO managerVO);
+	void insertManager(ManagerVO managerVO);
+	List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail);
+	void deleteManagerList(List<String> selectedManagerIds);
+	void deleteLgin(List<String> selectedManagerIds);
+	ManagerVO getManager(String mngrId);
+	void updateLgin(ManagerVO managerVO);
+	void updateManager(ManagerVO managerVO);
 
 }

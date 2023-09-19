@@ -1220,6 +1220,81 @@ public class AdminController {
 
 		return "admin/manager_list";
 	}
+	
+	/** 
+	 * 업무담당자 등록
+	 * @author : eunji
+	 * @date : 2023. 9. 18.
+	 * @parameter : managerNm, managerTel, managerEmail,managerEmail
+	 * @return : String
+	 */
+	@RequestMapping("/manager/insert")
+	public String managerInsert(@RequestParam String managerNm, @RequestParam String managerTel, 
+			@RequestParam String managerEmail, @RequestParam String managerPwd) {
+		ManagerVO managerVO = new ManagerVO();
+		managerVO.setMngrId(adminService.getMaxManagerId());
+		managerVO.setMngrNm(managerNm);
+		managerVO.setMngrTel(managerTel);
+		managerVO.setUserEmail(managerEmail);
+		managerVO.setUserPwd(managerPwd);
+		
+		adminService.insertManagerVO(managerVO);
+
+		return "redirect:/admin/manager/list";
+	}
+	
+	/**
+	 * 업무담당자 검색
+	 * @author : eunji
+	 * @date : 2023. 9. 18.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@PostMapping("/manager/search")
+	@ResponseBody
+	public Map<String, Object> managerSearch(@RequestParam String mngrNm, @RequestParam String mngrEmail) {
+		List<ManagerVO> managerList = adminService.getSearchManagerList(mngrNm, mngrEmail);
+		
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("managerList", managerList);
+		
+		return response;
+	}
+	
+	/**
+	 * 업무담당자 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : selectedManagerIds
+	 * @return : String
+	 */
+	@PostMapping("/manager/update")
+	@ResponseBody
+	public String managerUpdate(@RequestParam String mngrId, @RequestParam String mngrNm, 
+			@RequestParam String mngrTel, @RequestParam String mngrStatus) {
+		
+		ManagerVO managerVO = adminService.getManager(mngrId);
+		managerVO.setMngrNm(mngrNm);
+		managerVO.setMngrTel(mngrTel);
+		managerVO.setUserCd(mngrStatus);
+		adminService.updateManager(managerVO);
+		return "success";
+	}
+	
+	/**
+	 * 업무담당자 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : selectedManagerIds
+	 * @return : String
+	 */
+	@PostMapping("/manager/delete")
+	@ResponseBody
+	public String managerDelete(@RequestParam("selectedManagerIds[]") List<String> selectedManagerIds) {
+		adminService.deleteManagerList(selectedManagerIds);
+		return "success";
+	}
+	
 
 	/**
 	 * 기준정보 목록조회
