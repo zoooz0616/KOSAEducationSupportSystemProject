@@ -1339,6 +1339,7 @@ public class AdminController {
 		String fileId = null; 
 		FileVO fileVO = null;
 		//파일 처리
+		
 	    if (file != null && !file.isEmpty()) {
 	        fileVO = new FileVO();
 	        fileId = uploadFileService.getMaxFileId();
