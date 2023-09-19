@@ -147,7 +147,7 @@
 		join lgin on lgin.user_email = mngr.user_email
 		join cmcd on cmcd.cmcd_id = lgin.user_cd
 		where role_cd = 'ROL0000003'
-		order by mngr_nm 
+		order by mngr_id 
 	]]>
 	</select>
 
@@ -686,9 +686,87 @@
 	]]>
 	</update>
 	
+	<select id="getMaxManagerId" resultType="string">
+	<![CDATA[
+		select 'MNGR'||LPAD((max(cast(substr(mngr_id,5) as number(6)))+1),6,'0')
+		from mngr
+	]]>
+	</select>
 	
+	<insert id="insertLgin" parameterType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+	insert into lgin
+	values(#{userEmail}, #{userPwd}, null, 'ROL0000003', 'USR0000001')
+	]]>
+	</insert>
+	
+	<insert id="insertManager" parameterType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+	insert into mngr
+	values(#{mngrId}, #{userEmail}, #{mngrNm}, #{mngrTel}, systimestamp, 'MNGR000001', null, null)
+	]]>
+	</insert>
+	
+	<select id="getSearchManagerList" parameterType="string" resultType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+		select * 
+		from mngr
+		join lgin on lgin.user_email = mngr.user_email
+		join cmcd on cmcd.cmcd_id = lgin.user_cd
+		where mngr.user_email like #{mngrEmail}||'%'
+			and mngr.mngr_nm like #{mngrNm}||'%'
+			and lgin.role_cd = 'ROL0000003'
+		order by mngr_id
+	]]>
+	</select>
+	
+	<update id="deleteLgin" parameterType="java.util.List">
+		<foreach collection="selectedManagerIds" item="item" open="DECLARE BEGIN"
+			separator=";" close="; END;">
+			update lgin
+			set
+			user_cd = 'USR0000003'
+			where user_email = (select user_email from mngr where mngr_id = #{item})
+		</foreach>
+	</update>
+	
+	<update id="deleteManagerList" parameterType="java.util.List">
+		<foreach collection="selectedManagerIds" item="item" open="DECLARE BEGIN"
+			separator=";" close="; END;">
+			update mngr
+			set
+				updt_dt = SYSTIMESTAMP,
+				updter_id = 'MNGR000001'
+			where mngr_id = #{item}
+		</foreach>
+	</update>
 
-
+	<select id="getManager" parameterType="string" resultType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+	select * 
+	from mngr
+	join lgin on lgin.user_email = mngr.user_email
+	where mngr.mngr_id = #{mngrId}
+	]]>
+	</select>
+	
+	<update id="updateLgin" parameterType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+	update lgin
+	set user_cd = #{userCd}
+	where user_email=(select user_email from mngr where mngr_id = #{mngrId})
+	]]>
+	</update>
+	
+	<update id="updateManager" parameterType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+	update mngr
+	set 
+		mngr_nm = #{mngrNm},
+		mngr_tel = #{mngrTel}
+	where mngr_id = #{mngrId}
+	]]>
+	</update>
 
 
 

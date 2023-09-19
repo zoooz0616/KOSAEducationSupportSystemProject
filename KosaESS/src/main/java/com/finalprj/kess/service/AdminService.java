@@ -402,6 +402,53 @@ public class AdminService implements IAdminService {
 	public void updateInquiryStatus(String postId) {
 		adminRepository.updateInquiryStatus(postId);
 	}
+
+	@Override
+	public String getMaxManagerId() {
+		return adminRepository.getMaxManagerId();
+	}
+	
+	@Override
+	@Transactional
+	public void insertManagerVO(ManagerVO managerVO) {
+		//lgin에 먼저 insert
+		adminRepository.insertLgin(managerVO);
+		//mngr에 insert
+		adminRepository.insertManager(managerVO);
+	}
+	
+	@Override
+	public List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail) {
+		return adminRepository.getSearchManagerList(mngrNm, mngrEmail);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteManagerList(List<String> selectedManagerIds) {
+		adminRepository.deleteLgin(selectedManagerIds);
+		adminRepository.deleteManagerList(selectedManagerIds);
+	}
+	
+	@Override
+	public ManagerVO getManager(String mngrId) {
+		return adminRepository.getManager(mngrId);
+	}
+	
+	@Override
+	@Transactional
+	public void updateManager(ManagerVO managerVO) {
+		adminRepository.updateLgin(managerVO);
+		adminRepository.updateManager(managerVO);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

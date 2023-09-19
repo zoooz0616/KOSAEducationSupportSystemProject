@@ -47,7 +47,7 @@
 	display: flex;
 }
 
-.home-section .content_middle .search_filter_wrap .filter_box {
+.filter_box {
 	display: flex;
 	margin: 3px 20px 3px 20px;
 	color: #0E5881;
@@ -55,13 +55,14 @@
 	font-size: 15px;
 }
 
-.home-section .content_middle .search_filter_wrap .filter_box .filter_box_title
+.filter_box_title
 	{
 	margin-right: 20px;
 }
 
 .home-section .content_middle .search_filter_btn_wrap {
 	display: flex;
+	    align-items: center;
 }
 
 .search_filter_btn_wrap button {
@@ -95,7 +96,7 @@
 	color: #333333;
 	font-size: 15px;
 	font-weight: bold;
-	display:flex;
+	display: flex;
 	justify-content: space-between;
 }
 
@@ -103,8 +104,8 @@
 	color: #0E5881;
 }
 
-.home-section .content_bottom .content_info_wrap img{
-	width: 20px;	
+.home-section .content_bottom .content_info_wrap img {
+	width: 20px;
 }
 
 .content_info_wrap .content_info {
@@ -113,28 +114,25 @@
 
 .content_info_wrap .content_info_btn_wrap {
 	display: flex;
-	float:right;
+	float: right;
 }
 
-.content_info_wrap .content_info_btn_wrap button {
+.content_info_wrap .content_info_btn_wrap button, .insert_btn {
 	background: #0E5881;
 	color: white;
 	border: none;
 	border-radius: 3px;
 	font-weight: bold;
-	display:flex;
+	display: flex;
 	margin: 2px;
 	padding: 5px;
 }
-
-
-
 
 .content_list {
 	width: 100%;
 	background: #ffffff;
 	border-radius: 3px;
-	margin-top:10px;
+	margin-top: 10px;
 	border-top: 2px solid #0E5881;
 }
 
@@ -155,7 +153,7 @@
 
 .content_list_table tr td {
 	border: 1px solid #CFDEE6;
-	padding:5px;
+	padding: 5px;
 }
 
 .content_list_table tr td a {
@@ -170,7 +168,38 @@
 	text-decoration: underline;
 }
 
-.content_list_th{
+.content_list_th {
 	background: #F3F6F8;
 	color: #0E5881;
+}
+
+.insert_manager {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 40px;
+	background: #E7EFF3;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+}
+
+.input_check_td{
+	text-align:center;
+}
+
+.btn_td{
+	display:flex;
+	justify-content: center;
+}
+
+.update_btn, .save_btn, .cancel_btn{
+	text-align:center;
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	display: flex;
+	margin: 2px;
+	padding: 5px;
 }

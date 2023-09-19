@@ -113,4 +113,10 @@ public interface IAdminService {
 	String getMaxReplyId();
 	void insertReplyVO(PostVO postVO);
 	void updateInquiryStatus(String postId);
+	String getMaxManagerId();
+	void insertManagerVO(ManagerVO managerVO);
+	List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail);
+	void deleteManagerList(List<String> selectedManagerIds);
+	ManagerVO getManager(String mngrId);
+	void updateManager(ManagerVO managerVO);
 }
