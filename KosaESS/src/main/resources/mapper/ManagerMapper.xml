@@ -3,18 +3,28 @@
 <mapper namespace="com.finalprj.kess.repository.IManagerRepository">
 
 	<select id="getClassListByMngrId" parameterType="string" resultType="com.finalprj.kess.model.ClassVO">
-	<![CDATA[
-	SELECT
-		clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
-		limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
-		set_In_Tm, set_Out_Tm, m1.cmcd_nm as clss_Cd, clss_Adr, clss_Total_Tm,
-		c.file_Id, clss_Etc
-	FROM clss c
-		JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
-	WHERE
-		mngr_id = #{mngtId}
-	ORDER BY clss_nm DESC
-	]]>
+		<![CDATA[
+			SELECT
+				clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
+				limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
+				set_In_Tm, set_Out_Tm, m1.cmcd_nm as clss_Cd, clss_Adr, clss_Total_Tm,
+				c.file_Id, clss_Etc
+			FROM clss c
+				JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
+			WHERE
+				mngr_id = #{mngrId}
+		]]>
+		<choose>
+			<when test='sortBy.equalsIgnoreCase("name")'>
+				ORDER BY clss_nm
+			</when>
+			<otherwise>
+				ORDER BY clss_id
+			</otherwise>
+		</choose>
+		<if test='order.equalsIgnoreCase("DESC")'>
+			DESC
+		</if>
 	</select>
 
 	<select id="getApplyCountByClssId" parameterType="string" resultType="int">
@@ -22,7 +32,7 @@
 	SELECT COUNT(stdt_id)
 	FROM aply
 	WHERE
-	    clss_id = #{clss_id}
+		clss_id = #{clss_id}
 	]]>
 	</select>
 	<select id="getRgstCountByClssId" parameterType="string" resultType="int">
@@ -30,7 +40,7 @@
 	SELECT COUNT(stdt_id)
 	FROM rgst
 	WHERE
-	    clss_id = #{clss_id}
+		clss_id = #{clss_id}
 	]]>
 	</select>
 	
@@ -39,7 +49,7 @@
 	SELECT *
 	FROM cmcd
 	WHERE cmcd_id like #{keyword} ||'%'
-	
+	ORDER BY cmcd_id
 	]]>
 	</select>
 	
@@ -61,7 +71,9 @@
 	<select id="getFileSubIdListByFileId" parameterType="string" resultType="int">
 	<![CDATA[
 		SELECT file_sub_id
-		FROM flup WHERE file_id = #{fileId} AND DELETE_YN = 'N'
+		FROM flup
+		WHERE file_id = #{fileId}
+			AND DELETE_YN = 'N'
 		ORDER BY file_sub_id
 	]]>
 	</select>
@@ -71,7 +83,10 @@
 	SELECT
 		*
 	FROM flup
-	WHERE file_id=#{fileId} AND file_sub_id=#{fileSubId} AND DELETE_YN = 'N'
+	WHERE
+		file_id=#{fileId}
+		AND file_sub_id=#{fileSubId}
+		AND DELETE_YN = 'N'
 	]]>
 	</select>
 	
@@ -128,27 +143,27 @@
 	</select>
 	
 	<select id="getCountByClssIdWlogCdStdtId" resultType="int">
-	<![CDATA[
-	SELECT
-		count(stdt_id) wlogCnt
-	FROM wlog
-	WHERE
-		clss_id=#{clssId}
-		AND wlog_cd=#{wlogCd}
-		AND stdt_id=#{stdtId}
-		AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
-		AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
-		
-	]]>
+		<![CDATA[
+			SELECT
+				count(stdt_id) wlogCnt
+			FROM wlog
+			WHERE
+				clss_id=#{clssId}
+				AND wlog_cd=#{wlogCd}
+				AND stdt_id=#{stdtId}
+				AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
+				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
+				AND delete_yn = 'N'
+		]]>
 	</select>
 	
 	<select id="getLatestClassIdByMngrId" resultType="string">
-	<![CDATA[
-		SELECT max(clss_id)
-		FROM clss
-		WHERE
-			mngr_id = #{mngrId}
-	]]>
+		<![CDATA[
+			SELECT max(clss_id)
+			FROM clss
+			WHERE
+				mngr_id = #{mngrId}
+		]]>
 	</select>
 	
 	<select id="getFilteredClassListByMngrId" resultType="com.finalprj.kess.model.ClassVO">
@@ -165,12 +180,22 @@
 		WHERE
 			mngr_id = #{mngrId}
 			AND c.clss_cd IN 
-	]]>
-	<foreach collection="filterString" item="item" open="(" separator="," close=")">
-		#{item}
-	</foreach>
-	<![CDATA[
-		ORDER BY clss_nm DESC
-	]]>
+		]]>
+		<foreach collection="filterString" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<![CDATA[
+			--ORDER BY clss_id DESC
+			ORDER BY clss_nm
+		]]>
 	</select>
+	
+	<update id="updateStdtCmptCd">
+		<![CDATA[
+			UPDATE rgst
+			SET CMPT_cd=#{targetCmptId}
+			WHERE CLSS_ID=#{clssId}
+				AND STDT_ID=#{stdtId}
+		]]>
+	</update>
 </mapper>

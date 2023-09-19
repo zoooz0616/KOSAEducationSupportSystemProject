@@ -12,7 +12,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
 
 public interface IManagerService {
-	public List<ClassVO> getClassListByMngrId(String mngrId);
+	public List<ClassVO> getClassListByMngrId(String mngrId, String sortBy, String order);
 
 	public int getApplyCountByClssId(String clssId);
 
@@ -44,6 +44,8 @@ public interface IManagerService {
 
 	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString);
 //	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString);
+
+	public void updateStdtCmptCd(String stdtId, String clssId, String targetCmptId);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }

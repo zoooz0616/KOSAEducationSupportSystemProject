@@ -22,11 +22,13 @@
 			<div class="search_filter_wrap">
 				<span>교육과정 상태</span>
 				<ul class="search_filter_list">
-					<li><span> <label th:text="전체"></label><input
-							type="checkbox" checked="checked" id="chkAll"></span></li>
-					<li th:each="classCodeName:${classCodeNameList}"><label
-						th:text="${classCodeName.cmcdNm}"></label> <input type="checkbox"
-						checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
+					<li><span>
+						<label th:text="전체"></label>
+						<input type="checkbox" checked="checked" id="chkAll">
+					</span></li>
+					<li th:each="classCodeName:${classCodeNameList}">
+						<label th:text="${classCodeName.cmcdNm}"></label>
+						<input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
 					</li>
 				</ul>
 			</div>
@@ -51,7 +53,7 @@
 							<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
 							<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
 							<td th:text="${class.clssAdr}">class address</td>
-							<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student?classId=__${class.clssId}__}"></a><span th:text="|/ ${class.limitCnt}|"></span></td>
+							<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student?classId=__${class.clssId}__}"></a><span th:text="|/${class.limitCnt}|"></span></td>
 							<td th:text="${class.clssCd}">status</td>
 						</tr>
 					</tbody>
@@ -134,7 +136,7 @@
 							classPeriod.innerHTML=filteredClassList[i].clssStartDd+" ~ "+filteredClassList[i].clssEndDd;
 							classAddress.innerHTML=filteredClassList[i].clssAdr;
 							classRgst.innerHTML=filteredClassList[i].rgstCnt;
-							classRgst.setAttribute('href','/manager/student?classId='+filteredClassList[i].rgstCnt);
+							classRgst.setAttribute('href','/manager/student?classId='+filteredClassList[i].clssId);
 							classLimit.innerHTML="/"+filteredClassList[i].limitCnt;
 							classCnt.appendChild(classRgst);
 							classCnt.appendChild(classLimit);
