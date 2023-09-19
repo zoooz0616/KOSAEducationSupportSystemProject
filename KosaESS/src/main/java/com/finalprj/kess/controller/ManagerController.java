@@ -277,12 +277,8 @@ public class ManagerController {
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 
-		if (startDate == null || startDate == "") {
-			startDate = String.valueOf(YearMonth.now().atDay(1));
-		}
-		if (endDate == null || endDate == "") {
-			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-		}
+//		if (startDate == null || startDate == "") {startDate = String.valueOf(YearMonth.now().atDay(1));}
+//		if (endDate == null || endDate == "") {endDate = String.valueOf(YearMonth.now().atEndOfMonth());}
 
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");
@@ -292,9 +288,12 @@ public class ManagerController {
 			}
 		}
 
+		ClassVO thisClassVO = managerService.getClassDetailByClssId(classId);
+		System.out.println(thisClassVO);
+		
 		Map<String, Object> stdtListResponse = new HashMap<>();
 		stdtListResponse.put("stdtList", stdtList);
-
+		stdtListResponse.put("thisClassVO", thisClassVO);
 		return stdtListResponse;
 	}
 
