@@ -158,8 +158,19 @@
 		from lctr
 		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
 		join prof on prof.prof_id = lctr.prof_id
+		order by lctr_id
+	]]>
+	</select>
+	
+	<select id="getYLectureList"
+		resultType="com.finalprj.kess.model.LectureVO">
+	<![CDATA[
+		select *
+		from lctr
+		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
+		join prof on prof.prof_id = lctr.prof_id
 		where lctr.delete_yn = 'N'
-		order by lctr.rgst_dt desc
+		order by lctr_id
 	]]>
 	</select>
 
@@ -393,7 +404,7 @@
 	<![CDATA[
 		select *
 		from prof
-		where delete_yn = 'N'
+		order by prof_id
 	]]>
 	</select>
 
@@ -402,7 +413,7 @@
 	<![CDATA[
 		select *
 		from sbjt
-		where delete_yn = 'N'
+		order by sbjt_id
 	]]>
 	</select>
 
@@ -412,6 +423,7 @@
 	select count(sbjt_id)
 	from sbjt
 	where REPLACE(UPPER(sbjt_nm), ' ', '') = REPLACE(UPPER(#{sbjtNm}), ' ', '')
+		and delete_yn='N'
 	]]>
 	</select>
 
@@ -767,6 +779,77 @@
 	where mngr_id = #{mngrId}
 	]]>
 	</update>
+
+	<select id="getYSubjectList" resultType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+	select *
+	from sbjt
+	where delete_yn='N'
+	order by sbjt_nm
+	]]>
+	</select>
+	
+	<select id="getYProfessorList" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+	select *
+	from prof
+	where delete_yn='N'
+	order by prof_nm
+	]]>
+	</select>
+
+	<update id="updateLecture" parameterType="com.finalprj.kess.model.LectureVO">
+	<![CDATA[
+	 update lctr
+	 set
+	 	lctr_nm = #{lctrNm},
+	 	lctr_tm = #{lctrTm},
+	 	updt_dt = systimestamp,
+	 	updter_id = 'MNGR000001'
+	 where lctr_id = #{lctrId}
+	]]>
+	</update>
+
+	<select id="getSubjectVO" parameterType="string" resultType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+		select *
+		from sbjt
+		where sbjt_id = #{subjectId}
+	]]>
+	</select>
+
+	<update id="updateSubject" parameterType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+	update sbjt
+	set
+		sbjt_nm = #{sbjtNm},
+		updt_dt = systimestamp,
+		updter_id= 'MNGR000001'
+	where sbjt_id = #{sbjtId}
+	]]>
+	</update>
+
+	<select id="getProfessorVO" parameterType="string" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+	select *
+	from prof
+	where prof_id = #{profId}
+	]]>
+	</select>
+
+	<update id="updateProfessor" parameterType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+	update prof
+	set 
+		prof_nm = #{profNm},
+		prof_tel = #{profTel},
+		prof_email = #{profEmail}
+	where prof_id = #{profId}
+	]]>
+	</update>
+
+
+
 
 
 
