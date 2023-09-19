@@ -1,0 +1,86 @@
+.home-section .title {
+	display: inline-block;
+	color: #333333;
+	font-size: 30px;
+	font-weight: bold;
+	margin: 40px;
+}
+
+table {
+	table-layout:fixed;
+	border: 2px solid #0E5881;
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 5%;
+}
+
+.go_to_list_btn_wrap .go_to_list_btn {
+	width: 60px;
+	background-color: #0E5881;
+	margin: 10px 0 10px 0;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+th, td {
+	border: 2px solid #0E5881;
+	border-collapse: collapse;
+}
+
+table td {
+	padding: 1%;
+	font-weight: bold;
+}
+
+table th {
+	background-color: #E7EFF3;
+	width: 12%;
+}
+
+.content_wrap {
+/* 	display: flex; */
+	justify-content: center;
+/* 	border-style: groove; */
+/* 	border-color: blue; */
+/* 	border-width: 5px; */
+}
+
+
+.class_content_wrap {
+	border : 2px violet solid;
+	width: 60%;
+	justify-content: center;
+}
+
+.content {
+	padding-top: 5%;
+	flex-direction: column;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
+	margin: 5% auto;
+	box-shadow: 0px 40px 40px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	border-style: groove;
+	border-color: black;
+	border-width: 5px;
+}
+.image_wrap {
+/* 	display: flex; */
+	justify-content: center;
+	margin:3px;
+}
+.non_image_wrap {
+	display: flex;
+/* 	justify-content: center; */
+	align-content:center;
+/* 	margin:3px; */
+}
+.go_to_list_btn_wrap {
+	display: flex;
+	justify-content: center;
+}
+.download_img{
+	width:20px;
+	height:20px;
+}

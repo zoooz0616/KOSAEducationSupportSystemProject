@@ -19,8 +19,8 @@ public class ManagerService implements IManagerService {
 	IManagerRepository managerRepository;
 
 	@Override
-	public List<ClassVO> getClassListByMngrId(String mngrId) {
-		return managerRepository.getClassListByMngrId(mngrId);
+	public List<ClassVO> getClassListByMngrId(String mngrId, String sortBy, String order) {
+		return managerRepository.getClassListByMngrId(mngrId, sortBy, order);
 	}
 
 	@Override
@@ -91,6 +91,20 @@ public class ManagerService implements IManagerService {
 	@Override
 	public String getLatestClassIdByMngrId(String mngrId) {
 		return managerRepository.getLatestClassIdByMngrId(mngrId);
+	}
+
+	@Override
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString) {
+		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString);
+	}
+//	@Override
+//	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString) {
+//		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString);
+//	}
+
+	@Override
+	public void updateStdtCmptCd(String stdtId, String clssId, String targetCmptId) {
+		managerRepository.updateStdtCmptCd(stdtId, clssId, targetCmptId);
 	}
 
 //	@Override

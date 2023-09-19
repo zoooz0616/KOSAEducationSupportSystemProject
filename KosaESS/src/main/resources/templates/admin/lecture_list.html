@@ -21,8 +21,8 @@
 			<div class="title">강의 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/lecture/list}">강의
-					관리</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/lecture/list}">강의 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -36,8 +36,10 @@
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						강의 총 <span class="cnt" th:text="${#lists.size(lectureList)}"></span>
-						개
+						<div>
+							강의 총 <span class="cnt" th:text="${#lists.size(lectureList)}"></span>
+							개
+						</div>
 						<button id="lecture_delete_btn">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
@@ -46,10 +48,10 @@
 					<div class="insert_lecture insert" style="padding: 5px;">
 						<div>
 							<span>과목명</span> <select id="subject_id_input">
-								<option th:each="subject: ${subjectList}"
+								<option th:each="subject: ${ySubjectList}"
 									th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}">
 							</select> <span>강사명</span> <select id="professor_id_input">
-								<option th:each="professor: ${professorList}"
+								<option th:each="professor: ${yProfessorList}"
 									th:value="${professor.profId}" th:text="${professor.profNm}">
 							</select> <span>강의명</span> <input id="lecture_nm_input" value=""
 								type="text" placeholder="강의명" style="width: 150px;"> <span>이수시간</span>
@@ -64,8 +66,7 @@
 					<!-- 강의 등록하기 -->
 
 					<!-- 리스트 -->
-					<div class="table_wrap"
-						style="height: 80%; border: 1px solid #CFDEE6;">
+					<div class="table_wrap lecture_table">
 						<table>
 							<tr class="content_list_th">
 								<th><input type="checkbox" class="lecture_checkbox_all"></th>
@@ -80,32 +81,21 @@
 							<tr th:each="lecture : ${lectureList}">
 								<td style="text-align: center;"><input type="checkbox"
 									th:value="${lecture.lctrId}" class="lecture_checkbox_item"></td>
-								<td><span id="lecture_id" th:text="${lecture.lctrId}"
-									class="lecture_span"></span> <input
-									style="display: none; width: 100px;" class="lecture_input"
-									type="text" th:value="${lecture.lctrId}" disabled></td>
+								<td><span id="lecture_id" th:text="${lecture.lctrId}"></span></td>
 								<td><span th:text="${lecture.lctrNm}" class="lecture_span"></span>
 									<input style="display: none; width: 200px;"
-									class="lecture_input" type="text" th:value="${lecture.lctrNm}"></td>
-								<td><span th:text="${lecture.sbjtNm}" class="lecture_span"></span>
-									<input style="display: none; width: 100px;"
-									class="lecture_input" type="text" th:value="${lecture.sbjtNm}"
-									disabled></td>
-								<td><span th:text="${lecture.profNm}" class="lecture_span"></span>
-									<input style="display: none; width: 50px;"
-									class="lecture_input" type="text" th:value="${lecture.profNm}"
-									disabled></td>
+									class="lecture_input lecture_nm" type="text" th:value="${lecture.lctrNm}"></td>
+								<td><span th:text="${lecture.sbjtNm}"></span></td>
+								<td><span th:text="${lecture.profNm}"></span></td>
 								<td><span th:text="${lecture.lctrTm}" class="lecture_span"></span>
 									<input style="display: none; width: 50px;"
-									class="lecture_input" type="text" th:value="${lecture.lctrTm}">
+									class="lecture_input lecture_tm" type="text" th:value="${lecture.lctrTm}">
 								</td>
-								<td>
-									<span th:text="${lecture.deleteYn}" class="lecture_span"></span>
-									<input style="display:none; width:100px; " class="lecture_input" type="text" th:value="${lecture.deleteYn}" disabled>
-								</td>
+								<td><span th:text="${lecture.deleteYn}"></span></td>
 								<td style="text-align: center;">
-									<button class="update_btn" onclick="updateLecture(this)">수정</button>
-									<button class="delete_btn" onclick="deleteLecture(this)">삭제</button>
+									<button class="lecture_span"  onclick="updateLecture(this)">수정</button>
+									<button style="display: none;"class="lecture_input" onclick="saveLecture(this)">저장</button>
+									<button style="display: none;"class="lecture_input" onclick="cancelEdit(this)">취소</button>
 								</td>
 							</tr>
 						</table>
@@ -122,8 +112,10 @@
 				<div class="subject_wrap" style="height: 50%;">
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						과목 총 <span class="cnt" th:text="${#lists.size(subjectList)}"></span>
-						개
+						<div>
+							과목 총 <span class="cnt" th:text="${#lists.size(subjectList)}"></span>
+							개
+						</div>
 						<button id="subject_delete_btn">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
@@ -143,7 +135,7 @@
 					<!-- 과목 등록하기 -->
 
 					<!-- 리스트 -->
-					<div class="table_wrap">
+					<div class="table_wrap subject_table">
 						<table>
 							<tr class="content_list_th">
 								<th><input type="checkbox" class="subject_checkbox_all"></th>
@@ -156,14 +148,15 @@
 								<td style="text-align: center;"><input type="checkbox"
 									class="subject_checkbox_item" th:value="${subject.sbjtId}"></td>
 								<td th:text="${subject.sbjtId}"></td>
-								<td th:text="${subject.sbjtNm}"></td>
 								<td>
-									<span th:text="${subject.deleteYn}" class="lecture_span"></span>
-									<input style="display:none; width:100px; " class="lecture_input" type="text" th:value="${subject.deleteYn}" disabled>
+									<span th:text="${subject.sbjtNm}" class="subject_span"></span>
+									<input style="display:none;"type="text" class="subject_input subject_nm" th:value="${subject.sbjtNm}">
 								</td>
+								<td th:text="${subject.deleteYn}"></td>
 								<td style="text-align: center;">
-									<button class="update_btn">수정</button>
-									<button class="delete_btn">삭제</button>
+									<button class="subject_span" onclick="updateSubject(this)">수정</button>
+									<button style="display: none;"class="subject_input" onclick="saveSubject(this)">저장</button>
+									<button style="display: none;"class="subject_input" onclick="SubjectCancelEdit(this)">취소</button>
 								</td>
 							</tr>
 						</table>
@@ -176,8 +169,10 @@
 				<div class="professor_wrap" style="height: 50%;">
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						강사 총 <span class="cnt" th:text="${#lists.size(professorList)}"></span>
-						명
+						<div>
+							강사 총 <span class="cnt" th:text="${#lists.size(professorList)}"></span>
+							명
+						</div>
 						<button id="professor_delete_btn">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
@@ -200,7 +195,7 @@
 					<!-- 강사 등록하기 -->
 
 					<!-- 리스트 -->
-					<div class="table_wrap">
+					<div class="table_wrap professor_table">
 						<table>
 							<tr class="content_list_th">
 								<th><input type="checkbox" class="professor_checkbox_all"></th>
@@ -215,16 +210,27 @@
 								<td style="text-align: center;"><input type="checkbox"
 									class="professor_checkbox_item" th:value="${professor.profId}"></td>
 								<td th:text="${professor.profId}"></td>
-								<td th:text="${professor.profNm}"></td>
-								<td th:text="${professor.profTel}"></td>
-								<td th:text="${professor.profEmail}"></td>
 								<td>
-									<span th:text="${professor.deleteYn}" class="lecture_span"></span>
-									<input style="display:none; width:100px; " class="lecture_input" type="text" th:value="${professor.deleteYn}" disabled>
+									<span class="professor_span" th:text="${professor.profNm}"></span>
+									<input class="professor_input professor_nm" style="display: none;width:50px;" th:value="${professor.profNm}">
+								</td>
+								<td>
+									<span class="professor_span" th:text="${professor.profTel}"></span>
+									<input class="professor_input professor_tel" style="display: none;width:100px;" th:value="${professor.profTel}">
+								</td>
+								<td>
+									<span class="professor_span"  th:text="${professor.profEmail}"></span>
+									<input class="professor_input professor_email" style="display: none;width:200px;" th:value="${professor.profEmail}">
+								</td>
+								<td><span th:text="${professor.deleteYn}"
+									class="lecture_span"></span> <input
+									style="display: none; width: 100px;" class="lecture_input"
+									type="text" th:value="${professor.deleteYn}" disabled>
 								</td>
 								<td style="text-align: center;">
-									<button class="update_btn">수정</button>
-									<button class="delete_btn">삭제</button>
+									<button class="professor_span" onclick="updateProfessor(this)">수정</button>
+									<button style="display: none;"class="professor_input" onclick="saveProfessor(this)">저장</button>
+									<button style="display: none;"class="professor_input" onclick="ProfessorCancelEdit(this)">취소</button>
 								</td>
 							</tr>
 						</table>
@@ -261,7 +267,7 @@
 						} else if (response == "success") {
 							//성공하면 과목이 추가되었습니다. alert띄우고 location여기로 다시 이동
 							alert("과목이 추가되었습니다.");
-							window.location.href = "/admin/lecture";
+							window.location.href = "/admin/lecture/list";
 						}
 					}
 				});
@@ -295,7 +301,7 @@
 						} else if (response == "success") {
 							//성공하면 강사가 추가되었습니다. alert띄우고 location여기로 다시 이동
 							alert("강사가 추가되었습니다.");
-							window.location.href = "/admin/lecture";
+							window.location.href = "/admin/lecture/list";
 						}
 					}
 				});
@@ -331,7 +337,7 @@
 						} else if (response == "success") {
 							//성공하면 강의가 추가되었습니다. alert띄우고 location여기로 다시 이동
 							alert("강의가 추가되었습니다.");
-							window.location.href = "/admin/lecture";
+							window.location.href = "/admin/lecture/list";
 						}
 					}
 				});
@@ -499,6 +505,23 @@
 										}
 									});
 						});
+		
+		//취소버튼
+		function LectureCancelEdit(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.remove("editing"); // 수정 모드 종료
+
+			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
+			var spans = row.querySelectorAll('.lecture_input');
+			spans.forEach(function(span) {
+				span.style.display = 'none';
+			});
+
+			var inputs = row.querySelectorAll('.lecture_span');
+			inputs.forEach(function(input) {
+				input.style.display = 'inline-block';
+			});
+		}
 
 		//강의 수정
 		function updateLecture(button) {
@@ -506,37 +529,153 @@
 			var row = button.closest('tr');
 
 			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
-			var spans = row.querySelectorAll('.lecture_span')
+			var spans = row.querySelectorAll('.lecture_span');
 			spans.forEach(function(span) {
 				span.style.display = 'none';
 			});
 
-			var inputs = row.querySelectorAll('.lecture_input')
+			var inputs = row.querySelectorAll('.lecture_input');
 			inputs.forEach(function(input) {
 				input.style.display = 'inline-block';
 			});
-
+			
 		}
+		
+		//강의 저장
+		function saveLecture(button){
+			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
+			var row = button.closest('tr');
+			
+			//id값, nm, tm값 가져와서 비동기처리
+			var lectureId = row.querySelector(".lecture_checkbox_item").value;
+			var lectureNm = row.querySelector(".lecture_nm").value;
+			var lectureTm = row.querySelector(".lecture_tm").value;
+			
+			$.ajax({
+				url : '/admin/lecture/update',
+				method : 'POST',
+				data : {
+					lectureId : lectureId,
+					lectureNm : lectureNm,
+					lectureTm : lectureTm
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "success") {
+						alert("수정되었습니다.");
+						window.location.href = "/admin/lecture/list";
+					}
+				}
+			});
+		}
+		
+		//취소버튼
+		function SubjectCancelEdit(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.remove("editing"); // 수정 모드 종료
 
-		//강의 한 개 삭제
-		function deleteLecture(button) {
+			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
+			var spans = row.querySelectorAll('.subject_input')
+			spans.forEach(function(span) {
+				span.style.display = 'none';
+			});
+
+			var inputs = row.querySelectorAll('.subject_span')
+			inputs.forEach(function(input) {
+				input.style.display = 'inline-block';
+			});
+		}
+		
+		//과목 수정
+		function updateSubject(button) {
+			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
 			var row = button.closest('tr');
 
-		    var confirmMessage = "삭제하시겠습니까?";
-		    if (confirm(confirmMessage)) {
-		    	// 해당 행의 ID 값
-				var lectureId = row.querySelector('.lecture_span#lecture_id').textContent;
+			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
+			var spans = row.querySelectorAll('.subject_span')
+			spans.forEach(function(span) {
+				span.style.display = 'none';
+			});
 
-				// 이후에 lectureId를 사용하여 삭제 작업을 수행할 수 있습니다.
-				// 예를 들어, 해당 ID를 서버로 보내서 삭제 작업을 처리하거나 다른 작업을 수행할 수 있습니다.
+			var inputs = row.querySelectorAll('.subject_input')
+			inputs.forEach(function(input) {
+				input.style.display = 'inline-block';
+			});
+		}
+		
+		//과목 저장
+		function saveSubject(button){
+			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
+			var row = button.closest('tr');
+			
+			//id값, nm, tm값 가져와서 비동기처리
+			var subjectId = row.querySelector(".subject_checkbox_item").value;
+			var subjectNm = row.querySelector(".subject_nm").value;
+			
+			$.ajax({
+				url : '/admin/lecture/subject/update',
+				method : 'POST',
+				data : {
+					subjectId : subjectId,
+					subjectNm : subjectNm
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "success") {
+						alert("수정되었습니다.");
+						window.location.href = "/admin/lecture/list";
+					}
+				}
+			});
+		}
+		
+		//강사 취소
+		
+		//강사 수정
+		function updateProfessor(button) {
+			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
+			var row = button.closest('tr');
 
-				// 이 부분에서 lectureId를 사용하여 삭제 작업을 수행하도록 구현합니다.
-				// ...
+			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
+			var spans = row.querySelectorAll('.professor_span')
+			spans.forEach(function(span) {
+				span.style.display = 'none';
+			});
 
-				// 확인을 위해 콘솔에 출력
-				console.log('삭제할 강의 ID: ' + lectureId);
-		    } else {
-		    }
+			var inputs = row.querySelectorAll('.professor_input')
+			inputs.forEach(function(input) {
+				input.style.display = 'inline-block';
+			});
+		}
+		
+		//강사 저장
+		function saveProfessor(button){
+			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
+			var row = button.closest('tr');
+			
+			//id값, nm, tm값 가져와서 비동기처리
+			var professorId = row.querySelector(".professor_checkbox_item").value;
+			var professorNm = row.querySelector(".professor_nm").value;
+			var professorTel = row.querySelector(".professor_tel").value;
+			var professorEmail = row.querySelector(".professor_email").value;
+			
+			$.ajax({
+				url : '/admin/lecture/professor/update',
+				method : 'POST',
+				data : {
+					professorId : professorId,
+					professorNm : professorNm,
+					professorTel : professorTel,
+					professorEmail : professorEmail
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "success") {
+						alert("수정되었습니다.");
+						window.location.href = "/admin/lecture/list";
+					}
+				}
+			});
 		}
 	</script>
 </body>

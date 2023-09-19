@@ -383,6 +383,106 @@ public class AdminService implements IAdminService {
 		return adminRepository.getSearchPostList(searchInputCategory, searchInput, postStatusList);
 	}
 	
+	@Override
+	public List<PostVO> getReplyList(String postId) {
+		return adminRepository.getReplyList(postId);
+	}
+	
+	@Override
+	public String getMaxReplyId() {
+		return adminRepository.getMaxReplyId();
+	}
+	
+	@Override
+	public void insertReplyVO(PostVO postVO) {
+		adminRepository.insertReplyVO(postVO);
+	}
+	
+	@Override
+	public void updateInquiryStatus(String postId) {
+		adminRepository.updateInquiryStatus(postId);
+	}
+
+	@Override
+	public String getMaxManagerId() {
+		return adminRepository.getMaxManagerId();
+	}
+	
+	@Override
+	@Transactional
+	public void insertManagerVO(ManagerVO managerVO) {
+		//lgin에 먼저 insert
+		adminRepository.insertLgin(managerVO);
+		//mngr에 insert
+		adminRepository.insertManager(managerVO);
+	}
+	
+	@Override
+	public List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail) {
+		return adminRepository.getSearchManagerList(mngrNm, mngrEmail);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteManagerList(List<String> selectedManagerIds) {
+		adminRepository.deleteLgin(selectedManagerIds);
+		adminRepository.deleteManagerList(selectedManagerIds);
+	}
+	
+	@Override
+	public ManagerVO getManager(String mngrId) {
+		return adminRepository.getManager(mngrId);
+	}
+	
+	@Override
+	@Transactional
+	public void updateManager(ManagerVO managerVO) {
+		adminRepository.updateLgin(managerVO);
+		adminRepository.updateManager(managerVO);
+	}
+
+	@Override
+	public List<SubjectVO> getYSubjectList() {
+		return adminRepository.getYSubjectList();
+	}
+
+	@Override
+	public List<ProfessorVO> getYProfessorList() {
+		return adminRepository.getYProfessorList();
+	}
+	
+	@Override
+	public void updateLecture(LectureVO lectureVO) {
+		adminRepository.updateLecture(lectureVO);	
+	}
+	
+	@Override
+	public List<LectureVO> getYLectureList() {
+		return adminRepository.getYLectureList();
+	}
+	
+	@Override
+	public SubjectVO getSubjectVO(String subjectId) {
+		return adminRepository.getSubjectVO(subjectId);
+	}
+	
+	@Override
+	public void updateSubject(SubjectVO subjectVO) {
+		adminRepository.updateSubject(subjectVO);
+	}
+	
+	@Override
+	public ProfessorVO getProfessorVO(String professorId) {
+		return adminRepository.getProfessorVO(professorId);
+	}
+	
+	@Override
+	public void updateProfessor(ProfessorVO professorVO) {
+		adminRepository.updateProfessor(professorVO);
+	}
+	
+	
+	
 	
 	
 	

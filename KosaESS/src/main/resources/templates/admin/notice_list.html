@@ -41,8 +41,8 @@
 						</select>
 					</div>
 					<div>
-						<input class="search_input" id="search_input" value=""
-							type="text" list="search_option" required>
+						<input class="search_input" id="search_input" value="" type="text"
+							list="search_option" required>
 					</div>
 				</div>
 
@@ -192,11 +192,11 @@
 		//초기화 버튼
 		function resetInput() {
 			// 모든 요소를 선택
-			const inputElement1 = document.querySelector(".search_input");
-			inputElement1.value = "title";
+			const inputElement1 = document.querySelector(".search_input_category");
+			inputElement1.value = "post_title";
 
 			// 모든 요소를 선택
-			const inputElement2 = document.querySelector(".search_input_title");
+			const inputElement2 = document.querySelector(".search_input");
 			inputElement2.value = "";
 
 			// 모든 요소를 선택
@@ -204,29 +204,32 @@
 					.querySelector(".search_input_status");
 			inputElement3.value = "all";
 		}
-		
+
 		//조회 버튼
-		function search(){
+		function search() {
 			//input값 비어있으면 모두 입력하라고 알리기
 			var searchInput = document.querySelector("#search_input").value;
-			if(searchInput.value === null){
+			if (searchInput.value === null) {
 				alert("모든 요소를 입력하세요.");
-			}else{
-				var searchInputCategory = document.querySelector(".search_input_category").value;
-				var searchInputStatus = document.querySelector(".search_input_status").value;
-				
-				console.log(searchInput + searchInputCategory + searchInputStatus);
-				
+			} else {
+				var searchInputCategory = document
+						.querySelector(".search_input_category").value;
+				var searchInputStatus = document
+						.querySelector(".search_input_status").value;
+
+				console.log(searchInput + searchInputCategory
+						+ searchInputStatus);
+
 				var postStatusList = [];
-				if(searchInputStatus == "all"){
+				if (searchInputStatus == "all") {
 					postStatusList.push('PST0000001');
 					postStatusList.push('PST0000002');
 					console.log(postStatusList);
-				}else {
+				} else {
 					postStatusList.push(searchInputStatus);
 					console.log(postStatusList);
 				}
-				
+
 				$.ajax({
 					url : '/admin/notice/search',
 					method : 'POST',
@@ -236,21 +239,114 @@
 						postStatusList : postStatusList
 					},
 					success : function(response) {
-						var noticeList = response.noticeList;
 						console.log("성공");
+						var noticeList = response.noticeList;
+
+						// tbody 요소 찾기
+						var tbody = document.querySelector("tbody");
+
+						// tbody 내용 지우기
+						while (tbody.firstChild) {
+							tbody.removeChild(tbody.firstChild);
+						}
+
+						// noticeList를 이용하여 새로운 tr 요소 추가
+						for (var i = 0; i < noticeList.length; i++) {
+							var notice = noticeList[i];
+
+							//tr 생성
+							var tr = document.createElement("tr");
+							tr.className = "content_list_td";
+
+							// td 요소 추가 및 값 설정
+
+							//input type="check"
+							var tdCheck = document.createElement("td");
+							tdCheck.className = "notice_check";
+							var inputCheck = document.createElement("input");
+							inputCheck.className = "input_check";
+							inputCheck.type = "checkbox";
+							inputCheck.name = "chk";
+							inputCheck.value = notice.postId;
+							tdCheck.appendChild(inputCheck);
+							tr.appendChild(tdCheck);
+
+							//num
+							var tdNum = document.createElement("td");
+							tdNum.className = "notice_num";
+							tdNum.textContent = i + 1;
+							tr.appendChild(tdNum);
+
+							//postId
+							var tdPostId = document.createElement("td");
+							tdPostId.textContent = notice.postId;
+							tr.appendChild(tdPostId);
+
+							//postTitle
+							var tdPostTitle = document.createElement("td");
+							var aPostTitle = document.createElement("a");
+							aPostTitle.className = "notice_title";
+							aPostTitle.href = "/admin/notice/view/"
+									+ notice.postId;
+							aPostTitle.textContent = notice.postTitle;
+							tdPostTitle.appendChild(aPostTitle);
+							tr.appendChild(tdPostTitle);
+
+							//file
+							var tdFile = document.createElement("td");
+							tdFile.className = "notice_title";
+							if (notice.fileId != null) {
+								var fileImg = document.createElement("img");
+								fileImg.className = "file_img";
+								fileImg.src = "/img/file.png";
+								tdFile.appendChild(fileImg);
+							}
+							tr.appendChild(tdFile);
+							
+							//rgsterId
+							var tdRgster = document.createElement("td");
+							tdRgster.textContent="관리자";
+							tr.appendChild(tdRgster);
+							
+							//rgstDt
+							var tdRgstDt = document.createElement("td");
+							tdRgstDt.textContent = formatTimestamp(notice.rgstDt);
+							tr.appendChild(tdRgstDt);
+							
+							//hits
+							var tdHit = document.createElement("td");
+							tdHit.textContent = notice.postHit;
+							tr.appendChild(tdHit);
+							
+							//status
+							var tdStatus = document.createElement("td");
+							tdStatus.textContent= notice.cmcdNm;
+							tr.appendChild(tdStatus);
+
+							tbody.appendChild(tr);
+						}
 					}
 				});
-				
+
 			}
-			
-			//제목 or 내용 받기
-			//input값 받아오기
-			//상태값 받아오기
 		}
 		
-	</script>
-	<script>
-		
+		//날짜 형식
+		function formatTimestamp(timestamp) {
+			   const date = new Date(timestamp);
+
+			   const year = date.getFullYear();
+			   const month = String(date.getMonth() + 1).padStart(2, '0');
+			   const day = String(date.getDate()).padStart(2, '0');
+			   const hours = String(date.getHours()).padStart(2, '0');
+			   const minutes = String(date.getMinutes()).padStart(2, '0');
+			   const seconds = String(date.getSeconds()).padStart(2, '0');
+			   const milliseconds = date.getMilliseconds();
+
+			   const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+
+			   return formattedTimestamp;
+		}
 	</script>
 </body>
 </html>

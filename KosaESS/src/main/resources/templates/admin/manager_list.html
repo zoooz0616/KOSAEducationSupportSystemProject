@@ -29,8 +29,8 @@
 			<div class="title">업무담당자 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/manager/list}">업무담당자
-					관리</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/manager/list}">업무담당자 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -43,7 +43,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">이름</div>
 					<div>
-						<input class="search_input" id="class_name" placeholder="이름"
+						<input class="search_input" id="manager_name" placeholder="이름"
 							value="" type="text" list="search_option" required>
 					</div>
 				</div>
@@ -52,7 +52,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">이메일</div>
 					<div>
-						<input class="search_input" placeholder="이메일"
+						<input class="search_input" id="manager_email" placeholder="이메일"
 							value="" type="text" list="search_option" required>
 					</div>
 				</div>
@@ -65,73 +65,442 @@
 					onclick="resetInput()">
 					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
 				</button>
-				<button type="button" id="search_btn" class="search_filter_btn">
+				<button type="button" id="search_btn" class="search_filter_btn"
+					onclick="search()">
 					<img th:src="@{/img/search_white.png}"> <span>조회</span>
 				</button>
 			</div>
 			<!-- Search Button wrap -->
 		</div>
+
+		<!-- 업무담당자 등록하기 -->
+		<form th:action="@{/admin/manager/insert}" method="post">
+			<div class="insert_manager" style="padding: 5px;">
+				<div class="input_wrap" style="display: flex;">
+					<div class="filter_box">
+						<div class="filter_box_title">이름</div>
+						<div>
+							<input name="managerNm" type="text" placeholder="이름">
+						</div>
+					</div>
+					<div class="filter_box">
+						<div class="filter_box_title">이메일</div>
+						<div>
+							<input name="managerEmail" type="text" placeholder="이메일">
+						</div>
+					</div>
+					<div class="filter_box">
+						<div class="filter_box_title">전화번호</div>
+						<div>
+							<input name="managerTel" type="text" placeholder="전화번호">
+						</div>
+					</div>
+					<div class="filter_box">
+						<div class="filter_box_title">비밀번호</div>
+						<div>
+							<input name="managerPwd" type="text" placeholder="비밀번호">
+						</div>
+					</div>
+				</div>
+				<div>
+					<!-- 등록하기 버튼 -->
+					<button class="insert_btn" type="submit">
+						<img style="width: 20px;" th:src="@{/img/plus_white.png}"><span>등록하기</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- 업무담당자 등록하기 -->
+
+
 		<!-- Content Middle-->
 
 		<!-- Content Bottom-->
 		<div class="content_bottom">
-			<form th:action="@{/admin/cls/delete}" method="post">
-				<!-- 컨텐츠 개수와 버튼 wrap -->
-				<div class="content_info_wrap">
-					<div class="content_info">
-						<span>업무담당자 총 <span class="class_list_cnt"
-							th:text="${#lists.size(managerList)}">classListCnt</span>명
-						</span>
-					</div>
-					<div class="content_info_btn_wrap">
-						<!-- 선택삭제 버튼 -->
-						<button type="submit">
-							<img th:src="@{/img/minus_white.png}" id="delete_btn"><span>선택삭제</span>
-						</button>
-
-						<!-- 등록하기 버튼 -->
-						<a th:href="@{/admin/class/insert}" style="text-decoration: none;">
-							<button type="button">
-								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
-							</button>
-						</a>
-					</div>
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+			<div class="content_info_wrap">
+				<div class="content_info">
+					<span>업무담당자 총 <span class="class_list_cnt"
+						th:text="${#lists.size(managerList)}">classListCnt</span>명
+					</span>
 				</div>
-				<!-- 컨텐츠 개수와 버튼 wrap -->
-
-				<!-- 컨텐츠 리스트 부분 -->
-				<div class="content_list">
-					<table class="content_list_table" id="class_list_table">
-						<thead>
-							<tr class="content_list_th">
-								<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
-								<th style="width: 20%;">ID</th>
-								<th style="width: 10%;">업무담당자 이름</th>
-								<th style="width: 20%;">전화번호</th>
-								<th style="width: 20%;">이메일</th>
-								<th style="width: 10%;">계정상태</th>
-								<th style="width: 20%;">마지막 로그인 일시</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="manager: ${managerList}">
-								<td><input type="checkbox" id="chkAll" th:value="${manager.mngrId}"></td>
-								<td th:text="${manager.mngrId}"></td>
-								<td th:text="${manager.mngrNm}"></td>
-								<td th:text="${manager.mngrTel}"></td>
-								<td th:text="${manager.userEmail}"></td>
-								<td th:text="${manager.cmcdNm}"></td>
-								<td th:text="${manager.lastLoginDt}"></td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="content_info_btn_wrap">
+					<!-- 선택삭제 버튼 -->
+					<button id="delete_btn">
+						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+					</button>
 				</div>
-				<!-- 컨텐츠 리스트 부분 -->
-			</form>
+			</div>
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+
+			<!-- 컨텐츠 리스트 부분 -->
+			<div class="content_list">
+				<table class="content_list_table" id="class_list_table">
+					<thead>
+						<tr class="content_list_th">
+							<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
+							<th>ID</th>
+							<th>업무담당자 이름</th>
+							<th>전화번호</th>
+							<th>이메일</th>
+							<th>계정상태</th>
+							<th>마지막 로그인 일시</th>
+							<th style="width: 100px;">버튼</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="manager: ${managerList}">
+							<td class="input_check_td"><input class="input_check"
+								type="checkbox" name="chk" th:value="${manager.mngrId}"></td>
+							<td th:text="${manager.mngrId}"></td>
+							<td>
+								<div class="update_div" th:text="${manager.mngrNm}"></div> 
+								<input type="text"
+								class="update_input mngr_nm_input" style="display: none;" th:value="${manager.mngrNm}">
+							</td>
+							<td>
+								<div class="update_div"  th:text="${manager.mngrTel}"></div> 
+								<input type="text"
+								class="update_input mngr_tel_input" style="display: none;" th:value="${manager.mngrTel}">
+							</td>
+							<td th:text="${manager.userEmail}"></td>
+							<td>
+								<div class="update_div"  th:text="${manager.cmcdNm}"></div> 
+								<select class="update_input mngr_status_input" style="display: none;" th:value="${manager.userCd}">
+									<option value="USR0000001">활성화</option>
+									<option value="USR0000002">휴면</option>
+								</select>
+							</td>
+							<td th:text="${manager.lastLoginDt}"></td>
+							<td class="btn_td">
+							<button
+									class="update_btn" type="button" onclick="editRow(this)">수정</button>
+								<button class="save_btn" type="button" style="display: none;"
+									onclick="saveRow(this)">저장</button>
+								<button class="cancel_btn" type="button" style="display: none;"
+									onclick="cancelEdit(this)">취소</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- 컨텐츠 리스트 부분 -->
 		</div>
 		<!-- Content Bottom-->
 	</div>
 	<script>
-		</script>
+		//전체 선택
+		document.addEventListener("DOMContentLoaded", function() {
+			const chkAll = document.getElementById("chkAll");
+			const checkboxes = document
+					.querySelectorAll('input[type="checkbox"][name="chk"]');
+
+			chkAll.addEventListener("change", function() {
+				checkboxes.forEach(function(checkbox) {
+					checkbox.checked = chkAll.checked;
+				});
+			});
+		});
+
+		//선택삭제
+		document.querySelector("#delete_btn").addEventListener(
+				"click",
+				function() {
+					var selectedManagerIds = [];
+
+					// 선택된 체크박스를 모두 선택합니다.
+					var selectedCheckboxes = document
+							.querySelectorAll(".input_check:checked");
+
+					// 선택된 체크박스의 값을 배열에 추가합니다.
+					selectedCheckboxes.forEach(function(checkbox) {
+						selectedManagerIds.push(checkbox.value);
+					});
+
+					console.log(selectedManagerIds);
+					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+					$.ajax({
+						url : '/admin/manager/delete',
+						method : 'POST',
+						data : {
+							selectedManagerIds : selectedManagerIds
+						},
+						success : function(response) {
+							console.log(response);
+							if (response == "success") {
+								alert("선택한 업무담당자가 비활성화되었습니다.");
+								window.location.href = "/admin/manager/list";
+							}
+						}
+					});
+				});
+
+		//초기화
+		function resetInput() {
+			var inputElements = document.querySelectorAll(".search_input");
+
+			inputElements.forEach(function(input) {
+				input.value = "";
+			});
+		}
+
+		//조회
+		function search() {
+			var mngrNm = document.querySelector("#manager_name").value;
+			var mngrEmail = document.querySelector("#manager_email").value;
+
+			$
+					.ajax({
+						url : '/admin/manager/search',
+						async : true,
+						method : 'POST',
+						data : {
+							mngrNm : mngrNm,
+							mngrEmail : mngrEmail
+						},
+						success : function(response) {
+
+							var managerList = response.managerList;
+							console.log(managerList);
+							// tbody 요소 찾기
+							var tbody = document.querySelector("tbody");
+
+							// tbody 내용 지우기
+							while (tbody.firstChild) {
+								tbody.removeChild(tbody.firstChild);
+							}
+
+							// managerList를 이용하여 새로운 tr 요소 추가
+							for (var i = 0; i < managerList.length; i++) {
+								var manager = managerList[i];
+
+								//tr 생성
+								var tr = document.createElement("tr");
+
+								// td 요소 추가 및 값 설정
+
+								//input type="check"
+								var tdCheck = document.createElement("td");
+								tdCheck.className = "input_check_td";
+								var inputCheck = document
+										.createElement("input");
+								inputCheck.className = "input_check";
+								inputCheck.type = "checkbox";
+								inputCheck.name = "chk";
+								inputCheck.value = manager.mngrId;
+								tdCheck.appendChild(inputCheck);
+								tr.appendChild(tdCheck);
+
+								//mngrId
+								var tdMngrId = document.createElement("td");
+								tdMngrId.textContent = manager.mngrId;
+								tr.appendChild(tdMngrId);
+
+								//mngrNm
+								var tdMngrNm = document.createElement("td");
+								var divMngrNm = document.createElement("div");
+								divMngrNm.className = "update_div";
+								divMngrNm.textContent = manager.mngrNm;
+								var inputMngrNm = document.createElement("input");
+								inputMngrNm.type="text";
+								inputMngrNm.className="update_input mngr_nm_input";
+								inputMngrNm.style.display = "none";
+								inputMngrNm.value = manager.mngrNm;
+								
+								tdMngrNm.appendChild(divMngrNm);
+								tdMngrNm.appendChild(inputMngrNm);
+								tr.appendChild(tdMngrNm);
+
+								//mngrTel
+								var tdMngrTel = document.createElement("td");
+								var divMngrTel = document.createElement("div");
+								divMngrTel.className="update_div";
+								divMngrTel.textContent = manager.mngrTel;
+								var inputMngrTel = document.createElement("input");
+								inputMngrTel.type="text";
+								inputMngrTel.className="update_input mngr_tel_input";
+								inputMngrTel.style.display="none";
+								inputMngrTel.value= manager.mngrTel;
+								
+								tdMngrTel.appendChild(divMngrTel);
+								tdMngrTel.appendChild(inputMngrTel);
+								tr.appendChild(tdMngrTel);
+
+								//mngrEmail
+								var tdMngrEmail = document.createElement("td");
+								tdMngrEmail.textContent = manager.userEmail;
+								tr.appendChild(tdMngrEmail);
+
+								//status
+								var tdStatus = document.createElement("td");
+								var divStatus = document.createElement("div");
+								divStatus.className ="update_div";
+								divStatus.textContent = manager.cmcdNm;
+								var selectStatus = document.createElement("select");
+								selectStatus.className = "update_input mngr_status_input";
+								selectStatus.style.display= "none";
+								selectStatus.value=manager.userCd;
+								var option1 = document.createElement("option");
+								option1.value = "USR0000001";
+								option1.text = "활성화";
+								var option2 = document.createElement("option");
+								option2.value = "USR0000002";
+								option2.text = "휴면";
+								selectStatus.appendChild(option1);
+								selectStatus.appendChild(option2);
+								
+								tdStatus.appendChild(divStatus);
+								tdStatus.appendChild(selectStatus);
+								tr.appendChild(tdStatus);
+
+								//lastLoginDt
+								var tdLastLogin = document.createElement("td");
+								tdLastLogin.textContent = formatTimestamp(manager.lastLoginDt);
+								tr.appendChild(tdLastLogin);
+
+								//updateBtn
+								var tdButton = document.createElement("td");
+								tdButton.className = "btn_td";
+								
+								//수정 버튼 생성
+								var updateBtn = document.createElement("button");
+								updateBtn.className = "update_btn";
+								updateBtn.type="button";
+								updateBtn.textContent = "수정";
+								updateBtn.onclick = function() {
+								    editRow(this);
+								};
+								
+								// 저장 버튼 생성
+								var saveButton = document.createElement("button");
+								saveButton.className = "save_btn";
+								saveButton.type = "button";
+								saveButton.style.display = "none"; // 초기에는 숨겨진 상태
+								saveButton.textContent = "저장";
+								saveButton.onclick = function() {
+								    saveRow(this);
+								};
+								
+								// 취소 버튼 생성
+								var cancelButton = document.createElement("button");
+								cancelButton.className = "cancel_btn";
+								cancelButton.type = "button";
+								cancelButton.style.display = "none"; // 초기에는 숨겨진 상태
+								cancelButton.textContent = "취소";
+								cancelButton.onclick = function() {
+								    cancelEdit(this);
+								};
+								
+								tdButton.appendChild(updateBtn);
+								tdButton.appendChild(saveButton);
+								tdButton.appendChild(cancelButton);
+								tr.appendChild(tdButton);
+
+								tbody.appendChild(tr);
+							}
+
+						}
+					});
+
+		}
+
+		//날짜 형식
+		function formatTimestamp(timestamp) {
+
+			const date = new Date(timestamp);
+
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			const milliseconds = date.getMilliseconds();
+
+			formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+
+			return formattedTimestamp;
+		}
+
+		//수정 버튼
+		function editRow(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.add("editing"); // 수정 중인 행으로 표시
+
+			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+			var inputs = row.querySelectorAll(".update_input");
+			var dataElements = row.querySelectorAll(".update_div");
+
+			for (var i = 0; i < inputs.length; i++) {
+				inputs[i].style.display = "block";
+			}
+
+			for (var i = 0; i < dataElements.length; i++) {
+				dataElements[i].style.display = "none";
+			}
+
+			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+			row.querySelector(".update_btn").style.display = "none";
+			row.querySelector(".save_btn").style.display = "block";
+			row.querySelector(".cancel_btn").style.display = "block";
+		}
+
+		//저장 버튼
+		function saveRow(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+
+			var mngrId = row.querySelector(".input_check").value;
+			var mngrNm = row.querySelector(".mngr_nm_input").value;
+			var mngrTel = row.querySelector(".mngr_tel_input").value;
+			var mngrStatus = row.querySelector(".mngr_status_input").value;
+			console.log(mngrId);
+			console.log(mngrNm);
+			console.log(mngrTel);
+			console.log(mngrStatus);
+			
+			$.ajax({
+				url : '/admin/manager/update',
+				method : 'POST',
+				data : {
+					mngrId : mngrId,
+					mngrNm : mngrNm,
+					mngrTel : mngrTel,
+					mngrStatus : mngrStatus
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "success") {
+						alert("수정되었습니다.");
+						window.location.href = "/admin/manager/list";
+					}
+				}
+			});
+
+			// 수정 모드 종료
+			cancelEdit(button);
+		}
+
+		//취소버튼
+		function cancelEdit(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.remove("editing"); // 수정 모드 종료
+
+			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+			var inputs = row.querySelectorAll(".update_input");
+			var dataElements = row.querySelectorAll(".update_div");
+
+			for (var i = 0; i < inputs.length; i++) {
+				inputs[i].style.display = "none";
+			}
+
+			for (var i = 0; i < dataElements.length; i++) {
+				dataElements[i].style.display = "block";
+			}
+
+			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+			row.querySelector(".update_btn").style.display = "block";
+			row.querySelector(".save_btn").style.display = "none";
+			row.querySelector(".cancel_btn").style.display = "none";
+		}
+	</script>
 </body>
 </html>

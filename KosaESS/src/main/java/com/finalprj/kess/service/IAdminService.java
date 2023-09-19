@@ -108,4 +108,23 @@ public interface IAdminService {
 	void deleteAllInquiry(List<String> selectedInquiryIds);
 	void updateNoticeVO(List<FileVO> fileList, PostVO postVO);
 	List<PostVO> getSearchPostList(String searchInputCategory, String searchInput, List<String> postStatusList);
+	List<PostVO> getReplyList(String postId);
+	
+	String getMaxReplyId();
+	void insertReplyVO(PostVO postVO);
+	void updateInquiryStatus(String postId);
+	String getMaxManagerId();
+	void insertManagerVO(ManagerVO managerVO);
+	List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail);
+	void deleteManagerList(List<String> selectedManagerIds);
+	ManagerVO getManager(String mngrId);
+	void updateManager(ManagerVO managerVO);
+	List<SubjectVO> getYSubjectList();
+	List<ProfessorVO> getYProfessorList();
+	void updateLecture(LectureVO lectureVO);
+	List<LectureVO> getYLectureList();
+	SubjectVO getSubjectVO(String subjectId);
+	void updateSubject(SubjectVO subjectVO);
+	ProfessorVO getProfessorVO(String professorId);
+	void updateProfessor(ProfessorVO professorVO);
 }

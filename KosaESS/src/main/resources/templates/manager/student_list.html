@@ -3,11 +3,11 @@
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
 <title>Manager Student List</title>
-<link th:href="@{/css/managerClassList.css}" rel="stylesheet" />
 </head>
 <head>
-<link th:href="@{/css/manager_post_list.css}" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link th:href="@{/css/manager/manager_class_list.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<!-- 서브바 부분 -->
@@ -17,125 +17,162 @@
 	<!-- 컨텐츠 부분 -->
 	<div class="home-section">
 		<!-- title -->
-		<div class="title" th:text="|${title} : ${thisClassName}|">Title</div>
+		<div class="title_wrap">
+			<span class="title" th:text="|${title} : |"></span><a class="title_a" th:text="${thisClassName}" th:href="@{/manager/class/__${thisClassId}__}"></a>
+		</div>
 
 		<!-- content wrap-->
 		<div class="content_wrap">
-			<!-- 검색 필터 부분 -->
 			<div class="search_filter_wrap">
-				<!-- 아이콘 삽임 부분 -->
-				<!-- 				<div class="search_filter_icon"> -->
-				<!-- 					<img class="search_filter_icon_img" th:src="@{/img/filter.png}"> -->
-				<!-- 				</div> -->
-				<!-- 아이콘 삽임 부분 -->
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table_wrap">
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;"><select id="classId">
-									<option th:each="className:${classNameList}"
-										th:text="${className.clssNm}" th:value="${className.clssId}"></option>
-							</select></td>
-							<td style="width: 10%;">상태</td>
-							<td style="width: 50%;">
-								<!--리스트 전체선택 1 --> <span> <input type="checkbox"
-									checked="checked" id="chkAll1" name="chk1"> <label>전체</label>
-							</span> <span th:each="classCodeName:${classCodeNameList}"> <input
-									type="checkbox" checked="checked"
-									th:value="${classCodeName.cmcdId}" name="chk1"> <label
-									th:text="${classCodeName.cmcdNm}"></label>
-							</span>
-							</td>
-							<!-- regexp로 접근 -->
-						</tr>
-						<tr>
-							<td style="width: 5%;">학생 상태</td>
 							<td style="width: 30%;">
-								<!--리스트 전체선택 2 --> <span> <input type="checkbox"
-									checked="checked" id="chkAll2" name="chk"> <label>전체</label>
-							</span> <span th:each="stdtCodeName:${stdtCodeNameList}"> <input
-									type="checkbox" checked="checked"
-									th:value="${stdtCodeName.cmcdNm}" name="chk2"> <label
-									th:text="${stdtCodeName.cmcdNm}"></label>
-							</span>
+								<select id="classId">
+									<option th:each="className:${classNameList}" th:text="${className.clssNm}" th:value="${className.clssId}">
+									</option>
+								</select>
 							</td>
-							<!-- regexp로 접근 -->
 							<td style="width: 10%;">기간</td>
-							<td style="width: 55%;"><input type="date" id="startDate"><span>~</span><input
-								type="date" id="endDate"></td>
+							<td style="width: 30%;"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
 						</tr>
-
 					</table>
-					<!-- 검색 버튼 -->
 				</div>
+				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn" th:id="searchButton"
-						onclick="search()">검색</button>
+					<button class="search_filter_btn" th:id="searchButton" onclick="search()">검색</button>
 				</div>
+				<!-- End : 검색 버튼 -->
 			</div>
-			<!-- End 검색 버튼 -->
-			<span th:text="${stdtCnt}" id="stdtCnt"></span><span>명</span>
-			<span th:each="cmptCodeName:${cmptCodeNameList}">
-				<button th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}"></button>
-			</span>
+			<!-- End : 검색 필터 테이블-->
+			
+			<!-- 테이블 조작 -->
+			<div class=>
+				<span>
+					<span th:text="${stdtCnt}" id="stdtCnt"></span><span>명</span>
+				</span>
+				<span th:each="cmptCodeName:${cmptCodeNameList}" class="cmpt_controller">
+					<button onclick="cmptUpdate(this)" th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}" class="cmpt_btn" th:classappend="${cmptCodeNameStat.count}"></button>
+				</span>
+			</div>
+			<!-- End : 테이블 조작 -->
+			
+			<!-- table 시작 -->
 			<table id="stdt_list_table">
 			<thead>
 				<tr id="stdt_list_table_head">
 					<th><input type="checkbox" id="chkAllStdt"></th>
 					<th>번호</th>
 					<th>이름</th>
-					<th th:each="wlogCodeName:${wlogCodeNameList}"
-						th:text="${wlogCodeName.cmcdNm}"></th>
-					<th>성별</th>
-					<th>생년월일</th>
 					<th>이메일</th>
 					<th>연락처</th>
+					<th>성별</th>
+					<th>생년월일</th>
+					<th th:each="wlogCodeName:${wlogCodeNameList}"
+						th:text="${wlogCodeName.cmcdNm}"></th>
+					<th>이수율</th>
 					<th>이수여부</th>
 				</tr>
 				</thead>
 				<tbody id="stdt_list_table_tbody">
 				<tr th:each="stdt:${stdtList}" id="stdt_list_table_row">
-					<td><input type="checkbox" id="chkStdt"></td>
+					<td><input type="checkbox" id="chkStdt" name="checkedStdt" th:value="${stdt.stdtId}"></td>
 					<td th:text="${stdtStat.count}"></td>
 					<td th:text="${stdt.stdtNm}"></td>
-					<td th:each="wlogCodeName:${wlogCodeNameList}"
-						th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
-					<td th:text="${stdt.genderCd}">성별</td>
-					<td th:text="${stdt.birthDd}">생년월일</td>
 					<td th:text="${stdt.userEmail}">이메일</td>
 					<td th:text="${stdt.stdtTel}">연락처</td>
+					<td th:text="${stdt.genderCd}">성별</td>
+					<td th:text="${stdt.birthDd}">생년월일</td>
+					<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+					<td th:text="엄">이수율</td><!-- 구현 방법 : wlog 에서 totalTm가져오고 교육과정의 이수 시간을 가져와서 백분율을 출력 -->
 					<td th:text="${stdt.jobCd}">이수여부</td>
 				</tr>
 				</tbody>
 			</table>
-			<!-- End 검색 필터 부분 -->
+			<!-- End : table 시작-->
 		</div>
 	</div>
 
 	<script>
-	//리스트 전체선택1
-	const chkAll1 = document.querySelector("#chkAll1");
-	chkAll1.addEventListener("change", () => {
-		const chkList1 = document.getElementsByName("chk1");
-		for(chk1 of chkList1){
-			chk1.checked = chkAll1.checked;
-		}
-	});
+// 	$(document).ready(function () {});
+	const chkAll = $("#chkAllStdt");
+	const chkList = $("input[name=checkedStdt]");
 	
-	//리스트 전체선택2
-	const chkAll2 = document.querySelector("#chkAll2");
-	chkAll2.addEventListener("change", () => {
-		const chkList2 = document.getElementsByName("chk2");
-		for(chk2 of chkList2){
-			chk2.checked = chkAll2.checked;
-		}
+	// "전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
+	chkAll.on("change", function () {
+		const isChecked = chkAll.prop("checked");
+		chkList.prop("checked", isChecked);
 	});
+	//End
+	
+	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
+	chkList.on("change", function () {
+		const allChecked = chkList.filter(":checked").length === chkList.length;
+		chkAll.prop("checked", allChecked);
+	});
+	//End
+	
+	//현재 체크된 목록을 반환
+	function getCheckedStdt() {
+		const checkedStdts = [];
+		chkList.each(function () {
+			if ($(this).prop("checked")) {
+				checkedStdts.push($(this).val());
+			}
+		});
+		return checkedStdts;
+	}
+	//End
+	
+	function cmptUpdate(button){
+		//1. 선택받은 아이들을 가져온다(var targetList)
+		var targetList = getCheckedStdt();
+		//2. 바꿀 값이 뭔지 가져온다(var cmptValue)+어떤 수업인지도 가져온다
+		var targetCmptId = button.value;
+		var thisClassId = "[[${thisClassId}]]";
+		
+		console.log(thisClassId);
+		//3. target이랑 cmptValue를 넘긴다
+		$.ajax({
+			//4. update한다
+			url : '/manager/student/updateCmpt',
+			type :'post',
+			data : {
+				targetList:targetList
+				,clssId:thisClassId
+				,targetCmptId:targetCmptId
+			},
+			success: function(updatedStdtList){
+				clearTable();
+				fetchNewTable();
+			}
+			,error: function(error){
+				console.log("error: ", error);
+			}
+		});
+	}
+	
+	var stdtListTable = document.getElementById('stdt_list_table_tbody');
+	//테이블의 모든 내용을 삭제
+	function clearTable(){
+		if(stdtListTable.firstChild != null){
+		while (stdtListTable.firstChild) {
+			stdtListTable.removeChild(stdtListTable.firstChild);
+		}}
+	}
+	//End
 	
 	function search() {
-		var classId=document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
+		fetchNewTable();
+	}
+	
+	function fetchNewTable() {
+		var classId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value;
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
+		var title = document.getElementById("endDate").value;
 		var date = new Date();
 		var year = date.getFullYear();
 	 	function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
@@ -154,40 +191,45 @@
 			},
 			async:false,
 			success: function(stdtListResponse) {
-				//테이블의 모든 내용을 삭제
-				var stdtListTable = document.getElementById('stdt_list_table_tbody');
-// 				$('#stdt_list_table_tbody').remove();
-				while (stdtListTable.firstChild) {
-					stdtListTable.removeChild(stdtListTable.firstChild);
-				}
-// 				stdtListTable.empty();
-				
-				console.log(stdtListTable);
-				
-				console.log("asdasdadasadasdasdasdadsasd");
+				clearTable();
 
+				//인원 수 입력
 				var stdtList = stdtListResponse.stdtList;
 				document.getElementById("stdtCnt").innerHTML=stdtList.length;
+				//End
 
+				//입력 시작
 				for(let i = 0; i < stdtList.length; i++){
-// 					var newRow = $('<tr>');
 					var newRow = document.createElement("tr");
 					newRow.id="stdt_list_table_row";
 					
-					var rowChk = document.createElement('td');
+					//체크박스 생성
 					var inputChk = document.createElement('input');
 					inputChk.id = 'chkStdt';
 					inputChk.type = 'checkBox';
-					rowChk.appendChild(inputChk);
-					newRow.appendChild(rowChk);
 					
+					var rowChk = document.createElement('td');
+					rowChk.appendChild(inputChk);//체크박스
 					var rowNum = document.createElement('td');
-					rowNum.innerHTML=i+1;
-					newRow.appendChild(rowNum);
-					
+					rowNum.innerHTML=i+1;//행 번호
 					var rowName = document.createElement('td');
-					rowName.innerHTML=stdtList[i].stdtNm;
+					rowName.innerHTML=stdtList[i].stdtNm;//이름
+					var rowEmail = document.createElement('td');
+					rowEmail.innerHTML=stdtList[i].userEmail;//이메일
+					var rowTel = document.createElement('td');
+					rowTel.innerHTML=stdtList[i].stdtTel;//전화번호
+					var rowGender = document.createElement('td');
+					rowGender.innerHTML=stdtList[i].genderCd;//성
+					var rowBirth = document.createElement('td');
+					rowBirth.innerHTML=stdtList[i].birthDd;//생일
+
+					newRow.appendChild(rowChk);
+					newRow.appendChild(rowNum);
 					newRow.appendChild(rowName);
+					newRow.appendChild(rowEmail);
+					newRow.appendChild(rowTel);
+					newRow.appendChild(rowGender);
+					newRow.appendChild(rowBirth);
 					$.ajax({
 						type:'get',
 						url:'/manager/student/search/codename',
@@ -197,42 +239,30 @@
 						for (let j = 0; j < wlogCodeNameList.length; j++) {
 							var rowWlog = document.createElement('td');
 							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
-							newRow.appendChild(rowWlog);
+							newRow.appendChild(rowWlog);//출결상태
 						}
 						},error: function(error){console.log("error: ", error);}
 					})
-					var rowGender = document.createElement('td');
-					rowGender.innerHTML=stdtList[i].genderCd;
-					var rowBirth = document.createElement('td');
-					rowBirth.innerHTML=stdtList[i].birthDd;
-					var rowEmail = document.createElement('td');
-					rowEmail.innerHTML=stdtList[i].userEmail;
-					var rowTel = document.createElement('td');
-					rowTel.innerHTML=stdtList[i].stdtTel;
+					
+					//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
+					var cmptRate = document.createElement('td');
+					cmptRate.innerHTML="";
+					//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
+					
 					var rowJob = document.createElement('td');
 					rowJob.innerHTML=stdtList[i].jobCd;
 					
-					newRow.appendChild(rowGender);
-					newRow.appendChild(rowBirth);
-					newRow.appendChild(rowEmail);
-					newRow.appendChild(rowTel);
+					newRow.appendChild(cmptRate);
 					newRow.appendChild(rowJob);
 					
-					console.log(newRow);
-					console.log(stdtListTable);
-					
-// 					stdtListTable.appendChild(newRow);
 					stdtListTable.append(newRow);
-// 					$("#stdt_list_table_tbody").append(newRow);
-// 					stdtListTable.innerHTML=newRow;
 				}
-
+				//End
 			},error: function(error){
 				console.log("error: ", error);
 			}
 		})
 	}
-
 </script>
 
 </body>
