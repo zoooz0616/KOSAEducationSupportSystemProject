@@ -1,11 +1,20 @@
 package com.finalprj.kess.controller;
 
-import java.io.Console;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,12 +37,13 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
-import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
 
@@ -41,6 +52,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	IStudentService studentService;
@@ -58,6 +70,7 @@ public class StudentController {
 	 */
 	@GetMapping("")
 	public String main(Model model, HttpSession session) {
+		String stdtId = (String) session.getAttribute("stdtId");
 		model.addAttribute("student", student);
 
 		List<PostVO> postList = new ArrayList<PostVO>();
@@ -72,11 +85,284 @@ public class StudentController {
 		int cmptClassCnt = studentService.getCmptClass((String) session.getAttribute("stdtId"));
 		ClassVO ingClassVO = studentService.getIngClass((String) session.getAttribute("stdtId"));
 
+		if (ingClassVO != null) {
+			String clssId = ingClassVO.getClssId();
+			String lastWlogId = studentService.getLastWlogId(stdtId, clssId);
+			WorklogVO lastWlogVO = studentService.getLastWlogVO(lastWlogId);
+
+			model.addAttribute("lastWlogVO", lastWlogVO);
+		}
 		model.addAttribute("aplyClassCnt", aplyClassCnt);
 		model.addAttribute("cmptClassCnt", cmptClassCnt);
 		model.addAttribute("ingClassVO", ingClassVO);
 
 		return "student/main";
+	}
+
+	// 출퇴근 토글 출근!!
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9. 16.
+	 * @parameter : model
+	 * @return :
+	 * @throws ParseException
+	 */
+	@PostMapping("/wlog/inlog")
+	@ResponseBody
+	public WorklogVO insertWlog(@RequestParam("clssId") String clssId, HttpSession session) throws ParseException {
+		ClassVO clssVO = studentService.getWlogClass(clssId);
+		String stdtId = (String) session.getAttribute("stdtId");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+		Timestamp newInTm = new Timestamp(System.currentTimeMillis()); // 출근시간
+		Date newInTmDd = new Date(newInTm.getTime()); // 출근시간
+		String newInTime = sdf.format(newInTm); //
+
+		// System.out.println("수업 시작시간TM" + newInTm);
+		// System.out.println("수업 시작시간STR" + newInTime);
+		// System.out.println("수업 날짜 DATE" + newInTmDd);
+
+		Timestamp clssInTm = clssVO.getSetInTm(); // 시작시간
+		Date clssStatrDd = clssVO.getClssStartDd(); // 시작날짜
+		String clssInTime = sdf.format(clssInTm);
+		String wlogCd = null;
+
+		// System.out.println("수업 시작시간TM" + clssInTm);
+		// System.out.println("수업 시작시간STR" + clssInTime);
+		// System.out.println("수업 날짜 DATE" + clssStatrDd);
+
+		WorklogVO InWlogVO = new WorklogVO();
+		String maxWlogId = studentService.getMaxWlogId();
+		int wlogIdCnt = studentService.getWlogIdCnt(stdtId, clssId); // 그 전 출퇴근기록
+		if (wlogIdCnt == 0) {
+			long diffSec = (newInTmDd.getTime() - clssStatrDd.getTime()) / 1000;
+			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+
+			// System.out.println("차이 초" + diffSec);
+			// System.out.println("차이 일수" + diffDays);
+
+			if (diffDays > 1) { // 시작일과 1일 이상 차이나는 경우
+				Calendar cal1 = Calendar.getInstance();
+				Calendar cal2 = Calendar.getInstance();
+
+				// Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경
+				cal1.setTime(clssStatrDd);
+				cal2.setTime(newInTmDd);
+				cal2.add(Calendar.DATE, -1);
+				if (!cal1.equals(cal2)) {
+					// 시작날짜와 끝 날짜를 비교해, 시작날짜가 작은경우 출력
+					while (cal1.compareTo(cal2) != 1) {
+
+						Timestamp pastDd = new Timestamp(cal1.getTimeInMillis());
+						maxWlogId = studentService.getMaxWlogId();
+						WorklogVO pastwlogVO = new WorklogVO();
+						pastwlogVO.setWlogId(maxWlogId);
+						pastwlogVO.setClssId(clssId);
+						pastwlogVO.setStdtId(stdtId);
+						pastwlogVO.setInTm(pastDd);
+						pastwlogVO.setWlogCd("WOK0000004");
+						pastwlogVO.setRgsterId(stdtId);
+						studentService.insertPastWlog(pastwlogVO);
+
+						// 시작날짜 + 1 일
+						cal1.add(Calendar.DATE, 1);
+
+						if (cal1.compareTo(cal2) == 0)
+							break;
+					}
+				}
+				if (clssInTime.compareTo(newInTime) < 0) {
+					wlogCd = "WOK0000002";
+				} else {
+					wlogCd = "WOK0000001";
+				}
+				maxWlogId = studentService.getMaxWlogId();
+				InWlogVO = new WorklogVO();
+				InWlogVO.setWlogId(maxWlogId);
+				InWlogVO.setClssId(clssId);
+				InWlogVO.setStdtId(stdtId);
+				InWlogVO.setInTm(newInTm);
+				InWlogVO.setWlogCd(wlogCd);
+				InWlogVO.setRgsterId(stdtId);
+				studentService.insertNewWlog(InWlogVO);
+			} else {
+				if (clssInTime.compareTo(newInTime) < 0) {
+					wlogCd = "WOK0000002";
+				} else {
+					wlogCd = "WOK0000001";
+				}
+				maxWlogId = studentService.getMaxWlogId();
+				InWlogVO = new WorklogVO();
+				InWlogVO.setWlogId(maxWlogId);
+				InWlogVO.setClssId(clssId);
+				InWlogVO.setStdtId(stdtId);
+				InWlogVO.setInTm(newInTm);
+				InWlogVO.setWlogCd(wlogCd);
+				InWlogVO.setRgsterId(stdtId);
+				studentService.insertNewWlog(InWlogVO);
+			}
+		} else { // 이전 출석 로그가 있는 경우
+			String lastWlogId = studentService.getLastWlogId(stdtId, clssId);
+			WorklogVO lastWlogVO = studentService.getLastWlogVO(lastWlogId);
+			Timestamp lastDd = lastWlogVO.getInTm();
+			Date lastDate = new Date(lastDd.getTime());
+			System.out.println("이전 날짜TM" + lastDd);
+			System.out.println("이전 날짜 DATE" + lastDate);
+
+			long diffSec = (newInTmDd.getTime() - lastDate.getTime()) / 1000;
+			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+
+			System.out.println("차이 초" + diffSec);
+			System.out.println("차이 일수" + diffDays);
+			if (diffDays > 2) { // 이전 출석 로그와 2일 이상 차이나는 경우
+				Calendar cal1 = Calendar.getInstance();
+				Calendar cal2 = Calendar.getInstance();
+
+				cal1.setTime(lastDate);
+				cal2.setTime(newInTmDd);
+				cal2.add(Calendar.DATE, -1);
+				if (!cal1.equals(cal2)) {
+					// 시작날짜와 끝 날짜를 비교해, 시작날짜가 작은경우 출력
+					cal1.add(Calendar.DATE, 1);
+					while (cal1.compareTo(cal2) != 1) {
+						Timestamp pastDd = new Timestamp(cal1.getTimeInMillis());
+						maxWlogId = studentService.getMaxWlogId();
+						WorklogVO pastwlogVO = new WorklogVO();
+						pastwlogVO.setWlogId(maxWlogId);
+						pastwlogVO.setClssId(clssId);
+						pastwlogVO.setStdtId(stdtId);
+						pastwlogVO.setInTm(pastDd);
+						pastwlogVO.setWlogCd("WOK0000004");
+						pastwlogVO.setRgsterId(stdtId);
+						studentService.insertPastWlog(pastwlogVO);
+
+						// 시작날짜 + 1 일
+						cal1.add(Calendar.DATE, 1);
+					}
+				}
+				if (clssInTime.compareTo(newInTime) < 0) {
+					wlogCd = "WOK0000002";
+				} else {
+					wlogCd = "WOK0000001";
+				}
+				maxWlogId = studentService.getMaxWlogId();
+				InWlogVO = new WorklogVO();
+				InWlogVO.setWlogId(maxWlogId);
+				InWlogVO.setClssId(clssId);
+				InWlogVO.setStdtId(stdtId);
+				InWlogVO.setInTm(newInTm);
+				InWlogVO.setWlogCd(wlogCd);
+				InWlogVO.setRgsterId(stdtId);
+				studentService.insertNewWlog(InWlogVO);
+
+			} else {
+				if (clssInTime.compareTo(newInTime) < 0) {
+					wlogCd = "WOK0000002";
+				} else {
+					wlogCd = "WOK0000001";
+				}
+				maxWlogId = studentService.getMaxWlogId();
+				InWlogVO = new WorklogVO();
+				InWlogVO.setWlogId(maxWlogId);
+				InWlogVO.setClssId(clssId);
+				InWlogVO.setStdtId(stdtId);
+				InWlogVO.setInTm(newInTm);
+				InWlogVO.setWlogCd(wlogCd);
+				InWlogVO.setRgsterId(stdtId);
+				studentService.insertNewWlog(InWlogVO);
+			}
+		}
+		return InWlogVO;
+	}
+
+	// 출퇴근 토글 퇴근!!
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9. 16.
+	 * @parameter : model
+	 * @return :
+	 * @throws ParseException
+	 */
+	@PostMapping("/wlog/outlog")
+	@ResponseBody
+	public WorklogVO updateNewWlog(@RequestParam("clssId") String clssId, HttpSession session) throws ParseException {
+		ClassVO clssVO = studentService.getWlogClass(clssId);
+		String stdtId = (String) session.getAttribute("stdtId");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat sdfd = new SimpleDateFormat("yyyy-MM-dd");
+
+		Timestamp clssInTm = clssVO.getSetInTm(); // 수업시작시간
+		String clssInTime = sdf.format(clssInTm);
+		java.util.Date clssInTimeDd = sdf.parse(clssInTime);
+
+		Timestamp clssOutTm = clssVO.getSetOutTm(); // 수업종료시간
+		String clssOutTime = sdf.format(clssOutTm);
+		java.util.Date clssOutTimeDd = sdf.parse(clssOutTime);
+
+		// System.out.println("수업 종료시간TM" + clssOutTm);
+		// System.out.println("수업 종료시간STR" + clssOutTime);
+
+		Timestamp newOutTm = new Timestamp(System.currentTimeMillis()); // 새로운퇴근시간
+		Date newOutTmDd = new Date(newOutTm.getTime());
+		// System.out.println(newOutTmDd);
+		String newOutTime = sdf.format(newOutTm); //
+		java.util.Date newOutTimeDd = sdf.parse(newOutTime);
+
+		String lastWlogId = studentService.getLastWlogId(stdtId, clssId);
+		WorklogVO lastWlogVO = studentService.getLastWlogVO(lastWlogId); // 그전 출근VO
+		String outlogCd = null;
+		String inlogCd = lastWlogVO.getWlogCd();
+		Timestamp inlogTm = lastWlogVO.getInTm();
+		Date inlogTmDd = new Date(inlogTm.getTime());
+		String inlogTime = sdf.format(inlogTm); //
+		java.util.Date inlogTimeDd = sdf.parse(inlogTime);
+
+		Double totalTm = 0.0;
+		System.out.println(inlogTmDd);
+		System.out.println(newOutTmDd);
+		boolean areDatesEqual = sdfd.format(inlogTmDd).equals(sdfd.format(newOutTmDd));
+		if (areDatesEqual) {
+			if (clssOutTime.compareTo(newOutTime) < 0) {
+				outlogCd = ("WOK0000001");
+				if (inlogCd.equals("WOK0000001")) { // 수업마무리시간 - 수업시작시간
+					Double diffSec = (double) ((clssOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
+					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					totalTm = diffHours;
+					if (totalTm < 4)
+						outlogCd = ("WOK0000004");
+
+				} else if (inlogCd.equals("WOK0000002")) { // 수업마무리시간 - 출근시간
+					Double diffSec = (double) ((clssOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
+					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					totalTm = diffHours;
+					if (totalTm < 4)
+						outlogCd = ("WOK0000004");
+				}
+
+			} else {
+				outlogCd = ("WOK0000003");
+				if (inlogCd.equals("WOK0000001")) { // 퇴근시간 - 수업시작시간
+					Double diffSec = (double) ((newOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
+					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					totalTm = diffHours;
+					if (totalTm < 4)
+						outlogCd = "WOK0000004";
+
+				} else if (inlogCd.equals("WOK0000002")) { // 퇴근시간 - 출근시간
+					Double diffSec = (double) ((newOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
+					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					totalTm = diffHours;
+					if (totalTm < 4)
+						outlogCd = ("WOK0000004");
+				}
+
+			}
+		} else {
+			outlogCd = ("WOK0000004");
+		}
+		studentService.getUpdateOutlog(newOutTm, outlogCd, lastWlogId, totalTm);
+		WorklogVO OutWlogVO = studentService.getLastWlogVO(lastWlogId);
+		return OutWlogVO;
 	}
 
 	// 공지사항 리스트확인
@@ -310,7 +596,56 @@ public class StudentController {
 		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
 		model.addAttribute("rgstList", rgstList);
 
+		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		model.addAttribute("wlogList", wlogList);
+
 		return "student/mypage";
+	}
+
+	// 마이페이지 개인정보 조회 및 수정 이동
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 31.
+	 * @parameter :model
+	 * @return :
+	 * @throws IOException
+	 */
+	@PostMapping("/check/password")
+	@ResponseBody
+	public Map<String, Object> checkPassword(@RequestBody Map<String, String> requestBody, HttpSession session) {
+		Map<String, Object> response = new HashMap<>();
+		String stdtId = (String) session.getAttribute("stdtId");
+		String stdtPwd = studentService.getPassword(stdtId);
+		System.out.println(stdtPwd);
+
+		String clientPassword = requestBody.get("password");
+		System.out.println(clientPassword);
+		if (stdtPwd != null && stdtPwd.equals(clientPassword)) {
+			// 비밀번호가 일치하는 경우
+			response.put("success", true);
+
+			StudentVO stdtVO = studentService.getstdtInfo(stdtId);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date birth = stdtVO.getBirthDd();
+			String birthDd = format.format(birth);
+			Timestamp LastLogin = stdtVO.getLastLoginDt();
+			String lastLog = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(LastLogin);
+
+			// 사용자 정보를 응답에 추가할 수 있습니다.
+			Map<String, String> user = new HashMap<>();
+			user.put("name", stdtVO.getStdtNm()); // 사용자 이름
+			user.put("email", stdtVO.getUserEmail()); // 사용자 이메일
+			user.put("birth", birthDd);
+			user.put("tel", stdtVO.getStdtTel());
+			user.put("job", stdtVO.getJobCd());
+			user.put("LastLogin", lastLog);
+
+			response.put("user", user);
+		} else {
+			// 비밀번호가 일치하지 않는 경우
+			response.put("success", false);
+		}
+		return response;
 	}
 
 	// 교욱 리스트 검색 버튼
@@ -329,6 +664,23 @@ public class StudentController {
 		List<ClassVO> searchResults = studentService.searchClasses(keyword, ingClass);
 		model.addAttribute("classList", searchResults);
 		return searchResults;
+	}
+
+	// 마이페이지 출퇴근 내역 조회
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/mypage/wlogList")
+	@ResponseBody
+	public List<WorklogVO> searchWlogList(HttpSession session, Model model) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		model.addAttribute("wlogList", wlogList);
+		return wlogList;
 	}
 
 	// 마이페이지 지원내역 조회
@@ -410,6 +762,64 @@ public class StudentController {
 		fileVO.setFileContent(file.getBytes());
 		studentService.updateAplyFile(aplyId, fileVO, maxFileSubId);
 		studentService.updateAplydt(aplyId, stdtId);
+
+		return "redirect:/student/mypage";
+	}
+
+	// 마이페이지 사유서 제출
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 31.
+	 * @parameter :model
+	 * @return :
+	 * @throws IOException
+	 */
+
+	@PostMapping("/mypage/submitResn/{wlogId}")
+	public String insertResnFile(@PathVariable String wlogId, @RequestParam("file") MultipartFile file,
+			@RequestParam("resnText") String resnText, HttpSession session, Model model) throws IOException {
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		// 업로드하기
+		String maxFileId = uploadFileService.getMaxFileId();
+		int subFileId = 1;
+		FileVO fileVO = new FileVO();
+		fileVO.setFileId(maxFileId);
+		fileVO.setFileSubId(subFileId);
+		fileVO.setFileNm(file.getOriginalFilename());
+		fileVO.setFileSize(file.getSize());
+		fileVO.setFileType(file.getContentType());
+		fileVO.setFileContent(file.getBytes());
+		uploadFileService.uploadFile(fileVO);
+		subFileId++;
+
+		// 이력서 내역 추가하기
+		String maxResnId = studentService.getMaxResnId();
+		ReasonVO resn = new ReasonVO();
+		resn.setResnId(maxResnId);
+		resn.setWlogId(wlogId);
+		resn.setResnContent(resnText);
+		resn.setResnCd("RES0000001");
+		resn.setFileId(maxFileId);
+		resn.setRgsterId(stdtId);
+		studentService.uploadResnFile(resn);
+
+		return "redirect:/student/mypage";
+	}
+
+	// 마이페이지 사유서 내역 업데이트
+	@PostMapping("/mypage/uploadResn/{resnId}")
+	public String updateResnFile(@PathVariable String resnId, @RequestParam("file") MultipartFile file,
+			@RequestParam("resnText") String resnText, HttpSession session) throws IOException {
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		FileVO fileVO = new FileVO();
+		fileVO.setFileNm(file.getOriginalFilename());
+		fileVO.setFileSize(file.getSize());
+		fileVO.setFileType(file.getContentType());
+		fileVO.setFileContent(file.getBytes());
+		studentService.updateResnFile(resnId, fileVO);
+		studentService.updateResndt(resnId, stdtId, resnText);
 
 		return "redirect:/student/mypage";
 	}

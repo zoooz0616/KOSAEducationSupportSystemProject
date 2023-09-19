@@ -79,7 +79,6 @@ public class MainController {
 			session.setAttribute("userEmail", studentVO.getUserEmail());
 			session.setAttribute("userPwd", studentVO.getUserPwd());
 			session.setAttribute("stdtNm", studentVO.getStdtNm());
-			session.setAttribute("stdtId", studentVO.getStdtId());
 			session.setAttribute("roleCd", studentVO.getRoleCd());
 			session.setAttribute("lastLoginDt", studentVO.getLastLoginDt());
 

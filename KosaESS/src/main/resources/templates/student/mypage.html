@@ -23,6 +23,20 @@
 			<div class="maincontent">
 				<div class="personalData">
 					<h3>개인 정보 조회/수정</h3>
+					<h1>비밀번호 확인</h1>
+					<label for="password">비밀번호:</label> <input type="password"
+						id="password" placeholder="비밀번호를 입력하세요">
+					<button id="checkPassword">확인</button>
+
+					<div id="userInfo" style="display: none;">
+						<h2>회원 정보</h2>
+						<table>
+							<tr>
+								<th></th>
+								<th></th>
+							</tr>
+						</table>
+					</div>
 					<p>비밀번호 확인</p>
 				</div>
 				<div class="applyList" style="display: none;">
@@ -79,7 +93,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="aplyRow"
+								<tr class="rgstRow"
 									th:each="RegistrationVO , rowStat : ${rgstList}">
 									<td><span th:text="${rowStat.index + 1}"></span></td>
 									<td th:text="${RegistrationVO.clssNm}"></td>
@@ -99,9 +113,37 @@
 				</div>
 				<div class="workLog" style="display: none;">
 					<h3>출퇴근 관리</h3>
+					<div>
+						<table class="wlogTable">
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th>교육 과정 명</th>
+									<th>출근 시간</th>
+									<th>퇴근 시간</th>
+									<th>출퇴근 상태</th>
+									<th>사유서 제출</th>
+									<th>사유서 상태</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr class="wlogRow" th:each="WorklogVO , rowStat : ${wlogList}">
+									<td><span th:text="${rowStat.index + 1}"></span></td>
+									<td th:text="${WorklogVO.clssNm}"></td>
+									<td th:text="${WorklogVO.inTm}"></td>
+									<td th:text="${WorklogVO.outTm}"></td>
+									<td th:text="${WorklogVO.wlogNm}"></td>
+									<td><button class="submitResn">제출</button>
+										<button class="updateResn">수정</button>
+									</td>
+									<td class="resnStstus"
+										th:text="${WorklogVO.resnNm}"></td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
 				</div>
-				<div class="modal" style="display: none;">
-					>
+				<div class="modal1" style="display: none;">
 					<div class="modalBody">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
@@ -109,12 +151,56 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>지원서파일을 여기에 첨부하세요.</p>
-								<input type="file" name="file" id="fileInput">
+								<input type="file" name="file" id="fileInput1">
 							</div>
 						</div>
 						<div class="modalFooter">
 							<button type="reset" class="closeModalBtn">취소</button>
 							<button type="submit" class="aplyBtn">수정하기</button>
+						</div>
+					</div>
+				</div>
+				<div class="modal2" style="display: none;">
+					<div class="modalBody">
+						<div class="modalHeader">
+							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
+						</div>
+						<div class="modalContent">
+							<div class="upload-area">
+								<p>사유서파일을 첨부하세요.</p>
+								<input type="file" name="file" id="fileInput2">
+							</div>
+							<div>
+								<label>사유서 내용을 작성하세요.</label> <input type="text"
+									class="resnText1">
+							</div>
+						</div>
+
+						<div class="modalFooter">
+							<button type="reset" class="closeBtn">취소</button>
+							<button type="button" class="submitBtn">제출하기</button>
+						</div>
+					</div>
+				</div>
+				<div class="modal3" style="display: none;">
+					<div class="modalBody">
+						<div class="modalHeader">
+							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
+						</div>
+						<div class="modalContent">
+							<div class="upload-area">
+								<p>사유서파일을 첨부하세요.</p>
+								<input type="file" name="file" id="fileInput3">
+							</div>
+							<div>
+								<label>사유서 내용을 작성하세요.</label> <input type="text"
+									class="resnText2">
+							</div>
+						</div>
+
+						<div class="modalFooter">
+							<button type="reset" class="closeBtn">취소</button>
+							<button type="submit" class="submitBtn">수정하기</button>
 						</div>
 					</div>
 				</div>
@@ -125,7 +211,7 @@
 		/* JavaScript에서 Java 모델의 값을 가져와서 처리 */
 		var rgstList = /*[[${rgstList}]]*/[];
 
-		for (var i = 0; i < rgstList.length; i++) { 
+		for (var i = 0; i < rgstList.length; i++) {
 			var cmptCd = rgstList[i].cmptCd;
 			var rgstPrintElement = $('.rgstPrint').eq(i);
 
@@ -134,6 +220,31 @@
 			}
 		}
 	</script>
+	<script>
+	$(document).ready(function() {
+        $("#checkPassword").click(function() {
+            const password = $("#password").val();
+
+            // 비밀번호 비교를 위해 서버로 요청 보내기
+            $.ajax({
+                type: "POST",
+                url: "/student/check/password",
+                contentType: "application/json",
+                data: JSON.stringify({ password }),
+                success: function(data) {
+                    if (data.success) {
+                        $("#userInfo").show();
+                    } else {
+                        alert("비밀번호가 일치하지 않습니다.");
+                    }
+                },
+                error: function(error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        });
+    });
+    </script>
 	<script src="/js/student/sidebar.js"></script>
 	<script src="/js/student/mypage.js"></script>
 </body>

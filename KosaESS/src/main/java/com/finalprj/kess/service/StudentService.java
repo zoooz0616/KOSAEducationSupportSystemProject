@@ -1,5 +1,7 @@
 package com.finalprj.kess.service;
 
+import java.sql.Clob;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,10 @@ import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
+import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
 
 @Service
@@ -118,7 +123,7 @@ public class StudentService implements IStudentService {
 	@Override
 	public void insertRgst(String aplyId, String maxRgstId, String stdtId) {
 		studentRepository.insertRgst(aplyId, maxRgstId, stdtId);
-		
+
 	}
 
 	@Override
@@ -151,5 +156,85 @@ public class StudentService implements IStudentService {
 		return studentRepository.getRgstIngCnt(stdtId);
 	}
 
+	@Override
+	public int getWlogIdCnt(String stdtId, String clssId) {
+		return studentRepository.getWlogIdCnt(stdtId, clssId);
+	}
+
+	@Override
+	public String getLastWlogId(String stdtId, String clssId) {
+		return studentRepository.getLastWlogId(stdtId, clssId);
+	}
+
+	@Override
+	public WorklogVO getLastWlogVO(String lastWlogId) {
+		return studentRepository.getLastWlogVO(lastWlogId);
+	}
+
+	@Override
+	public String getMaxWlogId() {
+		return studentRepository.getMaxWlogId();
+	}
+
+	@Override
+	public void insertNewWlog(WorklogVO inWlogVO) {
+		studentRepository.insertNewWlog(inWlogVO);
+	}
+
+	@Override
+	public ClassVO getWlogClass(String clssId) {
+		return studentRepository.getWlogClass(clssId);
+	}
+
+	@Override
+	public List<WorklogVO> searchWlogList(String stdtId) {
+		return studentRepository.searchWlogList(stdtId);
+	}
+
+	@Override
+	public String getMaxResnId() {
+		return studentRepository.getMaxResnId();
+	}
+
+	@Override
+	public void uploadResnFile(ReasonVO resn) {
+		studentRepository.uploadResnFile(resn);
+	}
+
+	@Override
+	public void updateResnFile(String resnId, FileVO fileVO) {
+		studentRepository.updateResnFile(resnId, fileVO);
+	}
+
+	@Override
+	public void updateResndt(String resnId, String stdtId, String resnText) {
+		studentRepository.updateResndt(resnId, stdtId, resnText);
+	}
+
+	@Override
+	public StudentVO getstdtInfo(String stdtId) {
+		return studentRepository.getstdtInfo(stdtId);
+	}
+
+	@Override
+	public String getPassword(String stdtId) {
+		return studentRepository.getPassword(stdtId);
+	}
+
+
+	@Override
+	public WorklogVO getNewWlog(String maxWlogId) {
+		return studentRepository.getNewWlog(maxWlogId);
+	}
+
+	@Override
+	public void insertPastWlog(WorklogVO pastwlogVO) {
+		studentRepository.insertPastWlog(pastwlogVO);
+	}
+
+	@Override
+	public void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId,Double totalTm) {
+		studentRepository.getUpdateOutlog(newOutTm,outlogCd,lastWlogId,totalTm);
+	}
 
 }
