@@ -324,14 +324,14 @@ public class StudentController {
 		if (areDatesEqual) {
 			if (clssOutTime.compareTo(newOutTime) < 0) {
 				outlogCd = ("WOK0000001");
-				if (inlogCd.equals("WOK0000001")) {// 수업마무리시간 - 수업시작시간
+				if (inlogCd.equals("WOK0000001")) { // 수업마무리시간 - 수업시작시간
 					Double diffSec = (double) ((clssOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
 					totalTm = diffHours;
 					if (totalTm < 4)
 						outlogCd = ("WOK0000004");
 
-				} else if (inlogCd.equals("WOK0000002")) {// 수업마무리시간 - 출근시간
+				} else if (inlogCd.equals("WOK0000002")) { // 수업마무리시간 - 출근시간
 					Double diffSec = (double) ((clssOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
 					totalTm = diffHours;
@@ -341,14 +341,14 @@ public class StudentController {
 
 			} else {
 				outlogCd = ("WOK0000003");
-				if (inlogCd.equals("WOK0000001")) {// 퇴근시간 - 수업시작시간
+				if (inlogCd.equals("WOK0000001")) { // 퇴근시간 - 수업시작시간
 					Double diffSec = (double) ((newOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
 					totalTm = diffHours;
 					if (totalTm < 4)
 						outlogCd = "WOK0000004";
 
-				} else if (inlogCd.equals("WOK0000002")) {// 퇴근시간 - 출근시간
+				} else if (inlogCd.equals("WOK0000002")) { // 퇴근시간 - 출근시간
 					Double diffSec = (double) ((newOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
 					totalTm = diffHours;
