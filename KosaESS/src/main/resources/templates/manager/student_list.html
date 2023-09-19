@@ -19,7 +19,7 @@
 	<div class="home-section">
 		<!-- title -->
 		<div class="title_wrap">
-			<span class="title" th:text="|${title} : |"></span><a class="title_a" id="className" th:if="${thisClass.clssId!=null}" th:text="${thisClass.clssNm}" th:href="@{/manager/class/__${thisClass.clssId}__}" th:value="${thisClass.clssId}"></a>
+			<span class="title" th:text="|${title} : |"></span><a class="title_a" id="className" th:attrappend="text=${thisClass.clssId!=null}?${thisClass.clssNm}" th:href="@{/manager/class/__${thisClass.clssId}__}" th:value="${thisClass.clssId}"></a>
 		</div>
 
 		<!-- content wrap-->
