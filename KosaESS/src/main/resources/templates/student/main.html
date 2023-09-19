@@ -138,8 +138,11 @@
 	<script th:inline="javascript">
 		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
 		var clssId = /*[[${ingClassVO?.clssId}]]*/'';
+		var lastVO = /*[[${lastWlogVO}]]*/'';
+		console.log(lastVO);
 		var lastInTm = /*[[${lastWlogVO?.inTm}]]*/'';
 		var lastOutTm = /*[[${lastWlogVO?.outTm}]]*/'';
+		
 		console.log(lastInTm + lastOutTm);
 	</script>
 	<script src="/js/student/main.js"></script>

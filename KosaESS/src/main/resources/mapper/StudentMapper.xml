@@ -659,7 +659,7 @@
 	<![CDATA[
 		select 'WLOG'||LPAD((max(cast(substr(wlog_id,5) as number(6)))),6,'0')
 		from wlog
-		where stdt_id = #{stdtId} and clss_id = #{clssId}
+		where stdt_id = #{stdtId} and clss_id = #{clssId} and delete_yn ='N'
 	]]>
 	</select>
 
@@ -669,7 +669,7 @@
 	<![CDATA[
 		select *
 		from wlog
-		where wlog_id = #{lastWlogId}
+		where wlog_id = #{lastWlogId} and delete_yn ='N'
 	]]>
 	</select>
 

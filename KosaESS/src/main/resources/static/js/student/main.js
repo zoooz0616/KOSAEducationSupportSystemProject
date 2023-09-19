@@ -51,19 +51,24 @@ var intmInput = document.getElementById('intm');
 var outtmInput = document.getElementById('outtm');
 var wlogBtn = document.querySelector('.wlogBtn');
 
+if (lastVO != null) {
 	var lastInTmDate = timestampToFormattedString(lastInTm);
-
-if (lastOutTm === null) {
-	intmInput.value = lastInTmDate;
-	outtmInput.value = '';
-	isAttendance = true;
-	wlogBtn.value = "퇴근하기";
+	if (lastOutTm === null) {
+		intmInput.value = lastInTmDate;
+		outtmInput.value = '';
+		isAttendance = true;
+		wlogBtn.value = "퇴근하기";
+	} else {
+		var lastOutTmDate = timestampToFormattedString(lastOutTm);
+		intmInput.value = lastInTmDate;
+		outtmInput.value = lastOutTmDate;
+		wlogBtn.value = "출근하기";
+		var isAttendance = false; // 출근 상태를 저장하는 변수
+	}
 } else {
-	var lastOutTmDate = timestampToFormattedString(lastOutTm);
-	intmInput.value = lastInTmDate;
-	outtmInput.value = lastOutTmDate;
+	outtmInput.value = '';
+	outtmInput.value = '';
 	wlogBtn.value = "출근하기";
-	var isAttendance = false; // 출근 상태를 저장하는 변수
 }
 function toggleInOut() {
 	if (isAttendance) {
