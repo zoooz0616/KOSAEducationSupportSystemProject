@@ -1257,7 +1257,6 @@ public class AdminController {
 		
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("managerList", managerList);
-		
 		return response;
 	}
 	
