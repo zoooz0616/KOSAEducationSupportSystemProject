@@ -1611,8 +1611,6 @@ public class AdminController {
 		adminService.updateDetailCode(cmcdId, cmcdNm, useYn);
 		
 		String groupCodeId = adminService.getGroupCodeId(cmcdId);
-		
-		
 		return groupCodeId;
 	}
 	
