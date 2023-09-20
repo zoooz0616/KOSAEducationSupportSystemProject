@@ -47,5 +47,9 @@ public interface IManagerService {
 
 	public void updateStdtCmptCd(String stdtId, String clssId, String targetCmptId);
 
+	public double getTotalTmByClssId(String classId);
+
+	public double getStudentTmSumByIds(String classId, String stdtId);
+
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }

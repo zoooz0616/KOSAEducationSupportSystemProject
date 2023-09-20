@@ -1,5 +1,109 @@
 @charset "UTF-8";
+/* class="" */
+
+/* TO DO */
+/* 호버 넣기 */
+/* 제목 옮기기 <<< 제목 없앴음 */
+/* 검색 버튼 없애기 */
+
+/* 공통 사항*/
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section .title_wrap{
+	margin-top: 40px;
+	margin-left: 40px;
+}
+
+.home-section .title {
+	display: inline-block;
+	color: #333333;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.title_a {
+	display: inline-block;
+	color: #333333;
+	font-size: 30px;
+	font-weight: bold;
+/* 	margin: 40px 40px 40px 0px; */
+	text-decoration: none;
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.content_wrap {
+	width: 95%;
+	margin-left: 40px;
+}
+
+/* End : 공통 사항*/
+
+/* filter_table */
+.search_filter_wrap {
+	padding: 5px;
+	width: 100%;
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 1px 1px 3px lightgray;
+}
+
+.search_filter_wrap .search_filter_table_wrap {
+	width: 98%;
+	margin: auto;
+}
+
+.search_filter_table {
+	width: 100%;
+	font-weight: bold;
+	border-collapse: collapse;
+}
+
+.search_filter_table tr td {
+	width: 100%;
+	font-size: 15px;
+	border: none;
+	text-align: center;
+}
+
+.search_filter_table tr td input {
+	color: gray;
+	padding: 5px;
+}
+
+.search_filter_table tr td input:focus {
+	border-color: #0E5881;
+	border-radius: 3px;
+}
+
+.search_filter_btn_wrap {
+	text-align: center;
+}
+
+.search_filter_btn_wrap .search_filter_btn {
+	width: 60px;
+	background-color: #0E5881;
+	margin: 10px 0 10px 0;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
 
 select option[value=""][disabled] {
 	display: none;
 }
+/* End : filter_table */

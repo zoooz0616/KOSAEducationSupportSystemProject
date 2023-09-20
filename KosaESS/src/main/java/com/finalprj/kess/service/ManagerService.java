@@ -107,6 +107,16 @@ public class ManagerService implements IManagerService {
 		managerRepository.updateStdtCmptCd(stdtId, clssId, targetCmptId);
 	}
 
+	@Override
+	public double getTotalTmByClssId(String classId) {
+		return managerRepository.getTotalTmByClssId(classId);
+	}
+
+	@Override
+	public double getStudentTmSumByIds(String classId, String stdtId) {
+		return managerRepository.getStudentTmSumByIds(classId, stdtId);
+	}
+
 //	@Override
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
 //		return managerRepository.getStudentListBySearch(classId, startDate, endDate);

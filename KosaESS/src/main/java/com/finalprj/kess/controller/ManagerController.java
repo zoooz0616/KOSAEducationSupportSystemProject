@@ -1,5 +1,3 @@
-//	>>>TODO<<<<
-//		student_list의 교육과정 검색창 고치고, 학생 나오게 연동하기
 package com.finalprj.kess.controller;
 
 import java.io.UnsupportedEncodingException;
@@ -230,12 +228,19 @@ public class ManagerController {
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 
+		double totalTm = managerService.getTotalTmByClssId(classId);
+		double stdtTmSum;
 		for (StudentInfoDTO stdt : stdtList) {
+			// 출결 가져오기
 			stdt.setWlogCnt("");
 			for (CommonCodeVO cmcd : wlogCodeNameList) {
 				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
 				stdt.appendWlogCnt(",");
 			}
+			
+			// 이수율 입력하기
+			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
+			stdt.setCmptRate(100.0 * stdtTmSum/totalTm);
 		}
 
 		model.addAttribute("title", "교육생 목록");
