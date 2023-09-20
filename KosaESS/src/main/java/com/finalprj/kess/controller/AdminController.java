@@ -1484,7 +1484,7 @@ public class AdminController {
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
 		model.addAttribute("groupCodeList", groupCodeList);
 
-		List<CommonCodeVO> detailCodeList = null;
+		List<CommonCodeVO> detailCodeList = new ArrayList<CommonCodeVO>();
 		model.addAttribute("detailCodeList", detailCodeList);
 
 		return "admin/commoncode_list";
