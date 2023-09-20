@@ -137,4 +137,9 @@ public interface IAdminService {
 	void deleteGroupCode(List<String> selectedGroupCodeIds);
 	void updateGroupCode(String cmcdId, String cmcdNm);
 	List<CommonCodeVO> getDetailCodeList(String cmcdId);
+	String getGroupCodeId(String cmcdId);
+	int getDetailCodeNmCnt(String cmcdId, String cmcdNm);
+	String getMaxDetailCodeId(String cmcdId);
+	void insertDetailCode(CommonCodeVO commonCodeVO);
+	void updateDetailCode(String cmcdId, String cmcdNm, String useYn);
 }

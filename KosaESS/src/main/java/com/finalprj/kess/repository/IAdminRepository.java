@@ -134,5 +134,10 @@ public interface IAdminRepository {
 	void deleteGroupCode(List<String> selectedGroupCodeIds);
 	void updateGroupCode(String cmcdId, String cmcdNm);
 	List<CommonCodeVO> getDetailCodeList(String cmcdId);
+	String getGroupCodeId(String cmcdId);
+	int getDetailCodeNmCnt(String cmcdId, String cmcdNm);
+	String getMaxDetailCodeId(String cmcdId);
+	void insertDetailcode(CommonCodeVO commonCodeVO);
+	void updateDetailCode(String cmcdId, String cmcdNm, String useYn);
 
 }
