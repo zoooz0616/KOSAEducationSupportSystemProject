@@ -198,4 +198,21 @@
 				AND STDT_ID=#{stdtId}
 		]]>
 	</update>
+	
+	<select id="getTotalTmByClssId">
+		<![CDATA[
+			SELECT sum(lctr_tm)
+			FROM LCTR l
+				JOIN CRCL c on l.lctr_id = c.lctr_id
+			WHERE clss_id = #{clssId}
+		]]>
+	</select >
+	
+	<select id="getStudentTmSumByIds">
+		<![CDATA[
+		SELECT sum(nvl(wlog_total_tm,0))
+		FROM wlog
+		WHERE clss_id = #{classId} AND stdt_id = #{stdtId}
+		]]>
+	</select >
 </mapper>
