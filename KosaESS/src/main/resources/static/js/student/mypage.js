@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	updateAplyTable();
+	updateWlogTable();
 	function updateAplyTable() {
 		$.ajax({
 			type: 'GET',
@@ -180,7 +182,7 @@ $(document).ready(function() {
 					row.append('<td class="resnStstus">' + WorklogVO.resnNm + '</td>');
 					row.append('<td class="wlogId" style="display:none;">' + WorklogVO.wlogId + '</td>');
 					row.append('<td class="resnId" style="display:none;">' + WorklogVO.resnId + '</td>');
-					
+
 					var wlogCd = WorklogVO.wlogCd;
 					var resnId = WorklogVO.resnId;
 					var submitResnElement = row.find('.submitResn');

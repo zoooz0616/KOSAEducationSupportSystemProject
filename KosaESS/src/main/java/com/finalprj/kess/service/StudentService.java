@@ -237,4 +237,9 @@ public class StudentService implements IStudentService {
 		studentRepository.getUpdateOutlog(newOutTm,outlogCd,lastWlogId,totalTm);
 	}
 
+	@Override
+	public Timestamp getlastLogTime(String stdtId) {
+		return studentRepository.getlastLogTime(stdtId);
+	}
+
 }

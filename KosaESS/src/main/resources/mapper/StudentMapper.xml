@@ -42,6 +42,18 @@
 		]]>
 	</select>
 
+	<!-- 마지막 로그인 일시 불러오기 -->
+	<select id="getlastLogTime" parameterType="string"
+		resultType="java.sql.Timestamp">
+		<![CDATA[
+		SELECT LAST_LOGIN_DT
+		FROM lgin
+		WHERE USER_EMAIL = (select stdt.user_email
+		from stdt
+		where stdt_id = #{stdtId})
+		]]>
+	</select>
+
 	<!-- 교육생 개인정보 수정 -->
 	<update id="updateStudent"
 		parameterType="com.finalprj.kess.model.StudentVO">
@@ -329,7 +341,14 @@
 	<select id="getstdtInfo" parameterType="string"
 		resultType="com.finalprj.kess.model.StudentVO">
 	<![CDATA[
-		select *
+		select stdt_id, 
+		user_email, 
+		stdt_nm, 
+		(select cmcd_nm from cmcd where cmcd.cmcd_id = stdt.gender_cd) as "genderNm",
+		(select cmcd_nm from cmcd where cmcd.cmcd_id = stdt.job_cd) as "jobNm",
+		birth_dd,
+		stdt_tel,
+		rgst_dt
 			from stdt
 			where stdt_id = #{stdtId}
 	]]>
@@ -688,7 +707,7 @@
 		values(#{wlogId}, #{stdtId}, #{clssId}, systimestamp, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
 	]]>
 	</insert>
-	
+
 	<!-- 과거 시간 insert -->
 	<insert id="insertPastWlog">
 	<![CDATA[
@@ -696,8 +715,8 @@
 		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm}, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
 	]]>
 	</insert>
-	
-	
+
+
 	<!-- 퇴근 시간 업데이트 -->
 	<update id="getUpdateOutlog">
 	<![CDATA[

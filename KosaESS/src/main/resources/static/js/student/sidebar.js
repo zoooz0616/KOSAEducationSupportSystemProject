@@ -34,10 +34,13 @@ liElements.forEach(function(liElement, index) {
 		}
 
 		// 클릭한 li 요소의 배경색과 글씨 색상을 변경합니다.
-		this.style.background = '#0E5881'; // 예: 'blue'
-		this.style.color = 'white'; // 예: 'white'
+		this.style.background = '#0E5881';
+		this.style.color = 'white';
 
 		// 선택한 li 요소에 해당하는 content만 보여줍니다.
 		contentDivs[index].style.display = 'block';
 	});
+});
+$(document).ready(function() {
+	liElements[0].click();
 });

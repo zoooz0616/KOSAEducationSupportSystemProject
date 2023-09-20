@@ -104,4 +104,6 @@ public interface IStudentService {
 
 	void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId, Double totalTm);
 
+	Timestamp getlastLogTime(String stdtId);
+
 }
