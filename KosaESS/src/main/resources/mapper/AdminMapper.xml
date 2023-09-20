@@ -769,7 +769,8 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update mngr
 			set
-			updt_dt = SYSTIMESTAMP,
+			updt_dt =
+			SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
 			where mngr_id = #{item}
 		</foreach>
@@ -887,14 +888,16 @@
 	]]>
 	</select>
 
-	<insert id="insertCompanyVO" parameterType="com.finalprj.kess.model.CompanyVO">
+	<insert id="insertCompanyVO"
+		parameterType="com.finalprj.kess.model.CompanyVO">
 	<![CDATA[
 		insert into cmpy
 		values(#{cmpyId}, #{cmpyNm}, #{cmpyTel}, #{cmpyAdr}, #{fileId}, systimestamp, 'MNGR000001', null, null, 'N')
 	]]>
 	</insert>
 
-	<select id="getCompanyVO" parameterType="string" resultType="com.finalprj.kess.model.CompanyVO">
+	<select id="getCompanyVO" parameterType="string"
+		resultType="com.finalprj.kess.model.CompanyVO">
 	<![CDATA[
 	select *
 	from cmpy
@@ -903,26 +906,29 @@
 	</select>
 
 	<update id="deleteCompany" parameterType="java.util.List">
-		<foreach collection="selectedCompanyIds" item="item" open="DECLARE BEGIN"
-			separator=";" close="; END;">
+		<foreach collection="selectedCompanyIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
 			update cmpy
 			set
-			delete_yn = 'Y',
+			delete_yn =
+			'Y',
 			updt_dt =
 			SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where cmpy_id = #{item}
+			where cmpy_id =
+			#{item}
 		</foreach>
 	</update>
-	
-	<select id="getTpcdIdCnt" parameterType="string" resultType="int">
+
+	<select id="getTpcdIdCnt" parameterType="string"
+		resultType="int">
 	<![CDATA[
 		select COALESCE(COUNT(cmcd_id), 0)
 		from cmcd
 		where cmcd_id like 'GRP%' and tpcd_id = #{tpcdId}
 	]]>
 	</select>
-	
+
 	<select id="getMaxGroupCodeId" resultType="string">
 	<![CDATA[
 		select 'GRP'||LPAD((max(cast(substr(cmcd_id,4) as number(7)))+1),7,'0')
@@ -931,7 +937,8 @@
 	]]>
 	</select>
 
-	<insert id="insertGroupCode" parameterType="com.finalprj.kess.model.CommonCodeVO">
+	<insert id="insertGroupCode"
+		parameterType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
 		insert into cmcd
 		values(#{cmcdId}, #{tpcdId}, #{cmcdNm}, 'Y', systimestamp, 'MNGR000001', null, null)
@@ -941,12 +948,12 @@
 	<update id="deleteGroupCode" parameterType="java.util.List">
 		<foreach collection="selectedGroupCodeIds" item="item"
 			open="DECLARE BEGIN" separator=";" close="; END;">
-		update cmcd
-		set
+			update cmcd
+			set
 			use_yn = 'N',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-		where cmcd_id = #{item}
+			where cmcd_id = #{item}
 		</foreach>
 	</update>
 
@@ -961,7 +968,8 @@
 	]]>
 	</update>
 
-	<select id="getDetailCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<select id="getDetailCodeList" parameterType="string"
+		resultType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
 		select *
 		from cmcd
@@ -970,8 +978,55 @@
 	]]>
 	</select>
 
+	<select id="getGroupCodeId" parameterType="string"
+		resultType="string">
+	<![CDATA[
+	select tpcd_id
+	from cmcd
+	where cmcd_id = #{cmcdId}
+	]]>
+	</select>
+
+	<select id="getDetailCodeNmCnt" parameterType="string"
+		resultType="int">
+	<![CDATA[
+	select COALESCE(COUNT(cmcd_id), 0)
+	from cmcd
+	where tpcd_id = #{cmcdId} and cmcd_nm =#{cmcdNm}
+	]]>
+	</select>
+
+	<select id="getMaxDetailCodeId" parameterType="string"
+		resultType="string">
+	<![CDATA[
+		select tpcd_id|| (select LPAD((COALESCE(max(cast(substr(d.cmcd_id,4) as number(7))),0)+1),7,'0')
+			from cmcd d
+			join cmcd g on g.cmcd_id = d.tpcd_id
+			where d.tpcd_id = #{cmcdId})
+    	from cmcd where cmcd_id=#{cmcdId}
+	]]>
+	</select>
+
+	<insert id="insertDetailcode"
+		parameterType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+	insert into cmcd
+	values(#{cmcdId}, #{tpcdId}, #{cmcdNm}, 'Y', systimestamp, 'MNGR000001', null, null)
+	]]>
+	</insert>
 
 
+	<update id="updateDetailCode" parameterType="string">
+	<![CDATA[
+	update cmcd
+	set
+		cmcd_nm = #{cmcdNm},
+		use_yn = #{useYn},
+		updt_dt = systimestamp,
+		updter_id ='MNGR000001'
+	where cmcd_id = #{cmcdId}
+	]]>
+	</update>
 
 
 

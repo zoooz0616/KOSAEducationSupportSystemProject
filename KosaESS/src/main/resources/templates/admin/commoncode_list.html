@@ -73,19 +73,25 @@
 							</thead>
 							<tbody>
 								<tr th:each="groupCode: ${groupCodeList}">
-									<td style="text-align: center;"><input type="checkbox" class="group_chk" name="groupChk"
+									<td style="text-align: center;"><input type="checkbox"
+										class="group_chk" name="groupChk"
 										th:value="${groupCode.cmcdId}"></td>
-									<td><a th:href="@{/admin/commoncode/view/__${groupCode.cmcdId}__}" th:text="${groupCode.cmcdId}"></a></td>
+									<td><div onclick="detailCodeList(this)"
+											class="group_code_id" th:text="${groupCode.cmcdId}"></div></td>
 									<td th:text="${groupCode.tpcdId}"></td>
 									<td>
 										<div class="group_update_div" th:text="${groupCode.cmcdNm}"></div>
-										<input class="group_update_input" th:value="${groupCode.cmcdNm}" style="display:none;">
+										<input class="group_update_input"
+										th:value="${groupCode.cmcdNm}" style="display: none;">
 									</td>
 									<td th:text="${groupCode.useYn}"></td>
 									<td style="text-align: center;">
-										<button class="group_code_update_btn" onclick="groupEditRow(this)">수정</button>
-										<button style="display: none;" class="group_code_save_btn" onclick="groupSaveRow(this)">저장</button>
-										<button style="display: none;" class="group_code_cancel_btn" onclick="groupCancelEdit(this)">취소</button>
+										<button class="group_code_update_btn"
+											onclick="groupEditRow(this)">수정</button>
+										<button style="display: none;" class="group_code_save_btn"
+											onclick="groupSaveRow(this)">저장</button>
+										<button style="display: none;" class="group_code_cancel_btn"
+											onclick="groupCancelEdit(this)">취소</button>
 									</td>
 								</tr>
 							</tbody>
@@ -104,21 +110,25 @@
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						상세코드 총 <span class="cnt" th:text="${#lists.size(detailCodeList)}">0</span> 건
-						<button type="button">선택삭제</button>
+						상세코드 총 <span class="detailCodeCnt"
+							th:text="${#lists.size(detailCodeList)}">0</span> 건
+						<button type="button" id="detail_delete_btn">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 상세코드 등록하기 -->
 					<div class="insert_lecture insert" style="padding: 5px;">
 						<div>
-							<span>공통코드</span> <select>
-								<option value="전체">전체</option>
-							</select> <span>상세코드명</span> <input type="text" placeholder="ex)ㅇㅇㅇㅇ상태">
+							<span>공통코드</span> <select id="group_code_select">
+								<option value="all">선택</option>
+								<option th:each="groupCode: ${groupCodeList}"
+									th:value="${groupCode.cmcdId}" th:text="${groupCode.cmcdNm}"></option>
+							</select> <span>상세코드명</span> <input class="detailCmcdNm" type="text"
+								placeholder="상세코드명">
 						</div>
 						<div>
 							<button class="insert_btn" type="button"
-								onclick="insertLecture()">등록하기</button>
+								onclick="insertdetailCode()">등록하기</button>
 						</div>
 					</div>
 					<!-- 상세코드 등록하기 -->
@@ -128,27 +138,21 @@
 						style="height: 80%; border: 1px solid #CFDEE6;">
 
 						<div>
-							<div th:if="${detailCodeList == null}" 
-								style="width: 100%; height: 100%; text-align: center; padding-top: 40%;">조회
-								결과가 없습니다.</div>
-							<table th:if="${detailCodeList != null}">
+							<div class="error_div"
+								th:if="${#lists.size(detailCodeList) == 0}">조회 결과가 없습니다.</div>
+							<table style="display: none; width: 100%;"
+								class="detail_code_table">
 								<thead>
 									<tr class="content_list_th">
-										<th style="width: 30px;"><input type="checkbox"
-											class="lecture_checkbox_all"></th>
+										<th style="width: 30px;"><input type="checkbox" id="detailChkAll"></th>
 										<th>상세코드ID</th>
 										<th>상세코드명</th>
 										<th>사용여부</th>
+										<th style="width: 100px;">버튼</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="detailCode: ${detailCodeList}">
-										<td style="width: 30px;"><input type="checkbox"
-											class="lecture_checkbox_all"></td>
-										<td th:text="${detailCode.cmcdId}">상세코드ID</td>
-										<td th:text="${detailCode.cmcdNm}">상세코드명</td>
-										<td th:text="${detailCode.useYn}">사용여부</td>
-									</tr>
+
 								</tbody>
 							</table>
 						</div>
@@ -163,21 +167,24 @@
 	</div>
 
 	<script>
-		//그룹코드 전체선택
+		//체크박스 전체선택
 		document
 				.addEventListener(
 						"DOMContentLoaded",
 						function() {
+							//그룹코드
 							const chkAll = document
 									.getElementById("groupChkAll");
 							const checkboxes = document
-									.querySelectorAll('input[type="checkbox"][name="groupChk"]');
+									.querySelectorAll(".group_chk");
 
 							chkAll.addEventListener("change", function() {
 								checkboxes.forEach(function(checkbox) {
 									checkbox.checked = chkAll.checked;
 								});
 							});
+
+
 						});
 
 		//그룹코드 선택삭제
@@ -245,7 +252,7 @@
 			});
 
 		}
-		
+
 		//그룹코드 수정 버튼
 		function groupEditRow(button) {
 			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
@@ -268,14 +275,14 @@
 			row.querySelector(".group_code_save_btn").style.display = "inline";
 			row.querySelector(".group_code_cancel_btn").style.display = "inline";
 		}
-		
-		//저장 버튼
+
+		//그룹코드 저장 버튼
 		function groupSaveRow(button) {
 			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
 
 			var cmcdId = row.querySelector(".group_chk").value;
 			var cmcdNm = row.querySelector(".group_update_input").value;
-			
+
 			$.ajax({
 				url : '/admin/commoncode/update/groupcode',
 				method : 'POST',
@@ -295,8 +302,7 @@
 			// 수정 모드 종료
 			cancelEdit(button);
 		}
-		
-		
+
 		//그룹코드 취소 버튼
 		function groupCancelEdit(button) {
 			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
@@ -318,6 +324,303 @@
 			row.querySelector(".group_code_update_btn").style.display = "inline";
 			row.querySelector(".group_code_save_btn").style.display = "none";
 			row.querySelector(".group_code_cancel_btn").style.display = "none";
+		}
+
+		//cmcdId값에 맞는 상세코드 가져오기
+		function selectDetailCodeList(cmcdId) {
+			//해당 id값에 맞는 상세코드 가져와서 뿌리기
+			$
+					.ajax({
+						url : '/admin/commoncode/view/' + cmcdId,
+						method : 'GET',
+						data : {
+							cmcdId : cmcdId
+						},
+						success : function(response) {
+							var detailCodeList = response.detailCodeList;
+
+							//결과 없음 페이지
+							var errorDiv = document.querySelector(".error_div");
+
+							//table선택
+							var table = document
+									.querySelector(".detail_code_table");
+
+							if (detailCodeList.length > 0) {
+								var cnt = document
+										.querySelector(".detailCodeCnt");
+								cnt.textContent = detailCodeList.length;
+
+								//table아래의 <tbody> 요소를 선택
+								var tbody = table.querySelector("tbody");
+
+								//모든 <tr> 요소 제거
+								tbody.innerHTML = "";
+
+								// detailCodeList를 순회하며 <tr> 요소를 생성하여 추가
+								for (var i = 0; i < detailCodeList.length; i++) {
+									var detailCode = detailCodeList[i];
+
+									// <tr> 요소 생성
+									var tr = document.createElement("tr");
+
+									// <td> 요소 생성 및 추가 (이 부분을 detailCode 객체의 필드에 따라 조정)
+									var td1 = document.createElement("td");
+									td1.innerHTML = '<input type="checkbox" name="detailChk" class="detail_chk" value="' + detailCode.cmcdId + '">';
+									td1.style.textAlign = "center";
+
+									var td2 = document.createElement("td");
+									td2.innerHTML = detailCode.cmcdId;
+
+									var td3 = document.createElement("td");
+									td3.innerHTML = '<div class="detail_update_div">'
+											+ detailCode.cmcdNm
+											+ '</div><input class="detail_update_input detail_cmcd_nm" type="text" value="' + detailCode.cmcdNm + '" style="display: none;">';
+
+									var td4 = document.createElement("td");
+									td4.innerHTML = '<div class="detail_update_div">'
+											+ detailCode.useYn + '</div>';
+
+									// <select> 요소 생성
+									var select = document
+											.createElement("select");
+									select.className = "detail_update_input detail_use_yn";
+									select.style.display = "none";
+
+									// "Y" 옵션 추가
+									var optionY = document
+											.createElement("option");
+									optionY.value = "Y";
+									optionY.text = "Y";
+									if (detailCode.useYn === "Y") {
+										optionY.selected = true;
+									}
+									select.appendChild(optionY);
+
+									// "N" 옵션 추가
+									var optionN = document
+											.createElement("option");
+									optionN.value = "N";
+									optionN.text = "N";
+									if (detailCode.useYn === "N") {
+										optionN.selected = true;
+									}
+									select.appendChild(optionN);
+
+									td4.appendChild(select);
+
+									var td5 = document.createElement("td");
+									td5.innerHTML = '<button class="detail_code_update_btn" onclick="detailEditRow(this)">수정</button>'
+											+ '<button style="display: none;" class="detail_code_save_btn" onclick="detailSaveRow(this)">저장</button>'
+											+ '<button style="display: none;" class="detail_code_cancel_btn" onclick="detailCancelEdit(this)">취소</button>';
+									td5.style.textAlign = "center";
+
+									// <tr> 요소에 <td> 요소들 추가
+									tr.appendChild(td1);
+									tr.appendChild(td2);
+									tr.appendChild(td3);
+									tr.appendChild(td4);
+									tr.appendChild(td5);
+
+									// <tr> 요소를 <tbody>에 추가
+									tbody.appendChild(tr);
+
+									errorDiv.style.display = "none";
+									//테이블 보이게
+									table.style.display = "table";
+								}
+							} else {
+								var cnt = document
+										.querySelector(".detailCodeCnt");
+								cnt.textContent = 0;
+
+								table.style.display = "none";
+								errorDiv.style.display = "block";
+							}
+						}
+					});
+		}
+
+		//그룹코드 클릭 => 상세코드 리스트 보기
+		function detailCodeList(div) {
+			var cmcdId = div.textContent;
+			console.log(cmcdId);
+
+			selectDetailCodeList(cmcdId);
+		}
+
+	//상세코드 전체선택
+		document
+				.addEventListener(
+						"DOMContentLoaded",
+						function() {
+							const chkdetailAll = document
+									.getElementById("detailChkAll");
+							const checkdetailboxes = document
+									.querySelectorAll('.detail_chk:checked"]');
+
+							chkdetailAll.addEventListener("change", function() {
+								checkdetailboxes.forEach(function(checkbox) {
+									console.log("바뀜");
+									checkbox.checked = chkdetailAll.checked;
+								});
+							});
+						}); 
+
+		//상세코드 선택삭제
+		document.querySelector("#detail_delete_btn").addEventListener(
+				"click",
+				function() {
+					var selectedDetailCodeIds = [];
+
+					// 선택된 체크박스를 모두 선택합니다.
+					var selectedCheckboxes = document
+							.querySelectorAll(".detail_chk:checked");
+
+					// 선택된 체크박스의 값을 배열에 추가합니다.
+					selectedCheckboxes.forEach(function(checkbox) {
+						selectedDetailCodeIds.push(checkbox.value);
+					});
+
+					console.log(selectedDetailCodeIds);
+					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+					$.ajax({
+						url : '/admin/commoncode/delete/detailcode',
+						method : 'POST',
+						data : {
+							selectedDetailCodeIds : selectedDetailCodeIds
+						},
+						success : function(response) {
+							console.log(response);
+							if (response == "fail") {
+								alert("삭제할 그룹코드를 선택해주세요.");
+							} else {
+								alert("선택한 상세코드가 미사용으로 설정되었습니다.");
+								selectDetailCodeList(response);
+							}
+						}
+					});
+				});
+
+		// <select> 요소에 onchange 이벤트 핸들러를 할당
+		document.getElementById("group_code_select").onchange = function handleSelectChange() {
+			var cmcdId = document.getElementById("group_code_select").value;
+			// 선택한 옵션의 값에 대한 처리를 여기에 추가하세요.
+			console.log("선택한 값:", cmcdId);
+			// 여기에서 필요한 동작을 수행하세요.
+
+			selectDetailCodeList(cmcdId);
+		};
+
+		//상세코드 등록
+		function insertdetailCode() {
+			//그룹코드 cmcdId값
+			var cmcdIdSelect = document.getElementById("group_code_select")
+			var cmcdId = cmcdIdSelect.value;
+			//상세코드명
+			var cmcdNmInput = document.querySelector(".detailCmcdNm");
+			var cmcdNm = cmcdNmInput.value;
+
+			console.log(cmcdId);
+
+			$.ajax({
+				url : '/admin/commoncode/insert/detailcode',
+				method : 'POST',
+				data : {
+					cmcdId : cmcdId,
+					cmcdNm : cmcdNm
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "fail") {
+						alert("상세코드가 이미 존재합니다.");
+					} else {
+						alert("상세코드가 추가되었습니다.");
+						selectDetailCodeList(response);
+
+						cmcdIdSelect.value = "all";
+						cmcdNmInput.value = "";
+
+					}
+				}
+			});
+		}
+
+		//상세코드 수정 버튼
+		function detailEditRow(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.add("editing"); // 수정 중인 행으로 표시
+
+			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+			var inputs = row.querySelectorAll(".detail_update_input");
+			var dataElements = row.querySelectorAll(".detail_update_div");
+
+			for (var i = 0; i < inputs.length; i++) {
+				inputs[i].style.display = "block";
+			}
+
+			for (var i = 0; i < dataElements.length; i++) {
+				dataElements[i].style.display = "none";
+			}
+
+			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+			row.querySelector(".detail_code_update_btn").style.display = "none";
+			row.querySelector(".detail_code_save_btn").style.display = "inline";
+			row.querySelector(".detail_code_cancel_btn").style.display = "inline";
+		}
+
+		//상세코드 저장 버튼
+		function detailSaveRow(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+
+			var cmcdId = row.querySelector(".detail_chk").value;
+			var cmcdNm = row.querySelector(".detail_cmcd_nm").value;
+			var useYn = row.querySelector(".detail_use_yn").value;
+
+			$.ajax({
+				url : '/admin/commoncode/update/detailcode',
+				method : 'POST',
+				data : {
+					cmcdId : cmcdId,
+					cmcdNm : cmcdNm,
+					useYn : useYn
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "fail") {
+						alert("수정이 실패하였습니다.");
+					} else {
+						alert("수정되었습니다.");
+						selectDetailCodeList(response);
+					}
+				}
+			});
+
+			// 수정 모드 종료
+			cancelEdit(button);
+		}
+
+		//상세코드 취소 버튼
+		function detailCancelEdit(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.remove("editing"); // 수정 모드 종료
+
+			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+			var inputs = row.querySelectorAll(".detail_update_input");
+			var dataElements = row.querySelectorAll(".detail_update_div");
+
+			for (var i = 0; i < inputs.length; i++) {
+				inputs[i].style.display = "none";
+			}
+
+			for (var i = 0; i < dataElements.length; i++) {
+				dataElements[i].style.display = "block";
+			}
+
+			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+			row.querySelector(".detail_code_update_btn").style.display = "inline";
+			row.querySelector(".detail_code_save_btn").style.display = "none";
+			row.querySelector(".detail_code_cancel_btn").style.display = "none";
 		}
 	</script>
 </body>

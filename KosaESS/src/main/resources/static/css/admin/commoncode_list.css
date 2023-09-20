@@ -106,7 +106,7 @@ a {
 	font-weight: bold;
 }
 
-.content_info_wrap .cnt {
+.content_info_wrap .cnt , .detailCodeCnt {
 	color: #0E5881;
 }
 
@@ -153,4 +153,14 @@ a {
 
 .delete_btn {
 	background-color: #9FBCCD;
+}
+
+.error_div {
+	width: 100%; height: 100%; text-align: center; padding-top: 40%;
+}
+
+.group_code_id {
+	color: #0E5881;
+	font-weight: bold;
+	cursor: pointer;
 }
