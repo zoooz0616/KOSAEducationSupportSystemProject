@@ -209,18 +209,22 @@ public class ManagerController {
 			endDate = httpServletRequest.getParameter("endDate");
 		}
 		//end
+		List<ClassVO> classList = new ArrayList<ClassVO>();
+		ClassVO emptyClassVO = new ClassVO();
+		emptyClassVO.setClssNm("교육과정명을 선택하세요");
+		classList.add(emptyClassVO);
 
 		String roleCd = (String) session.getAttribute("roleCd");
 		
 		// classId가 null일 경우, 해당 mngrId의 가장 큰 classId를 가져옴  
-		if (classId == null) {
-			classId = managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
-		}
+//		if (classId == null) {
+//			classId = managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
+//		}
 //		else {
 //			classId = httpServletRequest.getParameter("classId");
 //		}
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
-		List<ClassVO> classNameList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");//수업 목록
+		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");//수업 목록
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
@@ -235,13 +239,16 @@ public class ManagerController {
 		}
 
 		model.addAttribute("title", "교육생 목록");
-		model.addAttribute("thisClassName", (String) managerService.getClassNameByClssId(classId));//title 옆에 현재 수업 이름 출력
-		model.addAttribute("thisClassId", classId);
+		if(classId!=null) {
+			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
+		}else {
+			model.addAttribute("thisClass", emptyClassVO);
+		}
 		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
 		model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
 		model.addAttribute("wlogCodeNameList", wlogCodeNameList);//출퇴근 상태 넘김
-		model.addAttribute("classNameList", classNameList);
+		model.addAttribute("classList", classList);
 		model.addAttribute("stdtList", stdtList);
 		model.addAttribute("stdtCnt", stdtList.size());
 		return "manager/student_list";
@@ -270,12 +277,8 @@ public class ManagerController {
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 
-		if (startDate == null || startDate == "") {
-			startDate = String.valueOf(YearMonth.now().atDay(1));
-		}
-		if (endDate == null || endDate == "") {
-			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-		}
+//		if (startDate == null || startDate == "") {startDate = String.valueOf(YearMonth.now().atDay(1));}
+//		if (endDate == null || endDate == "") {endDate = String.valueOf(YearMonth.now().atEndOfMonth());}
 
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");
@@ -285,9 +288,12 @@ public class ManagerController {
 			}
 		}
 
+		ClassVO thisClassVO = managerService.getClassDetailByClssId(classId);
+		System.out.println(thisClassVO);
+		
 		Map<String, Object> stdtListResponse = new HashMap<>();
 		stdtListResponse.put("stdtList", stdtList);
-
+		stdtListResponse.put("thisClassVO", thisClassVO);
 		return stdtListResponse;
 	}
 
