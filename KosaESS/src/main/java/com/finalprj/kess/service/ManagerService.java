@@ -11,6 +11,7 @@ import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IManagerRepository;
 
 @Service
@@ -103,8 +104,8 @@ public class ManagerService implements IManagerService {
 //	}
 
 	@Override
-	public void updateStdtCmptCd(String stdtId, String clssId, String targetCmptId) {
-		managerRepository.updateStdtCmptCd(stdtId, clssId, targetCmptId);
+	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId) {
+		managerRepository.updateStdtCmptCd(mngrId, stdtId, clssId, targetCmptId);
 	}
 
 	@Override
@@ -115,6 +116,11 @@ public class ManagerService implements IManagerService {
 	@Override
 	public double getStudentTmSumByIds(String classId, String stdtId) {
 		return managerRepository.getStudentTmSumByIds(classId, stdtId);
+	}
+
+	@Override
+	public List<WorklogVO> getWlogListByClssIdDate(String classId, String startDate, String endDate) {
+		return managerRepository.getWlogListByClssIdDate(classId, startDate, endDate);
 	}
 
 //	@Override
