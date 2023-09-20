@@ -60,7 +60,7 @@
 						<td th:text="${clss.setOutTime}+ '시'"></td>
 						<th>수강 정원</th>
 						<td>
-							<a th:text="${clss.rgstCnt}" th:href="@{/manager/student?classId=__${thisClassId}__}"></a>
+							<a th:text="${clss.rgstCnt}" th:href="@{/manager/student?classId=__${clss.clssId}__}"></a>
 							<span th:text="| / ${clss.limitCnt} 명|"></span>
 						</td>
 					</tr>

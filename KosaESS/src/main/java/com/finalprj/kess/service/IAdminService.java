@@ -127,4 +127,14 @@ public interface IAdminService {
 	void updateSubject(SubjectVO subjectVO);
 	ProfessorVO getProfessorVO(String professorId);
 	void updateProfessor(ProfessorVO professorVO);
+	String getMaxCompanyId();
+	void insertCompanyVO(FileVO fileVO, CompanyVO companyVO);
+	CompanyVO getCompanyVO(String cmpyId);
+	void deleteCompany(List<String> selectedCompanyIds);
+	int getTpcdIdCnt(String tpcdId);
+	String getMaxGroupCodeId();
+	void insertGroupCode(CommonCodeVO commonCodeVO);
+	void deleteGroupCode(List<String> selectedGroupCodeIds);
+	void updateGroupCode(String cmcdId, String cmcdNm);
+	List<CommonCodeVO> getDetailCodeList(String cmcdId);
 }

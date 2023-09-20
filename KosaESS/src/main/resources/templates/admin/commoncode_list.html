@@ -21,8 +21,8 @@
 			<div class="title">기준정보 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/commoncode/list}">기준정보
-					관리</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/commoncode/list}">기준정보 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -36,20 +36,22 @@
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						공통코드 총 <span class="cnt"></span> 건
-						<button id="lecture_delete_btn">선택삭제</button>
+						공통코드 총 <span class="cnt" th:text="${#lists.size(groupCodeList)}"></span>
+						건
+						<button id="group_delete_btn">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 그룹코드 등록하기 -->
 					<div class="insert_lecture insert" style="padding: 5px;">
 						<div>
-							<span>코드구분</span> <input type="text" placeholder="ex)NTC">
-							<span>코드구분명</span> <input type="text" placeholder="ex)ㅇㅇㅇㅇ상태">
+							<span>코드구분</span> <input type="text" class="group_code_tpcd_id"
+								placeholder="ex)NTC"> <span>코드구분명</span> <input
+								type="text" class="group_code_cmcd_nm" placeholder="ex)ㅇㅇㅇㅇ상태">
 						</div>
 						<div>
 							<button class="insert_btn" type="button"
-								onclick="insertLecture()">등록하기</button>
+								onclick="insertGroupCode()">등록하기</button>
 						</div>
 					</div>
 					<!-- 그룹코드 등록하기 -->
@@ -61,20 +63,30 @@
 							<thead>
 								<tr class="content_list_th">
 									<th style="width: 30px;"><input type="checkbox"
-										class="lecture_checkbox_all"></th>
+										id="groupChkAll" class="lecture_checkbox_all"></th>
 									<th>공통코드ID</th>
 									<th>코드구분</th>
 									<th>코드구분명</th>
 									<th>사용여부</th>
+									<th style="width: 100px;">버튼</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:each="groupCode: ${groupCodeList}">
-									<td><input type="checkbox"></td>
-									<td th:text="${groupCode.cmcdId}"></td>
+									<td style="text-align: center;"><input type="checkbox" class="group_chk" name="groupChk"
+										th:value="${groupCode.cmcdId}"></td>
+									<td><a th:href="@{/admin/commoncode/view/__${groupCode.cmcdId}__}" th:text="${groupCode.cmcdId}"></a></td>
 									<td th:text="${groupCode.tpcdId}"></td>
-									<td th:text="${groupCode.cmcdNm}"></td>
+									<td>
+										<div class="group_update_div" th:text="${groupCode.cmcdNm}"></div>
+										<input class="group_update_input" th:value="${groupCode.cmcdNm}" style="display:none;">
+									</td>
 									<td th:text="${groupCode.useYn}"></td>
+									<td style="text-align: center;">
+										<button class="group_code_update_btn" onclick="groupEditRow(this)">수정</button>
+										<button style="display: none;" class="group_code_save_btn" onclick="groupSaveRow(this)">저장</button>
+										<button style="display: none;" class="group_code_cancel_btn" onclick="groupCancelEdit(this)">취소</button>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -92,8 +104,8 @@
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						상세코드 총 <span class="cnt"></span> 건
-						<button id="lecture_delete_btn">선택삭제</button>
+						상세코드 총 <span class="cnt" th:text="${#lists.size(detailCodeList)}">0</span> 건
+						<button type="button">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
@@ -116,18 +128,27 @@
 						style="height: 80%; border: 1px solid #CFDEE6;">
 
 						<div>
-							<div style="display: none;width:100%; height: 100%; text-align:center;padding-top: 40%;">조회 결과가 없습니다.</div>
-							<table>
+							<div th:if="${detailCodeList == null}" 
+								style="width: 100%; height: 100%; text-align: center; padding-top: 40%;">조회
+								결과가 없습니다.</div>
+							<table th:if="${detailCodeList != null}">
 								<thead>
 									<tr class="content_list_th">
-									<th style="width: 30px;"><input type="checkbox"
-										class="lecture_checkbox_all"></th>
-									<th>상세코드ID</th>
-									<th>상세코드명</th>
-									<th>사용여부</th>
-								</tr>
+										<th style="width: 30px;"><input type="checkbox"
+											class="lecture_checkbox_all"></th>
+										<th>상세코드ID</th>
+										<th>상세코드명</th>
+										<th>사용여부</th>
+									</tr>
 								</thead>
 								<tbody>
+									<tr th:each="detailCode: ${detailCodeList}">
+										<td style="width: 30px;"><input type="checkbox"
+											class="lecture_checkbox_all"></td>
+										<td th:text="${detailCode.cmcdId}">상세코드ID</td>
+										<td th:text="${detailCode.cmcdNm}">상세코드명</td>
+										<td th:text="${detailCode.useYn}">사용여부</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -140,5 +161,164 @@
 		</div>
 		<!-- Content Middle-->
 	</div>
+
+	<script>
+		//그룹코드 전체선택
+		document
+				.addEventListener(
+						"DOMContentLoaded",
+						function() {
+							const chkAll = document
+									.getElementById("groupChkAll");
+							const checkboxes = document
+									.querySelectorAll('input[type="checkbox"][name="groupChk"]');
+
+							chkAll.addEventListener("change", function() {
+								checkboxes.forEach(function(checkbox) {
+									checkbox.checked = chkAll.checked;
+								});
+							});
+						});
+
+		//그룹코드 선택삭제
+		document
+				.querySelector("#group_delete_btn")
+				.addEventListener(
+						"click",
+						function() {
+							console.log("dmd");
+							var selectedGroupCodeIds = [];
+
+							// 선택된 체크박스를 모두 선택합니다.
+							var selectedCheckboxes = document
+									.querySelectorAll(".group_chk:checked");
+
+							// 선택된 체크박스의 값을 배열에 추가합니다.
+							selectedCheckboxes.forEach(function(checkbox) {
+								selectedGroupCodeIds.push(checkbox.value);
+							});
+
+							console.log(selectedGroupCodeIds);
+							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+							$
+									.ajax({
+										url : '/admin/commoncode/delete/groupcode',
+										method : 'POST',
+										data : {
+											selectedGroupCodeIds : selectedGroupCodeIds
+										},
+										success : function(response) {
+											console.log(response);
+											if (response == "success") {
+												alert("선택한 그룹코드가 미사용으로 설정되었습니다.");
+												window.location.href = "/admin/commoncode/list";
+											} else {
+												alert("삭제할 그룹코드를 선택해주세요.");
+											}
+										}
+									});
+						});
+
+		//그룹코드 등록
+		function insertGroupCode() {
+			//그룹코드 tpcdId
+			var tpcdId = document.querySelector(".group_code_tpcd_id").value;
+			//그룹코드 cmcdNm
+			var cmcdNm = document.querySelector(".group_code_cmcd_nm").value;
+
+			$.ajax({
+				url : '/admin/commoncode/insert/groupcode',
+				method : 'POST',
+				data : {
+					tpcdId : tpcdId,
+					cmcdNm : cmcdNm
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "success") {
+						alert("그룹코드가 생성되었습니다.");
+						window.location.href = "/admin/commoncode/list";
+					} else {
+						alert("코드 구분명이 중복됩니다.");
+					}
+				}
+			});
+
+		}
+		
+		//그룹코드 수정 버튼
+		function groupEditRow(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.add("editing"); // 수정 중인 행으로 표시
+
+			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+			var inputs = row.querySelectorAll(".group_update_input");
+			var dataElements = row.querySelectorAll(".group_update_div");
+
+			for (var i = 0; i < inputs.length; i++) {
+				inputs[i].style.display = "block";
+			}
+
+			for (var i = 0; i < dataElements.length; i++) {
+				dataElements[i].style.display = "none";
+			}
+
+			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+			row.querySelector(".group_code_update_btn").style.display = "none";
+			row.querySelector(".group_code_save_btn").style.display = "inline";
+			row.querySelector(".group_code_cancel_btn").style.display = "inline";
+		}
+		
+		//저장 버튼
+		function groupSaveRow(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+
+			var cmcdId = row.querySelector(".group_chk").value;
+			var cmcdNm = row.querySelector(".group_update_input").value;
+			
+			$.ajax({
+				url : '/admin/commoncode/update/groupcode',
+				method : 'POST',
+				data : {
+					cmcdId : cmcdId,
+					cmcdNm : cmcdNm
+				},
+				success : function(response) {
+					console.log(response);
+					if (response == "success") {
+						alert("수정되었습니다.");
+						window.location.href = "/admin/commoncode/list";
+					}
+				}
+			});
+
+			// 수정 모드 종료
+			cancelEdit(button);
+		}
+		
+		
+		//그룹코드 취소 버튼
+		function groupCancelEdit(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			row.classList.remove("editing"); // 수정 모드 종료
+
+			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+			var inputs = row.querySelectorAll(".group_update_input");
+			var dataElements = row.querySelectorAll(".group_update_div");
+
+			for (var i = 0; i < inputs.length; i++) {
+				inputs[i].style.display = "none";
+			}
+
+			for (var i = 0; i < dataElements.length; i++) {
+				dataElements[i].style.display = "block";
+			}
+
+			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+			row.querySelector(".group_code_update_btn").style.display = "inline";
+			row.querySelector(".group_code_save_btn").style.display = "none";
+			row.querySelector(".group_code_cancel_btn").style.display = "none";
+		}
+	</script>
 </body>
 </html>

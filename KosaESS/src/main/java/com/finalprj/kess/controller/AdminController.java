@@ -1,5 +1,8 @@
 package com.finalprj.kess.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -13,6 +16,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -160,7 +167,7 @@ public class AdminController {
 		model.addAttribute("noticeList", noticeList);
 		return "admin/notice_list";
 	}
-	
+
 	/**
 	 * 공지사항 상세조회
 	 * @author : eunji
@@ -321,9 +328,9 @@ public class AdminController {
 				redirectAttrs.addFlashAttribute("message", e.getMessage());
 			}
 		}
-		
+
 		postVO.setFileId(maxFileId);
-		
+
 		adminService.updateNoticeVO(fileList, postVO);
 
 		return "redirect:/admin/notice/view/"+postVO.getPostId();
@@ -356,16 +363,16 @@ public class AdminController {
 	@PostMapping("/notice/search")
 	@ResponseBody
 	public Map<String, Object> noticeSearch(@RequestParam String searchInputCategory, @RequestParam String searchInput, @RequestParam("postStatusList[]") List<String> postStatusList) {
-		
+
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		//공지사항 리스트 전달
 		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
-		
+
 		response.put("noticeList", noticeList);
 		return response;
 	}
-	
+
 	/**
 	 * 문의사항 목록조회
 	 * @author : eunji
@@ -404,14 +411,14 @@ public class AdminController {
 			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
 			model.addAttribute("fileList", fileList);
 		}
-		
+
 		//답변
 		List<PostVO> replyList = adminService.getReplyList(postVO.getPostId());
 		model.addAttribute("replyList", replyList);
 
 		return "admin/inquiry_form";
 	}
-	
+
 	/**
 	 * 문의사항 답변등록
 	 * @author : eunji
@@ -427,9 +434,9 @@ public class AdminController {
 		postVO.setPostTitle(replyTitle);
 		postVO.setPostContent(replyContent);
 		postVO.setRgsterId("MNGR000001");
-		
+
 		adminService.insertReplyVO(postVO);
-		
+
 		adminService.updateInquiryStatus(postId);
 
 		return "redirect:/admin/inquiry/view/"+postId;
@@ -450,7 +457,7 @@ public class AdminController {
 
 		return "success";
 	}
-	
+
 	/**
 	 * 문의사항 검색
 	 * @author : eunji
@@ -461,12 +468,12 @@ public class AdminController {
 	@PostMapping("/inquiry/search")
 	@ResponseBody
 	public Map<String, Object> inquirySearch(@RequestParam String searchInputCategory, @RequestParam String searchInput, @RequestParam("postStatusList[]") List<String> postStatusList) {
-		
+
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		//문의사항 리스트 전달
 		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
-		
+
 		response.put("inquiryList", inquiryList);
 		return response;
 	}
@@ -1043,15 +1050,15 @@ public class AdminController {
 		//강의 리스트 생성
 		List<LectureVO> lectureList = adminService.getLectureList();
 		model.addAttribute("lectureList", lectureList);
-		
+
 		//강의를 만들기 위한 과목 리스트
 		List<SubjectVO> ySubjectList = adminService.getYSubjectList();
 		model.addAttribute("ySubjectList", ySubjectList);
-		
+
 		//강의를 만들기 위한 강사 리스트
 		List<ProfessorVO> yProfessorList = adminService.getYProfessorList();
 		model.addAttribute("yProfessorList", yProfessorList);
-		
+
 		return "admin/lecture_list";
 	}
 
@@ -1154,13 +1161,13 @@ public class AdminController {
 		LectureVO lectureVO = adminService.getLecture(lectureId);
 		lectureVO.setLctrNm(lectureNm);
 		lectureVO.setLctrTm(lectureTm);
-		
+
 		adminService.updateLecture(lectureVO);
 
 		return "success";
 
 	}
-	
+
 	/**
 	 * 과목 수정
 	 * @author : eunji
@@ -1173,13 +1180,13 @@ public class AdminController {
 	public String updateSubject(@RequestParam String subjectId, @RequestParam String subjectNm) {
 		SubjectVO subjectVO = adminService.getSubjectVO(subjectId);
 		subjectVO.setSbjtNm(subjectNm);
-		
+
 		adminService.updateSubject(subjectVO);
 
 		return "success";
 
 	}
-	
+
 	/**
 	 * 강사 수정
 	 * @author : eunji
@@ -1192,18 +1199,18 @@ public class AdminController {
 	public String updateProfessor(@RequestParam String professorId, @RequestParam String professorNm,
 			@RequestParam String professorTel, @RequestParam String professorEmail) {
 		ProfessorVO professorVO = adminService.getProfessorVO(professorId);
-		
+
 		professorVO.setProfNm(professorNm);
 		professorVO.setProfTel(professorTel);
 		professorVO.setProfEmail(professorEmail);
-		
+
 		adminService.updateProfessor(professorVO);
 
 		return "success";
 
 	}
-	
-	
+
+
 
 	/**
 	 * 강의 선택삭제
@@ -1264,16 +1271,114 @@ public class AdminController {
 	 * 기업 목록조회
 	 * @author : eunji
 	 * @date : 2023. 9. 15.
-	 * @parameter : profNm, profTel, profEmail
+	 * @parameter : model
 	 * @return : String
 	 */
 	@RequestMapping("/company/list")
-	public String company(Model model) {
+	public String companyList(Model model) {
 		//기업 리스트 전달
 		List<CompanyVO> companyList = adminService.getCompanyList();
 		model.addAttribute("companyList", companyList);
 
 		return "admin/company_list";
+	}
+
+	/**
+	 * 기업 상세조회
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : cmpyId
+	 * @return : String
+	 */
+	@PostMapping("/company/view")
+	@ResponseBody
+	public Map<String, Object> companySelect(@RequestParam String cmpyId) {
+		//기업 객체 생성
+		CompanyVO companyVO = adminService.getCompanyVO(cmpyId);
+
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("companyVO", companyVO);
+
+
+
+		return response;
+	}
+
+	@GetMapping("file/{fileId}/1")
+	public ResponseEntity<byte[]> getFile(@PathVariable String fileId) {
+		FileVO file = uploadFileService.getFile(fileId, "1");
+
+		final HttpHeaders headers = new HttpHeaders();
+		String[] mtypes = file.getFileType().split("/");
+		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+		headers.setContentLength(file.getFileSize());
+		try {
+			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+			headers.setContentDispositionFormData("attachment", encodedFileName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
+	}
+
+
+
+	/**
+	 * 기업 생성
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : file,redirectAttrs,cmpyNm,cmpyTel,cmpyAdr
+	 * @return : String
+	 * @throws IOException 
+	 */
+	@PostMapping("/company/insert")
+	public String companyInsert(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttrs,
+			@RequestParam String cmpyNm, @RequestParam String cmpyTel, 
+			@RequestParam String cmpyAdr) throws IOException {
+
+		String fileId = null; 
+		FileVO fileVO = null;
+		//파일 처리
+
+		if (file != null && !file.isEmpty()) {
+			fileVO = new FileVO();
+			fileId = uploadFileService.getMaxFileId();
+			fileVO.setFileId(fileId);
+			fileVO.setFileSubId(1);
+			fileVO.setFileNm(file.getOriginalFilename());
+			fileVO.setFileSize(file.getSize());
+			fileVO.setFileType(file.getContentType());
+			fileVO.setFileContent(file.getBytes());
+		}
+
+		CompanyVO companyVO = new CompanyVO();
+		companyVO.setCmpyId(adminService.getMaxCompanyId());
+		companyVO.setCmpyNm(cmpyNm);
+		companyVO.setCmpyTel(cmpyTel);
+		companyVO.setCmpyAdr(cmpyAdr);
+		companyVO.setFileId(fileId);
+
+		adminService.insertCompanyVO(fileVO, companyVO);
+
+
+		//파일 업로드 후 파일 아이디 값으로 객체 생성
+
+		return "redirect:/admin/company/list";
+	}
+
+	/**
+	 * 기업 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : selectedCompanyIds
+	 * @return : String
+	 */
+	@PostMapping("/company/delete")
+	@ResponseBody
+	public String companyDelete(@RequestParam("selectedCompanyIds[]") List<String> selectedCompanyIds) {
+		adminService.deleteCompany(selectedCompanyIds);
+
+		return "success";
 	}
 
 
@@ -1291,7 +1396,7 @@ public class AdminController {
 
 		return "admin/manager_list";
 	}
-	
+
 	/** 
 	 * 업무담당자 등록
 	 * @author : eunji
@@ -1308,12 +1413,12 @@ public class AdminController {
 		managerVO.setMngrTel(managerTel);
 		managerVO.setUserEmail(managerEmail);
 		managerVO.setUserPwd(managerPwd);
-		
+
 		adminService.insertManagerVO(managerVO);
 
 		return "redirect:/admin/manager/list";
 	}
-	
+
 	/**
 	 * 업무담당자 검색
 	 * @author : eunji
@@ -1325,12 +1430,12 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> managerSearch(@RequestParam String mngrNm, @RequestParam String mngrEmail) {
 		List<ManagerVO> managerList = adminService.getSearchManagerList(mngrNm, mngrEmail);
-		
+
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("managerList", managerList);
 		return response;
 	}
-	
+
 	/**
 	 * 업무담당자 수정
 	 * @author : eunji
@@ -1342,7 +1447,7 @@ public class AdminController {
 	@ResponseBody
 	public String managerUpdate(@RequestParam String mngrId, @RequestParam String mngrNm, 
 			@RequestParam String mngrTel, @RequestParam String mngrStatus) {
-		
+
 		ManagerVO managerVO = adminService.getManager(mngrId);
 		managerVO.setMngrNm(mngrNm);
 		managerVO.setMngrTel(mngrTel);
@@ -1350,7 +1455,7 @@ public class AdminController {
 		adminService.updateManager(managerVO);
 		return "success";
 	}
-	
+
 	/**
 	 * 업무담당자 선택삭제
 	 * @author : eunji
@@ -1364,10 +1469,10 @@ public class AdminController {
 		adminService.deleteManagerList(selectedManagerIds);
 		return "success";
 	}
-	
+
 
 	/**
-	 * 기준정보 목록조회
+	 * 기준정보 그룹코드 목록조회
 	 * @author : eunji
 	 * @date : 2023. 9. 15.
 	 * @parameter : model
@@ -1379,11 +1484,94 @@ public class AdminController {
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
 		model.addAttribute("groupCodeList", groupCodeList);
 
-		//상세 코드 리스트 전달
-
+		List<CommonCodeVO> detailCodeList = null;
+		model.addAttribute("detailCodeList", detailCodeList);
 
 		return "admin/commoncode_list";
 	}
+
+	/**
+	 * 기준정보 그룹코드 생성
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@PostMapping("/commoncode/insert/groupcode")
+	@ResponseBody
+	public String insertGroupCode(@RequestParam String tpcdId, @RequestParam String cmcdNm) {
+		//tpcd중복 확인
+		int tpcdIdCnt = adminService.getTpcdIdCnt(tpcdId);
+
+		if(tpcdIdCnt == 0) {
+			//그룹 코드 생성하기
+			CommonCodeVO commonCodeVO = new CommonCodeVO();
+			commonCodeVO.setCmcdId(adminService.getMaxGroupCodeId());
+			commonCodeVO.setTpcdId(tpcdId);
+			commonCodeVO.setCmcdNm(cmcdNm);
+
+			adminService.insertGroupCode(commonCodeVO);
+			return "success";
+		}else {
+			return "fail";
+		}
+
+	}
+
+	/**
+	 * 기준정보 그룹코드 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@PostMapping("/commoncode/update/groupcode")
+	@ResponseBody
+	public String updateGroupCode(@RequestParam String cmcdId, @RequestParam String cmcdNm) {
+		adminService.updateGroupCode(cmcdId, cmcdNm);
+		return "success";
+	}
+
+	/**
+	 * 기준정보 그룹코드 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : selectedGroupCodeIds
+	 * @return : String
+	 */
+	@PostMapping("/commoncode/delete/groupcode")
+	@ResponseBody
+	public String deleteGroupCode(@RequestParam(name="selectedGroupCodeIds[]", required = false) List<String> selectedGroupCodeIds) {
+		if (selectedGroupCodeIds == null) {
+			return "fail";
+		}else {
+			//사용여부'N', updt 수정
+			adminService.deleteGroupCode(selectedGroupCodeIds);
+
+			return "success";
+		}
+	}
+
+	/**
+	 * 기준정보 상세코드 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : cmcdId, model
+	 * @return : String
+	 */
+	@RequestMapping("/commoncode/view/{cmcdId}")
+	public String detailCode(@PathVariable String cmcdId, Model model) {
+		//그룹코드 리스트 전달
+		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
+		model.addAttribute("groupCodeList", groupCodeList);
+
+		//상세코드 리스트 전달
+		List<CommonCodeVO> detailCodeList = adminService.getDetailCodeList(cmcdId);
+		model.addAttribute("detailCodeList", detailCodeList);
+		return "admin/commoncode_list";
+	}
+
+
 
 
 

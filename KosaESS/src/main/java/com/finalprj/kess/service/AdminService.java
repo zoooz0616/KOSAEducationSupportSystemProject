@@ -480,6 +480,64 @@ public class AdminService implements IAdminService {
 	public void updateProfessor(ProfessorVO professorVO) {
 		adminRepository.updateProfessor(professorVO);
 	}
+
+	@Override
+	public String getMaxCompanyId() {
+		return adminRepository.getMaxCompanyId();
+	}
+	
+	@Override
+	@Transactional
+	public void insertCompanyVO(FileVO fileVO, CompanyVO companyVO) {
+		if(fileVO != null) {
+			uploadFileRepository.uploadFile(fileVO);
+		}
+		
+		adminRepository.insertCompanyVO(companyVO);
+	}
+	
+	@Override
+	public CompanyVO getCompanyVO(String cmpyId) {
+		return adminRepository.getCompanyVO(cmpyId);
+	}
+	
+	@Override
+	public void deleteCompany(List<String> selectedCompanyIds) {
+		adminRepository.deleteCompany(selectedCompanyIds);
+	}
+	
+	@Override
+	public int getTpcdIdCnt(String tpcdId) {
+		return adminRepository.getTpcdIdCnt(tpcdId);
+	}
+	
+	@Override
+	public String getMaxGroupCodeId() {
+		return adminRepository.getMaxGroupCodeId();
+	}
+	
+	@Override
+	public void insertGroupCode(CommonCodeVO commonCodeVO) {
+		adminRepository.insertGroupCode(commonCodeVO);
+	}
+	
+	@Override
+	public void deleteGroupCode(List<String> selectedGroupCodeIds) {
+		adminRepository.deleteGroupCode(selectedGroupCodeIds);
+	}
+	
+	@Override
+	public void updateGroupCode(String cmcdId, String cmcdNm) {
+		adminRepository.updateGroupCode(cmcdId, cmcdNm);
+	}
+	
+	@Override
+	public List<CommonCodeVO> getDetailCodeList(String cmcdId) {
+		return adminRepository.getDetailCodeList(cmcdId);
+	}
+	
+	
+	
 	
 	
 	

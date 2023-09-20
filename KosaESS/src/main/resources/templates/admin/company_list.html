@@ -21,8 +21,8 @@
 			<div class="title">기업 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/company/list}">기업
-					관리</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/company/list}">기업 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -32,7 +32,7 @@
 			<!-- left section -->
 			<div class="left_section">
 				<!-- 기업 관리 -->
-				<div class="lecture_wrap" style="height: 100%;">
+				<div style="height: 100%;">
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
@@ -40,24 +40,24 @@
 							기업 총 <span class="cnt" th:text="${#lists.size(companyList)}"></span>
 							개
 						</div>
-						<button id="lecture_delete_btn">선택삭제</button>
+						<button id="delete_btn">선택삭제</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 기업 등록하기 -->
-					<div class="insert_lecture insert" style="padding: 5px;">
-						<div>
-							<span>기업명</span> <input type="text" placeholder="기업명"> <span>전화번호</span>
-							<input type="text" placeholder="전화번호"> <br> <span>주소</span>
-							<input type="text" id="streetAdr" class="form-control"
+					<form th:action="@{/admin/company/insert}" method="post"
+						enctype="multipart/form-data">
+						<div class="company_insert" style="padding: 5px;">
+							<span>기업명</span> <input type="text" name="cmpyNm"
+								placeholder="기업명"> <span>전화번호</span> <input type="text"
+								name="cmpyTel" placeholder="전화번호"> <span>주소</span> <input
+								type="text" id="streetAdr" name="cmpyAdr" class="form-control"
 								onclick="findAddr()" placeholder="도로명 주소를 입력하세요" readonly>
-							<span>기업로고</span> <input id="lecture_tm_input" type="file">
+							<br> <span>기업로고</span> <input id="lecture_tm_input"
+								type="file" name="file">
+							<button class="insert_btn" type="submit">등록하기</button>
 						</div>
-						<div>
-							<button class="insert_btn" type="button"
-								onclick="insertLecture()">등록하기</button>
-						</div>
-					</div>
+					</form>
 					<!-- 기업 등록하기 -->
 
 					<!-- 리스트 -->
@@ -67,7 +67,7 @@
 							<thead>
 								<tr class="content_list_th">
 									<th style="width: 30px;"><input type="checkbox"
-										class="lecture_checkbox_all"></th>
+										id="chkAll" class="lecture_checkbox_all"></th>
 									<th style="width: 10%;">ID</th>
 									<th style="width: 25%;">기업명</th>
 									<th style="width: 10%;">전화번호</th>
@@ -76,10 +76,11 @@
 							</thead>
 							<tbody>
 								<tr th:each="company: ${companyList}">
-									<td><input type="checkbox" class="lecture_checkbox_all"
-										th:value="${company.cmpyId}"></td>
-									<td th:text="${company.cmpyId}"></td>
-									<td><a th:href="@{/admin}" th:text="${company.cmpyNm}"></a></td>
+									<td style="text-align: center;"><input type="checkbox"
+										class="check_box" name="chk" th:value="${company.cmpyId}"></td>
+									<td class="cmpy_id" th:text="${company.cmpyId}"></td>
+									<td><span class="cmpy_nm" th:text="${company.cmpyNm}"
+										onclick="companyDetail(this)"></span></td>
 									<td th:text="${company.cmpyTel}"></td>
 									<td th:text="${company.cmpyAdr}"></td>
 								</tr>
@@ -97,42 +98,67 @@
 				<!-- 기업 관리 -->
 				<div class="lecture_wrap" style="height: 100%;">
 
-					<!-- 총 개수 및 버튼-->
+					<!-- 상세보기 -->
 					<div class="content_info_wrap">
-						기업 상세보기
-						<button id="lecture_delete_btn">수정하기</button>
+						<div>기업 상세보기</div>
+						<button class="update_btn" onclick="updateCompany(this)"
+							style="display: none;">수정하기</button>
+						<button class="save_btn" onclick="saveCompany(this)"
+							style="display: none;">저장하기</button>
 					</div>
-					<!-- 총 개수 및 버튼-->
+					<!-- 상세보기-->
 
 					<!-- 리스트 -->
 					<div class="table_wrap"
 						style="height: 100%; border: 1px solid #CFDEE6; margin-top: 0px;">
-						<div
-							style="display: none; width: 100%; height: 100%; text-align: center; margin-top: 45%;">
-							조회 결과가 없습니다.
-							</div>
-						<div>
-							<div>
-								<div style="display: flex;">
-									<table class="company_detail_table">
-										<tr>
-											<th>기업ID</th>
-											<td>CMP0000002</td>
-											<th>기업명</th>
-											<td>KCC정보통신</td>
-										</tr>
-										<tr>
-											<th>전화번호</th>
-											<td>0260907800</td>
-											<th>주소</th>
-											<td>서울시 용산구 청파로 61길 5</td>
-										</tr>
-									</table>
-								</div>
+						<div class="not_selected">조회 결과가 없습니다.</div>
+						<div class="company_table_wrap" style="display: none;">
+							<div style="display: flex;">
+								<table class="company_detail_table">
+									<tr>
+										<th style="width: 15%;">기업ID</th>
+										<td style="width: 20%;">
+											<div class="detail_cmpy_id"></div>
+										</td>
+										<th style="width: 15%;">기업명</th>
+										<td style="width: 50%;">
+											<div class="detail_cmpy_nm detail_cmpy"></div> <input
+											class="detail_cmpy_nm_input detail_input" type="text"
+											style="display: none;">
+										</td>
+									</tr>
+									<tr>
+										<th>전화번호</th>
+										<td>
+											<div class="detail_cmpy_tel detail_cmpy"></div> <input
+											class="detail_cmpy_tel_input detail_input" type="text"
+											style="display: none;">
+										</td>
+										<th>주소</th>
+										<td>
+											<div class="detail_cmpy_adr detail_cmpy"></div> <input
+											id="address" onclick="findAddrUpdate()"
+											class="detail_cmpy_adr_input detail_input" type="text"
+											style="display: none;">
+										</td>
+									</tr>
+								</table>
 							</div>
 
 							<div style="padding: 20px;">
 								<div id="map" style="width: 100%; height: 350px;"></div>
+								<div class="cmpy_img_div detail_cmpy">
+									<img class="cmpy_img">
+								</div>
+							</div>
+
+							<div class="detail_input" style="display: none; border: 1px solid #CFDEE6;">
+								<div style="display:flex;">
+									<div style="width: 15%; text-align:center; font-weight:bold; background: #F3F6F8;padding: 5px;">기업로고</div>
+									<div style="padding: 5px;">
+										<input type="file">
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -148,51 +174,57 @@
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09ec69ddf5b6f0163e112eee3e0d931f&libraries=services"></script>
 	<script>
-		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-		mapOption = {
-			center : new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-			level : 3
-		// 지도의 확대 레벨
-		};
+		//카카오 지도 띄우기
+		function map(address, cmpyNm) {
+			var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+			mapOption = {
+				center : new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+				level : 3
+			// 지도의 확대 레벨
+			};
 
-		// 지도를 생성합니다    
-		var map = new kakao.maps.Map(mapContainer, mapOption);
+			// 지도를 생성합니다    
+			var map = new kakao.maps.Map(mapContainer, mapOption);
 
-		// 주소-좌표 변환 객체를 생성합니다
-		var geocoder = new kakao.maps.services.Geocoder();
+			// 주소-좌표 변환 객체를 생성합니다
+			var geocoder = new kakao.maps.services.Geocoder();
 
-		// 주소로 좌표를 검색합니다
-		geocoder
-				.addressSearch(
-						'서울시 용산구 청파로 61길 5',
-						function(result, status) {
+			// 주소로 좌표를 검색합니다
+			geocoder
+					.addressSearch(
+							address,
+							function(result, status) {
 
-							// 정상적으로 검색이 완료됐으면 
-							if (status === kakao.maps.services.Status.OK) {
+								// 정상적으로 검색이 완료됐으면 
+								if (status === kakao.maps.services.Status.OK) {
 
-								var coords = new kakao.maps.LatLng(result[0].y,
-										result[0].x);
+									var coords = new kakao.maps.LatLng(
+											result[0].y, result[0].x);
 
-								// 결과값으로 받은 위치를 마커로 표시합니다
-								var marker = new kakao.maps.Marker({
-									map : map,
-									position : coords
-								});
+									// 결과값으로 받은 위치를 마커로 표시합니다
+									var marker = new kakao.maps.Marker({
+										map : map,
+										position : coords
+									});
 
-								// 인포윈도우로 장소에 대한 설명을 표시합니다
-								var infowindow = new kakao.maps.InfoWindow(
-										{
-											content : '<div style="width:150px;text-align:center;padding:6px 0;">KCC정보통신</div>'
-										});
-								infowindow.open(map, marker);
+									// 인포윈도우로 장소에 대한 설명을 표시합니다
+									var infowindow = new kakao.maps.InfoWindow(
+											{
+												content : '<div style="width:150px;text-align:center;padding:6px 0;">'
+														+ cmpyNm + '</div>'
+											});
+									infowindow.open(map, marker);
 
-								// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-								map.setCenter(coords);
-							}
-						});
+									// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+									map.setCenter(coords);
+								}
+							});
+		}
 	</script>
 
+
 	<script>
+		//insert할 때 도로명 주소 찾기
 		function findAddr() {
 			new daum.Postcode(
 					{
@@ -221,9 +253,7 @@
 								if (extraAddr !== '') {
 									extraAddr = ' (' + extraAddr + ')';
 								}
-								//document.getElementById("detailAdr").value = extraAddr;
 							} else {
-								//document.getElementById("detailAdr").value = '';
 							}
 							document.getElementById("streetAdr").value = addr;
 						}
@@ -232,6 +262,189 @@
 	</script>
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script>
+		//기업 누르면 상세보기 발생
+		function companyDetail(button) {
+			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+			var cmpyId = row.querySelector(".check_box").value;
 
+			$
+					.ajax({
+						url : '/admin/company/view?cmpyId=' + cmpyId,
+						method : 'POST',
+						success : function(response) {
+							console.log(response);
+							var cmpyVO = response.companyVO;
+
+							//먼저 디폴트 div 안보이게 하기
+							var notselected = document
+									.querySelector(".not_selected");
+							notselected.style.display = "none";
+
+							var updateBtn = document
+									.querySelector(".update_btn");
+							updateBtn.style.display = "inline";
+
+							var saveBtn = document.querySelector(".save_btn");
+							saveBtn.style.display = "none";
+
+							var selected = document
+									.querySelector(".company_table_wrap");
+
+							var table = document
+									.querySelector(".company_detail_table");
+
+							var tdCmpyId = table
+									.querySelector(".detail_cmpy_id");
+							tdCmpyId.textContent = cmpyVO.cmpyId;
+
+							var tdCmpyNm = table
+									.querySelector(".detail_cmpy_nm");
+							tdCmpyNm.textContent = cmpyVO.cmpyNm;
+							var tdCmpyNmInput = table
+									.querySelector(".detail_cmpy_nm_input");
+							tdCmpyNmInput.value = cmpyVO.cmpyNm;
+
+							var tdCmpyTel = table
+									.querySelector(".detail_cmpy_tel");
+							tdCmpyTel.textContent = cmpyVO.cmpyTel;
+							var tdCmpyTelInput = table
+									.querySelector(".detail_cmpy_tel_input");
+							tdCmpyTelInput.value = cmpyVO.cmpyTel;
+
+							var tdCmpyAdr = table
+									.querySelector(".detail_cmpy_adr");
+							tdCmpyAdr.textContent = cmpyVO.cmpyAdr;
+							var tdCmpyAdrInput = table
+									.querySelector(".detail_cmpy_adr_input");
+							tdCmpyAdrInput.value = cmpyVO.cmpyAdr;
+
+							map(cmpyVO.cmpyAdr, cmpyVO.cmpyNm);
+
+							var imgtag = document.querySelector(".cmpy_img");
+
+							if (cmpyVO.fileId == null) {
+								imgtag.src = "/img/logo.png";
+							} else {
+								imgtag.src = '/admin/file/' + cmpyVO.fileId
+										+ '/1';
+							}
+
+							//div 보이게 하기
+							selected.style.display = "block";
+						}
+					});
+		}
+
+		//전체 선택
+		document.addEventListener("DOMContentLoaded", function() {
+			const chkAll = document.getElementById("chkAll");
+			const checkboxes = document
+					.querySelectorAll('input[type="checkbox"][name="chk"]');
+
+			chkAll.addEventListener("change", function() {
+				checkboxes.forEach(function(checkbox) {
+					checkbox.checked = chkAll.checked;
+				});
+			});
+		});
+
+		//선택삭제
+		document.querySelector("#delete_btn").addEventListener(
+				"click",
+				function() {
+					var selectedCompanyIds = [];
+
+					// 선택된 체크박스를 모두 선택합니다.
+					var selectedCheckboxes = document
+							.querySelectorAll(".check_box:checked");
+
+					// 선택된 체크박스의 값을 배열에 추가합니다.
+					selectedCheckboxes.forEach(function(checkbox) {
+						selectedCompanyIds.push(checkbox.value);
+					});
+
+					console.log(selectedCompanyIds);
+					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+					$.ajax({
+						url : '/admin/company/delete',
+						method : 'POST',
+						data : {
+							selectedCompanyIds : selectedCompanyIds
+						},
+						success : function(response) {
+							console.log(response);
+							if (response == "success") {
+								alert("선택한 기업이 삭제되었습니다..");
+								window.location.href = "/admin/company/list";
+							}
+						}
+					});
+				});
+
+		//수정하기
+		function updateCompany(button) {
+			//자기 자신의 가장 가까운 부모div의 저장버튼을 활성화 하고 자기 자신은 숨기기
+			var divParent = button.closest("div");
+
+			var saveBtn = divParent.querySelector(".save_btn");
+			saveBtn.style.display = "inline";
+
+			button.style.display = "none";
+
+			//수정필요한 div는 숨기고 input만 나타내기
+			var detailCmpyDivs = document.querySelectorAll(".detail_cmpy");
+			detailCmpyDivs.forEach(function(detailDiv) {
+				detailDiv.style.display = "none";
+			});
+
+			//수정필요한 div는 숨기고 input만 나타내기
+			var detailCmpyInputs = document.querySelectorAll(".detail_input");
+			detailCmpyInputs.forEach(function(detailInput) {
+				detailInput.style.display = "block";
+			});
+
+		}
+
+		//update할 때 도로명 주소 찾기
+		function findAddrUpdate() {
+			new daum.Postcode(
+					{
+						oncomplete : function(data) {
+
+							var addr = ''; // 주소 변수
+							var extraAddr = ''; // 참고항목 변수
+
+							if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+								addr = data.roadAddress;
+							} else { // 사용자가 지번 주소를 선택했을 경우(J)
+								addr = data.jibunAddress;
+							}
+
+							if (data.userSelectedType === 'R') {
+								if (data.bname !== ''
+										&& /[동|로|가]$/g.test(data.bname)) {
+									extraAddr += data.bname;
+								}
+								if (data.buildingName !== ''
+										&& data.apartment === 'Y') {
+									extraAddr += (extraAddr !== '' ? ', '
+											+ data.buildingName
+											: data.buildingName);
+								}
+								if (extraAddr !== '') {
+									extraAddr = ' (' + extraAddr + ')';
+								}
+							} else {
+							}
+							document.getElementById("address").value = addr;
+
+							var cmyNm = document
+									.querySelector(".detail_cmpy_nm_input").value;
+							map(addr, cmyNm);
+						}
+					}).open();
+		}
+	</script>
 </body>
 </html>

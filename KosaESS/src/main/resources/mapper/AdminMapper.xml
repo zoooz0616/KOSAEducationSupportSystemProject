@@ -161,7 +161,7 @@
 		order by lctr_id
 	]]>
 	</select>
-	
+
 	<select id="getYLectureList"
 		resultType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
@@ -213,6 +213,7 @@
 		select * 
 		from cmcd
 		where tpcd_id = #{tpcdId}
+		order by cmcd_id
 	]]>
 	</select>
 
@@ -275,7 +276,7 @@
 	]]>
 	</select>
 
-	<delete id="deleteFile">
+	<update id="deleteFile">
 		update flup
 		set delete_yn = 'Y'
 		where file_id=#{fileId} and file_sub_id
@@ -284,7 +285,7 @@
 			#{subId}
 		</foreach>
 		)
-	</delete>
+	</update>
 
 	<select id="getMaxFileSubId" parameterType="string"
 		resultType="Integer">
@@ -346,7 +347,8 @@
 			update aply
 			set
 			aply_cd = 'APL0000003',
-			updt_dt = SYSTIMESTAMP,
+			updt_dt =
+			SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
 			where aply_id = #{item}
 		</foreach>
@@ -358,7 +360,8 @@
 			update aply
 			set
 			aply_cd = 'APL0000004',
-			updt_dt = SYSTIMESTAMP,
+			updt_dt =
+			SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
 			where aply_id = #{item}
 		</foreach>
@@ -370,7 +373,8 @@
 			update clss
 			set
 			delete_yn = 'Y',
-			updt_dt = SYSTIMESTAMP,
+			updt_dt =
+			SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
 			where clss_id = #{item}
 		</foreach>
@@ -495,10 +499,12 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update lctr
 			set
-			delete_yn = 'Y',
+			delete_yn =
+			'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where lctr_id = #{item}
+			where lctr_id =
+			#{item}
 		</foreach>
 	</update>
 
@@ -507,10 +513,12 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update sbjt
 			set
-			delete_yn = 'Y',
+			delete_yn =
+			'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where sbjt_id = #{item}
+			where sbjt_id =
+			#{item}
 		</foreach>
 	</update>
 
@@ -519,10 +527,12 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update prof
 			set
-			delete_yn = 'Y',
+			delete_yn =
+			'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where prof_id = #{item}
+			where prof_id =
+			#{item}
 		</foreach>
 	</update>
 
@@ -573,10 +583,12 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update post
 			set
-			delete_yn = 'Y',
+			delete_yn =
+			'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where post_id = #{item}
+			where post_id =
+			#{item}
 		</foreach>
 	</update>
 
@@ -586,6 +598,7 @@
 	select *
 	from cmcd
 	where cmcd_id like 'GRP%'
+	order by cmcd_id
 	]]>
 	</select>
 
@@ -620,10 +633,12 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update post
 			set
-			delete_yn = 'Y',
+			delete_yn =
+			'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where post_id = #{item}
+			where post_id =
+			#{item}
 		</foreach>
 	</update>
 
@@ -662,11 +677,12 @@
 				AND post_content LIKE '%'||#{searchInput}||'%'
 			</when>
 		</choose>
-			and post_id not like 'RPLY%'
+		and post_id not like 'RPLY%'
 		order by post_id desc
 	</select>
 
-	<select id="getReplyList" parameterType="string" resultType="com.finalprj.kess.model.PostVO">
+	<select id="getReplyList" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
 		select *
 		from post
@@ -674,7 +690,7 @@
 		order by rgst_dt
 	]]>
 	</select>
-	
+
 	<select id="getMaxReplyId" resultType="string">
 	<![CDATA[
 		select 'RPLY'||LPAD((max(cast(substr(post_id,5) as number(6)))+1),6,'0')
@@ -682,14 +698,15 @@
 		where post_id like 'RPLY%'
 	]]>
 	</select>
-	
-	<insert id="insertReplyVO" parameterType="com.finalprj.kess.model.PostVO">
+
+	<insert id="insertReplyVO"
+		parameterType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
 		insert into post
 		values(#{postId}, #{masterId}, #{postTitle}, #{postContent}, 0, 'PST0000001', null, systimestamp, #{rgsterId}, null, null, 'N')
 	]]>
 	</insert>
-	
+
 	<update id="updateInquiryStatus" parameterType="string">
 	<![CDATA[
 		update post
@@ -697,29 +714,32 @@
 		where post_id = #{postId}
 	]]>
 	</update>
-	
+
 	<select id="getMaxManagerId" resultType="string">
 	<![CDATA[
 		select 'MNGR'||LPAD((max(cast(substr(mngr_id,5) as number(6)))+1),6,'0')
 		from mngr
 	]]>
 	</select>
-	
-	<insert id="insertLgin" parameterType="com.finalprj.kess.model.ManagerVO">
+
+	<insert id="insertLgin"
+		parameterType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 	insert into lgin
 	values(#{userEmail}, #{userPwd}, null, 'ROL0000003', 'USR0000001')
 	]]>
 	</insert>
-	
-	<insert id="insertManager" parameterType="com.finalprj.kess.model.ManagerVO">
+
+	<insert id="insertManager"
+		parameterType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 	insert into mngr
 	values(#{mngrId}, #{userEmail}, #{mngrNm}, #{mngrTel}, systimestamp, 'MNGR000001', null, null)
 	]]>
 	</insert>
-	
-	<select id="getSearchManagerList" parameterType="string" resultType="com.finalprj.kess.model.ManagerVO">
+
+	<select id="getSearchManagerList" parameterType="string"
+		resultType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 		select * 
 		from mngr
@@ -731,29 +751,32 @@
 		order by mngr_id
 	]]>
 	</select>
-	
+
 	<update id="deleteLgin" parameterType="java.util.List">
-		<foreach collection="selectedManagerIds" item="item" open="DECLARE BEGIN"
-			separator=";" close="; END;">
+		<foreach collection="selectedManagerIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
 			update lgin
 			set
-			user_cd = 'USR0000003'
-			where user_email = (select user_email from mngr where mngr_id = #{item})
+			user_cd =
+			'USR0000003'
+			where user_email = (select user_email from mngr where
+			mngr_id = #{item})
 		</foreach>
 	</update>
-	
+
 	<update id="deleteManagerList" parameterType="java.util.List">
-		<foreach collection="selectedManagerIds" item="item" open="DECLARE BEGIN"
-			separator=";" close="; END;">
+		<foreach collection="selectedManagerIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
 			update mngr
 			set
-				updt_dt = SYSTIMESTAMP,
-				updter_id = 'MNGR000001'
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
 			where mngr_id = #{item}
 		</foreach>
 	</update>
 
-	<select id="getManager" parameterType="string" resultType="com.finalprj.kess.model.ManagerVO">
+	<select id="getManager" parameterType="string"
+		resultType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 	select * 
 	from mngr
@@ -761,16 +784,18 @@
 	where mngr.mngr_id = #{mngrId}
 	]]>
 	</select>
-	
-	<update id="updateLgin" parameterType="com.finalprj.kess.model.ManagerVO">
+
+	<update id="updateLgin"
+		parameterType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 	update lgin
 	set user_cd = #{userCd}
 	where user_email=(select user_email from mngr where mngr_id = #{mngrId})
 	]]>
 	</update>
-	
-	<update id="updateManager" parameterType="com.finalprj.kess.model.ManagerVO">
+
+	<update id="updateManager"
+		parameterType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 	update mngr
 	set 
@@ -780,7 +805,8 @@
 	]]>
 	</update>
 
-	<select id="getYSubjectList" resultType="com.finalprj.kess.model.SubjectVO">
+	<select id="getYSubjectList"
+		resultType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
 	select *
 	from sbjt
@@ -788,8 +814,9 @@
 	order by sbjt_nm
 	]]>
 	</select>
-	
-	<select id="getYProfessorList" resultType="com.finalprj.kess.model.ProfessorVO">
+
+	<select id="getYProfessorList"
+		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 	select *
 	from prof
@@ -798,7 +825,8 @@
 	]]>
 	</select>
 
-	<update id="updateLecture" parameterType="com.finalprj.kess.model.LectureVO">
+	<update id="updateLecture"
+		parameterType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
 	 update lctr
 	 set
@@ -810,7 +838,8 @@
 	]]>
 	</update>
 
-	<select id="getSubjectVO" parameterType="string" resultType="com.finalprj.kess.model.SubjectVO">
+	<select id="getSubjectVO" parameterType="string"
+		resultType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
 		select *
 		from sbjt
@@ -818,7 +847,8 @@
 	]]>
 	</select>
 
-	<update id="updateSubject" parameterType="com.finalprj.kess.model.SubjectVO">
+	<update id="updateSubject"
+		parameterType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
 	update sbjt
 	set
@@ -829,7 +859,8 @@
 	]]>
 	</update>
 
-	<select id="getProfessorVO" parameterType="string" resultType="com.finalprj.kess.model.ProfessorVO">
+	<select id="getProfessorVO" parameterType="string"
+		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 	select *
 	from prof
@@ -837,7 +868,8 @@
 	]]>
 	</select>
 
-	<update id="updateProfessor" parameterType="com.finalprj.kess.model.ProfessorVO">
+	<update id="updateProfessor"
+		parameterType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 	update prof
 	set 
@@ -847,6 +879,102 @@
 	where prof_id = #{profId}
 	]]>
 	</update>
+
+	<select id="getMaxCompanyId" resultType="string">
+	<![CDATA[
+		select 'CMPY'||LPAD((max(cast(substr(cmpy_id,5) as number(6)))+1),6,'0')
+		from cmpy
+	]]>
+	</select>
+
+	<insert id="insertCompanyVO" parameterType="com.finalprj.kess.model.CompanyVO">
+	<![CDATA[
+		insert into cmpy
+		values(#{cmpyId}, #{cmpyNm}, #{cmpyTel}, #{cmpyAdr}, #{fileId}, systimestamp, 'MNGR000001', null, null, 'N')
+	]]>
+	</insert>
+
+	<select id="getCompanyVO" parameterType="string" resultType="com.finalprj.kess.model.CompanyVO">
+	<![CDATA[
+	select *
+	from cmpy
+	where cmpy_id = #{cmpyId}
+	]]>
+	</select>
+
+	<update id="deleteCompany" parameterType="java.util.List">
+		<foreach collection="selectedCompanyIds" item="item" open="DECLARE BEGIN"
+			separator=";" close="; END;">
+			update cmpy
+			set
+			delete_yn = 'Y',
+			updt_dt =
+			SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where cmpy_id = #{item}
+		</foreach>
+	</update>
+	
+	<select id="getTpcdIdCnt" parameterType="string" resultType="int">
+	<![CDATA[
+		select COALESCE(COUNT(cmcd_id), 0)
+		from cmcd
+		where cmcd_id like 'GRP%' and tpcd_id = #{tpcdId}
+	]]>
+	</select>
+	
+	<select id="getMaxGroupCodeId" resultType="string">
+	<![CDATA[
+		select 'GRP'||LPAD((max(cast(substr(cmcd_id,4) as number(7)))+1),7,'0')
+		from cmcd
+		where cmcd_id like 'GRP%'
+	]]>
+	</select>
+
+	<insert id="insertGroupCode" parameterType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		insert into cmcd
+		values(#{cmcdId}, #{tpcdId}, #{cmcdNm}, 'Y', systimestamp, 'MNGR000001', null, null)
+	]]>
+	</insert>
+
+	<update id="deleteGroupCode" parameterType="java.util.List">
+		<foreach collection="selectedGroupCodeIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+		update cmcd
+		set
+			use_yn = 'N',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+		where cmcd_id = #{item}
+		</foreach>
+	</update>
+
+	<update id="updateGroupCode" parameterType="string">
+	<![CDATA[
+		update cmcd
+		set 
+			cmcd_nm = #{cmcdNm},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+		where cmcd_id = #{cmcdId}
+	]]>
+	</update>
+
+	<select id="getDetailCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		select *
+		from cmcd
+		where tpcd_id = #{cmcdId}
+		order by cmcd_id
+	]]>
+	</select>
+
+
+
+
+
+
 
 
 
