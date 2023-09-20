@@ -213,6 +213,7 @@
 		select * 
 		from cmcd
 		where tpcd_id = #{tpcdId}
+		order by cmcd_id
 	]]>
 	</select>
 
@@ -597,6 +598,7 @@
 	select *
 	from cmcd
 	where cmcd_id like 'GRP%'
+	order by cmcd_id
 	]]>
 	</select>
 
@@ -912,9 +914,61 @@
 			where cmpy_id = #{item}
 		</foreach>
 	</update>
+	
+	<select id="getTpcdIdCnt" parameterType="string" resultType="int">
+	<![CDATA[
+		select COALESCE(COUNT(cmcd_id), 0)
+		from cmcd
+		where cmcd_id like 'GRP%' and tpcd_id = #{tpcdId}
+	]]>
+	</select>
+	
+	<select id="getMaxGroupCodeId" resultType="string">
+	<![CDATA[
+		select 'GRP'||LPAD((max(cast(substr(cmcd_id,4) as number(7)))+1),7,'0')
+		from cmcd
+		where cmcd_id like 'GRP%'
+	]]>
+	</select>
 
+	<insert id="insertGroupCode" parameterType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		insert into cmcd
+		values(#{cmcdId}, #{tpcdId}, #{cmcdNm}, 'Y', systimestamp, 'MNGR000001', null, null)
+	]]>
+	</insert>
 
+	<update id="deleteGroupCode" parameterType="java.util.List">
+		<foreach collection="selectedGroupCodeIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+		update cmcd
+		set
+			use_yn = 'N',
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+		where cmcd_id = #{item}
+		</foreach>
+	</update>
 
+	<update id="updateGroupCode" parameterType="string">
+	<![CDATA[
+		update cmcd
+		set 
+			cmcd_nm = #{cmcdNm},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+		where cmcd_id = #{cmcdId}
+	]]>
+	</update>
+
+	<select id="getDetailCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		select *
+		from cmcd
+		where tpcd_id = #{cmcdId}
+		order by cmcd_id
+	]]>
+	</select>
 
 
 

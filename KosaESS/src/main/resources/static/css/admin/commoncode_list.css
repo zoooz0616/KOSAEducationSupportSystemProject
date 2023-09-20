@@ -94,6 +94,10 @@ a {
     font-weight: bold;
 }
 
+.insert div *{
+	margin-right:5px;
+}
+
 .table_wrap {
 	margin-top: 10px;
 }
@@ -135,6 +139,7 @@ a {
 }
 
 .table_wrap table tr td button {
+	background: #0E5881;
 	font-weight: bold;
 	color: white;
 	border: none;
