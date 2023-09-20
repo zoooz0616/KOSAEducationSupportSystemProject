@@ -12,6 +12,7 @@ import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 
 @Mapper
 @Repository
@@ -51,11 +52,13 @@ public interface IManagerRepository {
 	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString);
 //	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") String[] filterString);
 
-	public void updateStdtCmptCd(@Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
+	public void updateStdtCmptCd(@Param("mngrId") String mngrId, @Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
 
 	public int getTotalTmByClssId(String classId);
 
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
+
+	public List<WorklogVO> getWlogListByClssIdDate(@Param("classId") String classId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

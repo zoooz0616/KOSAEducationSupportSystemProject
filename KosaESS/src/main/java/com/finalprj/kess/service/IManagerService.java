@@ -10,6 +10,7 @@ import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.WorklogVO;
 
 public interface IManagerService {
 	public List<ClassVO> getClassListByMngrId(String mngrId, String sortBy, String order);
@@ -45,11 +46,13 @@ public interface IManagerService {
 	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString);
 //	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString);
 
-	public void updateStdtCmptCd(String stdtId, String clssId, String targetCmptId);
+	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId);
 
 	public double getTotalTmByClssId(String classId);
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
+
+	public List<WorklogVO> getWlogListByClssIdDate(String classId, String startDate, String endDate);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }
