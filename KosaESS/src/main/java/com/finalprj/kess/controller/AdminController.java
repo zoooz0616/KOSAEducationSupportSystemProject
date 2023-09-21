@@ -464,7 +464,6 @@ public class AdminController {
 	public String inquiryDeleteAll(@RequestParam("selectedInquiryIds[]") List<String> selectedInquiryIds) {
 		//문의사항 deleteYn='Y'로 업데이트
 		adminService.deleteAllInquiry(selectedInquiryIds);
-
 		return "success";
 	}
 
