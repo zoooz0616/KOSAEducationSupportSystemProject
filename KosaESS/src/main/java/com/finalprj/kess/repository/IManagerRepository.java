@@ -54,7 +54,7 @@ public interface IManagerRepository {
 
 	public void updateStdtCmptCd(@Param("mngrId") String mngrId, @Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
 
-	public int getTotalTmByClssId(String classId);
+	public double getTotalTmByClssId(String classId);
 
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
 
