@@ -953,7 +953,8 @@
 			use_yn = 'N',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
-			where cmcd_id = #{item}
+			where cmcd_id =
+			#{item}
 		</foreach>
 	</update>
 
@@ -1027,6 +1028,21 @@
 	where cmcd_id = #{cmcdId}
 	]]>
 	</update>
+
+	<select id="getStudentEmailByAplyId" parameterType="string"
+		resultType="string">
+		select user_email from stdt
+		where stdt_id = (select stdt_id from aply where aply_id=#{aplyId})
+	</select>
+	
+	<select id="getClssNmByAplyId" parameterType="string"
+		resultType="string">
+		select clss_nm
+		from clss
+		where clss_id = (select clss_id from aply where aply_id=#{aplyId})
+	</select>
+
+
 
 
 
