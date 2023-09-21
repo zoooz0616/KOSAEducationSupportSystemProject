@@ -199,14 +199,16 @@ public class ManagerController {
 		//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜로 오늘 기준 이번 달의 첫날과 마지막날을 반환
 		if (startDate == null) {
 			startDate = String.valueOf(YearMonth.now().atDay(1));
-		} else {
-			startDate = httpServletRequest.getParameter("startDate");
 		}
+//		else {
+//			startDate = httpServletRequest.getParameter("startDate");
+//		}
 		if (endDate == null) {
 			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-		} else {
-			endDate = httpServletRequest.getParameter("endDate");
 		}
+//		else {
+//			endDate = httpServletRequest.getParameter("endDate");
+//		}
 		//end
 		List<ClassVO> classList = new ArrayList<ClassVO>();
 		ClassVO emptyClassVO = new ClassVO();
@@ -227,7 +229,7 @@ public class ManagerController {
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 
-		double totalTm = managerService.getTotalTmByClssId(classId);
+//		double totalTm = managerService.getTotalTmByClssId(classId);
 		double stdtTmSum;
 		for (StudentInfoDTO stdt : stdtList) {
 			// 출결 가져오기
@@ -239,7 +241,7 @@ public class ManagerController {
 
 			// 이수율 입력하기
 			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
-			stdt.setCmptRate(100.0 * stdtTmSum/totalTm);
+			stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
 		}
 
 		model.addAttribute("title", "교육생 목록");
@@ -292,6 +294,7 @@ public class ManagerController {
 		//End : 유저 필터링
 		
 		String mngrId = (String) session.getAttribute("mngrId");
+		String title = "출퇴근 기록";
 		
 		//reqParam == null ? 초기화
 		if (startDate == null) {
@@ -306,6 +309,9 @@ public class ManagerController {
 		}
 		//End : reqParam == null ? 초기화
 		
+		//------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------
+		
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
@@ -315,15 +321,17 @@ public class ManagerController {
 			for (ClassVO vo : isManagerChkList) {
 				isManagerIdList.add(vo.getClssId());
 			}
-			if(isManagerIdList.contains(classId)) {
+			if(!isManagerIdList.contains(classId)) {
+				//탈출
 				return null;//<<<이 부분 에러 페이지 이동으로 수정하기
 			}
 		}
-
+		
 		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(classId, startDate, endDate);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
+		model.addAttribute("title", title);
 		return "manager/wlog_list";
 	}
 	
@@ -346,10 +354,16 @@ public class ManagerController {
 				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
 				stdt.appendWlogCnt(",");
 			}
+			double stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
+			double cmptRateUnder = managerService.getClassDetailByClssId(classId).getClssTotalTm();
+			if(cmptRateUnder!=0) {
+			stdt.setCmptRate(100.0 * stdtTmSum/cmptRateUnder);}
+			else {
+				stdt.setCmptRate(0);
+			}
 		}
 
 		ClassVO thisClassVO = managerService.getClassDetailByClssId(classId);
-		System.out.println(thisClassVO);
 		
 		Map<String, Object> stdtListResponse = new HashMap<>();
 		stdtListResponse.put("stdtList", stdtList);

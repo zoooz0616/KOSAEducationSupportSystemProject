@@ -49,6 +49,7 @@
 			SELECT *
 			FROM cmcd
 			WHERE cmcd_id like #{keyword} ||'%'
+				AND use_yn = 'Y'
 			ORDER BY cmcd_id
 		]]>
 	</select>
@@ -113,6 +114,7 @@
 				JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
 				JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
 			WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
+				AND r.clss_id = #{clssId}
 			ORDER BY s.stdt_nm
 		]]>
 	</select>
@@ -214,7 +216,7 @@
 	
 	<select id="getStudentTmSumByIds">
 		<![CDATA[
-		SELECT sum(nvl(wlog_total_tm,0))
+		SELECT nvl(sum(nvl(wlog_total_tm,0)),0)
 		FROM wlog
 		WHERE clss_id = #{classId} AND stdt_id = #{stdtId}
 		]]>
@@ -223,13 +225,22 @@
 	<select id="getWlogListByClssIdDate" resultType="com.finalprj.kess.model.WorklogVO">
 		<![CDATA[
 			SELECT
-				wlog_id, s.stdt_nm AS stdt_id, clss_id, in_tm, out_tm, wlog_cd, c1.cmcd_nm, wlog_total_tm, w.delete_yn
+				w.wlog_id
+				, s.stdt_nm AS stdtId --이름
+				, in_tm --출근
+				, out_tm --퇴근 시간
+				, wlog_total_tm --출석 인정 시간
+				, c1.cmcd_nm as wlogCd --출석 상태
+				, w.delete_yn --삭제 여부
+				, resn_id --사유서 id
+				, c2.cmcd_nm as prcsCd --처리 상태
 			FROM wlog w
 				JOIN stdt s ON w.stdt_id = s.stdt_id
 				JOIN cmcd c1 ON w.wlog_cd = c1.cmcd_id
+				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
+				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
 			WHERE
 				w.clss_id=#{classId}
-				AND w.stdt_id=#{classId}
 				AND in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
 				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
 		]]>

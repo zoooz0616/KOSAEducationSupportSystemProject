@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+----------------------------------------------------------------------
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .title {
+	display: inline-block;
+	color: #333333;
+	font-size: 30px;
+	font-weight: bold;
+	margin: 40px;
+}
+
+.home-section .content_wrap {
+	margin: 0px 0px 0px 40px;
+	width: 95%;
+}
+
+/* 여기까지는 공통 */
+.search_filter_wrap {
+	padding: 5px;
+/* 	width: fit-content; */
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 1px 1px 3px lightgray;
+}
+
+.search_filter_wrap .search_filter_table_wrap {
+	width: 98%;
+	display : flex;
+	margin: auto;
+	justify-content: center;
+}
+
+.search_filter_table{
+	width: 100%;
+}
+
+.search_filter_name{
+	width: 10%;
+}
+
+.search_filter_input{
+	width: 40%;
+}
+
+.search_filter_btn_wrap{
+	justify-content: center;
+	display: flex;
+}
+
+.search_filter_btn{
+	width: 60px;
+	background-color: #0E5881;
+	margin: 10px 0 10px 0;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.search_filter_table td{
+	text-align: center;
+}
+
+#wlog_list_table td{
+	text-align: center;
+	padding: 0 5px;
+}
+
+.wlog_list_tbody_row .resn_icon {
+	width: 15px;
+	height: 100%;
+}

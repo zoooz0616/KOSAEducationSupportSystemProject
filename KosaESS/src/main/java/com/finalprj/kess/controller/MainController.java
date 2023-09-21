@@ -149,4 +149,9 @@ public class MainController {
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/student/join")
+	public String join() {
+		return "signup";
+	}
 }

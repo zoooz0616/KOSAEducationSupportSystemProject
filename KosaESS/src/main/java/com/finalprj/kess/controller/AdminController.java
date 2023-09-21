@@ -46,6 +46,7 @@ import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.service.IAdminService;
+import com.finalprj.kess.service.IMailService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
 
@@ -68,6 +69,9 @@ public class AdminController {
 
 	@Autowired
 	IUploadFileService uploadFileService;
+	
+	@Autowired
+	IMailService mailService;
 
 	/**
 	 * 관리자 대시보드
@@ -75,9 +79,10 @@ public class AdminController {
 	 * @date : 2023. 8. 22.
 	 * @parameter : session, model
 	 * @return : String
+	 * @throws Exception 
 	 */
 	@RequestMapping("")
-	public String main(HttpSession session, Model model,HttpServletRequest request) {
+	public String main(HttpSession session, Model model,HttpServletRequest request) throws Exception {
 		if(session.getAttribute("mngrId")== null) {
 			return "redirect:/login";
 		}else {
@@ -145,7 +150,7 @@ public class AdminController {
 		//교육완료List
 		List<ClassVO> completeClassList = adminService.getCompleteClassList();
 		model.addAttribute("completeClassList", completeClassList);
-
+		
 		return "admin/dashboard";
 	}
 
@@ -1013,14 +1018,24 @@ public class AdminController {
 	 * @date : 2023. 9. 13.
 	 * @parameter : clssId, session, action, aplyIds
 	 * @return : String
+	 * @throws Exception 
 	 */
 	@PostMapping("/class/{clssId}/applicant")
 	public String applicant(@PathVariable String clssId, HttpSession session,
-			@RequestParam("action") String action, @RequestParam(name="chk", required = false)List<String> aplyIds) {
+			@RequestParam("action") String action, @RequestParam(name="chk", required = false)List<String> aplyIds) throws Exception {
 		if ("합격".equals(action)) {
 			//선택한 개수와 현재 합격된 교육생 수가 수강가능 인원 이하인지 확인(나중에 구현)
 			// "pass" 버튼을 클릭한 경우 실행할 코드
 			adminService.updateAplyPass(aplyIds);
+			
+			for(String aplyId: aplyIds) {
+				String recipient = adminService.getStudentEmailByAplyId(aplyId);
+				String clssNm = adminService.getClssNmByAplyId(aplyId);
+				mailService.sendMail(recipient,clssNm);
+			}
+			
+		
+			
 		} else if ("불합격".equals(action)) {
 			// "fail" 버튼을 클릭한 경우 실행할 코드
 			adminService.updateAplyFail(aplyIds);
