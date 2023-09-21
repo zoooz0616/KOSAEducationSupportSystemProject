@@ -198,7 +198,7 @@
 			UPDATE rgst
 			SET
 				CMPT_cd=#{targetCmptId}
-				,updt_dt=defalut
+				,updt_dt=systimestamp
 				,updter_id=#{mngrId}
 			WHERE CLSS_ID=#{clssId}
 				AND STDT_ID=#{stdtId}
@@ -240,7 +240,7 @@
 				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
 				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
 			WHERE
-				w.clss_id=#{classId}
+				w.clss_id=#{clssId}
 				AND in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
 				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
 		]]>

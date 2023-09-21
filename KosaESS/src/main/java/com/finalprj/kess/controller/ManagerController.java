@@ -194,34 +194,21 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		//end
-		
 
 		//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜로 오늘 기준 이번 달의 첫날과 마지막날을 반환
 		if (startDate == null) {
 			startDate = String.valueOf(YearMonth.now().atDay(1));
 		}
-//		else {
-//			startDate = httpServletRequest.getParameter("startDate");
-//		}
 		if (endDate == null) {
 			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
 		}
-//		else {
-//			endDate = httpServletRequest.getParameter("endDate");
-//		}
 		//end
+
 		List<ClassVO> classList = new ArrayList<ClassVO>();
 		ClassVO emptyClassVO = new ClassVO();
 		emptyClassVO.setClssNm("교육과정명을 선택하세요");
 		classList.add(emptyClassVO);
 
-		// classId가 null일 경우, 해당 mngrId의 가장 큰 classId를 가져옴  
-//		if (classId == null) {
-//			classId = managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
-//		}
-//		else {
-//			classId = httpServletRequest.getParameter("classId");
-//		}
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
 		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");//수업 목록
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
@@ -278,10 +265,11 @@ public class ManagerController {
 	
 	@GetMapping("/worklog")
 	public String getWlogList(Model model, HttpSession session, HttpServletRequest httpServletRequest
-			,@RequestParam(required = false) String classId
+			,@RequestParam(required = false) String clssId
 			,@RequestParam(required = false) String startDate
 			,@RequestParam(required = false) String endDate
 			,@RequestParam(required = false) String wlogCd
+			,@RequestParam(required = false) String stdtNm
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
@@ -310,24 +298,25 @@ public class ManagerController {
 		//End : reqParam == null ? 초기화
 		
 		//------------------------------------------------------------------------------------
+		
 		//------------------------------------------------------------------------------------
 		
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
-		if(classId != null) {
+		if(clssId != null) {
 			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId(mngrId,"", "");
 			List<String> isManagerIdList = new ArrayList<String>();
 			for (ClassVO vo : isManagerChkList) {
 				isManagerIdList.add(vo.getClssId());
 			}
-			if(!isManagerIdList.contains(classId)) {
+			if(!isManagerIdList.contains(clssId)) {
 				//탈출
 				return null;//<<<이 부분 에러 페이지 이동으로 수정하기
 			}
 		}
 		
-		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(classId, startDate, endDate);
+		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);

@@ -7,6 +7,12 @@
 	<link th:href="@{/css/manager/manager_wlog_list.css}" rel="stylesheet" />
 </head>
 <body>
+	<!-- 얼럴트 -->
+	<div class="look_at_me">
+		<span class="read_this">이봐!</span>
+	</div>
+	<!-- End : 얼럴트 -->
+
 	<!-- 서브바 부분 -->
 	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
 	<!-- End 서브바 -->
@@ -27,7 +33,7 @@
 						<tr class="search_filter_table_row">
 							<td class="search_filter_name">교육과정명</td>
 							<td class="search_filter_input">
-								<select id="classId">
+								<select id="class_selector">
 									<option value="" disabled selected>교육과정명을 선택하세요</option>
 									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
 								</select>
@@ -38,22 +44,23 @@
 						<tr class="search_filter_table_row">
 							<td class="search_filter_name">교육생 이름</td>
 							<td class="search_filter_input">
-								<input type="text" id="search_stdt_name">
+								<input type="text" id="search_by_stdt_name">
 							</td>
 							<td class="search_filter_name">출석 상태</td>
 							<td class="search_filter_input">
 								<span>전체</span><input type="checkbox" id="chkAll">
 								<span th:each="wlogCd:${wlogCdList}"><span th:text="${wlogCd.cmcdNm}"></span><input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}"></span>
-								<span>삭제</span><input type="checkbox" id="isDelete">
 							</td>
 						</tr>
 						<tr class="search_filter_table_row">
 							<td class="search_filter_name"></td>
 							<td class="search_filter_input">
 							</td>
-							<td class="search_filter_name">사유서 포함</td>
+							<td class="search_filter_name"></td>
 							<td class="search_filter_input">
-								<input type="checkbox" id="fileContainedOnly">
+								
+								<span>사유서 포함</span><input type="checkbox" id="fileContainedOnly">
+								<span>삭제</span><input type="checkbox" id="isDelete">
 							</td>
 						</tr>
 					</table>
@@ -69,6 +76,7 @@
 
 			<!-- table 시작 -->
 			<table id="wlog_list_table">
+
 				<thead id="wlog_list_thead">
 					<tr class="wlog_list_thead_row">
 						<th>번호</th>
@@ -82,7 +90,8 @@
 						<th>처리 상태</th>
 					</tr>
 				</thead>
-				<tbody class="wlog_list_tbody">
+
+				<tbody id="wlog_list_tbody">
 					<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
 						<td th:text="${wlogStat.count}">번호</td>
 						<td th:text="${wlog.stdtId}">이름</td>
@@ -91,9 +100,10 @@
 						<td th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1) + ' h'}">출석 인정 시간</td>
 						<td th:text="${wlog.wlogCd}">출석 상태</td>
 						<td th:text="${wlog.deleteYn}">삭제 여부</td>
-						<td><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal()" th:value="${wlog.resnId}" src="/img/file.png"></td>
+						<td class="file_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal()" th:value="${wlog.resnId}" src="/img/file.png"></td>
 						<td th:text="${wlog.deleteYn}">처리 상태</td>
 					</tr>
+
 				</tbody>
 			</table>
 			<!-- End : table 시작-->
@@ -101,5 +111,5 @@
 	</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- <script src="/js/manager/student_list.js"></script> -->
+<script src="/js/manager/wlog_list.js"></script>
 </html>

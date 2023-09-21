@@ -52,7 +52,7 @@ public interface IManagerService {
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
-	public List<WorklogVO> getWlogListByClssIdDate(String classId, String startDate, String endDate);
+	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }
