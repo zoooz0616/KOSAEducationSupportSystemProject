@@ -131,6 +131,29 @@
 		]]>
 	</select>
 
+	<!-- 공지사항 목록 검색 -->
+	<select id="searchNotices" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
+		<![CDATA[
+				 SELECT 
+					post_id,
+					post_title,
+					post_cd,
+					post_hit,
+					post.rgst_dt as "rgstDd",
+					mngr_nm as "mngrNm",
+					cmcd.cmcd_nm
+				FROM post
+				JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+				LEFT JOIN mngr on mngr.mngr_id = post.rgster_id
+				WHERE post_id LIKE 'NOTC%' and post_cd=
+					(select cmcd_id
+					from cmcd
+					where cmcd_id='PST0000001') and post_title LIKE ('%'|| UPPER(#{keyword}) ||'%')
+				ORDER BY post.rgst_dt DESC
+		]]>
+	</select>
+
 	<!-- 공지사항 상세 조회 -->
 	<select id="selectNotice" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
@@ -210,6 +233,32 @@
 		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
+	
+	<!-- 문의사항 목록 검색 -->
+	<select id="searchInquiries" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
+		<![CDATA[
+		SELECT 
+		    post_id,
+		    post_title,
+		    post_cd,
+		    post_hit,
+		    post.rgst_dt as "rgstDd",
+		    stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			cmcd.cmcd_nm
+		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
+		WHERE post_id LIKE 'INQY%' AND post_cd IN (
+		    SELECT cmcd_id
+		    FROM cmcd
+		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
+		) and delete_yn = 'N' and (post_title LIKE ('%'|| UPPER(#{keyword}) ||'%') or stdt_nm )
+		ORDER BY post.rgst_dt DESC
+		]]>
+	</select>
 
 
 	<!-- 문의사항 상세 조회 -->
@@ -233,8 +282,8 @@
 		WHERE post_id=#{postId}
 		]]>
 	</select>
-	
-		<!-- 문의 사항 상세 조회(이미지) -->
+
+	<!-- 문의 사항 상세 조회(이미지) -->
 	<select id="selectAllInquiryFile" parameterType="string"
 		resultType="com.finalprj.kess.model.FileVO">
 		<![CDATA[
@@ -260,7 +309,7 @@
 	    END
 		]]>
 	</select>
-	
+
 	<!-- 답변 상세 조회 -->
 	<select id="selectReply" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">

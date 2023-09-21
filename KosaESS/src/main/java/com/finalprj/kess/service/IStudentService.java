@@ -120,4 +120,8 @@ public interface IStudentService {
 
 	List<FileVO> selectAllReplyFile(String postId, String replyId);
 
+	List<PostVO> searchNotices(String keyword);
+
+	List<PostVO> searchInquiries(String keyword);
+
 }
