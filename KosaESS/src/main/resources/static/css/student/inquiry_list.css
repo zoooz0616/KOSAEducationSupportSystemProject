@@ -1,9 +1,9 @@
-.inqy-table table {
+.inquiry-table table {
 	border-style: none;
 	padding: 0 2%;
 }
 
-.inqy-table  .classRow {
+.inquiry-table .inquiryRow {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
@@ -15,7 +15,7 @@
 	border-width: thin;
 }
 
-.inqy-table thead {
+.inquiry-table thead {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
@@ -24,55 +24,92 @@
 	padding: 0.5% 0;
 }
 
-.inqy-table thead td {
+.inquiry-table thead td {
 	font-size: 18px;
 	font-weight: bold;
 	padding: 0.5% 0;
 }
 
-.inqy-table  tbody td {
+.inquiry-table tbody td {
 	padding: 1% 0;
 }
 
-.inqy-table tbody {
+.inquiry-table tbody {
 	display: flex;
 	flex-direction: column;
 	border-style: none;
 }
 
-.inqy-table tbody tr:nth-child(even) {
+.inquiry-table tbody tr:nth-child(even) {
 	background-color: #F3F6F8;
 }
 
-.inqy-table td:nth-child(1) {
+.inquiry-table td:nth-child(1) {
 	width: 12%;
 	text-align: center;
 }
 
-.inqy-table td:nth-child(2) {
+.inquiry-table td:nth-child(2) {
 	width: 50%;
 }
 
-.inqy-table td:nth-child(3) {
+.inquiry-table td:nth-child(3) {
 	width: 5%;
 	text-align: center;
 }
 
-.inqy-table td:nth-child(4) {
+.inquiry-table td:nth-child(4) {
 	width: 15%;
 	text-align: center;
 }
 
-.inqy-table td:nth-child(5) {
+.inquiry-table td:nth-child(5) {
 	width: 5%;
 	text-align: center;
 }
 
-.inqy-table td:nth-child(6) {
+.inquiry-table td:nth-child(6) {
 	width: 13%;
 	text-align: center;
 }
 
-a {
+a , .searchBtn{
 	cursor: pointer;
+}
+
+.search {
+	display: flex;
+	background: #E7EFF3;
+	padding: 1% 5%;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 2%;
+	cursor: pointer;
+}
+
+input {
+	padding: 10px;
+	border: 0;
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 5px;
+}
+
+input::placeholder {
+	color: #0E5881;
+}
+
+.searchBtn {
+	background: #0E5881;
+	color: white;
+	padding: 9px 2%;
+}
+
+.searchform {
+	width: 100%;
+}
+
+.searchInput {
+	width: 50%;
+	margin-left: 20%;
 }

@@ -19,7 +19,7 @@ public class MailService implements IMailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	private String from="zoooz0616@naver.com";
+	private String from="kosamanager11@naver.com";
 
 
 	@Override
