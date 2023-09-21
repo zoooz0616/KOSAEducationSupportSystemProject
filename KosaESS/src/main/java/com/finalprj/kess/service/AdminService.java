@@ -562,9 +562,15 @@ public class AdminService implements IAdminService {
 		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn);
 	}
 	
+	@Override
+	public String getStudentEmailByAplyId(String aplyId) {
+		return adminRepository.getStudentEmailByAplyId(aplyId);
+	}
 	
-	
-	
+	@Override
+	public String getClssNmByAplyId(String aplyId) {
+		return adminRepository.getClssNmByAplyId(aplyId);
+	}
 	
 	
 	
