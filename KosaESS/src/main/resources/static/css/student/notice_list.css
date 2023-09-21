@@ -3,7 +3,7 @@
 	padding: 0 2%;
 }
 
-.notice-table  .classRow {
+.notice-table  .noticeRow {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
@@ -63,6 +63,44 @@
 	text-align: center;
 }
 
-a {
+a , .searchBtn{
 	cursor: pointer;
+}
+
+
+.search {
+	display: flex;
+	background: #E7EFF3;
+	padding: 1% 5%;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 2%;
+	cursor: pointer;
+}
+
+input {
+	padding: 10px;
+	border: 0;
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 5px;
+}
+
+input::placeholder {
+	color: #0E5881;
+}
+
+.searchBtn {
+	background: #0E5881;
+	color: white;
+	padding: 9px 2%;
+}
+
+.searchform {
+	width: 100%;
+}
+
+.searchInput {
+	width: 50%;
+	margin-left: 20%;
 }

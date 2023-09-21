@@ -275,4 +275,14 @@ public class StudentService implements IStudentService {
 		return studentRepository.selectAllReplyFile(postId, replyId);
 	}
 
+	@Override
+	public List<PostVO> searchNotices(String keyword) {
+		return studentRepository.searchNotices(keyword);
+	}
+	
+	@Override
+	public List<PostVO> searchInquiries(String keyword) {
+		return studentRepository.searchInquiries(keyword);
+	}
+
 }
