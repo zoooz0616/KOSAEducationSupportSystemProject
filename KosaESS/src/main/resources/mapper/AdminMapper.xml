@@ -542,6 +542,7 @@
 		select *
 		from post
 		join cmcd on cmcd.cmcd_id = post.post_cd
+		join mngr on mngr.mngr_id = post.rgster_id
 		where post.post_id like 'NOTC%' and post.delete_yn='N'
 		order by post_id desc
 	]]>
@@ -549,12 +550,23 @@
 
 	<select id="getInquiryList"
 		resultType="com.finalprj.kess.model.PostVO">
-	<![CDATA[
-		select *
-		from post
-		join cmcd on cmcd.cmcd_id = post.post_cd
-		where post_id like 'INQY%' and delete_yn='N'
-		order by post_id desc
+	<![CDATA[		
+		SELECT 
+		    post_id,
+		    post_title,
+		    post_cd,
+		    post_hit,
+		    file_id,
+		    post.rgst_dt as "rgstDt",
+		    stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			cmcd.cmcd_nm
+		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
+		WHERE post_id LIKE 'INQY%' AND delete_yn = 'N'
+		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
 
@@ -648,6 +660,7 @@
 		update post
 		set post_title = #{postTitle},
 			post_content = #{postContent},
+			post_cd = #{postCd},
 			file_id = #{fileId},
 			updt_dt = systimestamp,
 			updter_id = 'MNGR000001'
@@ -658,9 +671,20 @@
 	<select id="getSearchPostList"
 		resultType="com.finalprj.kess.model.PostVO"> 
 	<![CDATA[
-		select *
-		from post
-		join cmcd on cmcd.cmcd_id = post.post_cd
+	SELECT 
+		    post_id,
+		    post_title,
+		    post_cd,
+		    post_hit,
+		    file_id,
+		    post.rgst_dt as "rgstDt",
+		    stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			cmcd.cmcd_nm
+		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
 		where 
 			delete_yn='N'
 			and post_cd in

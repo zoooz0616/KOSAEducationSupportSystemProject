@@ -78,11 +78,11 @@
 	width: 20px;
 }
 
-.search_filter_btn_wrap .search_reset_btn {
+.search_filter_btn_wrap .reset_btn {
 	background: #9FBCCD;
 }
 
-.search_filter_btn_wrap .search_filter_btn {
+.search_filter_btn_wrap .search_btn {
 	background: #0E5881;
 }
 
@@ -181,6 +181,6 @@
 	white-space: nowrap;
 }
 
-.notice_check, .notice_num, .notice_title {
+.notice_check, .mngr_nm, .notice_num, .notice_file, .notice_hit, .notice_status {
 	text-align: center;
 }

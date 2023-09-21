@@ -34,7 +34,7 @@ public class MailService implements IMailService {
 		String htmlContent = "<html><body>"
 				+ "<h1>안녕하세요, KOSA 교육과정지원 결과발표 안내입니다.</h1>"
 				+ "<h3>지원해주신 <span style='color: blue;'>"+ clssNm +"</span> 교육과정에 합격되신 것을 진심으로 축하드립니다.</h3>"
-				+ "<a href='localhost:8080/student'>홈페이지 바로가기</a>"
+				+ "<a href='http://192.168.0.142:8080/student'>홈페이지 바로가기</a>"
 				+ "</body></html>";
 
 		h.setText(htmlContent, true);

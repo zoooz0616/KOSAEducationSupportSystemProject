@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
-<title>Inquiry List</title>
 </head>
 <head>
 <link th:href="@{/css/admin/inquiry_list.css}" rel="stylesheet">
@@ -41,8 +40,7 @@
 						</select>
 					</div>
 					<div>
-						<input class="search_input" id="search_input" value="" type="text"
-							list="search_option" required>
+						<input class="search_input" type="text" id="search_input" value="">
 					</div>
 				</div>
 
@@ -64,12 +62,10 @@
 
 			<!-- Search Button wrap -->
 			<div class="search_filter_btn_wrap">
-				<button type="button" class="search_reset_btn"
-					onclick="resetInput()">
+				<button type="button" class="reset_btn" onclick="resetInput()">
 					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
 				</button>
-				<button type="button" id="search_btn" class="search_filter_btn"
-					onclick="search()">
+				<button type="button" class="search_btn" onclick="search()">
 					<img th:src="@{/img/search_white.png}"> <span>조회</span>
 				</button>
 			</div>
@@ -100,34 +96,37 @@
 				<table class="content_list_table" id="class_list_table">
 					<thead>
 						<tr class="content_list_th">
-							<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
-							<th style="width: 40px;">번호</th>
-							<th style="width: 10%;">ID</th>
-							<th style="width: 40%;">제목</th>
-							<th style="width: 50px;">첨부파일</th>
-							<th style="width: 10%;">작성자</th>
+							<th style="width: 3%;"><input type="checkbox"
+								name="select_all" onclick="selectAll(this)"></th>
+							<th style="width: 5%;">번호</th>
+							<th style="width: 52%;">제목</th>
+							<th style="width: 5%;">첨부파일</th>
+							<th style="width: 5%;">작성자</th>
 							<th style="width: 20%;">등록일시</th>
-							<th style="width: 40px;">조회수</th>
-							<th style="width: 50px;">답변상태</th>
+							<th style="width: 5%;">조회수</th>
+							<th style="width: 5%;">답변상태</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="content_list_td"
 							th:each="inquiry, iterStat: ${inquiryList}">
 							<td class="inquiry_check"><input class="input_check"
-								type="checkbox" name="chk" th:value="${inquiry.postId}"></td>
+								type="checkbox" name="select" onclick="checkSelectAll()"
+								th:value="${inquiry.postId}"></td>
 							<td class="inquiry_num" th:text="${iterStat.index + 1}"></td>
-							<td th:text="${inquiry.postId}"></td>
-							<td><a
+							<td><a class="inquiry_title"
 								th:href="@{/admin/inquiry/view/__${inquiry.postId}__}"
 								th:text="${inquiry.postTitle}"></a></td>
 							<td class="inquiry_file"><img
 								th:if="${inquiry.fileId!=null}" class="file_img"
 								th:src="@{/img/file.png}"></td>
-							<td th:text="${inquiry.rgsterId}"></td>
+							<td class="rgster_nm"><span
+								th:if="${inquiry.mngrNm == null}" th:text="${inquiry.stdtNm}"></span>
+								<span th:if="${inquiry.stdtNm == null}"
+								th:text="${inquiry.mngrNm}"></span></td>
 							<td th:text="${inquiry.rgstDt}"></td>
-							<td th:text="${inquiry.postHit}"></td>
-							<td th:text="${inquiry.cmcdNm}"></td>
+							<td class="inquiry_hit" th:text="${inquiry.postHit}"></td>
+							<td class="inquiry_status" th:text="${inquiry.cmcdNm}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -137,18 +136,30 @@
 		<!-- Content Bottom-->
 	</div>
 	<script>
-		//전체 선택
-		document.addEventListener("DOMContentLoaded", function() {
-			const chkAll = document.getElementById("chkAll");
-			const checkboxes = document
-					.querySelectorAll('input[type="checkbox"][name="chk"]');
-
-			chkAll.addEventListener("change", function() {
-				checkboxes.forEach(function(checkbox) {
-					checkbox.checked = chkAll.checked;
-				});
-			});
+	//전체선택
+	function selectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
 		});
+	}
+	
+	//개별 선택
+	function checkSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
 
 		//선택삭제
 		document.querySelector("#delete_btn").addEventListener(
@@ -186,7 +197,8 @@
 		//초기화 버튼
 		function resetInput() {
 			// 모든 요소를 선택
-			const inputElement1 = document.querySelector(".search_input_category");
+			const inputElement1 = document
+					.querySelector(".search_input_category");
 			inputElement1.value = "post_title";
 
 			// 모든 요소를 선택
@@ -198,8 +210,7 @@
 					.querySelector(".search_input_status");
 			inputElement3.value = "all";
 		}
-		
-		
+
 		//조회 버튼
 		function search() {
 			//input값 비어있으면 모두 입력하라고 알리기
@@ -225,122 +236,129 @@
 					console.log(postStatusList);
 				}
 
-				$.ajax({
-					url : '/admin/inquiry/search',
-					method : 'POST',
-					data : {
-						searchInputCategory : searchInputCategory,
-						searchInput : searchInput,
-						postStatusList : postStatusList
-					},
-					success : function(response) {
-						console.log("성공");
-						var inquiryList = response.inquiryList;
+				$
+						.ajax({
+							url : '/admin/inquiry/search',
+							method : 'POST',
+							data : {
+								searchInputCategory : searchInputCategory,
+								searchInput : searchInput,
+								postStatusList : postStatusList
+							},
+							success : function(response) {
+								console.log("성공");
+								var inquiryList = response.inquiryList;
 
-						// tbody 요소 찾기
-						var tbody = document.querySelector("tbody");
+								// tbody 요소 찾기
+								var tbody = document.querySelector("tbody");
 
-						// tbody 내용 지우기
-						while (tbody.firstChild) {
-							tbody.removeChild(tbody.firstChild);
-						}
+								// tbody 내용 지우기
+								while (tbody.firstChild) {
+									tbody.removeChild(tbody.firstChild);
+								}
 
-						// inquiryList를 이용하여 새로운 tr 요소 추가
-						for (var i = 0; i < inquiryList.length; i++) {
-							var inquiry = inquiryList[i];
+								// inquiryList를 이용하여 새로운 tr 요소 추가
+								for (var i = 0; i < inquiryList.length; i++) {
+									var inquiry = inquiryList[i];
 
-							//tr 생성
-							var tr = document.createElement("tr");
-							tr.className = "content_list_td";
+									//tr 생성
+									var tr = document.createElement("tr");
+									tr.className = "content_list_td";
 
-							// td 요소 추가 및 값 설정
+									// td 요소 추가 및 값 설정
 
-							//input type="check"
-							var tdCheck = document.createElement("td");
-							tdCheck.className = "inquiry_check";
-							var inputCheck = document.createElement("input");
-							inputCheck.className = "input_check";
-							inputCheck.type = "checkbox";
-							inputCheck.name = "chk";
-							inputCheck.value = inquiry.postId;
-							tdCheck.appendChild(inputCheck);
-							tr.appendChild(tdCheck);
+									//input type="check"
+									var tdCheck = document.createElement("td");
+									tdCheck.className = "inquiry_check";
+									var inputCheck = document
+											.createElement("input");
+									inputCheck.className = "input_check";
+									inputCheck.type = "checkbox";
+									inputCheck.name = "select";
+									inputCheck.value = inquiry.postId;
+									tdCheck.appendChild(inputCheck);
+									tr.appendChild(tdCheck);
 
-							//num
-							var tdNum = document.createElement("td");
-							tdNum.className = "inquiry_num";
-							tdNum.textContent = i + 1;
-							tr.appendChild(tdNum);
+									//num
+									var tdNum = document.createElement("td");
+									tdNum.className = "inquiry_num";
+									tdNum.textContent = i + 1;
+									tr.appendChild(tdNum);
 
-							//postId
-							var tdPostId = document.createElement("td");
-							tdPostId.textContent = inquiry.postId;
-							tr.appendChild(tdPostId);
+									//inquiryTitle
+									var tdPostTitle = document
+											.createElement("td");
+									var aPostTitle = document
+											.createElement("a");
+									aPostTitle.className = "inquiry_title";
+									aPostTitle.href = "/admin/inquiry/view/"
+											+ inquiry.postId;
+									aPostTitle.textContent = inquiry.postTitle;
+									tdPostTitle.appendChild(aPostTitle);
+									tr.appendChild(tdPostTitle);
 
-							//inquiryTitle
-							var tdPostTitle = document.createElement("td");
-							var aPostTitle = document.createElement("a");
-							aPostTitle.className = "inquiry_title";
-							aPostTitle.href = "/admin/inquiry/view/"
-									+ inquiry.postId;
-							aPostTitle.textContent = inquiry.postTitle;
-							tdPostTitle.appendChild(aPostTitle);
-							tr.appendChild(tdPostTitle);
+									//file
+									var tdFile = document.createElement("td");
+									tdFile.className = "inquiry_file";
+									if (inquiry.fileId != null) {
+										var fileImg = document
+												.createElement("img");
+										fileImg.className = "file_img";
+										fileImg.src = "/img/file.png";
+										tdFile.appendChild(fileImg);
+									}
+									tr.appendChild(tdFile);
 
-							//file
-							var tdFile = document.createElement("td");
-							tdFile.className = "inquiry_file";
-							if (inquiry.fileId != null) {
-								var fileImg = document.createElement("img");
-								fileImg.className = "file_img";
-								fileImg.src = "/img/file.png";
-								tdFile.appendChild(fileImg);
+									//rgster_nm
+									var tdRgster = document.createElement("td");
+									tdRgster.className="rgster_nm";
+									if(inquiry.mngrNm == null){
+										tdRgster.textContent=inquiry.stdtNm;
+									} else {
+										tdRgster.textContent=inquiry.mngrNm;
+									}
+									tr.appendChild(tdRgster);
+
+									//rgstDt
+									var tdRgstDt = document.createElement("td");
+									tdRgstDt.textContent = formatTimestamp(inquiry.rgstDt);
+									tr.appendChild(tdRgstDt);
+
+									//hits
+									var tdHit = document.createElement("td");
+									tdHit.className="inquiry_hit";
+									tdHit.textContent = inquiry.postHit;
+									tr.appendChild(tdHit);
+
+									//status
+									var tdStatus = document.createElement("td");
+									tdStatus.className ="inquiry_status";
+									tdStatus.textContent = inquiry.cmcdNm;
+									tr.appendChild(tdStatus);
+
+									tbody.appendChild(tr);
+								}
 							}
-							tr.appendChild(tdFile);
-							
-							//rgsterId
-							var tdRgster = document.createElement("td");
-							tdRgster.textContent=inquiry.rgsterId;
-							tr.appendChild(tdRgster);
-							
-							//rgstDt
-							var tdRgstDt = document.createElement("td");
-							tdRgstDt.textContent = formatTimestamp(inquiry.rgstDt);
-							tr.appendChild(tdRgstDt);
-							
-							//hits
-							var tdHit = document.createElement("td");
-							tdHit.textContent = inquiry.postHit;
-							tr.appendChild(tdHit);
-							
-							//status
-							var tdStatus = document.createElement("td");
-							tdStatus.textContent= inquiry.cmcdNm;
-							tr.appendChild(tdStatus);
-
-							tbody.appendChild(tr);
-						}
-					}
-				});
+						});
 
 			}
 		}
-		
+
 		//날짜 형식
 		function formatTimestamp(timestamp) {
-			   const date = new Date(timestamp);
+			const date = new Date(timestamp);
 
-			   const year = date.getFullYear();
-			   const month = String(date.getMonth() + 1).padStart(2, '0');
-			   const day = String(date.getDate()).padStart(2, '0');
-			   const hours = String(date.getHours()).padStart(2, '0');
-			   const minutes = String(date.getMinutes()).padStart(2, '0');
-			   const seconds = String(date.getSeconds()).padStart(2, '0');
-			   const milliseconds = date.getMilliseconds();
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			const milliseconds = date.getMilliseconds();
 
-			   const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+			const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
 
-			   return formattedTimestamp;
+			return formattedTimestamp;
 		}
 	</script>
 </body>
