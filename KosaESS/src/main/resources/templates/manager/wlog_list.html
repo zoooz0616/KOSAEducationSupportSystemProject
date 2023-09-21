@@ -23,32 +23,42 @@
 			<div class="search_filter_wrap">
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table_wrap">
-					<table class="search_filter_table" style="width: 100%;">
-						<tr>
-							<td style="width: 10%;">교육과정명</td>
-							<td style="width: 30%;">
+					<table class="search_filter_table">
+						<tr class="search_filter_table_row">
+							<td class="search_filter_name">교육과정명</td>
+							<td class="search_filter_input">
 								<select id="classId">
 									<option value="" disabled selected>교육과정명을 선택하세요</option>
 									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
 								</select>
 							</td>
-							<td style="width: 10%;">기간</td>
-							<td style="width: 30%;"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
+							<td class="search_filter_name">기간</td>
+							<td class="search_filter_input"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
 						</tr>
-						<tr>
-							<td style="width: 10%;">교육생 이름</td>
-							<td style="width: 30%;">
+						<tr class="search_filter_table_row">
+							<td class="search_filter_name">교육생 이름</td>
+							<td class="search_filter_input">
 								<input type="text" id="search_stdt_name">
 							</td>
-							<td style="width: 10%;">출석 상태</td>
-							<td style="width: 30%;">
+							<td class="search_filter_name">출석 상태</td>
+							<td class="search_filter_input">
 								<span>전체</span><input type="checkbox" id="chkAll">
 								<span th:each="wlogCd:${wlogCdList}"><span th:text="${wlogCd.cmcdNm}"></span><input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}"></span>
 								<span>삭제</span><input type="checkbox" id="isDelete">
 							</td>
 						</tr>
+						<tr class="search_filter_table_row">
+							<td class="search_filter_name"></td>
+							<td class="search_filter_input">
+							</td>
+							<td class="search_filter_name">사유서 포함</td>
+							<td class="search_filter_input">
+								<input type="checkbox" id="fileContainedOnly">
+							</td>
+						</tr>
 					</table>
 				</div>
+
 				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
 					<button class="search_filter_btn" th:id="searchButton" onclick="search()">검색</button>
@@ -68,6 +78,8 @@
 						<th>출석 인정 시간</th>
 						<th>출석 상태</th>
 						<th>삭제 여부</th>
+						<th>사유서</th>
+						<th>처리 상태</th>
 					</tr>
 				</thead>
 				<tbody class="wlog_list_tbody">
@@ -76,9 +88,11 @@
 						<td th:text="${wlog.stdtId}">이름</td>
 						<td th:text="${wlog.inTm}">출근 기록</td>
 						<td th:text="${wlog.outTm}">퇴근 기록</td>
-						<td th:text="${wlog.wlogTotalTm}">출석 인정 시간</td>
+						<td th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1) + ' h'}">출석 인정 시간</td>
 						<td th:text="${wlog.wlogCd}">출석 상태</td>
 						<td th:text="${wlog.deleteYn}">삭제 여부</td>
+						<td><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal()" th:value="${wlog.resnId}" src="/img/file.png"></td>
+						<td th:text="${wlog.deleteYn}">처리 상태</td>
 					</tr>
 				</tbody>
 			</table>

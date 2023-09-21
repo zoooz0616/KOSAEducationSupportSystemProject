@@ -87,7 +87,7 @@
 						<td th:text="${stdt.genderCd}">성별</td>
 						<td th:text="${stdt.birthDd}">생년월일</td>
 						<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
-						<td th:text="${#numbers.formatDecimal(stdt.cmptRate, 1, 3) + ' %'}"></td><!-- wlog 에서 totalTm가져오고 교육과정의 이수 시간을 가져와서 백분율을 출력 -->
+						<td th:text="${#numbers.formatDecimal(stdt.cmptRate, 1, 1) + ' %'}"></td>
 						<td th:text="${stdt.jobCd}">이수여부</td>
 					</tr>
 				</tbody>

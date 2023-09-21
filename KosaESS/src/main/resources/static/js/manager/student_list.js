@@ -131,7 +131,7 @@ function getCheckedStdt() {
 					
 					//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
 					var cmptRate = document.createElement('td');
-					cmptRate.innerHTML="";
+					cmptRate.innerHTML=(stdtList[i].cmptRate).toFixed(1)+" %";
 					//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
 					
 					var rowJob = document.createElement('td');
