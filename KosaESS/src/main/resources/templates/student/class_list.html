@@ -50,9 +50,9 @@
 			<table class="list-style" style="display: none;">
 
 				<thead>
-					<tr class="classRow">
+					<tr class="classRow" style="border:none;">
 						<td>번호</td>
-						<td>프로그램명</td>
+						<td style="text-align:center;">교육과정명</td>
 						<td>지원기간</td>
 						<td>교육기간</td>
 						<td>장소</td>
@@ -87,17 +87,22 @@
 						<td><span class="className" th:text="${classVO.cmcdNm}"></span></td>
 						<td class="classImg">
 							<div th:if="${classVO.fileId!=null}">
-								<img th:src="@{/student/file/__${classVO.fileId}__/__${classVO.fileSubId}__}">
+								<img
+									th:src="@{/student/file/__${classVO.fileId}__/__${classVO.fileSubId}__}">
 							</div>
 							<div th:if="${classVO.fileId==null}">
 								<img th:src="@{/img/logo.png}">
 							</div>
 						</td>
 						<td th:text="${classVO.clssNm}"
-							style="font-weight: bold; font-size: 18px;">교육과정명</td>
+							style="font-weight: bold; font-size: 22px;">교육과정명</td>
 						<td><span>지원기간: </span><span
+							th:if="${classVO.aplyStartDd == null}">미정</span> <span
+							th:if="${classVO.aplyStartDd != null}"
 							th:text="${classVO.aplyStartDd} + ' ~ ' +${classVO.aplyEndDd}"></span></td>
 						<td><span>교육기간: </span><span
+							th:if="${classVO.clssStartDd == null}">미정</span> <span
+							th:if="${classVO.clssStartDd != null}"
 							th:text="${classVO.clssStartDd} + ' ~ ' +${classVO.clssEndDd}"></span></td>
 						<td><span>장소: </span> <span
 							th:if="${classVO.clssAdr == null}">미정</span> <span

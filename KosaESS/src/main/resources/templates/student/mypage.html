@@ -23,49 +23,50 @@
 			<div class="maincontent">
 				<div class="personalData">
 					<h3>개인 정보 조회/수정</h3>
-					<div class="passwordForm">
-						<h1>비밀번호 확인</h1>
-						<label for="password">비밀번호:</label> <input type="password"
-							id="passwordInput" placeholder="비밀번호 입력">
+					<div class="passwordForm" style="text-align: center;">
+						<h1 style="margin-bottom: 5%;">비밀번호 확인</h1>
+						<input type="password" id="passwordInput" placeholder="비밀번호 입력">
 						<button id="checkPassword">비밀번호 확인</button>
 					</div>
 					<div id="userInfo" style="display: none;">
 						<table class="infoTable">
 							<tr>
-								<th>이름 </th>
+								<th>이름</th>
 								<td><input type="text" id="userName"></td>
 							</tr>
 							<tr>
-								<th>이메일 </th>
+								<th>이메일</th>
 								<td><div id="userEmail"></div></td>
 							</tr>
 							<tr>
-								<th>성별 </th>
-								<td><input type="text" id="userGender" ></td>
+								<th>성별</th>
+								<td><input type="text" id="userGender"></td>
 							</tr>
 							<tr>
-								<th>생년월일 </th>
+								<th>생년월일</th>
 								<td><input type="text" id="userBirth"></td>
 							</tr>
 							<tr>
-								<th>휴대전화 </th>
+								<th>휴대전화</th>
 								<td><input type="text" id="userTel"></td>
 							</tr>
 							<tr>
-								<th>직업 </th>
+								<th>직업</th>
 								<td><input type="text" id="userJob"></td>
 							</tr>
 							<tr>
-								<th>가입일 </th>
+								<th>가입일</th>
 								<td><div id="rgstDt"></div></td>
 							</tr>
 							<tr>
-								<th>마지막 로그인 일시 </th>
+								<th>마지막 로그인 일시</th>
 								<td><div id="lastLogin"></div></td>
 							</tr>
 						</table>
-						<button id="updateUserInfo">수정하기</button>
-						<button id="withdraw">탈퇴하기</button>
+						<div class="infoBtn">
+							<button id="updateUserInfo">수정하기</button>
+							<button id="withdraw">탈퇴하기</button>
+						</div>
 					</div>
 				</div>
 				<div class="applyList" style="display: none;">
@@ -75,13 +76,13 @@
 							<thead>
 								<tr>
 									<th>번호</th>
-									<th>교육 과정 명</th>
+									<th>교육과정명</th>
 									<th>지원기간</th>
 									<th>교육기간</th>
 									<th>정원</th>
-									<th>지원 날짜</th>
-									<th>지원 상태</th>
-									<th colspan="2">수정/수강</th>
+									<th>지원날짜</th>
+									<th>지원상태</th>
+									<th>수정/수강</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -97,8 +98,8 @@
 									<td th:text="${ApplyDetailDTO.rgstDd}"></td>
 									<td th:text="${ApplyDetailDTO.cmcdNm}"></td>
 									<td><button class="update">수정</button>
-										<button class="apply">수강</button></td>
-									<td><button class="cancel">지원취소</button>
+										<button class="apply">수강</button>
+										<button class="cancel">지원취소</button>
 										<button class="drop">수강포기</button></td>
 									<td style="display: none;"><span
 										th:text="${ApplyDetailDTO.aplyId}"></span></td>
@@ -114,10 +115,10 @@
 							<thead>
 								<tr>
 									<th>번호</th>
-									<th>교육 과정 명</th>
+									<th>교육과정명</th>
 									<th>교육기간</th>
 									<th>수강상태</th>
-									<th>이수 상태</th>
+									<th>이수상태</th>
 									<th>이수증 다운로드</th>
 								</tr>
 							</thead>
@@ -127,13 +128,13 @@
 									<td><span th:text="${rowStat.index + 1}"></span></td>
 									<td th:text="${RegistrationVO.clssNm}"></td>
 									<td
-										th:text="${RegistrationVO.clssStartDd} +' ~ '+ ${RegistrationVO.clssEndDd}"></td>
+										th:utext="${RegistrationVO.clssStartDd}+'&lt;br /&gt; ~ '+  ${RegistrationVO.clssEndDd}"></td>
 									<td th:text="${RegistrationVO.rgstNm}"></td>
 									<td th:text="${RegistrationVO.cmptNm}"></td>
 									<td class="rgstPrint" style="display: none;"><a
 										th:href="@{/download/file/__${RegistrationVO.fileId}__/__${RegistrationVO.fileSubId}__}"
 										th:title="${RegistrationVO.fileNm}"> <img
-											style="width: 30px;" th:src="@{/img/file_icon.png}"
+											style="height: 25px;" th:src="@{/img/file_icon.png}"
 											alt="file  아이콘"></a></td>
 								</tr>
 							</tbody>
@@ -147,12 +148,12 @@
 							<thead>
 								<tr>
 									<th>번호</th>
-									<th>교육 과정 명</th>
-									<th>출근 시간</th>
-									<th>퇴근 시간</th>
-									<th>출퇴근 상태</th>
-									<th>사유서 제출</th>
-									<th>사유서 상태</th>
+									<th>교육과정명</th>
+									<th>출근시간</th>
+									<th>퇴근시간</th>
+									<th>출퇴근상태</th>
+									<th>사유서제출</th>
+									<th>사유서상태</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -245,7 +246,7 @@
 			var rgstPrintElement = $('.rgstPrint').eq(i);
 
 			if (cmptCd === 'CMP0000002') {
-				rgstPrintElement.css('display', 'block');
+				rgstPrintElement.css('display', 'revert');
 			}
 		}
 	</script>
@@ -313,13 +314,13 @@
 
 		function displayUserInfo(userInfo) {
 			document.getElementById("userName").value = userInfo.name;
-			document.getElementById("userEmail").textContent= userInfo.email;
+			document.getElementById("userEmail").textContent = userInfo.email;
 			document.getElementById("userGender").value = userInfo.gender;
 			document.getElementById("userBirth").value = userInfo.birth;
 			document.getElementById("userTel").value = userInfo.tel;
 			document.getElementById("userJob").value = userInfo.job;
-			document.getElementById("rgstDt").textContent= userInfo.rgstDt;
-			document.getElementById("lastLogin").textContent= userInfo.LastLogin;
+			document.getElementById("rgstDt").textContent = userInfo.rgstDt;
+			document.getElementById("lastLogin").textContent = userInfo.LastLogin;
 		}
 	</script>
 	<script src="/js/student/sidebar.js"></script>

@@ -378,13 +378,46 @@ public class StudentController {
 
 	@GetMapping("/notice")
 	public String noticeList(Model model) {
-		model.addAttribute("student", student);
-
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllNotice();
 		model.addAttribute("postList", postList);
 
 		return "student/notice_list";
+	}
+
+	// 공지사항 조회수 상승
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@PostMapping("/incrementHit")
+	@ResponseBody
+	public void incrementHit(@RequestParam("postId") String postId) {
+		studentService.incrementHit(postId);
+	}
+
+	// 공지사항 상세화면
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@GetMapping("/notice/{postId}")
+	public String noticeDetail(@PathVariable String postId, Model model) {
+		PostVO noticeDetail = studentService.selectNotice(postId);
+		model.addAttribute("noticeDetail", noticeDetail);
+
+		List<FileVO> noticeFileList = studentService.selectAllNoticeFile(postId);
+		model.addAttribute("noticeFileList", noticeFileList);
+
+		return "student/notice_detail";
 	}
 
 	// 문의사항 리스트확인
@@ -396,13 +429,35 @@ public class StudentController {
 	 */
 	@GetMapping("/inquiry")
 	public String inquiryList(Model model) {
-		model.addAttribute("student", student);
-
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllInquiry();
 		model.addAttribute("postList", postList);
 
 		return "student/inquiry_list";
+	}
+
+	// 문의사항 상세화면
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@GetMapping("/inquiry/{postId}")
+	public String inquiryDetail(@PathVariable String postId, Model model) {
+		PostVO inquiryDetail = studentService.selectInquiry(postId);
+		model.addAttribute("inquiryDetail", inquiryDetail);
+
+		List<FileVO> inquiryFileList = studentService.selectAllInquiryFile(postId);
+		model.addAttribute("inquiryFileList", inquiryFileList);
+
+		List<PostVO> replyDetail = studentService.selectReply(postId);
+		model.addAttribute("replyDetail", replyDetail);
+
+
+		return "student/inquiry_detail";
 	}
 
 	// 교육 리스트확인
@@ -636,7 +691,7 @@ public class StudentController {
 				Timestamp rgstDt = stdtVO.getRgstDt();
 				String lastLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(lastLogin);
 				String rgstDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(rgstDt);
-				
+
 				// 사용자 정보를 응답에 추가
 				Map<String, String> user = new HashMap<>();
 				user.put("name", stdtVO.getStdtNm());
@@ -678,7 +733,6 @@ public class StudentController {
 	@ResponseBody
 	public Map<String, Object> updateUserInfo(@RequestBody Map<String, String> updatedUserInfo) {
 		Map<String, Object> response = new HashMap<>();
-
 
 		response.put("success", true);
 

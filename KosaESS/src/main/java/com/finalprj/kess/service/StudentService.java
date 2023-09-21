@@ -11,7 +11,6 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
-import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
@@ -221,7 +220,6 @@ public class StudentService implements IStudentService {
 		return studentRepository.getPassword(stdtId);
 	}
 
-
 	@Override
 	public WorklogVO getNewWlog(String maxWlogId) {
 		return studentRepository.getNewWlog(maxWlogId);
@@ -233,13 +231,48 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId,Double totalTm) {
-		studentRepository.getUpdateOutlog(newOutTm,outlogCd,lastWlogId,totalTm);
+	public void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId, Double totalTm) {
+		studentRepository.getUpdateOutlog(newOutTm, outlogCd, lastWlogId, totalTm);
 	}
 
 	@Override
 	public Timestamp getlastLogTime(String stdtId) {
 		return studentRepository.getlastLogTime(stdtId);
+	}
+
+	@Override
+	public PostVO selectNotice(String postId) {
+		return studentRepository.selectNotice(postId);
+	}
+
+	@Override
+	public List<FileVO> selectAllNoticeFile(String postId) {
+		return studentRepository.selectAllNoticeFile(postId);
+	}
+
+	@Override
+	public boolean incrementHit(String postId) {
+		return studentRepository.incrementHit(postId);
+	}
+
+	@Override
+	public PostVO selectInquiry(String postId) {
+		return studentRepository.selectInquiry(postId);
+	}
+
+	@Override
+	public List<FileVO> selectAllInquiryFile(String postId) {
+		return studentRepository.selectAllInquiryFile(postId);
+	}
+
+	@Override
+	public List<PostVO> selectReply(String postId) {
+		return studentRepository.selectReply(postId);
+	}
+
+	@Override
+	public List<FileVO> selectAllReplyFile(String postId, String replyId) {
+		return studentRepository.selectAllReplyFile(postId, replyId);
 	}
 
 }

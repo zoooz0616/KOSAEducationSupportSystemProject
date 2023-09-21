@@ -1,14 +1,17 @@
 table {
-	border: 2px solid #0E5881;
 	border-collapse: collapse;
 	width: 95%;
 	margin-bottom: 5%;
 }
 
 th, td {
-	border: 1px solid #0E5881;
+	border: 1px solid #9FBCCD;
 	border-collapse: collapse;
-	padding: 1%;
+	padding: 1.5% 0;
+}
+
+thead tr {
+	border-bottom: 2px solid #0E5881;
 }
 
 table td {
@@ -17,7 +20,10 @@ table td {
 
 table th {
 	background-color: #E7EFF3;
-	width: 12%;
+}
+
+.crclTable th {
+	border-bottom: 2px solid #0E5881;
 }
 
 .content {
@@ -69,12 +75,12 @@ ul {
 	justify-content: space-evenly;
 }
 
-.btn button {
-	padding: 0 3%;
-}
-
 .crclTable th {
 	background-color: #E7EFF3;
+}
+
+.btn button {
+	padding: 0 3%;
 }
 
 .back, .openModalBtn {
