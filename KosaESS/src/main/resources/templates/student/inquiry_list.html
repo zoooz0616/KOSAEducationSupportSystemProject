@@ -16,10 +16,16 @@
 		<div class="maintext">
 			<h1 style="color: #0E5881; margin-top: 3%;">문의사항</h1>
 		</div>
-		<div class="content">
-			<table class="inqy-table" style="width: 90%;">
+		<div class="content" style="flex-direction: column;">
+			<div class="search">
+				<div class="searchform">
+					<input type="text" class="searchInput" placeholder="문의사항명이나 작성자를 검색하세요.">
+					<input type="button" class="searchBtn" value="검색">
+				</div>
+			</div>
+			<table class="inquiry-table" style="width: 90%; margin: auto;">
 				<thead>
-					<tr class="classRow" style="border: none;">
+					<tr class="inquiryRow" style="border: none;">
 						<td>번호</td>
 						<td>문의사항 제목</td>
 						<td>작성자</td>
@@ -29,15 +35,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="classRow" th:each="postVO, rowStat : ${postList}">
+					<tr class="inquiryRow" th:each="postVO, rowStat : ${postList}">
 						<td><span th:text="${rowStat.index + 1}"></span></td>
 						<td><a><span class="goInquiryDetail"
 								style="font-size: 17px;" th:text="${postVO.postTitle}"></span></a></td>
-						<td><span
-							th:if="${postVO.mngrNm == null}"
+						<td><span th:if="${postVO.mngrNm == null}"
 							th:text="${postVO.stdtNm}"></span> <span
-							th:if="${postVO.stdtNm == null}"
-							th:text="${postVO.mngrNm}"></span></td>
+							th:if="${postVO.stdtNm == null}" th:text="${postVO.mngrNm}"></span></td>
 						<td><span th:text="${postVO.rgstDd}"></span></td>
 						<td><span th:text="${postVO.postHit}"></span></td>
 						<td><span th:text="${postVO.cmcdNm}"></span></td>
@@ -63,6 +67,54 @@
 				}
 			});
 		});
+		$('.searchInput').on('keyup', function(event) {
+			if (event.key === "Enter") {
+				$('.searchBtn').trigger('click');
+			}
+		});
+		// 검색 버튼 클릭 시의 처리 코드
+		$('.searchBtn').click(function() {
+			// 검색어를 가져옵니다.
+			var searchKeyword = $('.searchInput').val().trim();
+
+			// Ajax 요청을 보냅니다.
+			$.ajax({
+				type : 'GET',
+				url : '/student/inquiry/search',
+				data : {
+					keyword : searchKeyword,
+				},
+				success : function(data) {
+					// 받은 데이터로 테이블을 업데이트합니다.
+					var inquiryTable;
+					inquiryTable = $('.inquiry-table tbody');
+					inquiryTable.empty(); // 테이블 내용을 비웁니다.
+
+					for (var i = 0; i < data.length; i++) {
+						var postVO = data[i];
+						var row = $('<tr class="inquiryRow"></tr>');
+						row.append('<td><span >' + (i + 1) + '</span></td>');
+						row.append('<td><a><span class="goInquiryDetail" style="font-size: 17px;">' + postVO.postTitle + '</span></a></td>');
+						if(postVO.mngrNm == null){
+							row.append('<td><span>'+ postVO.stdtNm +'</span></td>')
+						}else if(postVO.stdtNm == null){
+							row.append('<td><span>'+ postVO.mngrNm +'</span></td>')
+						}
+						row.append('<td><span>'+ postVO.rgstDd +'</span></td>')
+						row.append('<td><span>'+ postVO.postHit +'</span></td>')
+						row.append('<td><span>'+ postVO.cmcdNm +'</span></td>')
+						row.append('<td style="display: none;"><span>'+ postVO.postId +'</span></td>')
+						inquiryTable.append(row);
+					}
+					$('.totalRowCount').text(data.length);
+				}
+			});
+		});
+
+		function updateTable() {
+			// 검색 버튼 클릭 이벤트 호출
+			$('.searchBtn').trigger('click');
+		}
 	</script>
 </body>
 </html>

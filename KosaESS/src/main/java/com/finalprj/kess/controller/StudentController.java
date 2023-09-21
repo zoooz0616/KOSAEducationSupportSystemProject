@@ -329,6 +329,10 @@ public class StudentController {
 				if (inlogCd.equals("WOK0000001")) { // 수업마무리시간 - 수업시작시간
 					Double diffSec = (double) ((clssOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					if (diffHours < 0)
+						totalTm = 0.0;
+					else
+						totalTm = diffHours;
 					totalTm = diffHours;
 					if (totalTm < 4)
 						outlogCd = ("WOK0000004");
@@ -336,6 +340,10 @@ public class StudentController {
 				} else if (inlogCd.equals("WOK0000002")) { // 수업마무리시간 - 출근시간
 					Double diffSec = (double) ((clssOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					if (diffHours < 0)
+						totalTm = 0.0;
+					else
+						totalTm = diffHours;
 					totalTm = diffHours;
 					if (totalTm < 4)
 						outlogCd = ("WOK0000004");
@@ -346,6 +354,10 @@ public class StudentController {
 				if (inlogCd.equals("WOK0000001")) { // 퇴근시간 - 수업시작시간
 					Double diffSec = (double) ((newOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					if (diffHours < 0)
+						totalTm = 0.0;
+					else
+						totalTm = diffHours;
 					totalTm = diffHours;
 					if (totalTm < 4)
 						outlogCd = "WOK0000004";
@@ -353,6 +365,10 @@ public class StudentController {
 				} else if (inlogCd.equals("WOK0000002")) { // 퇴근시간 - 출근시간
 					Double diffSec = (double) ((newOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					if (diffHours < 0)
+						totalTm = 0.0;
+					else
+						totalTm = diffHours;
 					totalTm = diffHours;
 					if (totalTm < 4)
 						outlogCd = ("WOK0000004");
@@ -383,6 +399,23 @@ public class StudentController {
 		model.addAttribute("postList", postList);
 
 		return "student/notice_list";
+	}
+
+	// 공지사항 검색 버튼
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .8
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/notice/search")
+	@ResponseBody
+	public List<PostVO> searchNotices(@RequestParam("keyword") String keyword, Model model) {
+		// 검색어(keyword)를 사용하여 교육 과정을 검색하고 결과를 모델에 담습니다.
+		List<PostVO> searchResults = studentService.searchNotices(keyword);
+		model.addAttribute("noticesList", searchResults);
+		return searchResults;
 	}
 
 	// 공지사항 조회수 상승
@@ -436,6 +469,23 @@ public class StudentController {
 		return "student/inquiry_list";
 	}
 
+	// 문의사항 검색 버튼
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .8
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/inquiry/search")
+	@ResponseBody
+	public List<PostVO> searchInquiries(@RequestParam("keyword") String keyword, Model model) {
+		// 검색어(keyword)를 사용하여 교육 과정을 검색하고 결과를 모델에 담습니다.
+		List<PostVO> searchResults = studentService.searchInquiries(keyword);
+		model.addAttribute("inquiriesList", searchResults);
+		return searchResults;
+	}
+
 	// 문의사항 상세화면
 
 	/**
@@ -455,7 +505,6 @@ public class StudentController {
 
 		List<PostVO> replyDetail = studentService.selectReply(postId);
 		model.addAttribute("replyDetail", replyDetail);
-
 
 		return "student/inquiry_detail";
 	}
@@ -645,7 +694,6 @@ public class StudentController {
 	 */
 	@GetMapping("/mypage")
 	public String mypageMain(HttpSession session, Model model) {
-		model.addAttribute("student", student);
 		String stdtId = (String) session.getAttribute("stdtId");
 		List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
 		model.addAttribute("applyList", applyList);

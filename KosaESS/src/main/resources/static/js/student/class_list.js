@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	// 초기 페이지당 목록 수 설정
-	var itemsPerPage = 8; // 기본값 8로 설정
+	var itemsPerPage = 10; // 기본값 10으로 설정
 
 	// 페이지당 목록 수가 변경될 때
 	$('#pageList').change(function() {
@@ -113,18 +113,18 @@ $(document).ready(function() {
 							row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
 						}
 						if (classVO.fileId != null) {
-							row.append('<td class="classImg"><div><img src="/student/file/' + classVO.fileId + '/' + classVO.fileSubId + '"></div>');
+							row.append('<td class="classImg"><div style="width: 100%; text-align: center;"><img src="/student/file/' + classVO.fileId + '/' + classVO.fileSubId + '"></div>');
 						} else {
-							row.append('<td class="classImg"><div><img src="/img/logo.png"></div>');
+							row.append('<td class="classImg"><div style="width: 100%; text-align: center;"><img src="/img/logo.png"></div>');
 						}
-						row.append('<td style="font-weight: bold; font-size: 20px;">' + classVO.clssNm + '</td>');
+						row.append('<td style="font-weight: bold; font-size: 18px;">' + classVO.clssNm + '</td>');
 						if (classVO.aplyStartDd == null) {
-							row.append('<td><span>지원기간:  미정  </span></td>');
+							row.append('<td><span>지원:  미정  </span></td>');
 						} else {
-							row.append('<td><span>지원기간: </span><span>' + classVO.aplyStartDd + ' ~ ' + classVO.aplyEndDd + '</span></td>');
+							row.append('<td><span>지원: </span><span>' + classVO.aplyStartDd + '~' + classVO.aplyEndDd + '</span></td>');
 						}
-						if (classVO.clssStartDd == null) {
-							row.append('<td><span>지원기간:  미정  </span></td>');
+						/*if (classVO.clssStartDd == null) {
+							row.append('<td><span>교육기간:  미정  </span></td>');
 						} else {
 							row.append('<td><span>교육기간: </span><span>' + classVO.clssStartDd + ' ~ ' + classVO.clssEndDd + '</span></td>');
 						}
@@ -138,7 +138,7 @@ $(document).ready(function() {
 								row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: ' + classVO.limitCnt + '</span></td>');
 							else
 								row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: 미정  </span></td>');
-						}
+						}*/
 						var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
 						row.append($('<td>').append(applyBtn));
 						// 행을 테이블에 추가합니다.

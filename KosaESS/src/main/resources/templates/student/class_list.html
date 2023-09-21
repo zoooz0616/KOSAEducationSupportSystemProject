@@ -41,18 +41,19 @@
 				</div>
 				<div>
 					<span>페이지당 목록 수</span> <select id="pageList">
-						<option value="8">8개씩</option>
-						<option value="16">16개씩</option>
-						<option value="32">32개씩</option>
+						<option value="10">10개씩</option>
+						<option value="20">20개씩</option>
+						<option value="30">30개씩</option>
 					</select>
 				</div>
 			</div>
-			<table class="list-style" style="display: none;">
+			<table class="list-style"
+				style="display: none; width: 95%; margin: auto;">
 
 				<thead>
-					<tr class="classRow" style="border:none;">
+					<tr class="classRow" style="border: none;">
 						<td>번호</td>
-						<td style="text-align:center;">교육과정명</td>
+						<td style="text-align: center;">교육과정명</td>
 						<td>지원기간</td>
 						<td>교육기간</td>
 						<td>장소</td>
@@ -86,29 +87,31 @@
 					<tr th:each="classVO, rowStat : ${classList}" class="classRow">
 						<td><span class="className" th:text="${classVO.cmcdNm}"></span></td>
 						<td class="classImg">
-							<div th:if="${classVO.fileId!=null}">
+							<div style="width: 100%; text-align: center;"
+								th:if="${classVO.fileId!=null}">
 								<img
 									th:src="@{/student/file/__${classVO.fileId}__/__${classVO.fileSubId}__}">
 							</div>
-							<div th:if="${classVO.fileId==null}">
+							<div style="width: 100%; text-align: center;"
+								th:if="${classVO.fileId==null}">
 								<img th:src="@{/img/logo.png}">
 							</div>
 						</td>
 						<td th:text="${classVO.clssNm}"
-							style="font-weight: bold; font-size: 22px;">교육과정명</td>
+							style="font-weight: bold; font-size: 18px;">교육과정명</td>
 						<td><span>지원기간: </span><span
 							th:if="${classVO.aplyStartDd == null}">미정</span> <span
 							th:if="${classVO.aplyStartDd != null}"
 							th:text="${classVO.aplyStartDd} + ' ~ ' +${classVO.aplyEndDd}"></span></td>
-						<td><span>교육기간: </span><span
+						<!-- <td><span>교육기간: </span><span
 							th:if="${classVO.clssStartDd == null}">미정</span> <span
 							th:if="${classVO.clssStartDd != null}"
-							th:text="${classVO.clssStartDd} + ' ~ ' +${classVO.clssEndDd}"></span></td>
-						<td><span>장소: </span> <span
+							th:text="${classVO.clssStartDd} + ' ~ ' +${classVO.clssEndDd}"></span></td> -->
+						<!-- <td><span>장소: </span> <span
 							th:if="${classVO.clssAdr == null}">미정</span> <span
 							th:if="${classVO.clssAdr != null}" th:text="${classVO.clssAdr}"></span>
 							<span th:text="'  /  '"></span> <span>정원: </span> <span
-							th:text="${classVO.limitCnt}"></span></td>
+							th:text="${classVO.limitCnt}"></span></td>-->
 						<td><a class="applyBtn"
 							th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
 					</tr>

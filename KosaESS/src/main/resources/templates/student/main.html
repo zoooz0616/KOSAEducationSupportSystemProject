@@ -45,20 +45,25 @@
 								style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
 						</h2>
 						<div class="my" style="text-align: left;">
-							<div class="box">
-								<a th:href="@{/student/mypage}"> <span>지원내역: </span> <span
+							<div class="box" id=" aplyList">
+								<span>지원내역: </span> <span
 									style="color: #0E5881; font-size: 22px;"
 									th:text="${aplyClassCnt}"></span> <span>건</span></a>
 							</div>
 							<div class="box">
-								<a th:href="@{/student/mypage}"> <span>출력 가능
-										이수증: </span> <span style="color: #0E5881; font-size: 22px;"
-									th:text="${cmptClassCnt}"></span> <span>건</span></a>
+								<span>출력 가능 이수증: </span> <span
+									style="color: #0E5881; font-size: 22px;"
+									th:text="${cmptClassCnt}"></span> <span>건</span>
 							</div>
 						</div>
+
 						<div class="lastlog">
 							<h4>마지막 로그인 일시</h4>
 							<h4 th:text="${lastLogTime}"></h4>
+						</div>
+						<div>
+							<a th:href="@{/student/mypage}" style="text-align: center;"><h3>상세내역
+									보러가기</h3></a>
 						</div>
 					</div>
 				</div>
@@ -66,18 +71,16 @@
 			<div class="login con"
 				style="margin-bottom: 4%; text-align: center; padding: 3%;">
 				<div th:if="${session.userEmail==null}">
+					<h2>로그인</h2>
 					<form th:action="@{/login}" method="post" class="">
-						<div class="">
-							<label for="email"></label> <input style="width: 50%;"
-								type="text" name="email" id="id" class="" placeholder="아이디(이메일)">
+						<div class="" style="display: flex; flex-direction: column;">
+							<label for="email"></label> <input type="text" name="email"
+								id="id" class="" placeholder="아이디(이메일)"> <label
+								for="pwd"></label> <input type="password" name="pwd" id="pwd"
+								class=" " placeholder="비밀번호">
 						</div>
-						<div class="">
-							<label for="pwd"></label> <input style="width: 50%;"
-								type="password" name="pwd" id="pwd" class=" " placeholder="비밀번호">
-						</div>
-						<div class="submit">
-							<input style="width: 50%;" type="submit" class="loginBtn"
-								th:value="로그인">
+						<div class="submit" style="width: 100%;">
+							<input type="submit" class="loginBtn" th:value="로그인">
 						</div>
 					</form>
 				</div>
@@ -94,14 +97,14 @@
 					<div th:if="${ingClassVO != null}">
 						<div class="inouttm">
 							<h3 th:text="${ingClassVO.clssNm}" style="margin: 0 0 2% 0;"></h3>
-							<div class="viewinout"
-								style="display: flex; justify-content: space-around;">
+							<div class="viewinout">
 								<div>
-									<label for="intm"></label><span>출근 시간</span> <input type="text"
-										name="intm" id="intm" class="checktm" readonly>
+									<label for="intm"></label> <input type="text"
+										placeholder="출근시간" name="intm" id="intm" class="checktm"
+										readonly>
 								</div>
 								<div>
-									<label for="outtm"></label><span>퇴근 시간</span> <input
+									<label for="outtm"></label> <input placeholder="퇴근시간"
 										type="text" name="outtm" id="outtm" class="checktm" readonly>
 								</div>
 							</div>
@@ -112,6 +115,11 @@
 							<input class="wlogBtn" type="button" onclick="toggleInOut()">
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class=" con" style="width: 45%;margin-bottom: 4%;">
+				<div>
+					<h2>커다란 달력</h2>
 				</div>
 			</div>
 			<div class="class con" style="width: 45%;">
@@ -158,6 +166,7 @@
 
 		console.log(lastInTm + lastOutTm);
 	</script>
+
 	<script src="/js/student/main.js"></script>
 
 </body>

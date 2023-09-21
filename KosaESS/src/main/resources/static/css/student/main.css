@@ -108,6 +108,10 @@ table a {
 	font-weight: bold;
 }
 
+a {
+	text-decoration: none;
+}
+
 a:hover {
 	text-decoration: underline;
 }
@@ -155,6 +159,8 @@ input::placeholder {
 	color: white;
 	margin: 2% auto;
 	cursor: pointer;
+	width: 100%;
+	
 }
 
 .wlogBtn {
@@ -162,12 +168,12 @@ input::placeholder {
 	color: white;
 	cursor: pointer;
 	text-align: center;
-	height: 100%;
 }
 
 .submit {
 	align-content: center;
 	width: 60%;
+	margin:auto;
 }
 
 .my {
@@ -211,13 +217,16 @@ input::placeholder {
 	flex-direction: column;
 	margin: 2% auto;
 }
-.viewinout div{
-	margin:0 3%;
+
+.viewinout div {
+	margin: 0 3%;
 }
-.lastlog{
+
+.lastlog {
 	padding: 2%;
 }
-.lastlog h4{
+
+.lastlog h4 {
 	margin: 2% 0;
 }
 
