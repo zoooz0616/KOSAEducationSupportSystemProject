@@ -536,6 +536,46 @@ public class AdminService implements IAdminService {
 		return adminRepository.getDetailCodeList(cmcdId);
 	}
 
+	
+	@Override
+	public String getGroupCodeId(String cmcdId) {
+		return adminRepository.getGroupCodeId(cmcdId);
+	}
+	
+	@Override
+	public int getDetailCodeNmCnt(String cmcdId, String cmcdNm) {
+		return adminRepository.getDetailCodeNmCnt(cmcdId, cmcdNm);
+	}
+	
+	@Override
+	public String getMaxDetailCodeId(String cmcdId) {
+		return adminRepository.getMaxDetailCodeId(cmcdId);
+	}
+	
+	@Override
+	public void insertDetailCode(CommonCodeVO commonCodeVO) {
+		adminRepository.insertDetailcode(commonCodeVO);
+	}
+	
+	@Override
+	public void updateDetailCode(String cmcdId, String cmcdNm, String useYn) {
+		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();

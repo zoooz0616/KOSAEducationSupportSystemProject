@@ -32,6 +32,7 @@ public class StudentInfoDTO {
 	private int countLateArrive;//지각 수
 	private int countEalryLeave;//조퇴 수
 	private int countAbsent;//결석 수
+	private double cmptRate;//출석률
 
 	public void appendWlogCnt(String wlogCnt) {
 		this.wlogCnt = this.wlogCnt.concat(wlogCnt);

@@ -1,5 +1,3 @@
-//	>>>TODO<<<<
-//		student_list의 교육과정 검색창 고치고, 학생 나오게 연동하기
 package com.finalprj.kess.controller;
 
 import java.io.UnsupportedEncodingException;
@@ -33,6 +31,7 @@ import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
 
@@ -214,8 +213,6 @@ public class ManagerController {
 		emptyClassVO.setClssNm("교육과정명을 선택하세요");
 		classList.add(emptyClassVO);
 
-		String roleCd = (String) session.getAttribute("roleCd");
-		
 		// classId가 null일 경우, 해당 mngrId의 가장 큰 classId를 가져옴  
 //		if (classId == null) {
 //			classId = managerService.getLatestClassIdByMngrId((String) session.getAttribute("mngrId"));
@@ -230,12 +227,19 @@ public class ManagerController {
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 
+		double totalTm = managerService.getTotalTmByClssId(classId);
+		double stdtTmSum;
 		for (StudentInfoDTO stdt : stdtList) {
+			// 출결 가져오기
 			stdt.setWlogCnt("");
 			for (CommonCodeVO cmcd : wlogCodeNameList) {
 				stdt.appendWlogCnt(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(classId, cmcd.getCmcdId(), stdt.getStdtId(), startDate, endDate)));
 				stdt.appendWlogCnt(",");
 			}
+
+			// 이수율 입력하기
+			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
+			stdt.setCmptRate(100.0 * stdtTmSum/totalTm);
 		}
 
 		model.addAttribute("title", "교육생 목록");
@@ -269,7 +273,63 @@ public class ManagerController {
 		
 		return "manager/mypage";
 	}
+	
+	@GetMapping("/worklog")
+	public String getWlogList(Model model, HttpSession session, HttpServletRequest httpServletRequest
+			,@RequestParam(required = false) String classId
+			,@RequestParam(required = false) String startDate
+			,@RequestParam(required = false) String endDate
+			,@RequestParam(required = false) String wlogCd
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//End : 유저 필터링
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		
+		//reqParam == null ? 초기화
+		if (startDate == null) {
+			startDate = String.valueOf(YearMonth.now().atDay(1));
+		} else {
+			startDate = httpServletRequest.getParameter("startDate");
+		}
+		if (endDate == null) {
+			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
+		} else {
+			endDate = httpServletRequest.getParameter("endDate");
+		}
+		//End : reqParam == null ? 초기화
+		
+		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
+		model.addAttribute("wlogCdList", wlogCdList);
+		
+		if(classId != null) {
+			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId(mngrId,"", "");
+			List<String> isManagerIdList = new ArrayList<String>();
+			for (ClassVO vo : isManagerChkList) {
+				isManagerIdList.add(vo.getClssId());
+			}
+			if(isManagerIdList.contains(classId)) {
+				return null;//<<<이 부분 에러 페이지 이동으로 수정하기
+			}
+		}
 
+		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(classId, startDate, endDate);
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
+		model.addAttribute("classList", classList);
+		model.addAttribute("wlogList", wlogList);
+		return "manager/wlog_list";
+	}
+	
+	
+	
+// AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
 	@ResponseBody
 	public Map<String, Object> fetchStudentList(@RequestParam("classId") String classId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
@@ -332,7 +392,7 @@ public class ManagerController {
 			) {
 		//업데이트
 		for (String stdtId : targetList) {
-			managerService.updateStdtCmptCd(stdtId, clssId, targetCmptId);
+			managerService.updateStdtCmptCd((String)session.getAttribute("mngrId"),stdtId, clssId, targetCmptId);
 		}
 		// End : 업데이트
 		return "OK!";

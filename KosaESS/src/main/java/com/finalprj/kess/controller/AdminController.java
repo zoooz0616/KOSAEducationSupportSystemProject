@@ -1484,7 +1484,7 @@ public class AdminController {
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
 		model.addAttribute("groupCodeList", groupCodeList);
 
-		List<CommonCodeVO> detailCodeList = null;
+		List<CommonCodeVO> detailCodeList = new ArrayList<CommonCodeVO>();
 		model.addAttribute("detailCodeList", detailCodeList);
 
 		return "admin/commoncode_list";
@@ -1559,16 +1559,81 @@ public class AdminController {
 	 * @parameter : cmcdId, model
 	 * @return : String
 	 */
-	@RequestMapping("/commoncode/view/{cmcdId}")
-	public String detailCode(@PathVariable String cmcdId, Model model) {
-		//그룹코드 리스트 전달
-		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
-		model.addAttribute("groupCodeList", groupCodeList);
-
+	@GetMapping("/commoncode/view/{cmcdId}")
+	@ResponseBody
+	public Map<String, Object> detailCode(@PathVariable String cmcdId) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
 		//상세코드 리스트 전달
 		List<CommonCodeVO> detailCodeList = adminService.getDetailCodeList(cmcdId);
-		model.addAttribute("detailCodeList", detailCodeList);
-		return "admin/commoncode_list";
+		response.put("detailCodeList", detailCodeList);
+		
+		return response;
+	}
+	
+	/**
+	 * 기준정보 상세코드 등록
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : cmcdId,cmcdNm
+	 * @return : String
+	 */
+	@PostMapping("/commoncode/insert/detailcode")
+	@ResponseBody
+	public String deleteDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm) {
+		//이미 그 그룹코드에 사용여부가 Y중에 입력한 상세코드명이 있는지 확인
+		int detailCodeCnt = adminService.getDetailCodeNmCnt(cmcdId, cmcdNm);
+		//있으면 return fail
+		if(detailCodeCnt > 0) {
+			return "fail";
+		}else {
+			CommonCodeVO commonCodeVO = new CommonCodeVO();
+			commonCodeVO.setCmcdId(adminService.getMaxDetailCodeId(cmcdId));
+			commonCodeVO.setTpcdId(cmcdId);
+			commonCodeVO.setCmcdNm(cmcdNm);
+			
+			adminService.insertDetailCode(commonCodeVO);
+			
+			return cmcdId;
+		}
+	}
+	
+	/**
+	 * 기준정보 상세코드 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : cmcdId, cmcdNm, useYn
+	 * @return : String
+	 */
+	@PostMapping("/commoncode/update/detailcode")
+	@ResponseBody
+	public String updateDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm, @RequestParam String useYn) {
+		adminService.updateDetailCode(cmcdId, cmcdNm, useYn);
+		
+		String groupCodeId = adminService.getGroupCodeId(cmcdId);
+		return groupCodeId;
+	}
+	
+	/**
+	 * 기준정보 상세코드 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : selectedDetailCodeIds
+	 * @return : String
+	 */
+	@PostMapping("/commoncode/delete/detailcode")
+	@ResponseBody
+	public String deleteDetailCode(@RequestParam(name="selectedDetailCodeIds[]", required = false) List<String> selectedDetailCodeIds) {
+		if (selectedDetailCodeIds == null) {
+			return "fail";
+		}else {
+			//사용여부'N', updt 수정
+			adminService.deleteGroupCode(selectedDetailCodeIds);
+			
+			String groupCodeId = adminService.getGroupCodeId(selectedDetailCodeIds.get(0));
+
+			return groupCodeId;
+		}
 	}
 
 
