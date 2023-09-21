@@ -255,7 +255,7 @@
 		    SELECT cmcd_id
 		    FROM cmcd
 		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
-		) and delete_yn = 'N' and (post_title LIKE ('%'|| UPPER(#{keyword}) ||'%') or stdt_nm )
+		) and delete_yn = 'N' and (post_title LIKE ('%'|| UPPER(#{keyword}) ||'%') or stdt_nm LIKE ('%'|| UPPER(#{keyword}) ||'%'))
 		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
