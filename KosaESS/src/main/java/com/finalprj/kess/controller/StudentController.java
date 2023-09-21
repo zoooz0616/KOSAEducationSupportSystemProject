@@ -81,9 +81,10 @@ public class StudentController {
 		classList = studentService.selectClassMain();
 		model.addAttribute("classList", classList);
 
-		int aplyClassCnt = studentService.getAplyClass((String) session.getAttribute("stdtId"));
-		int cmptClassCnt = studentService.getCmptClass((String) session.getAttribute("stdtId"));
-		ClassVO ingClassVO = studentService.getIngClass((String) session.getAttribute("stdtId"));
+		int aplyClassCnt = studentService.getAplyClass(stdtId);
+		int cmptClassCnt = studentService.getCmptClass(stdtId);
+		ClassVO ingClassVO = studentService.getIngClass(stdtId);
+		Timestamp lastLogTime = studentService.getlastLogTime(stdtId);
 
 		if (ingClassVO != null) {
 			String clssId = ingClassVO.getClssId();
@@ -95,6 +96,7 @@ public class StudentController {
 		model.addAttribute("aplyClassCnt", aplyClassCnt);
 		model.addAttribute("cmptClassCnt", cmptClassCnt);
 		model.addAttribute("ingClassVO", ingClassVO);
+		model.addAttribute("lastLogTime", lastLogTime);
 
 		return "student/main";
 	}
@@ -376,13 +378,46 @@ public class StudentController {
 
 	@GetMapping("/notice")
 	public String noticeList(Model model) {
-		model.addAttribute("student", student);
-
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllNotice();
 		model.addAttribute("postList", postList);
 
 		return "student/notice_list";
+	}
+
+	// 공지사항 조회수 상승
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@PostMapping("/incrementHit")
+	@ResponseBody
+	public void incrementHit(@RequestParam("postId") String postId) {
+		studentService.incrementHit(postId);
+	}
+
+	// 공지사항 상세화면
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@GetMapping("/notice/{postId}")
+	public String noticeDetail(@PathVariable String postId, Model model) {
+		PostVO noticeDetail = studentService.selectNotice(postId);
+		model.addAttribute("noticeDetail", noticeDetail);
+
+		List<FileVO> noticeFileList = studentService.selectAllNoticeFile(postId);
+		model.addAttribute("noticeFileList", noticeFileList);
+
+		return "student/notice_detail";
 	}
 
 	// 문의사항 리스트확인
@@ -394,13 +429,35 @@ public class StudentController {
 	 */
 	@GetMapping("/inquiry")
 	public String inquiryList(Model model) {
-		model.addAttribute("student", student);
-
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllInquiry();
 		model.addAttribute("postList", postList);
 
 		return "student/inquiry_list";
+	}
+
+	// 문의사항 상세화면
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@GetMapping("/inquiry/{postId}")
+	public String inquiryDetail(@PathVariable String postId, Model model) {
+		PostVO inquiryDetail = studentService.selectInquiry(postId);
+		model.addAttribute("inquiryDetail", inquiryDetail);
+
+		List<FileVO> inquiryFileList = studentService.selectAllInquiryFile(postId);
+		model.addAttribute("inquiryFileList", inquiryFileList);
+
+		List<PostVO> replyDetail = studentService.selectReply(postId);
+		model.addAttribute("replyDetail", replyDetail);
+
+
+		return "student/inquiry_detail";
 	}
 
 	// 교육 리스트확인
@@ -602,7 +659,7 @@ public class StudentController {
 		return "student/mypage";
 	}
 
-	// 마이페이지 개인정보 조회 및 수정 이동
+	// 마이페이지 개인정보 조회
 	/**
 	 * @author : dabin
 	 * @date : 2023. 8. 31.
@@ -615,36 +672,70 @@ public class StudentController {
 	public Map<String, Object> checkPassword(@RequestBody Map<String, String> requestBody, HttpSession session) {
 		Map<String, Object> response = new HashMap<>();
 		String stdtId = (String) session.getAttribute("stdtId");
-		String stdtPwd = studentService.getPassword(stdtId);
-		System.out.println(stdtPwd);
+		String stdtPwd = (String) studentService.getPassword(stdtId);
 
-		String clientPassword = requestBody.get("password");
-		System.out.println(clientPassword);
-		if (stdtPwd != null && stdtPwd.equals(clientPassword)) {
-			// 비밀번호가 일치하는 경우
-			response.put("success", true);
+		// 데이터베이스에서 사용자 정보 조회
+		StudentVO stdtVO = studentService.getstdtInfo(stdtId);
 
-			StudentVO stdtVO = studentService.getstdtInfo(stdtId);
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date birth = stdtVO.getBirthDd();
-			String birthDd = format.format(birth);
-			Timestamp LastLogin = stdtVO.getLastLoginDt();
-			String lastLog = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(LastLogin);
+		if (stdtVO != null) {
+			String clientPassword = requestBody.get("password"); // 클라이언트로부터 받은 비밀번호
 
-			// 사용자 정보를 응답에 추가할 수 있습니다.
-			Map<String, String> user = new HashMap<>();
-			user.put("name", stdtVO.getStdtNm()); // 사용자 이름
-			user.put("email", stdtVO.getUserEmail()); // 사용자 이메일
-			user.put("birth", birthDd);
-			user.put("tel", stdtVO.getStdtTel());
-			user.put("job", stdtVO.getJobCd());
-			user.put("LastLogin", lastLog);
+			// 클라이언트로부터 받은 비밀번호와 사용자의 비밀번호를 비교
+			if (passwordsMatch(clientPassword, stdtPwd)) {
+				// 비밀번호가 일치하는 경우
+				response.put("success", true);
 
-			response.put("user", user);
+				Date birth = stdtVO.getBirthDd();
+				String birthDd = new SimpleDateFormat("yyyy-MM-dd").format(birth);
+				Timestamp lastLogin = studentService.getlastLogTime(stdtId);
+				Timestamp rgstDt = stdtVO.getRgstDt();
+				String lastLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(lastLogin);
+				String rgstDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(rgstDt);
+
+				// 사용자 정보를 응답에 추가
+				Map<String, String> user = new HashMap<>();
+				user.put("name", stdtVO.getStdtNm());
+				user.put("email", stdtVO.getUserEmail());
+				user.put("gender", stdtVO.getGenderNm());
+				user.put("birth", birthDd);
+				user.put("tel", stdtVO.getStdtTel());
+				user.put("job", stdtVO.getJobNm());
+				user.put("rgstDt", rgstDate);
+				user.put("LastLogin", lastLog);
+
+				response.put("user", user);
+			} else {
+				// 비밀번호가 일치하지 않는 경우
+				response.put("success", false);
+			}
 		} else {
-			// 비밀번호가 일치하지 않는 경우
+			// 사용자 정보를 찾을 수 없는 경우
 			response.put("success", false);
 		}
+
+		return response;
+	}
+
+	// 비밀번호 비교 함수
+	private boolean passwordsMatch(String clientPassword, String stdtPwd) {
+		return clientPassword.equals(stdtPwd);
+	}
+
+	// 마이페이지 개인정보 수정
+	/**
+	 * @author : dabin
+	 * @date : 2023. 8. 31.
+	 * @parameter :model
+	 * @return :
+	 * @throws IOException
+	 */
+	@PostMapping("/updateUserInfo")
+	@ResponseBody
+	public Map<String, Object> updateUserInfo(@RequestBody Map<String, String> updatedUserInfo) {
+		Map<String, Object> response = new HashMap<>();
+
+		response.put("success", true);
+
 		return response;
 	}
 

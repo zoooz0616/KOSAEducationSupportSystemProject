@@ -535,6 +535,7 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getDetailCodeList(String cmcdId) {
 		return adminRepository.getDetailCodeList(cmcdId);
 	}
+
 	
 	@Override
 	public String getGroupCodeId(String cmcdId) {

@@ -22,4 +22,6 @@ public class PostVO {
 	private String deleteYn;//삭제여부
 	
 	private String cmcdNm;//상태이름
+	private String stdtNm;//등록자이름
+	private String mngrNm;//등록자이름
 }

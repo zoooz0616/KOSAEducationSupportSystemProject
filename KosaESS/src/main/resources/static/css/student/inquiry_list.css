@@ -1,0 +1,78 @@
+.inqy-table table {
+	border-style: none;
+	padding: 0 2%;
+}
+
+.inqy-table  .classRow {
+	display: flex;
+	justify-content: space-between;
+	border-style: none;
+	width: 100%;
+	align-items: center;
+	height: 5%;
+	border-bottom-style: solid;
+	border-color: #E7EFF3;
+	border-width: thin;
+}
+
+.inqy-table thead {
+	display: flex;
+	justify-content: space-between;
+	border-style: none;
+	background: #0E5881;
+	color: white;
+	padding: 0.5% 0;
+}
+
+.inqy-table thead td {
+	font-size: 18px;
+	font-weight: bold;
+	padding: 0.5% 0;
+}
+
+.inqy-table  tbody td {
+	padding: 1% 0;
+}
+
+.inqy-table tbody {
+	display: flex;
+	flex-direction: column;
+	border-style: none;
+}
+
+.inqy-table tbody tr:nth-child(even) {
+	background-color: #F3F6F8;
+}
+
+.inqy-table td:nth-child(1) {
+	width: 12%;
+	text-align: center;
+}
+
+.inqy-table td:nth-child(2) {
+	width: 50%;
+}
+
+.inqy-table td:nth-child(3) {
+	width: 5%;
+	text-align: center;
+}
+
+.inqy-table td:nth-child(4) {
+	width: 15%;
+	text-align: center;
+}
+
+.inqy-table td:nth-child(5) {
+	width: 5%;
+	text-align: center;
+}
+
+.inqy-table td:nth-child(6) {
+	width: 13%;
+	text-align: center;
+}
+
+a {
+	cursor: pointer;
+}

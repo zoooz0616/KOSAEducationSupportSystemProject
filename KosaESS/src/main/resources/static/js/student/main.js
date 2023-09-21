@@ -55,7 +55,7 @@ if (lastVO != null) {
 	var lastInTmDate = timestampToFormattedString(lastInTm);
 	if (lastOutTm === null) {
 		intmInput.value = lastInTmDate;
-		outtmInput.value = '';
+		outtmInput.value = ' ';
 		isAttendance = true;
 		wlogBtn.value = "퇴근하기";
 	} else {

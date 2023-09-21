@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link th:href="@{/css/student/post_detail.css}" rel="stylesheet">
+<link rel="icon" href="/img/icon.png" />
+<meta charset="UTF-8">
+<title>inquiry detail</title>
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+	<div class="container" style="display: flex;">
+		<div style="width: 100%;">
+			<div class="maintext">
+				<h1 style="color: #0E5881;">공지사항 상세</h1>
+			</div>
+			<div class="content">
+				<table>
+					<tr>
+						<th>공지사항 제목</th>
+						<td colspan="3"><span th:text="${noticeDetail.postTitle}"></span></td>
+					</tr>
+					<tr>
+						<th>게시일자</th>
+						<td><span th:text="${noticeDetail.rgstDd}"></span></td>
+
+						<th>조회수</th>
+						<td><span th:text="${noticeDetail.postHit}"></span></td>
+					</tr>
+				</table>
+				<div style="width: 80%;">
+					<div>
+						<h4 th:utext="${noticeDetail.postContent}"></h4>
+					</div>
+				</div>
+				<div class="postFile">
+					<ul>
+						<li th:each="FileVO : ${noticeFileList}"><a
+							th:if="${FileVO.fType == 'image'}"> <img
+								th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
+						</a> <a th:if="${FileVO.fType == 'application'}"
+							th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
+							th:title="${FileVO.fileNm}"> <img style="width: 40px;"
+								th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+								th:text="${FileVO.fileNm}"></span>><br>
+						</a></li>
+					</ul>
+				</div>
+			</div>
+			<div
+				style="position: fixed; display: block; right: 20px; bottom: 20px; width: 15%;">
+				<div class="btn">
+					<button class="back">목록으로</button>
+					<button class="moveTopBtn">
+						<img th:src="@{/img/up_navy.png}" style="height: 40px;">
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -62,16 +62,31 @@ $(document).ready(function() {
 						// 각 열에 해당하는 데이터를 행에 추가합니다.
 						row.append('<td><span >' + (i + 1) + '</span></td>');
 						row.append('<td style="font-size: 18px;">' + classVO.clssNm + '</td>');
-						row.append('<td><span>' + classVO.aplyStartDd + '<br> ~ ' + classVO.aplyEndDd + '</span></td>');
-						row.append('<td><span>' + classVO.clssStartDd + '<br> ~ ' + classVO.clssEndDd + '</span></td>');
+						if (classVO.aplyStartDd == null) {
+							row.append('<td><span>미정</span></td>');
+						} else {
+							row.append('<td><span>' + classVO.aplyStartDd + '<br> ~ ' + classVO.aplyEndDd + '</span></td>');
+						}
+						if (classVO.aplyStartDd == null) {
+							row.append('<td><span>미정</span></td>');
+						} else {
+							row.append('<td><span>' + classVO.clssStartDd + '<br> ~ ' + classVO.clssEndDd + '</span></td>');
+						}
 						if (classVO.clssAdr == null) {
 							row.append('<td><span>미정</span></td>');
 						} else {
 							row.append('<td><span>' + classVO.clssAdr + '</span></td>');
 						}
-						row.append('<td><span>' + classVO.limitCnt + '</span></td>');
-						row.append('<td><span class="className">' + classVO.cmcdNm + '</span></td>');
-						var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
+						if (classVO.limitCnt == 0) {
+							row.append('<td><span>미정</span></td>');
+						} else {
+							row.append('<td><span>' + classVO.limitCnt + '</span></td>');
+						}
+						if (classVO.cmcdNm == '접수중') {
+							row.append('<td><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
+						} else {
+							row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
+						} var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
 						row.append($('<td>').append(applyBtn));
 						// 행을 테이블에 추가합니다.
 						classTable.append(row);
@@ -92,19 +107,37 @@ $(document).ready(function() {
 						var row = $('<tr class="classRow"></tr>');
 
 						// 각 열에 해당하는 데이터를 행에 추가합니다.
-						row.append('<td><span class="className">' + classVO.cmcdNm + '</span></td>');
+						if (classVO.cmcdNm == '접수중') {
+							row.append('<td><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
+						} else {
+							row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
+						}
 						if (classVO.fileId != null) {
-							row.append('<td class="classImg"><div><img src="/student/file/' + classVO.fileId +'/' + classVO.fileSubId + '"></div>');
+							row.append('<td class="classImg"><div><img src="/student/file/' + classVO.fileId + '/' + classVO.fileSubId + '"></div>');
 						} else {
 							row.append('<td class="classImg"><div><img src="/img/logo.png"></div>');
 						}
-						row.append('<td style="font-weight: bold; font-size: 18px;">' + classVO.clssNm + '</td>');
-						row.append('<td><span>지원기간: </span><span>' + classVO.aplyStartDd + ' ~ ' + classVO.aplyEndDd + '</span></td>');
-						row.append('<td><span>교육기간: </span><span>' + classVO.clssStartDd + ' ~ ' + classVO.clssEndDd + '</span></td>');
-						if (classVO.clssAdr == null) {
-							row.append('<td><span>장소: 미정  /  정원: ' + classVO.limitCnt + '</span></td>');
+						row.append('<td style="font-weight: bold; font-size: 20px;">' + classVO.clssNm + '</td>');
+						if (classVO.aplyStartDd == null) {
+							row.append('<td><span>지원기간:  미정  </span></td>');
 						} else {
-							row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: ' + classVO.limitCnt + '</span></td>');
+							row.append('<td><span>지원기간: </span><span>' + classVO.aplyStartDd + ' ~ ' + classVO.aplyEndDd + '</span></td>');
+						}
+						if (classVO.clssStartDd == null) {
+							row.append('<td><span>지원기간:  미정  </span></td>');
+						} else {
+							row.append('<td><span>교육기간: </span><span>' + classVO.clssStartDd + ' ~ ' + classVO.clssEndDd + '</span></td>');
+						}
+						if (classVO.clssAdr == null) {
+							if (classVO.limitCnt != 0)
+								row.append('<td><span>장소: 미정  /  정원: ' + classVO.limitCnt + '</span></td>');
+							else
+								row.append('<td><span>장소: 미정  /  정원: 미정  </span></td>');
+						} else {
+							if (classVO.limitCnt != 0)
+								row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: ' + classVO.limitCnt + '</span></td>');
+							else
+								row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: 미정  </span></td>');
 						}
 						var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
 						row.append($('<td>').append(applyBtn));

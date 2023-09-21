@@ -18,6 +18,7 @@ ul {
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 2%;
+	cursor: pointer;
 }
 
 input {
@@ -78,7 +79,7 @@ input::placeholder {
 
 .grid-style td {
 	padding: 0.5%;
-	font-size: 12px;
+	font-size: 15px;
 }
 
 .grid-style a {
@@ -93,7 +94,7 @@ input::placeholder {
 	padding: 10px;
 	margin: 5px 0;
 	border: 0;
-	font-size: 10px;
+	font-size: 15px;
 	font-weight: bold;
 	border-radius: 10px;
 	display: block;
@@ -109,7 +110,7 @@ input::placeholder {
 	padding: 0 2%;
 }
 
-.list-style .classRow {
+.list-style  .classRow {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
@@ -117,7 +118,7 @@ input::placeholder {
 	align-items: center;
 	height: 5%;
 	border-bottom-style: solid;
-	border-color: #0E5881;
+	border-color: #E7EFF3;
 	border-width: thin;
 }
 
@@ -125,6 +126,9 @@ input::placeholder {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
+	background: #0E5881;
+	color: white;
+	padding: 0.5% 0;
 }
 
 .list-style thead td {
@@ -142,6 +146,10 @@ input::placeholder {
 	padding: 0.5%;
 }
 
+.list-style tbody tr:nth-child(even) {
+	background-color: #F3F6F8;
+}
+
 .list-style a {
 	text-align: center;
 	text-decoration: none;
@@ -155,18 +163,21 @@ input::placeholder {
 
 .list-style td:nth-child(2) {
 	width: 40%;
+	font-weight: bold;
 }
 
 .list-style td:nth-child(3) {
 	width: 13%;
+	text-align: center;
 }
 
 .list-style td:nth-child(4) {
 	width: 13%;
+	text-align: center;
 }
 
 .list-style td:nth-child(5) {
-	width: 5%;
+	width: 7%;
 	text-align: center;
 }
 
@@ -185,40 +196,6 @@ input::placeholder {
 	text-align: center;
 }
 
-----------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .totalcnt {
 	display: contents;
 }
@@ -231,6 +208,14 @@ input::placeholder {
 	height: 30px;
 }
 
+.list-view {
+	cursor: pointer;
+}
+
+.grid-view {
+	cursor: pointer;
+}
+
 .list-view.active img {
 	content: url('/img/list_white.png'); /* 적절한 이미지 경로를 지정하세요 */
 	background: #0E5881;
@@ -239,6 +224,14 @@ input::placeholder {
 .grid-view.active img {
 	content: url('/img/grid_white.png'); /* 적절한 이미지 경로를 지정하세요 */
 	background: #0E5881;
+}
+
+#aply {
+	cursor: pointer;
+}
+
+input:checked+lable::before {
+	background-image: url('/img/check_navy.png');
 }
 
 .moveTopBtn {
