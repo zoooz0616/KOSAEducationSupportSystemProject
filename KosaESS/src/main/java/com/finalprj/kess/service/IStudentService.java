@@ -104,4 +104,20 @@ public interface IStudentService {
 
 	void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId, Double totalTm);
 
+	Timestamp getlastLogTime(String stdtId);
+
+	PostVO selectNotice(String postId);
+
+	List<FileVO> selectAllNoticeFile(String postId);
+
+	boolean incrementHit(String postId);
+
+	PostVO selectInquiry(String postId);
+
+	List<FileVO> selectAllInquiryFile(String postId);
+
+	List<PostVO> selectReply(String postId);
+
+	List<FileVO> selectAllReplyFile(String postId, String replyId);
+
 }

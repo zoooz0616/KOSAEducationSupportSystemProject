@@ -24,5 +24,7 @@ public class StudentVO {
 	private String updterId;//수정자id
 	
 	private String clssNm;//교육과정 이름
+	private String genderNm;//교육생 성별
+	private String jobNm;//교육생 직업
 	private Timestamp lastLoginDt;//마지막 로그인 일시
 }

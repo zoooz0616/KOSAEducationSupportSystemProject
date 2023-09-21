@@ -142,4 +142,6 @@ public interface IAdminService {
 	String getMaxDetailCodeId(String cmcdId);
 	void insertDetailCode(CommonCodeVO commonCodeVO);
 	void updateDetailCode(String cmcdId, String cmcdNm, String useYn);
+	String getStudentEmailByAplyId(String aplyId);
+	String getClssNmByAplyId(String aplyId);
 }

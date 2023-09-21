@@ -3,7 +3,9 @@
 <head>
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link th:href="@{/css/student/inquiry_list.css}" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>main page</title>
 </head>
@@ -15,28 +17,52 @@
 			<h1 style="color: #0E5881; margin-top: 3%;">문의사항</h1>
 		</div>
 		<div class="content">
-			<div>
-				<table>
-					<tr>
-						<th>번호</th>
-						<th>문의사항 제목</th>
-						<th>작성자</th>
-						<th>등록일자</th>
-						<th>조회수</th>
-						<th>상태</th>
+			<table class="inqy-table" style="width: 90%;">
+				<thead>
+					<tr class="classRow" style="border: none;">
+						<td>번호</td>
+						<td>문의사항 제목</td>
+						<td>작성자</td>
+						<td>등록일자</td>
+						<td>조회수</td>
+						<td>상태</td>
 					</tr>
-					<tr th:each="postVO, rowStat : ${postList}">
+				</thead>
+				<tbody>
+					<tr class="classRow" th:each="postVO, rowStat : ${postList}">
 						<td><span th:text="${rowStat.index + 1}"></span></td>
-						<td><a th:text="${postVO.postTitle}"
-							th:href="@{/student/inquiry/__${postVO.postId}__}">문의사항 제목</a></td>
-						<td th:text="${postVO.rgsterId}">작성자</td>
-						<td th:text="${postVO.rgstDt}">등록일자</td>
-						<td th:text="${postVO.postHit}">조회수</td>
-						<td th:text="${postVO.postCd}">상태</td>
+						<td><a><span class="goInquiryDetail"
+								style="font-size: 17px;" th:text="${postVO.postTitle}"></span></a></td>
+						<td><span
+							th:if="${postVO.mngrNm == null}"
+							th:text="${postVO.stdtNm}"></span> <span
+							th:if="${postVO.stdtNm == null}"
+							th:text="${postVO.mngrNm}"></span></td>
+						<td><span th:text="${postVO.rgstDd}"></span></td>
+						<td><span th:text="${postVO.postHit}"></span></td>
+						<td><span th:text="${postVO.cmcdNm}"></span></td>
+						<td style="display: none;"><span th:text="${postVO.postId}"></span></td>
 					</tr>
-				</table>
-			</div>
+				</tbody>
+			</table>
 		</div>
 	</div>
+	<script>
+		$('.goInquiryDetail').click(function() {
+			// 서버로 조회수 증가 요청을 보냅니다.
+			var clickedRow = $(this).closest('tr');
+			var postId = clickedRow.find('td:hidden span').text();
+			$.ajax({
+				type : 'POST',
+				url : '/student/incrementHit',
+				data : {
+					postId : postId
+				},
+				success : function() {
+					window.location.href = '/student/inquiry/' + postId;
+				}
+			});
+		});
+	</script>
 </body>
 </html>

@@ -22,7 +22,7 @@
 			</div>
 			<div class="imgs img2">
 				<div class="bannertext">
-					<h2>second...</h2>
+					<h2 style="font-size: 30px;">KOSA 교육지원 시스템을 통해서 여러 교육을 만나보세요.</h2>
 				</div>
 			</div>
 		</div>
@@ -34,28 +34,31 @@
 			<button class="button-right"></button>
 		</div>
 		<div class="maincontent">
-			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; padding: 3%;">
+			<div class="login con" style="margin-bottom: 4%; padding: 3%;">
 				<div th:if="${session.userEmail==null}">
 					<h2>회원가입후 이용가능</h2>
 				</div>
-				<div th:if="${session.userEmail!=null}">
-					<div class="">
-						<h2 style="margin-bottom: 2%;">
+				<div th:if="${session.userEmail!=null}" style="text-align: left;">
+					<div style="width: 100%;">
+						<h2 style="margin-bottom: 2%; padding: 5% 0;">
 							<span th:text="${session.stdtNm}"
 								style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
 						</h2>
-						<div class="my">
+						<div class="my" style="text-align: left;">
 							<div class="box">
-								<a th:href="@{/student/mypage/apply}"> <span>지원내역: </span><span
+								<a th:href="@{/student/mypage}"> <span>지원내역: </span> <span
 									style="color: #0E5881; font-size: 22px;"
 									th:text="${aplyClassCnt}"></span> <span>건</span></a>
 							</div>
 							<div class="box">
-								<a th:href="@{/student/mypage/complete}"> <span>출력 가능
+								<a th:href="@{/student/mypage}"> <span>출력 가능
 										이수증: </span> <span style="color: #0E5881; font-size: 22px;"
 									th:text="${cmptClassCnt}"></span> <span>건</span></a>
 							</div>
+						</div>
+						<div class="lastlog">
+							<h4>마지막 로그인 일시</h4>
+							<h4 th:text="${lastLogTime}"></h4>
 						</div>
 					</div>
 				</div>
@@ -80,24 +83,34 @@
 				</div>
 				<div th:if="${session.userEmail!=null}">
 					<div th:if="${ingClassVO == null}">
-						<h3></h3>
-					</div>
-					<div th:if="${ingClassVO != null}" class="inouttm">
-						<h3 th:text="${ingClassVO.clssNm}" ></h3>
-						<div>
-							<label for="intm"></label><span>출근 시간</span> <input type="text"
-								name="intm" id="intm" class="checktm" readonly>
-						</div>
-						<div>
-							<label for="outtm"></label><span>퇴근 시간</span> <input type="text"
-								name="outtm" id="outtm" class="checktm" readonly>
+						<h3>수강중인 교육이 없습니다.</h3>
+						<div
+							style="align-items: center; justify-content: center; display: flex;">
+							<a th:href="@{/student/class}"><img style="height: 70px;"
+								th:src="@{/img/hat_navy.png}">
+								<h3>교육지원하러 가기</h3> </a>
 						</div>
 					</div>
-					<div class="submit"
-						style="margin-top: 0; display: grid; align-items: center;">
-						<!-- 토글 버튼 -->
-						<input class="wlogBtn" type="button"
-							onclick="toggleInOut()">
+					<div th:if="${ingClassVO != null}">
+						<div class="inouttm">
+							<h3 th:text="${ingClassVO.clssNm}" style="margin: 0 0 2% 0;"></h3>
+							<div class="viewinout"
+								style="display: flex; justify-content: space-around;">
+								<div>
+									<label for="intm"></label><span>출근 시간</span> <input type="text"
+										name="intm" id="intm" class="checktm" readonly>
+								</div>
+								<div>
+									<label for="outtm"></label><span>퇴근 시간</span> <input
+										type="text" name="outtm" id="outtm" class="checktm" readonly>
+								</div>
+							</div>
+						</div>
+						<div class="submit"
+							style="margin: auto; display: grid; align-items: center;">
+							<!-- 토글 버튼 -->
+							<input class="wlogBtn" type="button" onclick="toggleInOut()">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -142,7 +155,7 @@
 		console.log(lastVO);
 		var lastInTm = /*[[${lastWlogVO?.inTm}]]*/'';
 		var lastOutTm = /*[[${lastWlogVO?.outTm}]]*/'';
-		
+
 		console.log(lastInTm + lastOutTm);
 	</script>
 	<script src="/js/student/main.js"></script>

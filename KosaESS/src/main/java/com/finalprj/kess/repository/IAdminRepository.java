@@ -139,5 +139,7 @@ public interface IAdminRepository {
 	String getMaxDetailCodeId(String cmcdId);
 	void insertDetailcode(CommonCodeVO commonCodeVO);
 	void updateDetailCode(String cmcdId, String cmcdNm, String useYn);
+	String getStudentEmailByAplyId(String aplyId);
+	String getClssNmByAplyId(String aplyId);
 
 }

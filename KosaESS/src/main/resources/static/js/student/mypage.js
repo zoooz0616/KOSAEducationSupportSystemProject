@@ -1,10 +1,13 @@
 $(document).ready(function() {
+	updateAplyTable();
+	updateWlogTable();
 	function updateAplyTable() {
 		$.ajax({
 			type: 'GET',
 			url: '/student/mypage/aplyList',
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
+				const time = Date.now();
 				var tbody = $('.applyTable tbody');
 				tbody.empty(); // tbody 내용을 비웁니다.
 
@@ -19,8 +22,7 @@ $(document).ready(function() {
 					row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
 					row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
 					row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
-					row.append('<td><button class="update">수정</button><button class="apply">수강</button></td>');
-					row.append('<td><button class="cancel">지원취소</button><button class="drop">수강포기</button></td>');
+					row.append('<td><button class="update">수정</button><button class="apply">수강</button><button class="cancel">지원취소</button><button class="drop">수강포기</button></td>');
 					row.append('<td style="display:none;"><span>' + ApplyDetailDTO.aplyId + '</span></td>')
 
 					var updateBtn = row.find('.update');
@@ -169,18 +171,25 @@ $(document).ready(function() {
 					var row = $('<tr class="wlogRow"></tr>');
 					var inTmDd = formatTimestamp(WorklogVO.inTm);
 					console.log(inTmDd);
-					var outTmDd = formatTimestamp(WorklogVO.outTm);
+					if (WorklogVO.outTm == null)
+						var outTmDd = '-';
+					else
+						var outTmDd = formatTimestamp(WorklogVO.outTm);
 
 					row.append('<td><span >' + (i + 1) + '</span></td>');
 					row.append('<td>' + WorklogVO.clssNm + '</td>');
 					row.append('<td>' + inTmDd + '</td>');
 					row.append('<td>' + outTmDd + '</td>');
-					row.append('<td>' + WorklogVO.wlogNm + '</td>');
+					if (WorklogVO.wlogNm == '정상') {
+						row.append('<td>' + WorklogVO.wlogNm + '</td>');
+					} else {
+						row.append('<td style="color: red;">' + WorklogVO.wlogNm + '</td>');
+					}
 					row.append('<td><button class="submitResn" >제출</button><button class="updateResn">수정</button></td>');
 					row.append('<td class="resnStstus">' + WorklogVO.resnNm + '</td>');
 					row.append('<td class="wlogId" style="display:none;">' + WorklogVO.wlogId + '</td>');
 					row.append('<td class="resnId" style="display:none;">' + WorklogVO.resnId + '</td>');
-					
+
 					var wlogCd = WorklogVO.wlogCd;
 					var resnId = WorklogVO.resnId;
 					var submitResnElement = row.find('.submitResn');

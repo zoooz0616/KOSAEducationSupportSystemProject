@@ -108,7 +108,7 @@ table a {
 	font-weight: bold;
 }
 
-table a:hover {
+a:hover {
 	text-decoration: underline;
 }
 
@@ -167,16 +167,16 @@ input::placeholder {
 
 .submit {
 	align-content: center;
+	width: 60%;
 }
 
 .my {
-	display: flex;
-	justify-content: space-around;;
+	padding: 2%;
 }
 
 .box {
-	width: 40%;
 	font-size: 12px;
+	padding: 2%;
 }
 
 .box h3 {
@@ -209,8 +209,16 @@ input::placeholder {
 .inouttm {
 	display: flex;
 	flex-direction: column;
-	width: 70%;
 	margin: 2% auto;
+}
+.viewinout div{
+	margin:0 3%;
+}
+.lastlog{
+	padding: 2%;
+}
+.lastlog h4{
+	margin: 2% 0;
 }
 
 .inoutform {

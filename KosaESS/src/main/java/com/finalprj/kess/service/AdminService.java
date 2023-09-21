@@ -535,6 +535,7 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getDetailCodeList(String cmcdId) {
 		return adminRepository.getDetailCodeList(cmcdId);
 	}
+
 	
 	@Override
 	public String getGroupCodeId(String cmcdId) {
@@ -561,9 +562,15 @@ public class AdminService implements IAdminService {
 		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn);
 	}
 	
+	@Override
+	public String getStudentEmailByAplyId(String aplyId) {
+		return adminRepository.getStudentEmailByAplyId(aplyId);
+	}
 	
-	
-	
+	@Override
+	public String getClssNmByAplyId(String aplyId) {
+		return adminRepository.getClssNmByAplyId(aplyId);
+	}
 	
 	
 	

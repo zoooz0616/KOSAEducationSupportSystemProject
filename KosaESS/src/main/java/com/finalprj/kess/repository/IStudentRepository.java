@@ -61,7 +61,7 @@ public interface IStudentRepository {
 
 	List<ApplyDetailDTO> searchAplyList(String stdtId);
 
-	void  updateaply(String aplyCd, String aplyId);
+	void updateaply(String aplyCd, String aplyId);
 
 	void insertRgst(String aplyId, String maxRgstId, String stdtId);
 
@@ -108,5 +108,21 @@ public interface IStudentRepository {
 	void insertPastWlog(WorklogVO pastwlogVO);
 
 	void getUpdateOutlog(Timestamp newOutTm, String outlogCd, String lastWlogId, Double totalTm);
+
+	Timestamp getlastLogTime(String stdtId);
+
+	PostVO selectNotice(String postId);
+
+	List<FileVO> selectAllNoticeFile(String postId);
+
+	boolean incrementHit(String postId);
+
+	PostVO selectInquiry(String postId);
+
+	List<FileVO> selectAllInquiryFile(String postId);
+
+	List<PostVO> selectReply(String postId);
+
+	List<FileVO> selectAllReplyFile(String postId, String replyId);
 
 }

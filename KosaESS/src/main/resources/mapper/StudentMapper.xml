@@ -42,6 +42,18 @@
 		]]>
 	</select>
 
+	<!-- 마지막 로그인 일시 불러오기 -->
+	<select id="getlastLogTime" parameterType="string"
+		resultType="java.sql.Timestamp">
+		<![CDATA[
+		SELECT LAST_LOGIN_DT
+		FROM lgin
+		WHERE USER_EMAIL = (select stdt.user_email
+		from stdt
+		where stdt_id = #{stdtId})
+		]]>
+	</select>
+
 	<!-- 교육생 개인정보 수정 -->
 	<update id="updateStudent"
 		parameterType="com.finalprj.kess.model.StudentVO">
@@ -99,18 +111,22 @@
 	<select id="selectAllNotice" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
-				SELECT 
+				 SELECT 
 					post_id,
 					post_title,
 					post_cd,
 					post_hit,
-					rgst_dt as "rgstDd"
+					post.rgst_dt as "rgstDd",
+					mngr_nm as "mngrNm",
+					cmcd.cmcd_nm
 				FROM post
+				JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+				LEFT JOIN mngr on mngr.mngr_id = post.rgster_id
 				WHERE post_id LIKE 'NOTC%' and post_cd=
 					(select cmcd_id
 					from cmcd
 					where cmcd_id='PST0000001')
-				ORDER BY rgst_dt DESC
+				ORDER BY post.rgst_dt DESC
 
 		]]>
 	</select>
@@ -119,11 +135,55 @@
 	<select id="selectNotice" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
-		SELECT *
+		SELECT 
+			post_id,
+			post_title,
+			post_content,
+			post_hit,
+			rgst_dt as "rgstDd"
 		FROM post
 		WHERE post_id=#{postId}
 		]]>
 	</select>
+
+	<!-- 공지사항 상세 조회(이미지) -->
+	<select id="selectAllNoticeFile" parameterType="string"
+		resultType="com.finalprj.kess.model.FileVO">
+		<![CDATA[
+		SELECT
+		    file_id,
+		    file_sub_id,
+		    file_nm,
+		    file_content,
+		    file_size,
+		    file_type,
+		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fType"
+		FROM flup
+		WHERE file_id = (
+		    SELECT file_id
+		    FROM post
+			WHERE post_id=#{postId}
+		) and flup.delete_yn= 'N'
+		ORDER BY
+	    CASE
+	        WHEN file_type LIKE 'application%' THEN 0
+	        WHEN file_type LIKE 'text%' THEN 1
+	        ELSE 2
+	    END
+		]]>
+	</select>
+
+
+	<!-- 조회수 업데이트 -->
+	<update id="incrementHit" parameterType="string">
+	<![CDATA[
+		update post
+		set 
+			post_hit = post_hit + 1
+		where post_id=#{postId}
+	]]>
+	</update>
+
 
 	<!-- 문의사항 전체목록 조회 -->
 	<select id="selectAllInquiry" parameterType="string"
@@ -134,25 +194,90 @@
 		    post_title,
 		    post_cd,
 		    post_hit,
-		    rgster_id,
-		    rgst_dt as "rgstDd"
+		    post.rgst_dt as "rgstDd",
+		    stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			cmcd.cmcd_nm
 		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
 		WHERE post_id LIKE 'INQY%' AND post_cd IN (
 		    SELECT cmcd_id
 		    FROM cmcd
 		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
-		)
-		ORDER BY rgst_dt DESC
+		) and delete_yn = 'N'
+		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
+
 
 	<!-- 문의사항 상세 조회 -->
 	<select id="selectInquiry" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
 		<![CDATA[
-			SELECT *
-			FROM post
+		SELECT 
+			post_id,
+			master_id,
+			cmcd.cmcd_nm,
+			post_title,
+			post_content,
+			post_hit,
+			stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			post.rgst_dt as "rgstDd"
+		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
+		WHERE post_id=#{postId}
+		]]>
+	</select>
+	
+		<!-- 문의 사항 상세 조회(이미지) -->
+	<select id="selectAllInquiryFile" parameterType="string"
+		resultType="com.finalprj.kess.model.FileVO">
+		<![CDATA[
+		SELECT
+		    file_id,
+		    file_sub_id,
+		    file_nm,
+		    file_content,
+		    file_size,
+		    file_type,
+		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fType"
+		FROM flup
+		WHERE file_id = (
+		    SELECT file_id
+		    FROM post
 			WHERE post_id=#{postId}
+		) and flup.delete_yn= 'N'
+		ORDER BY
+	    CASE
+	        WHEN file_type LIKE 'application%' THEN 0
+	        WHEN file_type LIKE 'text%' THEN 1
+	        ELSE 2
+	    END
+		]]>
+	</select>
+	
+	<!-- 답변 상세 조회 -->
+	<select id="selectReply" parameterType="string"
+		resultType="com.finalprj.kess.model.PostVO">
+		<![CDATA[
+		SELECT 
+			post_id,
+			master_id,
+			post_title,
+			post_content,
+			stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			post.rgst_dt as "rgstDd"
+		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
+		WHERE master_id=#{postId} 
 		]]>
 	</select>
 
@@ -329,7 +454,14 @@
 	<select id="getstdtInfo" parameterType="string"
 		resultType="com.finalprj.kess.model.StudentVO">
 	<![CDATA[
-		select *
+		select stdt_id, 
+		user_email, 
+		stdt_nm, 
+		(select cmcd_nm from cmcd where cmcd.cmcd_id = stdt.gender_cd) as "genderNm",
+		(select cmcd_nm from cmcd where cmcd.cmcd_id = stdt.job_cd) as "jobNm",
+		birth_dd,
+		stdt_tel,
+		rgst_dt
 			from stdt
 			where stdt_id = #{stdtId}
 	]]>
@@ -688,7 +820,7 @@
 		values(#{wlogId}, #{stdtId}, #{clssId}, systimestamp, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
 	]]>
 	</insert>
-	
+
 	<!-- 과거 시간 insert -->
 	<insert id="insertPastWlog">
 	<![CDATA[
@@ -696,8 +828,8 @@
 		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm}, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
 	]]>
 	</insert>
-	
-	
+
+
 	<!-- 퇴근 시간 업데이트 -->
 	<update id="getUpdateOutlog">
 	<![CDATA[
