@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
-<title>Notice Form</title>
 </head>
 <head>
 <link th:href="@{/css/admin/notice_form.css}" rel="stylesheet">
@@ -57,19 +56,29 @@
 							<div th:if="${act=='select'}" th:text="${postVO.postTitle}"></div>
 						</td>
 					</tr>
+					<tr th:if="${act=='select' or act=='update'}">
+						<th>게시상태<span th:if="${act=='update'}"
+							class="star">*</span></th>
+						<td><input type="hidden" name="noticeStatus"
+							th:value="${postVO.postCd}"> <select
+							class="notice_status_select" onchange="noticeStatusChange(this)" th:if="${act=='update'}">
+								<option th:each="noticeCommonCode : ${noticeCommonCodeList}"
+									th:value="${noticeCommonCode.cmcdId}"
+									th:text="${noticeCommonCode.cmcdNm}"
+									th:selected="${noticeCommonCode.cmcdId == postVO.postCd}"></option>
+						</select>
+
+							<div th:if="${act=='select'}" th:text="${postVO.cmcdNm}"></div></td>
+					</tr>
 					<tr>
 						<th>내용<span th:if="${act=='insert' or act=='update'}"
 							class="star">*</span></th>
 						<td><textarea th:if="${act=='insert'}" name="editorTxt"
 								id="edit_text" rows="20" cols="10" placeholder="내용을 입력해주세요"
-								style="width: 100%;"></textarea> 
-							<textarea
+								style="width: 100%;"></textarea> <textarea
 								th:if="${act=='update'}" name="editorTxt" id="edit_text"
 								rows="20" cols="10" style="width: 100%;"
 								placeholder="내용을 입력해주세요" th:utext="${postVO.postContent}"></textarea>
-
-
-
 							<div class="scroll"
 								style="width: 100%; height: 400px; overflow: scroll;"
 								th:if="${act=='select'}" th:utext="${postVO.postContent}"></div>
@@ -77,16 +86,17 @@
 					</tr>
 					<tr>
 						<th>첨부파일</th>
-						<td><input th:if="${act=='insert'}" type="file" name="files" multiple>
-
-							<input th:if="${act=='update'}" type="file" name="files" multiple>
+						<td><input th:if="${act=='insert'}" type="file" name="files"
+							multiple> <input th:if="${act=='update'}" type="file"
+							name="files" multiple>
 
 							<div th:if="${act=='select'}">
 								<div th:if="${fileList == null}">첨부파일 없음</div>
 								<div th:each="file: ${fileList}">
-								<a 
-									th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
-									th:text="${file.fileNm}"></a></div>
+									<a
+										th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
+										th:text="${file.fileNm}"></a>
+								</div>
 							</div></td>
 					</tr>
 				</table>
@@ -111,7 +121,8 @@
 				</div>
 
 				<div class="btn_wrap" th:if="${act=='update'}">
-					<input class="notice_id" name="noticeId" type="hidden" th:value="${postVO.postId}">
+					<input class="notice_id" name="noticeId" type="hidden"
+						th:value="${postVO.postId}">
 					<button class="cancel_btn" type="button"
 						onclick="location.href='/admin/notice/list'">취소</button>
 					<button class="insert_btn" type="submit">수정</button>
@@ -161,10 +172,19 @@
 			}
 		}
 		}
-	</script>
-
-	<!-- 삭제하기 -->
-	<script>
+		
+		
+	function noticeStatusChange(select){
+		var selectedValue=select.value;
+		console.log(selectedValue);//선택한 값 출력
+		
+	    //input(hidden)의 값을 변경해줌.
+	    const noticeStatusInput = document.querySelector('input[name="noticeStatus"]');
+	    noticeStatusInput.value = selectedValue;
+	}	
+			
+		
+	//삭제하기
 	document.querySelector("#delete_btn").addEventListener("click",function() {
 				var selectedNoticeIds = [];
 				var noticeId = document.querySelector(".notice_id").value;
@@ -189,6 +209,11 @@
 					}
 				});
 			});
+	
+	
+	
 	</script>
+
+
 </body>
 </html>

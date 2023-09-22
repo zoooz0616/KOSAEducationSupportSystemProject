@@ -69,7 +69,7 @@ public class AdminController {
 
 	@Autowired
 	IUploadFileService uploadFileService;
-	
+
 	@Autowired
 	IMailService mailService;
 
@@ -150,7 +150,7 @@ public class AdminController {
 		//교육완료List
 		List<ClassVO> completeClassList = adminService.getCompleteClassList();
 		model.addAttribute("completeClassList", completeClassList);
-		
+
 		return "admin/dashboard";
 	}
 
@@ -164,8 +164,8 @@ public class AdminController {
 	@GetMapping("/notice/list")
 	public String noticeList(HttpSession session, Model model) {
 		//공지사항 상태 리스트 전달
-		List<CommonCodeVO> classCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
-		model.addAttribute("classCommonCodeList", classCommonCodeList);
+		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
+		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
 
 		//공지사항 리스트 전달
 		List<PostVO> noticeList = adminService.getNoticeList();
@@ -281,6 +281,10 @@ public class AdminController {
 		PostVO postVO = adminService.getPostVO(noticeId);
 		model.addAttribute("postVO", postVO);
 
+		//공지사항 상태 리스트 전달
+		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
+		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
+
 
 		if (postVO.getFileId() != null) {
 			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
@@ -299,11 +303,12 @@ public class AdminController {
 	 */
 	@PostMapping("/notice/update")
 	public String noticeUpdate(@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
-			@RequestParam String noticeTitle, @RequestParam String editorTxt, @RequestParam String noticeId) {
+			@RequestParam String noticeTitle, @RequestParam String noticeStatus, @RequestParam String editorTxt, @RequestParam String noticeId) {
 
 		PostVO postVO = adminService.getPostVO(noticeId);
 		postVO.setPostTitle(noticeTitle);
 		postVO.setPostContent(editorTxt);
+		postVO.setPostCd(noticeStatus);
 
 		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
 		String maxFileId = null;
@@ -459,7 +464,6 @@ public class AdminController {
 	public String inquiryDeleteAll(@RequestParam("selectedInquiryIds[]") List<String> selectedInquiryIds) {
 		//문의사항 deleteYn='Y'로 업데이트
 		adminService.deleteAllInquiry(selectedInquiryIds);
-
 		return "success";
 	}
 
@@ -1027,15 +1031,15 @@ public class AdminController {
 			//선택한 개수와 현재 합격된 교육생 수가 수강가능 인원 이하인지 확인(나중에 구현)
 			// "pass" 버튼을 클릭한 경우 실행할 코드
 			adminService.updateAplyPass(aplyIds);
-			
+
 			for(String aplyId: aplyIds) {
 				String recipient = adminService.getStudentEmailByAplyId(aplyId);
 				String clssNm = adminService.getClssNmByAplyId(aplyId);
 				mailService.sendMail(recipient,clssNm);
 			}
-			
-		
-			
+
+
+
 		} else if ("불합격".equals(action)) {
 			// "fail" 버튼을 클릭한 경우 실행할 코드
 			adminService.updateAplyFail(aplyIds);
@@ -1578,14 +1582,14 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> detailCode(@PathVariable String cmcdId) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		
+
 		//상세코드 리스트 전달
 		List<CommonCodeVO> detailCodeList = adminService.getDetailCodeList(cmcdId);
 		response.put("detailCodeList", detailCodeList);
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * 기준정보 상세코드 등록
 	 * @author : eunji
@@ -1606,13 +1610,13 @@ public class AdminController {
 			commonCodeVO.setCmcdId(adminService.getMaxDetailCodeId(cmcdId));
 			commonCodeVO.setTpcdId(cmcdId);
 			commonCodeVO.setCmcdNm(cmcdNm);
-			
+
 			adminService.insertDetailCode(commonCodeVO);
-			
+
 			return cmcdId;
 		}
 	}
-	
+
 	/**
 	 * 기준정보 상세코드 수정
 	 * @author : eunji
@@ -1624,11 +1628,11 @@ public class AdminController {
 	@ResponseBody
 	public String updateDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm, @RequestParam String useYn) {
 		adminService.updateDetailCode(cmcdId, cmcdNm, useYn);
-		
+
 		String groupCodeId = adminService.getGroupCodeId(cmcdId);
 		return groupCodeId;
 	}
-	
+
 	/**
 	 * 기준정보 상세코드 삭제
 	 * @author : eunji
@@ -1644,7 +1648,7 @@ public class AdminController {
 		}else {
 			//사용여부'N', updt 수정
 			adminService.deleteGroupCode(selectedDetailCodeIds);
-			
+
 			String groupCodeId = adminService.getGroupCodeId(selectedDetailCodeIds.get(0));
 
 			return groupCodeId;
