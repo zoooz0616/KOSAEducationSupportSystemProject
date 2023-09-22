@@ -19,37 +19,45 @@
 					class='bx bx-grid-alt'> <img th:src="@{/img/main_white.png}">
 				</i> <span class="links_name">메인</span>
 			</a> <span class="tooltip">메인</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/notice/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/notice/list}"> <i
 					class='bx bx-user'><img th:src="@{/img/notice_white.png}"></i>
 					<span class="links_name">공지사항 관리</span>
 			</a> <span class="tooltip">공지사항 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/inquiry/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/inquiry/list}"> <i
 					class='bx bx-chat'><img th:src="@{/img/inquiry_white.png}"></i>
 					<span class="links_name">문의 관리</span>
 			</a> <span class="tooltip">문의 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/manager/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/manager/list}"> <i
 					class='bx bx-pie-chart-alt-2'><img
 						th:src="@{/img/manager_white.png}"></i> <span class="links_name">업무
 						담당자 관리</span>
 			</a> <span class="tooltip">업무 담당자 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/company/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/company/list}"> <i
 					class='bx bx-pie-chart-alt-2'><img
 						th:src="@{/img/company_white.png}"></i> <span class="links_name">기업
 						관리</span>
-			</a> <span class="tooltip">기업 관리</span></li>			
-			<li><a class="icon_img" th:href="@{/__${session.role}__/lecture/list}"> <i
+			</a> <span class="tooltip">기업 관리</span></li>
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/lecture/list}"> <i
 					class='bx bx-cart-alt'><img th:src="@{/img/lecture_white.png}"></i>
 					<span class="links_name">강의 관리</span>
 			</a> <span class="tooltip">강의 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/class/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/class/list}"> <i
 					class='bx bx-cart-alt'><img th:src="@{/img/class_white.png}"></i>
 					<span class="links_name">교육과정 관리</span>
 			</a> <span class="tooltip">교육과정 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/student/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/student/list}"> <i
 					class='bx bx-heart'><img th:src="@{/img/student_white.png}"></i>
 					<span class="links_name">교육생 관리</span>
 			</a> <span class="tooltip">교육생 관리</span></li>
-			<li><a class="icon_img" th:href="@{/__${session.role}__/commoncode/list}"> <i
+			<li><a class="icon_img"
+				th:href="@{/__${session.role}__/commoncode/list}"> <i
 					class='bx bx-folder'><img th:src="@{/img/commoncode_white.png}"></i>
 					<span class="links_name">기준 정보 관리</span>
 			</a> <span class="tooltip">기준 정보 관리</span></li>
@@ -67,13 +75,12 @@
 					<div class="name_job">
 						<div class="name" th:text="${session.userEmail}">userEmail</div>
 						<div class="job" th:text="${session.lastLoginDt}">lastLoginDt</div>
-						<div class="logout" >
-							
-						</div>
+						<div class="logout"></div>
 					</div>
 					<i class='bx bx-log-out' id="log_out"><a onclick="logout()"><img
-								style="width: 35px; object-fit: contain;margin-top: 5px;" class='bx bx-log-out'
-								id="log_out" th:src="@{/img/logout_white.png}"></a></i>
+							style="width: 35px; object-fit: contain; margin-top: 5px;"
+							class='bx bx-log-out' id="log_out"
+							th:src="@{/img/logout_white.png}"></a></i>
 				</div>
 			</li>
 		</ul>
