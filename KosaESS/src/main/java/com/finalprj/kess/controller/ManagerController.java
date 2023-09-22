@@ -270,6 +270,8 @@ public class ManagerController {
 			,@RequestParam(required = false) String endDate
 			,@RequestParam(required = false) String wlogCd
 			,@RequestParam(required = false) String stdtNm
+			,@RequestParam(required = false) String isDelete
+			,@RequestParam(required = false) String resnOnly
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
@@ -296,11 +298,9 @@ public class ManagerController {
 			endDate = httpServletRequest.getParameter("endDate");
 		}
 		//End : reqParam == null ? 초기화
-		
 		//------------------------------------------------------------------------------------
 		
 		//------------------------------------------------------------------------------------
-		
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
@@ -316,7 +316,7 @@ public class ManagerController {
 			}
 		}
 		
-		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate);
+		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, stdtNm, isDelete, resnOnly);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
@@ -400,5 +400,20 @@ public class ManagerController {
 		// End : 업데이트
 		return "OK!";
 		// End : 업데이트 결과 전송
+	}
+	
+	@GetMapping("/worklog/search")
+	@ResponseBody
+	public Map<String, Object> getWlogSearch(HttpSession session, HttpServletRequest httpServletRequest
+			,@RequestParam(required = false) String clssId
+			,@RequestParam(required = false) String startDate
+			,@RequestParam(required = false) String endDate
+			,@RequestParam(required = false) String wlogCd
+			,@RequestParam(required = false) String stdtNm
+			,@RequestParam(required = false) String isDelete
+			,@RequestParam(required = false) String resnOnly
+			) {
+		
+	return null;
 	}
 }

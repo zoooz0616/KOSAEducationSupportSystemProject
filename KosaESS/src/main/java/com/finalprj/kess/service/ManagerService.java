@@ -119,8 +119,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate) {
-		return managerRepository.getWlogListByClssIdDate(clssId, startDate, endDate);
+	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly) {
+		return managerRepository.getWlogListByClssIds(clssId, startDate, endDate, stdtNm, isDelete, resnOnly);
 	}
 
 //	@Override
