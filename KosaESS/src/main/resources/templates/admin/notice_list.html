@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
-<title>Notice List</title>
 </head>
 <head>
 <link th:href="@{/css/admin/notice_list.css}" rel="stylesheet">
@@ -22,8 +21,7 @@
 			<div class="title">공지사항 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/notice/list}">공지사항
-					관리</a>
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/notice/list}">공지사항 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -41,8 +39,7 @@
 						</select>
 					</div>
 					<div>
-						<input class="search_input" id="search_input" value="" type="text"
-							list="search_option" required>
+						<input class="search_input" type="text" id="search_input" value="">
 					</div>
 				</div>
 
@@ -52,10 +49,9 @@
 					<div>
 						<select class="search_input_status">
 							<option value="all" th:text="전체">전체</option>
-							<option th:each="classCommonCode: ${classCommonCodeList}"
-								th:value="${classCommonCode.cmcdId}"
-								th:text="${classCommonCode.cmcdNm}"></option>
-
+							<option th:each="noticeCommonCode: ${noticeCommonCodeList}"
+								th:value="${noticeCommonCode.cmcdId}"
+								th:text="${noticeCommonCode.cmcdNm}"></option>
 						</select>
 					</div>
 				</div>
@@ -64,12 +60,10 @@
 
 			<!-- Search Button wrap -->
 			<div class="search_filter_btn_wrap">
-				<button type="button" class="search_reset_btn"
-					onclick="resetInput()">
+				<button type="button" class="reset_btn" onclick="resetInput()">
 					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
 				</button>
-				<button type="button" id="search_btn" class="search_filter_btn"
-					onclick="search()">
+				<button type="button" class="search_btn" onclick="search()">
 					<img th:src="@{/img/search_white.png}"> <span>조회</span>
 				</button>
 			</div>
@@ -82,8 +76,8 @@
 			<!-- 컨텐츠 개수와 버튼 wrap -->
 			<div class="content_info_wrap">
 				<div class="content_info">
-					<span>총 게시물 <span class="class_list_cnt"
-						th:text="${#lists.size(noticeList)}">classListCnt</span>건
+					<span>총 게시물 <span class="notice_list_cnt"
+						th:text="${#lists.size(noticeList)}">noticeListCnt</span>건
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
@@ -104,36 +98,34 @@
 
 			<!-- 컨텐츠 리스트 부분 -->
 			<div class="content_list">
-				<table class="content_list_table" id="class_list_table">
+				<table class="content_list_table">
 					<thead>
 						<tr class="content_list_th">
-							<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
-							<th style="width: 40px;">번호</th>
-							<th style="width: 10%;">ID</th>
-							<th style="width: 40%;">제목</th>
-							<th style="width: 50px;">첨부파일</th>
-							<th style="width: 10%;">작성자</th>
+							<th style="width: 3%;">
+								<input type="checkbox" name="select_all" onclick="selectAll(this)">
+							</th>
+							<th style="width: 5%;">번호</th>
+							<th style="width: 52%;">제목</th>
+							<th style="width: 5%;">첨부파일</th>
+							<th style="width: 5%;">작성자</th>
 							<th style="width: 20%;">등록일시</th>
-							<th style="width: 40px;">조회수</th>
-							<th style="width: 50px;">게시상태</th>
+							<th style="width: 5%;">조회수</th>
+							<th style="width: 5%;">게시상태</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="content_list_td"
-							th:each="notice, iterStat: ${noticeList}">
-							<td class="notice_check"><input class="input_check"
-								type="checkbox" name="chk" th:value="${notice.postId}"></td>
+						<tr class="content_list_td" th:each="notice, iterStat: ${noticeList}">
+							<td class="notice_check">
+								<input class="input_check" type="checkbox" name="select" onclick="checkSelectAll()" th:value="${notice.postId}"></td>
 							<td class="notice_num" th:text="${iterStat.index + 1}"></td>
-							<td th:text="${notice.postId}"></td>
-							<td><a class="notice_title"
-								th:href="@{/admin/notice/view/__${notice.postId}__}"
+							<td><a class="notice_title" th:href="@{/admin/notice/view/__${notice.postId}__}"
 								th:text="${notice.postTitle}"></a></td>
-							<td class="notice_title"><img th:if="${notice.fileId!=null}"
+							<td class="notice_file"><img th:if="${notice.fileId!=null}"
 								class="file_img" th:src="@{/img/file.png}"></td>
-							<td>관리자</td>
+							<td class="mngr_nm" th:text="${notice.mngrNm}"></td>
 							<td th:text="${notice.rgstDt}"></td>
-							<td th:text="${notice.postHit}"></td>
-							<td th:text="${notice.cmcdNm}"></td>
+							<td class="notice_hit" th:text="${notice.postHit}"></td>
+							<td class="notice_status" th:text="${notice.cmcdNm}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -143,18 +135,30 @@
 		<!-- Content Bottom-->
 	</div>
 	<script>
-		//전체 선택
-		document.addEventListener("DOMContentLoaded", function() {
-			const chkAll = document.getElementById("chkAll");
-			const checkboxes = document
-					.querySelectorAll('input[type="checkbox"][name="chk"]');
-
-			chkAll.addEventListener("change", function() {
-				checkboxes.forEach(function(checkbox) {
-					checkbox.checked = chkAll.checked;
-				});
+		//전체선택
+		function selectAll(selectAll){
+			//모든 체크박스들
+			const checkboxes = document.querySelectorAll('input[name="select"]');
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = selectAll.checked;
 			});
-		});
+		}
+		
+		//개별 선택
+		function checkSelectAll(){
+			//전체선택 체크박스
+			const selectAll = document.querySelector('input[name="select_all"]');
+			//모든 체크박스
+			const checkboxes = document.querySelectorAll('input[name="select"]');
+			//선택된 체크박스
+			const checked = document.querySelectorAll('input[name="select"]:checked');
+			
+			if(checkboxes.length == checked.length){
+				selectAll.checked = true;
+			}else{
+				selectAll.checked = false;
+			}
+		}
 
 		//선택삭제
 		document.querySelector("#delete_btn").addEventListener(
@@ -266,7 +270,8 @@
 							var inputCheck = document.createElement("input");
 							inputCheck.className = "input_check";
 							inputCheck.type = "checkbox";
-							inputCheck.name = "chk";
+							inputCheck.name = "select";
+							inputCheck.onclick = checkSelectAll;
 							inputCheck.value = notice.postId;
 							tdCheck.appendChild(inputCheck);
 							tr.appendChild(tdCheck);
@@ -276,11 +281,6 @@
 							tdNum.className = "notice_num";
 							tdNum.textContent = i + 1;
 							tr.appendChild(tdNum);
-
-							//postId
-							var tdPostId = document.createElement("td");
-							tdPostId.textContent = notice.postId;
-							tr.appendChild(tdPostId);
 
 							//postTitle
 							var tdPostTitle = document.createElement("td");
@@ -294,7 +294,7 @@
 
 							//file
 							var tdFile = document.createElement("td");
-							tdFile.className = "notice_title";
+							tdFile.className = "notice_file";
 							if (notice.fileId != null) {
 								var fileImg = document.createElement("img");
 								fileImg.className = "file_img";
@@ -303,9 +303,10 @@
 							}
 							tr.appendChild(tdFile);
 							
-							//rgsterId
+							//mngrNm
 							var tdRgster = document.createElement("td");
-							tdRgster.textContent="관리자";
+							tdRgster.className="mngr_nm";
+							tdRgster.textContent=notice.mngrNm;
 							tr.appendChild(tdRgster);
 							
 							//rgstDt
@@ -315,11 +316,13 @@
 							
 							//hits
 							var tdHit = document.createElement("td");
+							tdHit.className="notice_hit";
 							tdHit.textContent = notice.postHit;
 							tr.appendChild(tdHit);
 							
 							//status
 							var tdStatus = document.createElement("td");
+							tdStatus.className ="notice_status";
 							tdStatus.textContent= notice.cmcdNm;
 							tr.appendChild(tdStatus);
 
