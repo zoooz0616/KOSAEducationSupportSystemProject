@@ -79,11 +79,11 @@
 	width: 20px;
 }
 
-.search_filter_btn_wrap .search_reset_btn {
+.search_filter_btn_wrap .reset_btn {
 	background: #9FBCCD;
 }
 
-.search_filter_btn_wrap .search_filter_btn {
+.search_filter_btn_wrap .search_btn {
 	background: #0E5881;
 }
 
@@ -178,4 +178,8 @@
 
 .inquiry_check, .inquiry_num, .inquiry_file img {
 	width: 15px;
+}
+
+.inquiry_check, .rgster_nm, .inquiry_num, .inquiry_file, .inquiry_hit, .inquiry_status {
+	text-align: center;
 }

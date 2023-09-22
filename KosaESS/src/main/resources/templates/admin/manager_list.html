@@ -139,7 +139,6 @@
 					<thead>
 						<tr class="content_list_th">
 							<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
-							<th>ID</th>
 							<th>업무담당자 이름</th>
 							<th>전화번호</th>
 							<th>이메일</th>
@@ -152,7 +151,6 @@
 						<tr th:each="manager: ${managerList}">
 							<td class="input_check_td"><input class="input_check"
 								type="checkbox" name="chk" th:value="${manager.mngrId}"></td>
-							<td th:text="${manager.mngrId}"></td>
 							<td>
 								<div class="update_div" th:text="${manager.mngrNm}"></div> 
 								<input type="text"
@@ -289,11 +287,6 @@
 								inputCheck.value = manager.mngrId;
 								tdCheck.appendChild(inputCheck);
 								tr.appendChild(tdCheck);
-
-								//mngrId
-								var tdMngrId = document.createElement("td");
-								tdMngrId.textContent = manager.mngrId;
-								tr.appendChild(tdMngrId);
 
 								//mngrNm
 								var tdMngrNm = document.createElement("td");
