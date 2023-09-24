@@ -369,14 +369,15 @@ public class ManagerController {
 		return wlogResponse;
 	}
 	
-	@GetMapping("/class/filter")
+	@GetMapping("/class/search")
 	@ResponseBody
 	public Map<String, Object> fetchClassList(
-			HttpSession session,
-			@RequestParam("filterString[]") List<String> filterString
+			HttpSession session
+			,@RequestParam(name="searchKeyword", required=false) String searchKeyword
+			,@RequestParam("filterString[]") List<String> filterString
 			) {
 		String mngrId = (String) session.getAttribute("mngrId");
-		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString);
+		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString, searchKeyword);
 		for (ClassVO vo : classList) {
 			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
 		}

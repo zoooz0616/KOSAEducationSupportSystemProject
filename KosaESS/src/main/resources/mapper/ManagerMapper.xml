@@ -187,8 +187,12 @@
 		<foreach collection="filterString" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
+		<if test="searchKeyword!=null">
 		<![CDATA[
-			--ORDER BY clss_id DESC
+			AND c.clss_nm like '%'|| #{searchKeyword} ||'%'
+		]]>
+		</if>
+		<![CDATA[
 			ORDER BY clss_nm
 		]]>
 	</select>

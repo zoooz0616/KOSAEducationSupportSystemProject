@@ -14,8 +14,6 @@
 			<i class='bx bx-menu' id="btn"><img class="open_icon" th:src="@{/img/open.png}"></i>
 		</div>
 		<ul class="nav-list">
-		
-<!-- 			<li><a th:href="@{/__${session.role}__}"> <i class='bx bx-grid-alt'> <img th:src="@{/img/main_white.png}"> </i> <span class="links_name">메인</span> </a> <span class="tooltip">메인</span></li> -->
 			<li><a th:href="@{/__${session.role}__/class}"> <i class='bx bx-cart-alt'><img th:src="@{/img/class_white.png}"></i> <span class="links_name">교육과정 관리</span> </a> <span class="tooltip">교육과정 관리</span></li>
 			<li><a th:href="@{/__${session.role}__/student}"> <i class='bx bx-heart'><img th:src="@{/img/student_white.png}"></i> <span class="links_name">교육생 관리</span> </a> <span class="tooltip">교육생 관리</span></li>
 			<li><a th:href="@{/__${session.role}__/worklog}"> <i class='bx bx-heart'><img th:src="@{/img/worklog_white.png}"></i> <span class="links_name">출퇴근 관리</span> </a> <span class="tooltip">출퇴근 관리</span></li>
@@ -31,8 +29,8 @@
 							
 						</div>
 					</div>
-					<i class='bx bx-log-out' id="log_out"><a th:href="@{/logout}"><img
-								style="width: 35px; object-fit: contain;margin-top: 5px;" class='bx bx-log-out'
+					<i class='bx bx-log-out' id="log_out"  style="background: #1d1b31;"><a onclick="logout()">
+						<img style="width: 35px; object-fit: contain;margin-top: 5px;" class='bx bx-log-out'
 								id="log_out" th:src="@{/img/logout_white.png}"></a></i>
 				</div>
 			</li>
@@ -56,7 +54,7 @@
 
 		//서브바 메뉴 event
 		const listItem = document.querySelectorAll('.nav-list li a');//모든 li안의 있는 a태그
-
+		
 		listItem.forEach(item => {
 			//한 a태그의 자식 img객체를 얻어와야됨.
 			const img = item.querySelector('i img');
@@ -67,18 +65,25 @@
 			
 			//hover event
 			item.addEventListener('mouseenter', () => {
-				const newSrc = originalSrc.replace('_white', '_navy'); // Assuming you have separate hover images 
-				img.setAttribute('src', newSrc);
-			});
+      			const newSrc = originalSrc.replace('_white', '_navy'); // Assuming you have separate hover images 
+      			img.setAttribute('src', newSrc);
+    		});
 
 			item.addEventListener('mouseleave', () => {
 				// 클릭한 후에는 현재 상태를 고정
-				if (!currentSrc.includes('_navy')) {
-					img.setAttribute('src', originalSrc);
-				}
-			});
-		});
+			    if (!currentSrc.includes('_navy')) {
+			      img.setAttribute('src', originalSrc);
+			    }
+    		});
+  		});
 		
-	</script>
+		function logout() {
+	        if (!confirm("로그아웃 하시겠습니까?")) {
+	        	//원래 화면으로
+	        } else {
+	        	location.replace("/logout");
+	        }
+	    }
+  </script>
 </body>
 </html>
