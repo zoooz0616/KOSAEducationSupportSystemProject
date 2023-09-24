@@ -1,3 +1,5 @@
+var paramList = new URLSearchParams(location.search);
+var thisClassId = paramList.get('classId');
 var chkAll = $("#chkAllStdt");//전체 체크박스
 var chkList = $("input[name=checkedStdt]");//존재하는 stdt체크박스 리스트
 var isChecked = chkAll.prop("checked");//체크된 stdt체크박스 리스트
@@ -25,23 +27,57 @@ function getCheckedStdt() {
 }
 //End
 
+//주소의 classId param이 null이 아니라면 hidden targetClassId를 변경
+function changeTargetClassId(){
+	if(thisClassId != null){
+		$('#class_id_save').val(thisClassId);
+	}
+}
+//End
+
+//주소의 classId param이 null이 아니라면 select 박스의 값을 param의 id와 같은 것으로 변경
+function changeSelectBox(){
+	if(thisClassId != null){
+		for(let i = 0;i < document.getElementById('classId').options.length;i++){
+			//console.log((String)((String)(document.getElementById('classId').options[i].value.split("(")[1]).split(",")[0]).split("=")[1]);
+			if(thisClassId == (String)((String)(document.getElementById('classId').options[i].value.split("(")[1]).split(",")[0]).split("=")[1]){
+				document.getElementById('classId').selectedIndex=i;
+				//$("#classId option").prop("selected",true);
+				console.log(document.getElementById('classId').options[i].seleted);
+				break;
+			}
+		}
+	}
+}
+//End
 //---------------------------------------------------------------------------
 // 1. 체크박스 컨트롤
-	$(document).ready(
-		//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
-		//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
-		chkAll.on("change", function () {
-			isChecked = chkAll.prop("checked");
-			chkList.prop("checked", isChecked);
-		}),
-		//End
-		//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
-		chkList.on("change", function () {
-			allChecked = chkList.filter(":checked").length === chkList.length;
-			chkAll.prop("checked", allChecked);
-		}),
-		//End
-	);
+$(document).ready(
+	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
+	
+	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
+	chkAll.on("change", function () {
+		isChecked = chkAll.prop("checked");
+		chkList.prop("checked", isChecked);
+	}),
+	//End
+	
+	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
+	chkList.on("change", function () {
+		allChecked = chkList.filter(":checked").length === chkList.length;
+		chkAll.prop("checked", allChecked);
+	}),
+	//End
+	
+	//주소의 classId Param이 null 아니라면, 해당 id에 해당하는 이름으로 select 박스 값으로 선택하기
+	changeTargetClassId(),
+	//End
+	
+	//주소의 classId param이 null이 아니라면 select 박스의 값을 param의 id와 같은 것으로 변경
+	changeSelectBox()
+	//End
+	
+);
 //End : 체크박스 컨트롤
 
 // 2. 검색 누르면 검색하세요
@@ -52,6 +88,7 @@ function getCheckedStdt() {
 		
 		//2) tbody에 붙일 내용물을 만든다
 		var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
+		//var targetClassId = thisClassId;
 		
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
@@ -157,6 +194,12 @@ function getCheckedStdt() {
 			chkAll.prop("checked", allChecked);
 		})
 		//End
+		//셀렉트 박스 값에 이수상태 변경이 영향을 받지 않도록 classId 값을 hidden에 저장
+		function changeHiddenClassId(){
+			$('#class_id_save').val(document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1]);
+		}
+		changeHiddenClassId();
+		//End
 	}
 //End : 검색 버튼 누르면 검색
 
@@ -167,7 +210,8 @@ function getCheckedStdt() {
 	
 // 		//2. 바꿀 값이 뭔지 가져온다(var cmptValue)+어떤 수업인지도 가져온다
 		var targetCmptId = button.value;
-		var thisClassId = $(".title_a").val();
+		//var thisClassId = $(".title_a").val();
+		var targetClassId = $("#class_id_save").val();
 
 // 		//3. target이랑 cmptValue를 넘긴다
 		$.ajax({
@@ -176,7 +220,7 @@ function getCheckedStdt() {
 			type :'post',
 			data : {
 				targetList:targetList
-				,clssId:thisClassId
+				,clssId:targetClassId
 				,targetCmptId:targetCmptId
 			},
 			success: function(updatedStdtList){
@@ -185,7 +229,7 @@ function getCheckedStdt() {
 				var endDate = document.getElementById("endDate").value;
 				if(startDate==''){startDate=getFirstDay();}
 				if(endDate==''){endDate=getLastDay();}
-				var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
+				//var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
 				//========================================================================================
 				$.ajax({
 					type:'get',
@@ -198,6 +242,9 @@ function getCheckedStdt() {
 					},
 					async:false,
 					success: function(stdtListResponse) {
+						
+						console.log(targetClassId);
+						
 						var stdtList = stdtListResponse.stdtList;
 		
 						//입력 시작
@@ -248,7 +295,7 @@ function getCheckedStdt() {
 							
 							//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
 							var cmptRate = document.createElement('td');
-							cmptRate.innerHTML="";
+							cmptRate.innerHTML=(stdtList[i].cmptRate).toFixed(1)+" %";
 							//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
 							
 							var rowJob = document.createElement('td');
