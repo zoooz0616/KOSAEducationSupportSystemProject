@@ -17,8 +17,6 @@ function getCheckedItems() {
 function fetchClassList() {
 	var filterString = getCheckedItems();
 	var searchKeyword = $("#search_by_name").val();
-	console.log(searchKeyword);
-	console.log(filterString);
 	$.ajax({
 		url : "/manager/class/search", // 컨트롤러 엔드포인트
 		type : "GET",
@@ -78,6 +76,11 @@ function fetchClassList() {
 	});
 }
 
+//검색 버튼을 누르면 결과 반영
+function search(){
+	fetchClassList();
+}
+
 //---------------------------------------------------------------
 $(document).ready(function () {
 	
@@ -85,13 +88,13 @@ $(document).ready(function () {
 	chkAll.on("change", function () {
 		const isChecked = chkAll.prop("checked");
 		chkList.prop("checked", isChecked);
-		fetchClassList();
+		//fetchClassList();
 	});
 	
 	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
 	chkList.on("change", function () {
 		const allChecked = chkList.filter(":checked").length === chkList.length;
 		chkAll.prop("checked", allChecked);
-		fetchClassList();
+		//fetchClassList();
 	});
 });

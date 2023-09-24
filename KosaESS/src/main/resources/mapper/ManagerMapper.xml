@@ -263,5 +263,8 @@
 				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE stdt_nm like '%'||#{stdtNm}||'%' ) --null이 아닐 경우 조건 걸어야됨
 			]]>
 		</if>
+		<![CDATA[
+			ORDER BY in_tm DESC
+		]]>
 	</select>
 </mapper>
