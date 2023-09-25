@@ -63,4 +63,7 @@ topBtn.addEventListener('click', () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-
+$("#fileInput").on('change',function(){
+  var fileName = $("#fileInput").val();
+  $(".upload-name").val(fileName);
+});
