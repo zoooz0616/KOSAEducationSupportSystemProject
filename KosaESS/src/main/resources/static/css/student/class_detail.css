@@ -10,20 +10,16 @@ th, td {
 	padding: 1.5% 0;
 }
 
-thead tr {
+/* thead tr {
 	border-bottom: 2px solid #0E5881;
-}
-
+} */
 table td {
 	font-weight: bold;
 }
 
 table th {
 	background-color: #E7EFF3;
-}
-
-.crclTable th {
-	border-bottom: 2px solid #0E5881;
+	width: 115px;
 }
 
 .content {
