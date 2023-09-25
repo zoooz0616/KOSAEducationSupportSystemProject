@@ -1575,7 +1575,6 @@ public class AdminController {
 		//교육과정 리스트
 		List<ClassVO> classList = adminService.getClassList();
 		model.addAttribute("classList", classList);
-		
 		return "admin/student_list";
 	}
 	
