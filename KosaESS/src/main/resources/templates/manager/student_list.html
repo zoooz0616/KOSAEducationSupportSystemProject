@@ -37,6 +37,12 @@
 							<td style="width: 10%;">기간</td>
 							<td style="width: 30%;"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
 						</tr>
+						<tr>
+							<td style="width: 10%;">검색어</td>
+							<td style="width: 30%;"><input></td>
+							<td style="width: 10%;">이수여부</td>
+							<td style="width: 30%;"></td>
+						</tr>
 					</table>
 				</div>
 				<!-- 검색 버튼 -->
@@ -70,7 +76,7 @@
 						<th>성별</th>
 						<th>생년월일</th>
 						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
-						<th>이수율</th>
+						<th>이수율<br>(%)</th>
 						<th>이수여부</th>
 					</tr>
 				</thead>
@@ -84,7 +90,7 @@
 						<td th:text="${stdt.genderCd}">성별</td>
 						<td th:text="${stdt.birthDd}">생년월일</td>
 						<td th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
-						<td th:text="${#numbers.formatDecimal(stdt.cmptRate, 1, 1) + ' %'}"></td>
+						<td th:text="${#numbers.formatDecimal(stdt.cmptRate, 1, 1)}"></td>
 						<td th:text="${stdt.jobCd}">이수여부</td>
 					</tr>
 				</tbody>
