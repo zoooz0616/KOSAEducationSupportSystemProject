@@ -20,7 +20,7 @@ public interface IManagerService {
 
 	public ClassVO getClassDetailByClssId(String clssId);
 
-	public List<StudentInfoDTO> getStudentListByClssId(String clssId);
+	public List<StudentInfoDTO> getStudentListByClssId(String clssId, String keyword, List<String> cmptList);
 
 	public String getClassNameByClssId(String clssId);
 
@@ -54,6 +54,8 @@ public interface IManagerService {
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
 	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly);
+
+	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }

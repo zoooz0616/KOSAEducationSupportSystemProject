@@ -80,7 +80,9 @@ public class ManagerController {
 			}
 			model.addAttribute("classList", classList);
 			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
+			List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CLS");
 			model.addAttribute("classCodeNameList", classCodeNameList);
+			model.addAttribute("cmptCodeNameList", cmptCodeNameList);
 			return "manager/class_list";
 		} else {
 			if(roleCd == null) {
@@ -172,22 +174,23 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		//end
-
-		//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜로 오늘 기준 이번 달의 첫날과 마지막날을 반환
-		if (startDate == null) {
-			startDate = String.valueOf(YearMonth.now().atDay(1));
+		
+		if(classId!=null) {
+			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜로 오늘 기준 이번 달의 첫날과 마지막날을 반환
+			if (startDate == null) {
+				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
+			}
+			if (endDate == null) {
+				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
+			}
+			//end
 		}
-		if (endDate == null) {
-			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-		}
-		//end
-
 		List<ClassVO> classList = new ArrayList<ClassVO>();
 		ClassVO emptyClassVO = new ClassVO();
 		emptyClassVO.setClssNm("교육과정명을 선택하세요");
 		classList.add(emptyClassVO);
 
-		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
+		List<StudentInfoDTO> stdtList = managerService.getStudentListByOnlyClssId(classId);//학생 이름 목록
 		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");//수업 목록
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
@@ -307,13 +310,16 @@ public class ManagerController {
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
 	@ResponseBody
-	public Map<String, Object> fetchStudentList(@RequestParam("classId") String classId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+	public Map<String, Object> fetchStudentList(
+			@RequestParam("classId") String classId, 
+			@RequestParam("startDate") String startDate, 
+			@RequestParam("endDate") String endDate,
+			@RequestParam("keyword") String keyword,
+			@RequestParam("cmptList[]") List<String> cmptList
+			) {
 
-		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
+		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId, keyword, cmptList);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-
-//		if (startDate == null || startDate == "") {startDate = String.valueOf(YearMonth.now().atDay(1));}
-//		if (endDate == null || endDate == "") {endDate = String.valueOf(YearMonth.now().atEndOfMonth());}
 
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");

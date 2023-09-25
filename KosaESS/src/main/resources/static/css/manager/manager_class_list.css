@@ -173,22 +173,31 @@ ul {
 /*------------------------------------------------------------*/
 .search_condition_name{
 	display:inline-block;
-/* 	width : auto; */
-	width : 20%;
+	width : auto;
+/* 	width : 10%; */
 }
 
-.search_by_name_btn_wrap{
+.search_btn_wrap{
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
+	width : 10%;
+	align-items: center;
 }
 
-.search_by_name_btn_wrap #search_by_name_btn {
-	width: 60px;
-	margin: 10px 0 10px 0;
-	background-color: #0E5881;
+.search_btn_wrap input {
 	color: white;
-	font-size: 20px;
-	font-weight: bold;
+	font-size: 1em;
+	border : none;
+	width: 40%;
+	height : 2em;
+} 
+
+.search_btn_wrap #search_by_name_btn {
+	background-color: #0E5881;
+	
+}
+.search_btn_wrap #search_reset_btn {
+	background-color: #9FBCCD;
 }
 
 .search_filter_wrap {
@@ -199,6 +208,7 @@ ul {
 }
 .search_filter_inner_wrap {
 	display: flex;
+	justify-content: space-between;
 }
 #search_by_name{
 	width: 60%;
@@ -207,7 +217,7 @@ ul {
 	font-weight: bold;
 }
 #search_by_name_wrap{
-	width:50%;
+	width:30%;
 }
 #search_by_status_wrap{
 	width:50%;

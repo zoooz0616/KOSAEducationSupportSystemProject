@@ -1,6 +1,17 @@
 @charset "UTF-8";
 /* class="" */
 
+/*-------------------------------------------------------*/
+select option[value=""][disabled] {
+	display: none;
+}
+
+
+
+
+
+/*-------------------------------------------------------*/
+
 /* 공통 사항*/
 .home-section {
 	position: relative;
@@ -30,22 +41,10 @@
 	font-weight: bold;
 }
 
-.title_a {
-	display: inline-block;
-	color: #333333;
-	font-size: 30px;
-	font-weight: bold;
-/* 	margin: 40px 40px 40px 0px; */
-	text-decoration: none;
-	color: #0E5881;
-	font-weight: bold;
-}
-
 .content_wrap {
 	width: 95%;
 	margin-left: 40px;
 }
-
 /* End : 공통 사항*/
 
 /* filter_table */
@@ -98,7 +97,29 @@
 	font-size: 20px;
 }
 
-select option[value=""][disabled] {
-	display: none;
-}
 /* End : filter_table */
+.search_filter_table td #classId{
+	width: 80%;
+}
+
+#stdt_list_table_thead th{
+	background-color:#E7EFF3;
+}
+
+.search_filter_table .input_keyword{
+	width: 80%;
+	height: 1.8em;
+}
+
+#stdt_list_table{
+	width : 100%;
+}
+
+#stdt_list_table_tbody .fixed_length_cell{
+	text-align: center;
+}
+
+#stdt_list_table_tbody .number_cell{
+	text-align: right;
+	padding-right: 1em;
+}

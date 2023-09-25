@@ -1,9 +1,16 @@
 var paramList = new URLSearchParams(location.search);
 var thisClassId = paramList.get('classId');
-var chkAll = $("#chkAllStdt");//전체 체크박스
+
+var chkAll = $("#chkAllStdt");//"전체" 학생 체크박스
 var chkList = $("input[name=checkedStdt]");//존재하는 stdt체크박스 리스트
-var isChecked = chkAll.prop("checked");//체크된 stdt체크박스 리스트
-var allChecked = chkList.filter(":checked").length === chkList.length;
+var isChecked = chkAll.prop("checked");//"전체(학생)" 체크박스의 상태값(true 아니면 false)
+var allChecked = chkList.filter(":checked").length === chkList.length;//학생 체크박스가 전체 체크됐는지 여부
+
+var chkAllcmpt = $("#chk_all_cmpt");//"전체" 이수상태 체크박스
+var chkcmptList = $("input[class=cmpt_checkbox]");//존재하는 stdt체크박스 리스트
+var chkAllcmptChecked = chkAllcmpt.prop("checked");//"전체(학생)" 체크박스의 상태값(true 아니면 false)
+var chkcmptAllChecked = chkcmptList.filter(":checked").length === chkcmptList.length;//학생 체크박스에서 체크 된 리스트
+
 var stdtListTable = document.getElementById('stdt_list_table_tbody');//tbody 선택하기
 var date = new Date();
 var year = date.getFullYear();
@@ -15,7 +22,7 @@ function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var la
 //tbody의 모든 내용을 삭제
 function clearTable(){if(stdtListTable.firstChild != null){while (stdtListTable.firstChild) {stdtListTable.removeChild(stdtListTable.firstChild);}}}
 
-//현재 체크된 목록을 반환 <<< 3번 할 때 쓸 예정
+//현재 체크된 교육생 목록을 반환
 function getCheckedStdt() {
 	const checkedStdts = [];
 	chkList.each(function () {
@@ -24,6 +31,19 @@ function getCheckedStdt() {
 		}
 	});
 	return checkedStdts;
+}
+//End
+
+//현재 체크된 이수 상태 목록을 반환
+function getCheckedCmpts() {
+	const checkedCmpts = [];
+	checkedCmpts.push('CMPT');
+	chkcmptList.each(function () {
+		if ($(this).prop("checked")) {
+			checkedCmpts.push($(this).val());
+		}
+	});
+	return checkedCmpts;
 }
 //End
 
@@ -55,17 +75,31 @@ function changeSelectBox(){
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 	
-	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
+	//"전체"(교육생) 체크박스의 상태에 따라 나머지 교육생 체크박스의 상태를 변경
 	chkAll.on("change", function () {
 		isChecked = chkAll.prop("checked");
 		chkList.prop("checked", isChecked);
 	}),
 	//End
 	
-	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
+	//교육생 체크박스가 변경될 때 "전체"(교육생) 체크박스 상태 업데이트
 	chkList.on("change", function () {
 		allChecked = chkList.filter(":checked").length === chkList.length;
 		chkAll.prop("checked", allChecked);
+	}),
+	//End
+
+	//"전체"(이수 상태) 체크박스의 상태에 따라 나머지 이수 상태 체크박스의 상태를 변경
+	chkAllcmpt.on("change", function () {
+		chkAllcmptChecked = chkAllcmpt.prop("checked");
+		chkcmptList.prop("checked", chkAllcmptChecked);
+	}),
+	//End
+	
+	//이수 상태 체크박스가 변경될 때 "전체"(이수 상태) 체크박스 상태 업데이트
+	chkcmptList.on("change", function () {
+		chkcmptallChecked = chkcmptList.filter(":checked").length === chkcmptList.length;
+		chkAllcmpt.prop("checked", chkcmptallChecked);
 	}),
 	//End
 	
@@ -95,6 +129,9 @@ $(document).ready(
 		if(startDate==''){startDate=getFirstDay();}
 		if(endDate==''){endDate=getLastDay();}
 		
+		var inputKeyword = $('.input_keyword').val();
+		var cmptList = getCheckedCmpts;
+		
 		$.ajax({
 			type:'get',
 			url:'/manager/student/search', // 서버의 엔드포인트 URL
@@ -103,6 +140,8 @@ $(document).ready(
 				classId:targetClassId
  				, startDate:startDate
  				, endDate:endDate
+				, keyword:inputKeyword
+				, cmptList:cmptList
 			},
 			async:false,
 			success: function(stdtListResponse) {
@@ -162,6 +201,7 @@ $(document).ready(
 							var rowWlog = document.createElement('td');
 							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
 							newRow.appendChild(rowWlog);//출결상태
+							rowWlog.setAttribute("class","number_cell")
 						}
 						},error: function(error){console.log("error: ", error);}
 					})
@@ -178,6 +218,15 @@ $(document).ready(
 					newRow.appendChild(rowJob);
 					//3) tbody에 붙인다
 					stdtListTable.append(newRow);
+					
+					rowChk.setAttribute("class","fixed_length_cell");
+					rowNum.setAttribute("class","fixed_length_cell");
+					rowName.setAttribute("class","fixed_length_cell");
+					rowTel.setAttribute("class","fixed_length_cell");
+					rowGender.setAttribute("class","fixed_length_cell");
+					rowBirth.setAttribute("class","fixed_length_cell");
+					cmptRate.setAttribute("class","number_cell");
+					rowJob.setAttribute("class","fixed_length_cell");
 				}
 				//End
 			},error: function(error){

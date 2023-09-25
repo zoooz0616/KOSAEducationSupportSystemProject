@@ -28,7 +28,7 @@ public interface IManagerRepository {
 
 	public ClassVO getClassDetailByClssId(String clssId);
 
-	public List<StudentInfoDTO> getStudentListByClssId(String clssId);
+	public List<StudentInfoDTO> getStudentListByClssId(@Param("clssId") String clssId, @Param("keyword") String keyword, @Param("cmptList") List<String> cmptList);
 
 	public String getClassNameByClssId(String clssId);
 
@@ -60,6 +60,8 @@ public interface IManagerRepository {
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
 
 	public List<WorklogVO> getWlogListByClssIds(@Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("stdtNm") String stdtNm, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly);
+
+	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

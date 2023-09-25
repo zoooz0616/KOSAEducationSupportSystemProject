@@ -50,7 +50,7 @@
 			FROM cmcd
 			WHERE cmcd_id like #{keyword} ||'%'
 				AND use_yn = 'Y'
-			ORDER BY cmcd_id
+			ORDER BY cmcd_order
 		]]>
 	</select>
 	
@@ -115,6 +115,17 @@
 				JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
 			WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
 				AND r.clss_id = #{clssId}
+			
+		]]>
+		<if test='keyword != null'>
+			<![CDATA[
+				AND ((stdt_nm like '%'||#{keyword}||'%')OR(user_email like '%'||#{keyword}||'%'))
+			]]>
+		</if>
+		<foreach collection="cmptList" item="item" open="(" separator="," close=")">
+			AND r.cmpt_cd IN #{item}
+		</foreach>
+		<![CDATA[
 			ORDER BY s.stdt_nm
 		]]>
 	</select>
@@ -267,4 +278,24 @@
 			ORDER BY in_tm DESC
 		]]>
 	</select>
+	
+	<select id="getStudentListByOnlyClssId" resultType="com.finalprj.kess.dto.StudentInfoDTO">
+		<![CDATA[
+			SELECT
+				s.stdt_Id,
+				s.user_Email,
+				s.stdt_Nm,
+				c1.cmcd_nm AS gender_Cd,
+				s.birth_Dd,
+				s.stdt_Tel,
+				r.cmpt_cd AS job_Cd
+			FROM stdt s
+				JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
+				JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
+			WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
+				AND r.clss_id = #{clssId}
+			ORDER BY s.stdt_nm
+		]]>
+	</select>
+	
 </mapper>
