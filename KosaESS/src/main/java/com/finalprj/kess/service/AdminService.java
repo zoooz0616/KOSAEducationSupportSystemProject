@@ -20,6 +20,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IAdminRepository;
 import com.finalprj.kess.repository.IUploadFileRepository;
@@ -418,8 +419,8 @@ public class AdminService implements IAdminService {
 	}
 	
 	@Override
-	public List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail) {
-		return adminRepository.getSearchManagerList(mngrNm, mngrEmail);
+	public List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput) {
+		return adminRepository.getSearchManagerList(searchInputCategory, searchInput);
 	}
 	
 	@Override
@@ -558,8 +559,8 @@ public class AdminService implements IAdminService {
 	}
 	
 	@Override
-	public void updateDetailCode(String cmcdId, String cmcdNm, String useYn) {
-		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn);
+	public void updateDetailCode(String cmcdId, String cmcdNm, String useYn, int cmcdOrder) {
+		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn, cmcdOrder);
 	}
 	
 	@Override
@@ -573,7 +574,20 @@ public class AdminService implements IAdminService {
 	}
 	
 	
+	@Override
+	public void deleteInquiryReply(String replyId) {
+		adminRepository.deleteInquiryReply(replyId);
+	}
 	
+	@Override
+	public int getFileCnt(String fileId) {
+		return adminRepository.getFileCnt(fileId);
+	}
+
+	@Override
+	public List<StudentVO> getStudentList() {
+		return adminRepository.getStudentList();
+	}
 	
 	
 	

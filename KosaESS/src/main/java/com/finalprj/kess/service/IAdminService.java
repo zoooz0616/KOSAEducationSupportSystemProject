@@ -19,6 +19,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 
 public interface IAdminService {
@@ -115,7 +116,7 @@ public interface IAdminService {
 	void updateInquiryStatus(String postId);
 	String getMaxManagerId();
 	void insertManagerVO(ManagerVO managerVO);
-	List<ManagerVO> getSearchManagerList(String mngrNm, String mngrEmail);
+	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput);
 	void deleteManagerList(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);
 	void updateManager(ManagerVO managerVO);
@@ -141,7 +142,10 @@ public interface IAdminService {
 	int getDetailCodeNmCnt(String cmcdId, String cmcdNm);
 	String getMaxDetailCodeId(String cmcdId);
 	void insertDetailCode(CommonCodeVO commonCodeVO);
-	void updateDetailCode(String cmcdId, String cmcdNm, String useYn);
+	void updateDetailCode(String cmcdId, String cmcdNm, String useYn, int cmcdOrder);
 	String getStudentEmailByAplyId(String aplyId);
 	String getClssNmByAplyId(String aplyId);
+	void deleteInquiryReply(String replyId);
+	int getFileCnt(String fileId);
+	List<StudentVO> getStudentList();
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/student_list.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">교육생 관리</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/student/list}">교육생 관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+		
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<!-- Search Filter wrap -->
+			<div class="search_filter_wrap">
+				<!-- 교육생 이름 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육생 이름</div>
+					<div>
+						<input class="search_input" type="text" id="search_input" value="">
+					</div>
+				</div>
+
+				<!-- 교육과정 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육과정</div>
+					<div>
+						<select class="search_input_status">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="class: ${classList}"
+								th:value="${class.clssId}"
+								th:text="|${class.clssNm}(${class.clssId})|"></option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<!-- Search Filter wrap -->
+
+			<!-- Search Button wrap -->
+			<div class="search_filter_btn_wrap">
+				<button type="button" class="reset_btn" onclick="resetInput()">
+					<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+				</button>
+				<button type="button" class="search_btn" onclick="search()">
+					<img th:src="@{/img/search_white.png}"> <span>조회</span>
+				</button>
+			</div>
+			<!-- Search Button wrap -->
+		</div>
+		<!-- Content Middle-->
+		
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+			<div class="content_info_wrap">
+				<div class="content_info">
+					<span>교육생 총 <span class="inquiry_list_cnt"
+						th:text="${#lists.size(studentList)}"></span>명
+					</span>
+				</div>
+				<div class="content_info_btn_wrap">
+					<!-- 선택삭제 버튼 -->
+					<button type="button" id="delete_btn">
+						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+					</button>
+				</div>
+			</div>
+			<!-- 컨텐츠 개수와 버튼 wrap -->
+
+			<!-- 컨텐츠 리스트 부분 -->
+			<div class="content_list">
+				<table class="content_list_table" id="class_list_table">
+					<thead>
+						<tr class="content_list_th">
+							<th style="width: 3%;"><input type="checkbox"
+								name="select_all" onclick="selectAll(this)"></th>
+							<th style="width: 5%;">번호</th>
+							<th style="width: 10%;">이름</th>
+							<th style="width: 22%;">이메일</th>
+							<th style="width: 5%;">성별</th>
+							<th style="width: 10%;">생년월일</th>
+							<th style="width: 10%;">전화번호</th>
+							<th style="width: 5%;">직업</th>
+							<th style="width: 10%;">계정상태</th>
+							<th style="width: 20%;">마지막 로그인 일시</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="content_list_td" th:each="student, iterStat: ${studentList}">
+							<td class="student_check"><input class="input_check"
+								type="checkbox" name="select" onclick="checkSelectAll()"
+								th:value="${student.stdtId}"></td>
+							<td class="student_num" th:text="${iterStat.index + 1}"></td>
+							<td class="student_name">
+								<a th:href="@{/admin/student/view/__${student.stdtId}__}" th:text="${student.stdtNm}"></a>
+							</td>
+							<td class="student_email" th:text="${student.userEmail}"></td>
+							<td class="student_gender" th:text="${student.genderNm}"></td>
+							<td class="student_birthday" th:text="${#dates.format(student.birthDd, 'yyyy-MM-dd')}"></td>
+							<td class="student_tel" th:text="${student.stdtTel}"></td>
+							<td class="student_job" th:text="${student.jobNm}"></td>
+							<td class="student_status" th:text="${student.userNm}"></td>
+							<td class="last_login_dt" th:text="${#dates.format(student.lastLoginDt, 'yyyy-MM-dd hh:mm:ss')}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- 컨텐츠 리스트 부분 -->
+		</div>
+		<!-- Content Bottom-->
+	</div>
+</body>
+</html>

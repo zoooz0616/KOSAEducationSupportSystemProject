@@ -42,7 +42,7 @@
 					<tr th:if="${act=='select'}">
 						<th>등록자</th>
 						<td>
-							<div th:text="${postVO.rgsterId}"></div>
+							<div th:text="${postVO.mngrNm}"></div>
 						</td>
 					</tr>
 					<tr>
@@ -57,11 +57,11 @@
 						</td>
 					</tr>
 					<tr th:if="${act=='select' or act=='update'}">
-						<th>게시상태<span th:if="${act=='update'}"
-							class="star">*</span></th>
+						<th>게시상태<span th:if="${act=='update'}" class="star">*</span></th>
 						<td><input type="hidden" name="noticeStatus"
 							th:value="${postVO.postCd}"> <select
-							class="notice_status_select" onchange="noticeStatusChange(this)" th:if="${act=='update'}">
+							class="notice_status_select" onchange="noticeStatusChange(this)"
+							th:if="${act=='update'}">
 								<option th:each="noticeCommonCode : ${noticeCommonCodeList}"
 									th:value="${noticeCommonCode.cmcdId}"
 									th:text="${noticeCommonCode.cmcdNm}"
@@ -87,17 +87,32 @@
 					<tr>
 						<th>첨부파일</th>
 						<td><input th:if="${act=='insert'}" type="file" name="files"
-							multiple> <input th:if="${act=='update'}" type="file"
-							name="files" multiple>
+							multiple>
 
-							<div th:if="${act=='select'}">
-								<div th:if="${fileList == null}">첨부파일 없음</div>
+							<div class="file_wrap" th:if="${act=='select'}">
+								<div th:if="${postVO.fileId} == null">첨부파일 없음</div>
 								<div th:each="file: ${fileList}">
-									<a
+									<img class="file_img" th:src="@{/img/file.png}"> <a
 										th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
 										th:text="${file.fileNm}"></a>
 								</div>
-							</div></td>
+							</div>
+
+							<div th:if="${act=='update'}">
+								<button class="add_file" onclick="addFile(this)" type="button">
+								<img class="add_file_img" th:src="@{/img/plus_navy.png}">
+								파일추가</button>
+								<div>
+									<div th:each="file: ${fileList}" class="file_wrap">
+										<input type="hidden" th:value="${file.fileSubId}">
+										<img class="file_img" th:src="@{/img/file.png}"> 
+										<span th:text="${file.fileNm}"></span>
+										<button class="delete_file" type="button" onclick="deleteFile(this)" >삭제</button>
+									</div>
+								</div>
+								<input type="file" name="files" >
+							</div>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -210,10 +225,25 @@
 				});
 			});
 	
+	//update일 때 '파일추가'버튼 클릭하면 파일 추가하기
+	function addFile(button){
+		var divParent = button.closest('div');
+		var inputFile = document.createElement('input');
+		inputFile.type = 'file';
+		inputFile.name = 'files';
+
+		divParent.appendChild(inputFile);
+	}
 	
+	//update일 때 파일 '삭제'버튼 클릭하면 input type="hidden"에 name 추가
+	function deleteFile(button){
+		var divParent = button.closest('div');
+		var inputHidden = divParent.querySelector('input');
+		inputHidden.name='deleteFiles';
+		console.log(inputHidden.value);
+		divParent.style.display = 'none';
+	}
 	
 	</script>
-
-
 </body>
 </html>

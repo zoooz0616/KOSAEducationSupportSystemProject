@@ -44,6 +44,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IMailService;
@@ -302,43 +303,84 @@ public class AdminController {
 	 * @return : String
 	 */
 	@PostMapping("/notice/update")
-	public String noticeUpdate(@RequestParam("files") MultipartFile[] files, RedirectAttributes redirectAttrs,
-			@RequestParam String noticeTitle, @RequestParam String noticeStatus, @RequestParam String editorTxt, @RequestParam String noticeId) {
+	public String noticeUpdate(@RequestParam(name="files", required = false) MultipartFile[] files, RedirectAttributes redirectAttrs,
+			@RequestParam String noticeTitle, @RequestParam String noticeStatus, 
+			@RequestParam String editorTxt, @RequestParam String noticeId,
+			@RequestParam(name="deleteFiles", required = false) List<String> deleteFiles) {
 
 		PostVO postVO = adminService.getPostVO(noticeId);
 		postVO.setPostTitle(noticeTitle);
 		postVO.setPostContent(editorTxt);
 		postVO.setPostCd(noticeStatus);
 
-		//파일을 첨부하지 않았다면 maxFileId와 fileList는 null.
-		String maxFileId = null;
+		//삭제한 파일이 있다면
+		if(deleteFiles != null) {
+			//파일삭제
+			adminService.deleteFile(postVO.getFileId(), deleteFiles);
+			System.out.println("+++++++++++++++++++++"+deleteFiles);
+		}
+		
+		//fileId가 널이 아닐 때 file개수가 0 이면 fileId null로 변경
+		if (postVO.getFileId() != null) {
+			int fileCnt = adminService.getFileCnt(postVO.getFileId());
+			if (fileCnt == 0) {
+				postVO.setFileId(null);
+			}
+		}		
+				
+		//파일을 첨부하지 않았다면 maxFileId는 그대로 fileList는 null.
+		String maxFileId = postVO.getFileId();
 		List<FileVO> fileList = null;
 
 		//파일을 첨부했다면 List생성해서 전달
 		if(files[0]!=null && !files[0].isEmpty()) {
-			maxFileId = uploadFileService.getMaxFileId();
-			int subFileId=1;
-			fileList = new ArrayList<FileVO>();
-			try {
-				for(MultipartFile file: files) {
-					if(file!=null && !file.isEmpty()) {
-						FileVO fileVO = new FileVO();
-						fileVO.setFileId(maxFileId);
-						fileVO.setFileSubId(subFileId);
-						fileVO.setFileNm(file.getOriginalFilename());
-						fileVO.setFileSize(file.getSize());
-						fileVO.setFileType(file.getContentType());
-						fileVO.setFileContent(file.getBytes());
-						fileList.add(fileVO);
-						subFileId++;
+			//원래 파일이 없다면
+			if(maxFileId == null) {
+				maxFileId = uploadFileService.getMaxFileId();
+				int subFileId=1;
+				fileList = new ArrayList<FileVO>();
+				try {
+					for(MultipartFile file: files) {
+						if(file!=null && !file.isEmpty()) {
+							FileVO fileVO = new FileVO();
+							fileVO.setFileId(maxFileId);
+							fileVO.setFileSubId(subFileId);
+							fileVO.setFileNm(file.getOriginalFilename());
+							fileVO.setFileSize(file.getSize());
+							fileVO.setFileType(file.getContentType());
+							fileVO.setFileContent(file.getBytes());
+							fileList.add(fileVO);
+							subFileId++;
+						}
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					redirectAttrs.addFlashAttribute("message", e.getMessage());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				redirectAttrs.addFlashAttribute("message", e.getMessage());
+			}else {
+				//원래 파일이 있었다면
+				int subFileId=adminService.getMaxFileSubId(maxFileId);
+				fileList = new ArrayList<FileVO>();
+				try {
+					for(MultipartFile file: files) {
+						if(file!=null && !file.isEmpty()) {
+							FileVO fileVO = new FileVO();
+							fileVO.setFileId(maxFileId);
+							fileVO.setFileSubId(subFileId);
+							fileVO.setFileNm(file.getOriginalFilename());
+							fileVO.setFileSize(file.getSize());
+							fileVO.setFileType(file.getContentType());
+							fileVO.setFileContent(file.getBytes());
+							fileList.add(fileVO);
+							subFileId++;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					redirectAttrs.addFlashAttribute("message", e.getMessage());
+				}
 			}
 		}
-
 		postVO.setFileId(maxFileId);
 
 		adminService.updateNoticeVO(fileList, postVO);
@@ -466,6 +508,24 @@ public class AdminController {
 		adminService.deleteAllInquiry(selectedInquiryIds);
 		return "success";
 	}
+	
+	/**
+	 * 문의사항 답변 삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 22.
+	 * @parameter : 
+	 * @return : String
+	 */
+	@PostMapping("/inquiry/reply/delete/{replyId}")
+	@ResponseBody
+	public String inquiryReplyDelete(@PathVariable String replyId) {
+		System.out.println("++++++++++++++++");
+		System.out.println(replyId);
+		
+		//답변 deleteYn='Y'로 업데이트
+		adminService.deleteInquiryReply(replyId);
+		return "success";
+	}
 
 	/**
 	 * 문의사항 검색
@@ -504,6 +564,9 @@ public class AdminController {
 		//교육상태 리스트
 		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
 		model.addAttribute("classCommonCodeList", classCommonCodeList);
+		
+		List<CompanyVO> companyList = adminService.getCompanyList();
+		model.addAttribute("companyList", companyList);
 
 		return "admin/class_list";
 	}
@@ -584,7 +647,7 @@ public class AdminController {
 		List<CompanyVO> companyList = adminService.getCompanyList();
 		model.addAttribute("companyList", companyList);
 
-		//업무담당자
+		//업무담당자 리스트
 		List<ManagerVO> managerList = adminService.getManagerList();
 		model.addAttribute("managerList", managerList);
 
@@ -731,7 +794,7 @@ public class AdminController {
 
 		adminService.createClass(fileList, classVO, curriculumList);
 
-		return "redirect:/admin/class";
+		return "redirect:/admin/class/list";
 	}
 
 	/**
@@ -828,15 +891,17 @@ public class AdminController {
 		//현 교육과정의 fileId값 가져오기 
 		String fileId = classVO.getFileId();
 
-		//만약 null이라면 파일이 없었음. fileId 생성해줌.
-		if(fileId == null) {
-			fileId = uploadFileService.getMaxFileId();
-		}
-
+		
 		//삭제되거나 변경전 파일 아이디들(deleteFileIds) 있다면 update deleteYn='Y'
 		if (fileSubIds != null) {
 			adminService.deleteFile(fileId, fileSubIds);
 		}
+		
+		//만약 null이라면 파일이 없었음. fileId 생성해줌.
+				if(fileId == null) {
+					fileId = uploadFileService.getMaxFileId();
+				}
+
 
 		//추가한 파일 insert하기.파일 변경이 없거나 모두 삭제시 fileList는 null.
 		List<FileVO> fileList = null;
@@ -962,7 +1027,7 @@ public class AdminController {
 
 
 		//교육과정 상세페이지로 이동하기
-		return "redirect:/admin/class/"+classVO.getClssId();
+		return "redirect:/admin/class/view/"+classVO.getClssId();
 	}
 
 	/**
@@ -977,7 +1042,7 @@ public class AdminController {
 		//선택한 교육과정 모두 update deleteYn='Y', updt
 		adminService.deleteClass(clssIds);
 
-		return "redirect:/admin/class";
+		return "redirect:/admin/class/list";
 	}
 
 	/**
@@ -987,7 +1052,7 @@ public class AdminController {
 	 * @parameter : clssId
 	 * @return : String
 	 */
-	@PostMapping("/cls/delete/{clssId}")
+	@PostMapping("/class/delete/{clssId}")
 	public @ResponseBody String classDelete(@PathVariable String clssId) {
 		List<String> clssIds = new ArrayList<String>();
 		clssIds.add(clssId);
@@ -1410,8 +1475,13 @@ public class AdminController {
 	 */
 	@RequestMapping("/manager/list")
 	public String manager(HttpSession session, Model model) {
+		//업무담당자 리스트
 		List<ManagerVO> managerList = adminService.getManagerList();
 		model.addAttribute("managerList", managerList);
+		
+		//계정 기준정보 리스트
+		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
+		model.addAttribute("mngrCommonCodeList", mngrCommonCodeList);
 
 		return "admin/manager_list";
 	}
@@ -1447,8 +1517,8 @@ public class AdminController {
 	 */
 	@PostMapping("/manager/search")
 	@ResponseBody
-	public Map<String, Object> managerSearch(@RequestParam String mngrNm, @RequestParam String mngrEmail) {
-		List<ManagerVO> managerList = adminService.getSearchManagerList(mngrNm, mngrEmail);
+	public Map<String, Object> managerSearch(@RequestParam String searchInputCategory, @RequestParam String searchInput) {
+		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput);
 
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("managerList", managerList);
@@ -1488,6 +1558,28 @@ public class AdminController {
 		adminService.deleteManagerList(selectedManagerIds);
 		return "success";
 	}
+	
+	/**
+	 * 교육생 목록조회
+	 * @author : eunji
+	 * @date : 2023. 9. 25.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/student/list")
+	public String studentList(Model model) {
+		//교육생 리스트
+		List<StudentVO> studentList = adminService.getStudentList();
+		model.addAttribute("studentList", studentList);
+		
+		//교육과정 리스트
+		List<ClassVO> classList = adminService.getClassList();
+		model.addAttribute("classList", classList);
+		
+		return "admin/student_list";
+	}
+	
+	
 
 
 	/**
@@ -1626,8 +1718,8 @@ public class AdminController {
 	 */
 	@PostMapping("/commoncode/update/detailcode")
 	@ResponseBody
-	public String updateDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm, @RequestParam String useYn) {
-		adminService.updateDetailCode(cmcdId, cmcdNm, useYn);
+	public String updateDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm, @RequestParam String useYn, @RequestParam int cmcdOrder) {
+		adminService.updateDetailCode(cmcdId, cmcdNm, useYn, cmcdOrder);
 
 		String groupCodeId = adminService.getGroupCodeId(cmcdId);
 		return groupCodeId;

@@ -14,4 +14,5 @@ public class CommonCodeVO {
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
 	private String useYn;//삭제여부
+	private int cmcdOrder;//우선순위
 }

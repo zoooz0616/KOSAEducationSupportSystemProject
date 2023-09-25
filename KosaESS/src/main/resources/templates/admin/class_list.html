@@ -71,7 +71,7 @@
 
 				<!-- 교육과정상태 -->
 				<div class="filter_box">
-					<div class="filter_box_title">교육과정상태</div>
+					<div class="filter_box_title">상태</div>
 					<div>
 						<select class="search_select_input">
 							<option value="all" th:text="전체">전체</option>
@@ -101,6 +101,19 @@
 							placeholder="연도-월-일" style="width:100px;"> <span> ~ </span> <input
 							id="class_end_dd" class="search_input" type="text"
 							placeholder="연도-월-일" style="width:100px;">
+					</div>
+				</div>
+				
+				<!-- 기업명 -->
+				<div class="filter_box">
+					<div class="filter_box_title">기업</div>
+					<div>
+						<select class="search_select_input">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="company: ${companyList}"
+								th:value="${company.cmpyId}"
+								th:text="${company.cmpyNm}"></option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -150,30 +163,38 @@
 				<div class="content_list">
 					<table class="content_list_table" id="class_list_table">
 						<tr class="content_list_th">
-							<th><input style="width:30px;"type="checkbox" id="chkAll"></th>
-							<th>ID</th>
-							<th>프로그램명</th>
-							<th>지원기간</th>
-							<th>교육기간</th>
-							<th>교육장소</th>
-							<th>수강가능인원</th>
-							<th>교육상태</th>
+							<th style="width: 2%;"><input style="width:30px;"type="checkbox" id="chkAll"></th>
+							<th style="width: 2%;">순번</th>
+							<th style="width: 5%;">ID</th>
+							<th style="width: 19%;">교육과정명</th>
+							<th style="width: 10%;">기업</th>
+							<th style="width: 5%;">교육상태</th>
+							<th style="width: 15%;">지원기간</th>
+							<th style="width: 10%;">교육기간</th>
+							<th style="width: 5%;">교육시간</th>
+							<th style="width: 17%;">교육장소</th>
+							<th style="width: 5%;">수강가능인원</th>
+							<th style="width: 5%;">업무담당자</th>
 						</tr>
-						<tr id="class_list" th:each="class:${classList}">
-							<td style="text-align:center;"><input type="checkbox" name="chk"
+						<tr id="class_list" th:each="class, iterStat:${classList}">
+							<td class="class_check"><input type="checkbox" name="chk"
 								th:value="${class.clssId}"></td>
-							<td th:text="${class.clssId}"></td>
+							<td class="class_num" th:text="${iterStat.index + 1}"></td>
+							<td class="class_id"th:text="${class.clssId}"></td>
 							<td><a th:text="${class.clssNm}"
 								th:href="@{/admin/class/view/__${class.clssId}__}"
 								style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a></td>
-							<td th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
+							<td th:text="${class.cmpyNm} ? ${class.cmpyNm} : '미정'"></td>
+							<td class="class_status" th:text="${class.cmcdNm}">status</td>
+							<td class="aply_dt" th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
 							${#dates.format(class.aplyEndDt, 'yyyy-MM-dd HH:mm')}|"></td>
-							<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
-							<td th:text="${class.clssAdr}">class address</td>
-							<td><a
+							<td class="class_dt" th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
+							<td class="set_tm" th:text="|${#dates.format(class.setInTm, 'hh:MM')} ~ ${#dates.format(class.setOutTm, 'hh:MM')}|"></td>
+							<td th:text="${class.clssAdr} ? ${class.clssAdr} : '미정'">class address</td>
+							<td class="limit_cnt"><a
 								th:href="@{/admin/class/__${class.clssId}__/applicant}"><span
 									th:text="${class.limitCnt}"></span></a></td>
-							<td th:text="${class.cmcdNm}">status</td>
+							<td class="manager_name" th:text="${class.mngrNm} ? ${class.mngrNm} :'미정'"></td>
 						</tr>
 					</table>
 				</div>
