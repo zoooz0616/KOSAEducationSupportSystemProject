@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
@@ -49,7 +50,7 @@ public interface IManagerRepository {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
-	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString);
+	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString, @Param("searchKeyword") String searchKeyword);
 //	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") String[] filterString);
 
 	public void updateStdtCmptCd(@Param("mngrId") String mngrId, @Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
@@ -58,7 +59,7 @@ public interface IManagerRepository {
 
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
 
-	public List<WorklogVO> getWlogListByClssIdDate(@Param("classId") String classId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	public List<WorklogVO> getWlogListByClssIds(@Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("stdtNm") String stdtNm, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

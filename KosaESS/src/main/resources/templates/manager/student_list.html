@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 </head>
 <head>
-<!-- 	<link th:href="@{/css/manager/manager_class_list.css}" rel="stylesheet" /> -->
-<!-- 	<link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet" /> -->
 	<link th:href="@{/css/manager/manager_student_list.css}" rel="stylesheet" />
 </head>
 <body>
@@ -17,9 +15,8 @@
 	<div class="home-section">
 		<!-- title -->
 		<div class="title_wrap">
-			<span class="title" th:text="${title}"></span><br>
-			<a class="title_a" id="className" th:if=${thisClass.clssId!=null} th:text="${thisClass.clssNm}" th:href="@{/manager/class/__${thisClass.clssId}__}" th:value="${thisClass.clssId}"></a>
-			<a class="title_a" id="className" th:if=${thisClass.clssId==null} th:value="${thisClass.clssId}"></a>
+			<span class="title" th:text="${title}"></span>
+			<input id="class_id_save" type="text" style="display: none;"> 
 		</div>
 
 		<!-- content wrap-->

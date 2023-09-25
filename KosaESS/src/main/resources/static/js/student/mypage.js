@@ -75,7 +75,7 @@ $(document).ready(function() {
 		// 모달 내부의 .aplyBtn 버튼 클릭 시
 		modal1.on('click', '.aplyBtn', function() {
 			let formData = new FormData();
-			let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+			let file = document.querySelector("#fileInput1").files[0]; // 파일 인풋 필드에서 파일을 가져옴
 			formData.append("formData", file); // FormData에 파일 추가
 
 			$.ajax({
@@ -311,3 +311,24 @@ function formatTimestamp(timestamp) {
 
 	return formattedTimestamp;
 }
+
+$("#fileInput1").on('change',function(){
+  var fileName = $("#fileInput1").val();
+  $(".upload-name1").val(fileName);
+});
+
+$("#fileInput2").on('change',function(){
+  var fileName = $("#fileInput2").val();
+  $(".upload-name2").val(fileName);
+});
+
+$("#fileInput3").on('change',function(){
+  var fileName = $("#fileInput3").val();
+  $(".upload-name3").val(fileName);
+});
+
+$('#passwordInput').on('keyup', function(event) {
+		if (event.key === "Enter") {
+			$('#checkPassword').trigger('click');
+		}
+	});
