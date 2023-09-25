@@ -6,7 +6,6 @@
 <link th:href="@{/css/student/class_detail.css}" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
 <meta charset="UTF-8">
-<title>class detail</title>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 <body>
@@ -27,31 +26,64 @@
 					</tr>
 					<tr>
 						<th>지원 기간</th>
-						<td colspan="2"
-							th:text="${classDetail.aplyStartDd} + ' ~ ' + ${classDetail.aplyEndDd}"></td>
+						<td colspan="2"><span
+							th:if="${classDetail.aplyStartDd == null}">미정</span> <span
+							th:if="${classDetail.aplyStartDd != null}"
+							th:text="${classDetail.aplyStartDd} + ' ~ ' +${classDetail.aplyEndDd}"></span></td>
 
 						<th>교육 기간</th>
-						<td colspan="2"
-							th:text="${classDetail.clssStartDd}+ ' ~ ' + ${classDetail.clssEndDd}"></td>
+						<td colspan="2"><span
+							th:if="${classDetail.clssStartDd == null}">미정</span> <span
+							th:if="${classDetail.clssStartDd!= null}"
+							th:text="${classDetail.clssStartDd} + ' ~ ' +${classDetail.clssEndDd}"></span></td>
 						<th>업무담당자</th>
-						<td th:text="${classDetail.mngrNm}"></td>
+						<td><span th:if="${classDetail.mngrNm == null}">미정</span><span
+							th:if="${classDetail.mngrNm!= null}"
+							th:text="${classDetail.mngrNm}"></span></td>
 					</tr>
 					<tr>
+
 						<th>회사</th>
-						<td colspan="3" th:text="${classDetail.cmpyNm}"></td>
+						<td colspan="3"><span th:if="${classDetail.cmpyNm == null}">미정</span><span
+							th:if="${classDetail.cmpyNm!= null}"
+							th:text="${classDetail.cmpyNm}"></span></td>
 						<th>교육 장소</th>
-						<td colspan="3" th:text="${classDetail.clssAdr}"></td>
+						<td colspan="3"><span th:if="${classDetail.clssAdr == null}">미정</span><span
+							th:if="${classDetail.clssAdr!= null}"
+							th:text="${classDetail.clssAdr}"></span></td>
 
 					</tr>
 					<tr>
 						<th>총 이수 시간</th>
-						<td th:text="${classDetail.clssTotalTm} + '시간'"></td>
+						<td><span th:if="${classDetail.clssTotalTm == null}">미정</span><span
+							th:if="${classDetail.clssTotalTm!= null}"
+							th:text="${classDetail.clssTotalTm}+ '시간'"></span></td>
 						<th>시작 시간</th>
-						<td th:text="${classDetail.setInTime} + '시'"></td>
+						<td><span th:if="${classDetail.setInTime == null}">미정</span><span
+							th:if="${classDetail.setInTime!= null}"
+							th:text="${classDetail.setInTime}+ '시'"></span></td>
 						<th>종료 시간</th>
-						<td th:text="${classDetail.setOutTime}+ '시'"></td>
+						<td><span th:if="${classDetail.setOutTime == null}">미정</span><span
+							th:if="${classDetail.setOutTime!= null}"
+							th:text="${classDetail.setOutTime}+ '시'"></span></td>
 						<th>수강 정원</th>
-						<td th:text="${classDetail.limitCnt}+ '명'"></td>
+						<td><span th:if="${classDetail.limitCnt == null}">미정</span><span
+							th:if="${classDetail.limitCnt!= null}"
+							th:text="${classDetail.limitCnt}+ '명'"></span></td>
+					</tr>
+					<tr>
+						<th>관련 파일</th>
+						<td colspan="7"><ul
+								style="margin: 0; text-align: left; padding-left: 3%;">
+								<li th:each="FileVO : ${classFileList}"><a
+									style="width: 100%; display: flex;"
+									th:if="${FileVO.fType == 'application'}"
+									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
+									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
+										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+										style="margin-left: 5px;" th:text="${FileVO.fileNm}"></span><br>
+								</a></li>
+							</ul></td>
 					</tr>
 				</table>
 				<div style="width: 80%;">
@@ -89,11 +121,6 @@
 							<li th:each="FileVO : ${classFileList}"><a
 								th:if="${FileVO.fType == 'image'}"> <img
 									th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
-							</a> <a th:if="${FileVO.fType == 'application'}"
-								th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
-								th:title="${FileVO.fileNm}"> <img style="width: 40px;"
-									th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
-									th:text="${FileVO.fileNm}"></span>><br>
 							</a></li>
 						</ul>
 						<h5>기타사항</h5>
@@ -108,7 +135,10 @@
 				<ul style="padding: 0;">
 					<li th:if="${class2 != null}">
 						<div class="veiwClass1">
-							<span th:text="${class2.cmcdNm}"></span>
+							<span th:if="${class2.cmcdNm == '접수중'}"
+								th:text="${class2.cmcdNm}" style="font-weight: bold;"></span> <span
+								th:if="${class2.cmcdNm != '접수중'}" th:text="${class2.cmcdNm}"
+								style="color: black;"></span>
 							<h2 th:text="${class2.clssNm}"></h2>
 							<div th:if="${class2.fileId!=null}">
 								<img
@@ -123,7 +153,10 @@
 					</li>
 					<li th:if="${class1 != null}">
 						<div class="veiwclass2">
-							<span th:text="${class1.cmcdNm}"></span>
+							<span th:if="${class1.cmcdNm == '접수중'}"
+								th:text="${class1.cmcdNm}" style="font-weight: bold;"></span> <span
+								th:if="${class1.cmcdNm != '접수중'}" th:text="${class1.cmcdNm}"
+								style="color: black;"></span>
 							<h2 th:text="${class1.clssNm}"></h2>
 							<div th:if="${class1.fileNm!=null}">
 								<img th:src="@{/img/__${class1.fileNm}__}">
@@ -138,7 +171,6 @@
 				</ul>
 			</div>
 		</div>
-
 	</div>
 	<div
 		style="position: fixed; display: block; right: 20px; bottom: 20px; width: 15%;">
@@ -160,7 +192,13 @@
 				<div class="modalContent">
 					<div class="upload-area">
 						<p>지원서파일을 여기에 첨부하세요.</p>
-						<input type="file" name="file" id="fileInput">
+						<p style="color:red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
+						<div style="width: 80%;">
+							<input class="upload-name" value="선택된 첨부파일이 없습니다"
+								placeholder="선택된 첨부파일이 없습니다" readonly> <label
+								for="fileInput">파일찾기</label> <input type="file" name="file"
+								id="fileInput" class="fileInput" accept=".pdf">
+						</div>
 					</div>
 				</div>
 				<div class="modalFooter">
