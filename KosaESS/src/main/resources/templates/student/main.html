@@ -58,11 +58,7 @@
 
 						<div class="lastlog">
 							<h4>마지막 로그인 일시</h4>
-							<h4 th:text="${lastLogTime}"></h4>
-						</div>
-						<div>
-							<a th:href="@{/student/mypage}" style="text-align: center;"><h3>상세내역
-									보러가기</h3></a>
+							<h4 id="lastLog"></h4>
 						</div>
 					</div>
 				</div>
@@ -116,7 +112,7 @@
 					</div>
 				</div>
 			</div>
-			<div class=" con" style="width: 45%;margin-bottom: 4%;">
+			<div class=" con" style="width: 45%; margin-bottom: 4%;">
 				<div>
 					<h2>커다란 달력</h2>
 				</div>
@@ -159,11 +155,31 @@
 		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
 		var clssId = /*[[${ingClassVO?.clssId}]]*/'';
 		var lastVO = /*[[${lastWlogVO}]]*/'';
+		var lastLogTime = /*[[${lastLogTime}]]*/'';
 		console.log(lastVO);
 		var lastInTm = /*[[${lastWlogVO?.inTm}]]*/'';
 		var lastOutTm = /*[[${lastWlogVO?.outTm}]]*/'';
 
 		console.log(lastInTm + lastOutTm);
+
+		function formatTimestamp(timestamp) {
+			const date = new Date(timestamp);
+
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+
+			const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+			return formattedTimestamp;
+		}
+
+		lastLogDd = formatTimestamp(lastLogTime);
+
+		document.getElementById("lastLog").textContent = lastLogDd;
 	</script>
 
 	<script src="/js/student/main.js"></script>

@@ -31,7 +31,7 @@
 						<table class="infoTable">
 							<tr>
 								<th>이름</th>
-								<td><input type="text" id="userName"></td>
+								<td class="infoInput"><input type="text" id="userName"></td>
 							</tr>
 							<tr>
 								<th>이메일</th>
@@ -39,19 +39,26 @@
 							</tr>
 							<tr>
 								<th>성별</th>
-								<td><input type="text" id="userGender"></td>
+								<td class="infoInput"><select id="userGender">
+										<option value="GND0000001">남</option>
+										<option value="GND0000002">여</option>
+								</select></td>
 							</tr>
 							<tr>
 								<th>생년월일</th>
-								<td><input type="text" id="userBirth"></td>
+								<td class="infoInput"><input type="text" id="userBirth"></td>
 							</tr>
 							<tr>
 								<th>휴대전화</th>
-								<td><input type="text" id="userTel"></td>
+								<td class="infoInput"><input type="text" id="userTel"></td>
 							</tr>
 							<tr>
 								<th>직업</th>
-								<td><input type="text" id="userJob"></td>
+								<td class="infoInput"><select id="userJob">
+										<option value="JOB0000001">무직</option>
+										<option value="JOB0000002">학생</option>
+										<option value="JOB0000003">직장인</option>
+								</select></td>
 							</tr>
 							<tr>
 								<th>가입일</th>
@@ -64,6 +71,7 @@
 						</table>
 						<div class="infoBtn">
 							<button id="updateUserInfo">수정하기</button>
+							<button id="quit">탈퇴하기</button>
 						</div>
 					</div>
 				</div>
@@ -179,7 +187,12 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>지원서파일을 여기에 첨부하세요.</p>
-								<input type="file" name="file" id="fileInput1">
+								<div style="width: 80%;">
+									<input class="upload-name1" value="선택된 첨부파일이 없습니다"
+										placeholder="선택된 첨부파일이 없습니다" readonly> <label
+										for="fileInput1">파일찾기</label> <input type="file" name="file"
+										id="fileInput1" class="fileInput">
+								</div>
 							</div>
 						</div>
 						<div class="modalFooter">
@@ -189,46 +202,56 @@
 					</div>
 				</div>
 				<div class="modal2" style="display: none;">
-					<div class="modalBody">
+					<div class="modalBody" style="height: 590px;">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
 						</div>
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
-								<input type="file" name="file" id="fileInput2">
+								<div style="width: 80%;">
+									<input class="upload-name2" value="선택된 첨부파일이 없습니다"
+										placeholder="선택된 첨부파일이 없습니다" readonly> <label
+										for="fileInput2">파일찾기</label> <input type="file" name="file"
+										id="fileInput2" class="fileInput" accept="image/*">
+								</div>
+
 							</div>
 							<div>
-								<label>사유서 내용을 작성하세요.</label> <input type="text"
-									class="resnText1">
+								<!-- <input type="text" class="resnText1"
+									placeholder="사유서 내용을 작성하세요."> -->
+								<textarea class="resnText1" placeholder="사유서 내용을 작성하세요."></textarea>
 							</div>
-						</div>
 
-						<div class="modalFooter">
-							<button type="reset" class="closeBtn">취소</button>
-							<button type="button" class="submitBtn">제출하기</button>
+							<div class="modalFooter">
+								<button type="reset" class="closeBtn">취소</button>
+								<button type="button" class="submitBtn">제출</button>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="modal3" style="display: none;">
-					<div class="modalBody">
+					<div class="modalBody" style="height: 590px;">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
 						</div>
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
-								<input type="file" name="file" id="fileInput3">
+								<div style="width: 80%;">
+									<input class="upload-name3" value="선택된 첨부파일이 없습니다"
+										placeholder="선택된 첨부파일이 없습니다" readonly> <label
+										for="fileInput3">파일찾기</label> <input type="file" name="file"
+										id="fileInput3" class="fileInput" accept="image/*">
+								</div>
 							</div>
 							<div>
-								<label>사유서 내용을 작성하세요.</label> <input type="text"
-									class="resnText2">
+								<textarea class="resnText2" placeholder="사유서 내용을 작성하세요."></textarea>
 							</div>
-						</div>
-
-						<div class="modalFooter">
-							<button type="reset" class="closeBtn">취소</button>
-							<button type="submit" class="submitBtn">수정하기</button>
+							<div class="modalFooter">
+								<button type="reset" class="closeBtn">취소</button>
+								<button type="submit" class="submitBtn">수정</button>
+							</div>
 						</div>
 					</div>
 				</div>

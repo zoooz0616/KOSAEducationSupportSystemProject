@@ -71,6 +71,20 @@
 							th:if="${classDetail.limitCnt!= null}"
 							th:text="${classDetail.limitCnt}+ '명'"></span></td>
 					</tr>
+					<tr>
+						<th>관련 파일</th>
+						<td colspan="7"><ul
+								style="margin: 0; text-align: left; padding-left: 3%;">
+								<li th:each="FileVO : ${classFileList}"><a
+									style="width: 100%; display: flex;"
+									th:if="${FileVO.fType == 'application'}"
+									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
+									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
+										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+										style="margin-left: 5px;" th:text="${FileVO.fileNm}"></span><br>
+								</a></li>
+							</ul></td>
+					</tr>
 				</table>
 				<div style="width: 80%;">
 					<div>
@@ -107,11 +121,6 @@
 							<li th:each="FileVO : ${classFileList}"><a
 								th:if="${FileVO.fType == 'image'}"> <img
 									th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
-							</a> <a th:if="${FileVO.fType == 'application'}"
-								th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
-								th:title="${FileVO.fileNm}"> <img style="width: 40px;"
-									th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
-									th:text="${FileVO.fileNm}"></span>><br>
 							</a></li>
 						</ul>
 						<h5>기타사항</h5>
@@ -162,7 +171,6 @@
 				</ul>
 			</div>
 		</div>
-
 	</div>
 	<div
 		style="position: fixed; display: block; right: 20px; bottom: 20px; width: 15%;">
@@ -184,7 +192,13 @@
 				<div class="modalContent">
 					<div class="upload-area">
 						<p>지원서파일을 여기에 첨부하세요.</p>
-						<input type="file" name="file" id="fileInput">
+						<p style="color:red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
+						<div style="width: 80%;">
+							<input class="upload-name" value="선택된 첨부파일이 없습니다"
+								placeholder="선택된 첨부파일이 없습니다" readonly> <label
+								for="fileInput">파일찾기</label> <input type="file" name="file"
+								id="fileInput" class="fileInput" accept=".pdf">
+						</div>
 					</div>
 				</div>
 				<div class="modalFooter">

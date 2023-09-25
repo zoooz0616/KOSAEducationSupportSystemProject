@@ -97,7 +97,7 @@ public interface IStudentRepository {
 
 	void updateResnFile(String resnId, FileVO fileVO);
 
-	void updateResndt(String resnId, String stdtId, String resnTexts);
+	void updateResndt(String resnId, String stdtId, String resnText);
 
 	StudentVO getstdtInfo(String stdtId);
 

@@ -539,7 +539,8 @@
 		parameterType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
 		insert into aply
-		values(#{aplyId}, #{stdtId}, #{clssId}, #{aplyCd}, #{fileId},systimestamp, #{rgsterId}, null, null)
+		(aply_id, stdt_id, clss_id, aply_cd, file_id, rgster_id)
+		values(#{aplyId}, #{stdtId}, #{clssId}, #{aplyCd}, #{fileId},#{rgsterId})
 	]]>
 	</insert>
 
@@ -643,6 +644,7 @@
 		parameterType="com.finalprj.kess.model.RegistrationVO">
 		<![CDATA[
 		INSERT into rgst
+		(rgst_id, stdt_id, clss_id, rgst_cd,cmpt_cd, rgster_id )
 		values(#{maxRgstId}, #{stdtId}, (select
             clss_id
            from aply
@@ -654,7 +656,7 @@
             clss_id
            from aply
        where aply_id = #{aplyId})),
-        'CMP0000001',null,systimestamp, #{stdtId}, null, null,null)
+        'CMP0000001',systimestamp, #{stdtId})
         
 		]]>
 	</insert>
@@ -792,7 +794,8 @@
 	<insert id="uploadResnFile">
 	<![CDATA[
 		INSERT into resn
-		values(#{resnId}, #{wlogId}, #{resnContent}, #{resnCd},#{fileId},systimestamp, #{rgsterId},null,null, 'N') 
+		(resn_id, wlog_id, resn_content, resn_cd, file_id, rgster_id)
+		values(#{resnId}, #{wlogId}, #{resnContent}, #{resnCd},#{fileId},#{rgsterId}) 
 	]]>
 	</insert>
 
@@ -866,7 +869,8 @@
 	<insert id="insertNewWlog">
 	<![CDATA[
 		INSERT into wlog
-		values(#{wlogId}, #{stdtId}, #{clssId}, systimestamp, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
+		(wlog_id, stdt_id, clss_id, wlog_cd, rgster_id)
+		values(#{wlogId}, #{stdtId}, #{clssId},#{wlogCd}, #{rgsterId}) 
 	]]>
 	</insert>
 
@@ -874,7 +878,8 @@
 	<insert id="insertPastWlog">
 	<![CDATA[
 		INSERT into wlog
-		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm}, null,#{wlogCd}, null, systimestamp, #{rgsterId},null,null, 'N') 
+		(wlog_id, stdt_id, clss_id, in_tm,wlog_cd, rgster_id)
+		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm},#{wlogCd}, #{rgsterId}) 
 	]]>
 	</insert>
 

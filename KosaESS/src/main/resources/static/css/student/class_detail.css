@@ -39,6 +39,10 @@ table th {
 	text-align: center;
 }
 
+.content a {
+	color: black;
+}
+
 .crclTable {
 	display: flex;
 	flex-direction: column;
@@ -73,6 +77,7 @@ ul {
 	text-align: center;
 	display: flex;
 	justify-content: space-evenly;
+	border:0;
 }
 
 .crclTable th {
@@ -81,6 +86,7 @@ ul {
 
 .btn button {
 	padding: 0 3%;
+	border:0;
 }
 
 .back, .openModalBtn {
@@ -92,10 +98,12 @@ ul {
 	font-size: 15px;
 	font-weight: bold;
 	border-radius: 10px;
+	border:0;
 }
 
 .openModalBtn {
 	display: none;
+	border:0;
 }
 
 .moveTopBtn {
@@ -120,7 +128,7 @@ ul {
 	top: 50%;
 	left: 50%;
 	width: 500px;
-	height: 600px;
+	height: 520px;
 	text-align: center;
 	background-color: rgb(255, 255, 255);
 	border-radius: 10px;
@@ -134,21 +142,51 @@ ul {
 	padding: 7%;
 	justify-content: center;
 	background-color: #E7EFF3;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
 .upload-area {
 	margin: 5% auto;
-	border: none;
-	padding: 20% 0;
+	padding: 13% 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	background-color: white;
-	color: darkgray;
+	color: black;
 	border-style: dashed;
-	border-color: black;
+	border-color: darkgray;
 	font-size: 18px;
 	width: 90%;
+	border-radius: 10px;
+}
+
+.upload-name {
+	display: inline-block;
+	padding: 3%;
+	vertical-align: middle;
+	border: 1px solid #dddddd;
+	width: 60%;
+	color: black;
+}
+
+.upload-area label {
+	display: inline-block;
+	padding: 3% 5%;
+	color: black;
+	background-color: #E7EFF3;
+	cursor: pointer;
+	font-size: 15px;
+	border-radius: 10px;
+}
+
+.upload-area input[type="file"] {
+	position: absolute;
+	width: 0;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
 }
 
 .modal-footer {
@@ -159,11 +197,13 @@ ul {
 
 .aplyBtn, .closeModalBtn {
 	padding: 3% 7%;
-	font-weight: 500;
+	font-weight: bold;
 	border-radius: 10px;
 	color: #FFF;
 	background-color: #0E5881;
 	margin: 0 2%;
+	border:0;
+	font-size:15px;
 }
 
 #file-upload-button {
@@ -173,6 +213,7 @@ ul {
 	color: #FFF;
 	background-color: #0E5881;
 	margin: 0 2%;
+	border: 0;
 }
 
 #fileInput {

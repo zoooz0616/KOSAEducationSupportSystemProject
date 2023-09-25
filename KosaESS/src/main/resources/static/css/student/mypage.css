@@ -25,12 +25,28 @@ input::placeholder {
 	color: #0E5881;
 }
 
+.resnText1, .resnText2 {
+	width: 85%;
+	color: black;
+	padding: 3%;
+	margin-bottom: 5%;
+	height: 80px;
+	border: solid 2px darkgray;
+	border-radius: 10px;
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.resnText1::placeholder, .resnText2::placeholder {
+	color: black;
+}
+
 #checkPassword {
 	background: #0E5881;
 	color: white;
 	padding: 10px 2%;
 	border: 0;
-	font-size:15px;
+	font-size: 15px;
 	border-radius: 5px;
 }
 
@@ -38,7 +54,7 @@ input::placeholder {
 	display: none;
 }
 
-.modal1 {
+.modal1, .modal2, .modal3 {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -57,7 +73,7 @@ input::placeholder {
 	top: 50%;
 	left: 50%;
 	width: 500px;
-	height: 600px;
+	height: 520px;
 	text-align: center;
 	background-color: rgb(255, 255, 255);
 	border-radius: 10px;
@@ -71,21 +87,51 @@ input::placeholder {
 	padding: 7%;
 	justify-content: center;
 	background-color: #E7EFF3;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
 .upload-area {
 	margin: 5% auto;
-	border: none;
-	padding: 20% 0;
+	padding: 13% 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	background-color: white;
-	color: darkgray;
+	color: black;
 	border-style: dashed;
-	border-color: black;
+	border-color: darkgray;
 	font-size: 18px;
 	width: 90%;
+	border-radius: 10px;
+}
+
+.upload-name1, .upload-name2, .upload-name3 {
+	display: inline-block;
+	padding: 3%;
+	vertical-align: middle;
+	border: 1px solid #dddddd;
+	width: 60%;
+	color: black;
+}
+
+.upload-area label {
+	display: inline-block;
+	padding: 3% 5%;
+	color: black;
+	background-color: #E7EFF3;
+	cursor: pointer;
+	font-size: 15px;
+	border-radius: 10px;
+}
+
+.upload-area input[type="file"] {
+	position: absolute;
+	width: 0;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
 }
 
 .modal-footer {
@@ -94,27 +140,14 @@ input::placeholder {
 	justify-content: flex-end;
 }
 
-.aplyBtn, .closeModalBtn {
-	padding: 3% 7%;
-	font-weight: 500;
+.aplyBtn, .closeModalBtn, .closeBtn, .submitBtn {
+	padding: 2% 5%;
+	font-weight: bold;
 	border-radius: 10px;
 	color: #FFF;
 	background-color: #0E5881;
 	margin: 0 2%;
-}
-
-#file-upload-button {
-	padding: 3% 7%;
-	font-weight: 500;
-	border-radius: 10px;
-	color: #FFF;
-	background-color: #0E5881;
-	margin: 0 2%;
-}
-
-#fileInput {
-	color: black;
-	padding: 2% 0;
+	border: 0;
 }
 
 table {
@@ -128,7 +161,7 @@ table thead th {
 	font-weight: bold;
 	color: #0E5881;
 	border-bottom: 2px solid #0E5881;
-	font-size:18px;
+	font-size: 18px;
 }
 
 table tbody th {
@@ -258,7 +291,6 @@ td button {
 	width: 14%;
 }
 
-
 .wlogTable td:nth-child(1) {
 	width: 7%;
 }
@@ -284,6 +316,7 @@ td button {
 .wlogTable td:nth-child(6) {
 	width: 11%;
 }
+
 .wlogTable td:nth-child(7) {
 	width: 17%;
 }
