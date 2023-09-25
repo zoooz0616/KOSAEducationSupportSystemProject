@@ -95,8 +95,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString) {
-		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString);
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword) {
+		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString,  searchKeyword);
 	}
 //	@Override
 //	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString) {
@@ -119,8 +119,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<WorklogVO> getWlogListByClssIdDate(String classId, String startDate, String endDate) {
-		return managerRepository.getWlogListByClssIdDate(classId, startDate, endDate);
+	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly) {
+		return managerRepository.getWlogListByClssIds(clssId, startDate, endDate, stdtNm, isDelete, resnOnly);
 	}
 
 //	@Override

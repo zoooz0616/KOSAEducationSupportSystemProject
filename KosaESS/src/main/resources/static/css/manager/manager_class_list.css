@@ -45,14 +45,6 @@ input, progress {
 }
 
 /* 여기까지는 공통 */
-.search_filter_wrap {
-	padding: 5px;
-	width: fit-content;
-	background: #ffffff;
-	border-radius: 3px;
-	box-shadow: 1px 1px 3px lightgray;
-}
-
 .search_filter_wrap .search_filter_table_wrap {
 	width: 98%;
 	display : flex;
@@ -62,7 +54,7 @@ input, progress {
 
 .search_filter_list {
 	width: 100%;
-	font-weight: bold;
+/* 	font-weight: bold; */
 /* 	border-collapse: collapse; */
 	list-style:none; 
 	display: inline;
@@ -178,4 +170,45 @@ ul {
 	background: #F3F6F8;
 	color: #0E5881;
 }
+/*------------------------------------------------------------*/
+.search_condition_name{
+	display:inline-block;
+/* 	width : auto; */
+	width : 20%;
+}
 
+.search_by_name_btn_wrap{
+	display: flex;
+	justify-content: center;
+}
+
+.search_by_name_btn_wrap #search_by_name_btn {
+	width: 60px;
+	margin: 10px 0 10px 0;
+	background-color: #0E5881;
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.search_filter_wrap {
+	padding: 5px;
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 1px 1px 3px lightgray;
+}
+.search_filter_inner_wrap {
+	display: flex;
+}
+#search_by_name{
+	width: 60%;
+}
+#search_by_status_wrap .search_filter_list .chk_all_span .chk_all_label{
+	font-weight: bold;
+}
+#search_by_name_wrap{
+	width:50%;
+}
+#search_by_status_wrap{
+	width:50%;
+}

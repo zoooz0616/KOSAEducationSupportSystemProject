@@ -80,3 +80,37 @@
 	width: 15px;
 	height: 100%;
 }
+.wlog_list_tbody_row .resn_icon:hover {
+	cursor: pointer;
+}
+
+.wlog_list_tbody_row .file_cell_active:hover{
+	cursor: pointer;
+}
+
+select option[value=""][disabled] {
+	display: none;
+}
+
+.look_at_me{
+	display : none;
+	font-size: 1em;
+	font-weight:bold;
+	z-index:10;
+	position: fixed;
+	background-color: #F9DCCB;
+	border : 1px solid #FF333E;
+	color : #FF333E;
+	border-radius: 0.2em;
+	left: 80%;
+	height: 6%;
+	width: 20%;
+	align-items: center;
+    justify-content: center;
+}
+
+.look_at_me .read_this{
+/* 	position : absolute; */
+/* 	top : 50%; */
+/* 	left : 50%; */
+}

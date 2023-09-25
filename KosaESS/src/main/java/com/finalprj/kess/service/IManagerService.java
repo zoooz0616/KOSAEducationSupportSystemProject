@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.model.ClassVO;
@@ -43,7 +44,7 @@ public interface IManagerService {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
-	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString);
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword);
 //	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString);
 
 	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId);
@@ -52,7 +53,7 @@ public interface IManagerService {
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
-	public List<WorklogVO> getWlogListByClssIdDate(String classId, String startDate, String endDate);
+	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }
