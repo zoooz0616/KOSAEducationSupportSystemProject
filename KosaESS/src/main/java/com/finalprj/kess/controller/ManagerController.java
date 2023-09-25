@@ -110,11 +110,14 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		
+		// 학생 정보를 세션에서 가져와서 student 객체에 저장
+		String student = (String) session.getAttribute("student");
+		model.addAttribute("student", student);
+
 		// classDetail 객체를 가져와서 모델에 추가
 		ClassVO classDetail = studentService.selectClass(classId);
-		classDetail.setRgstCnt(managerService.getClassDetailByClssId(classId).getRgstCnt());
 		classDetail.setRgstCnt(managerService.getRgstCountByClssId(classId));
-		model.addAttribute("clss", classDetail);
+		model.addAttribute("classDetail", classDetail);
 
 		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(classId);
 		model.addAttribute("curriculumlist", curriculumlist);
@@ -123,31 +126,6 @@ public class ManagerController {
 		List<FileVO> classFileList = studentService.selectAllClassFile(classId);
 		model.addAttribute("classFileList", classFileList);
 		
-		model.addAttribute("title", "교육 과정 상세");
-//		ClassVO thisClass = new ClassVO();
-//		thisClass = managerService.getClassDetailByClssId(classId);
-//		thisClass.setRgstCnt(managerService.getRgstCountByClssId(classId));
-//		model.addAttribute("clss", thisClass);
-//		
-//		ClassVO classDetail = studentService.selectClass(classId);
-//		model.addAttribute("classDetail", classDetail);
-//		
-//		List<Integer> imageFileSubIdList = managerService.getFileSubIdListByFileId(thisClass.getFileId());
-//		List<FileVO> NonImageFileInfoList = new ArrayList<FileVO>();
-//		for (int i = 0, j = 0; i < imageFileSubIdList.size(); i++) {
-//			FileVO vo = managerService.getFileInfoByIds(thisClass.getFileId(), imageFileSubIdList.get(i));
-//			System.out.println("imageFileSubIdList : " + imageFileSubIdList.get(i));
-//			if (vo.getFileType().split("/")[0].equals("image")) {
-//				j++;
-//			} else {
-//				NonImageFileInfoList.add(vo);
-//				imageFileSubIdList.remove(i);
-//			}
-//		}
-//		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(classId);
-//		model.addAttribute("curriculumlist", curriculumlist);
-//		model.addAttribute("imageFileSubIdList", imageFileSubIdList);
-//		model.addAttribute("NonImageFileInfoList", NonImageFileInfoList);
 		return "manager/class_detail";
 	}
 

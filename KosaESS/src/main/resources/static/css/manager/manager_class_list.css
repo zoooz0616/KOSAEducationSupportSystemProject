@@ -212,3 +212,7 @@ ul {
 #search_by_status_wrap{
 	width:50%;
 }
+
+.class_list_table_tbody .variable_length_cell{
+	text-align: left;
+}
