@@ -4,23 +4,25 @@
 <meta charset="UTF-8">
 <title>KOSA 교육관리시스템 회원가입</title>
 <link rel="stylesheet" href="/css/signup.css">
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
 <script src="login.js"></script>
-
 </head>
-
 <body>
-	<div class="main-signup">
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+
+	<div class="main-signup" style="margin-top:100px;">
 		<!--웹페이지 상단-->
-		<header>
+		<div>
 			<!--NAVER LOGO-->
 			<div class="logo">
 				<a th:href="@{/student}" title="KOSA교육관리시스템"><img
 					th:src="@{/img/logo.png}" class="image"></a>
 			</div>
-		</header>
+		</div>
 
 		<!--회원가입 부분-->
 		<section class="signup-wrap">
