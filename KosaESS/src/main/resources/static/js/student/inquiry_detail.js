@@ -180,7 +180,6 @@ $("#fileInput").on('change', function() {
 	var fileName = $("#fileInput").val();
 	$(".upload-name").val(fileName);
 });
-
 var modal = $('.modal');
 $('.openformBtn').on('click', '.submitResn', function() {
 	modal.show();
