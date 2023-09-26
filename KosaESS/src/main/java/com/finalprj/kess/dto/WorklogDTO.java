@@ -10,6 +10,7 @@ import lombok.Data;
 public class WorklogDTO {
 	private String wlogId;//출퇴근 id
 	private String stdtId;//교육생id
+	private String stdtNm;//교육생 이름
 	private String userEmail;//교육생 이메일
 	private String clssId;//교육과정id
 	private Timestamp inTm;//출근시간
@@ -17,7 +18,7 @@ public class WorklogDTO {
 	private Date inTmDd;//출근시간
 	private Date outTmDd;//퇴근시간
 	private String wlogCd;//출퇴근 상태
-	private int wlogTotalTm;//총 근무시간
+	private double wlogTotalTm;//총 근무시간
 	private Timestamp rgstDt;//등록일시
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시

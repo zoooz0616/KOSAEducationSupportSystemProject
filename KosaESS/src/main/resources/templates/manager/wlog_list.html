@@ -75,45 +75,58 @@
 				</div>
 
 				<!-- 검색 버튼 -->
-				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn" id="searchButton" onclick="search()">검색</button>
+				<div class="search_btn_wrap">
+					<input type="button" id="search_reset_btn" value="초기화" onclick="search()">
+					<input type="button" id="search_by_name_btn" value="검색" onclick="search()">
 				</div>
 				<!-- End : 검색 버튼 -->
 			</div>
 			<!-- End : 검색 필터 테이블-->
 			
+			<!-- 테이블 조작 -->
+			<div class="table_controller" id="tableController">
+				<span>
+					<span th:text="${wlogCnt}" id="wlogCnt"></span>
+					<span class="wlog_count_unit">건</span>
+				</span>
+				<span th:each="wlogCd:${wlogCdList}" class="wlog_controller">
+					<button onclick="wlogUpdate(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
+				</span>
+			</div>
+			<!-- End : 테이블 조작 -->
+			
 			<!-- table 시작 -->
 			<table id="wlog_list_table">
-
 				<thead id="wlog_list_thead">
 					<tr class="wlog_list_thead_row">
+						<th><input type="checkbox" id="chk_all_wlog"></th>
 						<th>번호</th>
 						<th>이름</th>
 						<th>이메일</th>
 						<th>출근</th>
 						<th>퇴근</th>
-						<th>출석 인정 시간</th>
+						<th>출석 인정 시간<br>(h)</th>
 						<th>출석 상태</th><!-- 셀렉박스 -->
 						<th>삭제 여부</th>
 						<th>사유서</th>
 						<th>처리 상태</th><!-- 사유서 모달에서 변경함 -->
 					</tr>
 				</thead>
-
+				
 				<tbody id="wlog_list_tbody">
 					<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
-						<td th:text="${wlogStat.count}">번호</td>
-						<td th:text="${wlog.stdtId}">이름</td>
-						<td th:text="${wlog.userEmail}">이메일</td>
-						<td th:text="${wlog.inTm}">출근 기록</td>
-						<td th:text="${wlog.outTm}">퇴근 기록</td>
-						<td th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1) + ' h'}">출석 인정 시간</td>
-						<td th:text="${wlog.wlogCd}">출석 상태</td>
-						<td th:text="${wlog.deleteYn}">삭제 여부</td>
+						<td> <input type="checkbox" class="chk_wlog"> </td>
+						<td class="row_number" th:text="${wlogStat.count}">번호</td>
+						<td class="row_name" th:text="${wlog.stdtId}">이름</td>
+						<td class="row_email" th:text="${wlog.userEmail}">이메일</td>
+						<td class="row_intime" th:text="${wlog.inTm}">출근 기록</td>
+						<td class="row_outtime" th:text="${wlog.outTm}">퇴근 기록</td>
+						<td class="row_totaltime" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
+						<td class="row_wlogcode" th:text="${wlog.wlogCd}">출석 상태</td>
+						<td class="row_isdelete" th:text="${wlog.deleteYn}">삭제 여부</td>
 						<td class="file_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal()" th:value="${wlog.resnId}" src="/img/file.png"></td>
-						<td th:text="${wlog.deleteYn}">처리 상태</td>
+						<td class="row_resncode" th:text="${wlog.prscCd}">처리 상태</td>
 					</tr>
-
 				</tbody>
 			</table>
 			<!-- End : table 시작-->

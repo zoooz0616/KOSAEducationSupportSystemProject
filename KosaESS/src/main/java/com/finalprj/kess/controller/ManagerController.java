@@ -280,21 +280,7 @@ public class ManagerController {
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "출퇴근 기록";
-		
-		//reqParam == null ? 초기화
-//		if (startDate == null) {
-//			startDate = String.valueOf(YearMonth.now().atDay(1));
-//		} else {
-//			startDate = httpServletRequest.getParameter("startDate");
-//		}
-//		if (endDate == null) {
-//			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-//		} else {
-//			endDate = httpServletRequest.getParameter("endDate");
-//		}
-		//End : reqParam == null ? 초기화
-		//------------------------------------------------------------------------------------
-		
+
 		//------------------------------------------------------------------------------------
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
@@ -316,6 +302,7 @@ public class ManagerController {
 			wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
 		}
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
+		model.addAttribute("wlogCnt", wlogList.size());
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
 		model.addAttribute("title", title);

@@ -77,10 +77,11 @@
 
 			<!-- 테이블 조작 -->
 			<div class="table_controller" id="tableController">
-				<span> <span th:text="${stdtCnt}" id="stdtCnt"></span><span
-					class="stdt_count_unit">명</span>
-				</span> <span th:each="cmptCodeName:${cmptCodeNameList}"
-					class="cmpt_controller">
+				<span>
+					<span th:text="${stdtCnt}" id="stdtCnt"></span>
+					<span class="stdt_count_unit">명</span>
+				</span>
+				<span th:each="cmptCodeName:${cmptCodeNameList}" class="cmpt_controller">
 					<button onclick="cmptUpdate(this)" th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}" class="cmpt_btn" th:classappend="${cmptCodeNameStat.count}"></button>
 				</span>
 			</div>

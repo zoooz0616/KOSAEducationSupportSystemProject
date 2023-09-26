@@ -241,7 +241,8 @@
 		<![CDATA[
 			SELECT
 				w.wlog_id
-				, s.stdt_nm AS stdtId --이름
+				, s.stdt_id AS stdtid --id
+				, s.stdt_nm AS stdtNm --이름
 				, s.user_email AS userEmail --이메일
 				, in_tm --출근
 				, out_tm --퇴근 시간
@@ -256,7 +257,7 @@
 				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
 				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
 			WHERE
-				w.clss_id='CLSS000002'
+				w.clss_id=#{clssId}
 				AND in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
 				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
 		]]>
@@ -265,18 +266,18 @@
 				AND w.delete_yn='N' 
 			]]>
 		</if>
-		<if test='resnOnly!=null and (resnOnly eq "true")'>
+		<if test='resnOnly eq "true"'>
 			<![CDATA[
-				AND w.wlog_id in (SELECT wlog_id FROM resn)
+				AND w.wlog_id in (SELECT wlog_id FROM resn WHERE delete_yn='N')
 			]]>
 		</if>
-		<if test='stdtNm!=null'>
+		<if test='keyword!=""'>
 			<![CDATA[
-				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE stdt_nm like '%'||#{stdtNm}||'%' ) --null이 아닐 경우 조건 걸어야됨
+				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE ((s.stdt_nm like '%'||#{keyword}||'%' ) OR (s.user_email like '%'||#{keyword}||'%')))
 			]]>
 		</if>
 		<![CDATA[
-			ORDER BY in_tm DESC
+			ORDER BY in_tm DESC, stdtNm
 		]]>
 	</select>
 	
