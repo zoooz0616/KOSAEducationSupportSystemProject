@@ -124,4 +124,8 @@ public interface IStudentService {
 
 	List<PostVO> searchInquiries(String keyword);
 
+	List<PostVO> searchPostList(String stdtId);
+
+	List<PostVO> getReply(String postId);
+
 }

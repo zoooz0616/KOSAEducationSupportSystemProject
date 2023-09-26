@@ -270,7 +270,7 @@ td button {
 }
 
 .rgstTable td:nth-child(2) {
-	width: 35%;
+	width: 45%;
 	text-align: left;
 	font-weight: bold;
 }
@@ -280,15 +280,15 @@ td button {
 }
 
 .rgstTable td:nth-child(4) {
-	width: 8%;
+	width: 10%;
 }
 
 .rgstTable td:nth-child(5) {
-	width: 8%;
+	width: 10%;
 }
 
 .rgstTable td:nth-child(6) {
-	width: 14%;
+	width: 10%;
 }
 
 .wlogTable td:nth-child(1) {
@@ -318,5 +318,43 @@ td button {
 }
 
 .wlogTable td:nth-child(7) {
-	width: 17%;
+	width: 14%;
+}
+
+.postTable td:nth-child(1) {
+	width: 7%;
+}
+
+.postTable td:nth-child(2) {
+	width: 52%;
+	text-align: left;
+	font-weight: bold;
+}
+
+.postTable td:nth-child(3) {
+	width: 15%;
+}
+
+.postTable td:nth-child(4) {
+	width: 13%;
+}
+
+.postTable td:nth-child(5) {
+	width: 13%;
+}
+
+.reply {
+	list-style: none;
+	border: #0E5881;
+	border-style: solid;
+	background: #E7EFF3;
+	padding: 0;
+}
+
+.reply li {
+	padding: 1%;
+	border-bottom: 1px solid #0E5881;
+}
+.reply span{
+	padding-left: 2%;
 }

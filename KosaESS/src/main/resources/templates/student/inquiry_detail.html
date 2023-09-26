@@ -28,7 +28,8 @@
 						<th>게시일자</th>
 						<td><span th:text="${inquiryDetail.rgstDd}"></span></td>
 						<th>조회수</th>
-						<td style="width:10%;"><span th:text="${inquiryDetail.postHit}"></span></td>
+						<td style="width: 10%;"><span
+							th:text="${inquiryDetail.postHit}"></span></td>
 						<th>글 작성자</th>
 						<td><span th:if="${inquiryDetail.stdtNm == null}"
 							th:text="${inquiryDetail.mngrNm}"></span> <span
@@ -57,9 +58,9 @@
 
 			</div>
 			<div class="content" style="padding: 0 2%;">
-				<ul style="width: 100%;" >
+				<ul style="width: 100%;">
 					<li th:each="postVO : ${replyDetail}">
-						<table style="margin: 1% auto;;" class="reply">
+						<table style="margin: 1% auto;" class="reply">
 							<tr>
 								<th>답변 제목</th>
 								<td colspan="3"><span th:text="${postVO.postTitle}"></span></td>
@@ -70,10 +71,10 @@
 							</tr>
 							<tr>
 								<th>답변자</th>
-								<td style="width:40%;"><span th:if="${postVO.stdtNm == null}"
-									th:text="${postVO.mngrNm}"></span> <span
-									th:if="${postVO.mngrNm == null}" th:text="${postVO.stdtNm}"></span>
-								</td>
+								<td style="width: 40%;"><span
+									th:if="${postVO.stdtNm == null}" th:text="${postVO.mngrNm}"></span>
+									<span th:if="${postVO.mngrNm == null}"
+									th:text="${postVO.stdtNm}"></span></td>
 								<th>답변 일자</th>
 								<td><span th:text="${postVO.rgstDd}"></span></td>
 							</tr>
@@ -92,5 +93,6 @@
 			</div>
 		</div>
 	</div>
+	<script src="/js/student/inquiry_detail.js"></script>
 </body>
 </html>

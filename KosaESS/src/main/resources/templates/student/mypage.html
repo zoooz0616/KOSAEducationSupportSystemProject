@@ -125,7 +125,7 @@
 									<th>교육기간</th>
 									<th>수강상태</th>
 									<th>이수상태</th>
-									<th>이수증 다운로드</th>
+									<th>이수증</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -177,6 +177,39 @@
 								</tr> -->
 							</tbody>
 						</table>
+					</div>
+				</div>
+				<div class="inquiryList" style="display: none;">
+					<h3>문의 내역</h3>
+					<table class="postTable">
+						<thead>
+							<tr>
+								<td>번호</td>
+								<td>문의내역명</td>
+								<td>문의날짜</td>
+								<td>답변상태</td>
+								<td>답변확인</td>
+							</tr>
+						</thead>
+					</table>
+					<div>
+						<ul style="margin: 0; list-style: none; padding: 0;">
+							<li class="postRow" th:each="postVO , rowStat : ${postList}">
+								<table class="postTable">
+									<tbody>
+										<tr>
+											<td><span th:text="${rowStat.index + 1}"></span></td>
+											<td th:text="${postVO.postTitle}"></td>
+											<td th:text="${postVO.rgstDd}"></td>
+											<td th:text="${postVO.cmcdNm}"></td>
+											<td><button class="showReply" style="display: none;">확인하기</button></td>
+											<td th:text="${postVO.postId}" style="display: none;"></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="reply-container"></div>
+							</li>
+						</ul>
 					</div>
 				</div>
 				<div class="modal1" style="display: none;">
@@ -268,6 +301,18 @@
 
 			if (cmptCd === 'CMP0000002') {
 				rgstPrintElement.css('display', 'revert');
+			}
+		}
+
+		var postList = /*[[${postList}]]*/[];
+
+		for (var i = 0; i < postList.length; i++) {
+			var postCd = postList[i].postCd;
+			var postId = postList[i].postId;
+			var showReplyElement = $('.showReply').eq(i);
+
+			if (postCd === 'PST0000004') {
+				showReplyElement.css('display', 'revert');
 			}
 		}
 	</script>

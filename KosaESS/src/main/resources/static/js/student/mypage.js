@@ -170,7 +170,6 @@ $(document).ready(function() {
 					var WorklogVO = data[i];
 					var row = $('<tr class="wlogRow"></tr>');
 					var inTmDd = formatTimestamp(WorklogVO.inTm);
-					console.log(inTmDd);
 					if (WorklogVO.outTm == null)
 						var outTmDd = '-';
 					else
@@ -312,23 +311,72 @@ function formatTimestamp(timestamp) {
 	return formattedTimestamp;
 }
 
-$("#fileInput1").on('change',function(){
-  var fileName = $("#fileInput1").val();
-  $(".upload-name1").val(fileName);
+$("#fileInput1").on('change', function() {
+	var fileName = $("#fileInput1").val();
+	$(".upload-name1").val(fileName);
 });
 
-$("#fileInput2").on('change',function(){
-  var fileName = $("#fileInput2").val();
-  $(".upload-name2").val(fileName);
+$("#fileInput2").on('change', function() {
+	var fileName = $("#fileInput2").val();
+	$(".upload-name2").val(fileName);
 });
 
-$("#fileInput3").on('change',function(){
-  var fileName = $("#fileInput3").val();
-  $(".upload-name3").val(fileName);
+$("#fileInput3").on('change', function() {
+	var fileName = $("#fileInput3").val();
+	$(".upload-name3").val(fileName);
 });
 
 $('#passwordInput').on('keyup', function(event) {
-		if (event.key === "Enter") {
-			$('#checkPassword').trigger('click');
+	if (event.key === "Enter") {
+		$('#checkPassword').trigger('click');
+	}
+});
+
+$('.showReply').click(function() {
+	$('.reply').slideUp(300);
+	// 현재 클릭된 행의 다음 형제 요소를 찾습니다.
+	var replyRow = $(this).closest('li').find(
+		'.reply');
+	var postId = $(this).closest('li').find(
+		'td:last-child').text().trim(); // 버튼을 누른 행에 있는 postId 가져오기
+
+	var ulContainer = $(this).closest('li').find(
+		'.reply-container');
+
+	// Ajax 요청을 보내서 답변 목록을 가져옵니다.
+	$.ajax({
+		type: "POST",
+		url: "/student/show/reply",
+		data: {
+			postId: postId
+		},
+		success: function(response) {
+			// 답변 목록을 새로운 ul 요소로 생성합니다.
+			var ul = $('<ul class="reply">');
+
+			// 각 답변을 ul 요소에 추가합니다.
+			for (var i = 0; i < response.length; i++) {
+				var reply = response[i];
+				var li = $('<li>');
+				li.append('<div>답변 제목: '
+					+ reply.inquiry.title
+					+ '</div>');
+				li.append('<div>답변 내용: '
+					+ reply.inquiry.content
+					+ '</div>');
+				li.append('<div style="display:flex; justify-content: flex-end;"><span>답변 날짜: '
+					+ reply.inquiry.date
+					+ '</span><span>답변자: '
+					+ reply.inquiry.name
+					+ '</span></div>');
+				ul.append(li);
+			}
+
+			// ul을 reply-container에 추가하고 보여줍니다.
+			ulContainer.html(ul).hide().slideToggle(300);
+			replyRow
+				.css('display', 'block'); // 또는 'inline' 등 적절한 값으로 설정합니다.
 		}
 	});
+});
+
