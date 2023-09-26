@@ -140,7 +140,7 @@
 				<table>
 					<tr th:each="postVO : ${postList}">
 						<td style="width: 75%;"><a
-							th:href="@{notice/__${postVO.postId}__}"
+							th:href="@{/student/notice/__${postVO.postId}__}"
 							th:text="${postVO.postTitle}"></a></td>
 						<td style="width: 25%; text-align: right;"
 							th:text="${postVO.rgstDd}"></td>

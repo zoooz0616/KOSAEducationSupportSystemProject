@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	const countPerPage = 10; // 페이지당 데이터 건수
-	const showPageCnt = 5;
+	var countPerPage = 10; // 페이지당 데이터 건수
+	var showPageCnt = 5;
 	let todoData = [];
 
 	// 검색 버튼 클릭 이벤트 핸들러
@@ -174,4 +174,41 @@ const topBtn = document.querySelector(".moveTopBtn");
 // 버튼 클릭 시 맨 위로 이동
 topBtn.addEventListener('click', () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+$("#fileInput").on('change', function() {
+	var fileName = $("#fileInput").val();
+	$(".upload-name").val(fileName);
+});
+var modal = $('.modal');
+$('.openformBtn').on('click', '.submitResn', function() {
+	modal.show();
+
+	// 모달 내부의 .submitBtn 버튼 클릭 시
+	modal.on('click', '.submitBtn', function() {
+
+		var resnText = $('.resnText').val();
+		var formData = new FormData();
+		var file = document.querySelector("#fileInput").files[0];
+		formData.append("file", file);
+		formData.append("resnText", resnText)
+		console.log(resnText);
+		console.log(formData);
+		console.log(file);
+		$.ajax({
+			type: 'POST',
+			url: '/student/write/' + postId,
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function() {
+				modal.hide();
+				alert("문의를작성하셨습니다.");
+			}
+		});
+	});
+
+	modal.on('click', '.closeBtn', function() {
+		modal.hide();
+	});
 });
