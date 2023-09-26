@@ -61,42 +61,40 @@
 		</div>
 
 		<!-- 업무담당자 등록하기 -->
-		<form th:action="@{/admin/manager/insert}" method="post">
-			<div class="insert_manager" style="padding: 5px;">
-				<div class="input_wrap" style="display: flex;">
-					<div class="filter_box">
-						<div class="filter_box_title">이름</div>
-						<div>
-							<input name="managerNm" type="text" placeholder="이름">
-						</div>
-					</div>
-					<div class="filter_box">
-						<div class="filter_box_title">이메일</div>
-						<div>
-							<input name="managerEmail" type="text" placeholder="이메일">
-						</div>
-					</div>
-					<div class="filter_box">
-						<div class="filter_box_title">전화번호</div>
-						<div>
-							<input name="managerTel" type="text" placeholder="전화번호">
-						</div>
-					</div>
-					<div class="filter_box">
-						<div class="filter_box_title">비밀번호</div>
-						<div>
-							<input name="managerPwd" type="text" placeholder="비밀번호">
-						</div>
+		<div class="insert_manager" style="padding: 5px;">
+			<div class="input_wrap" style="display: flex;">
+				<div class="filter_box">
+					<div class="filter_box_title">이름<span class="red">*</span></div>
+					<div>
+						<input class="input_manager_name" type="text" placeholder="이름">
 					</div>
 				</div>
-				<div>
-					<!-- 등록하기 버튼 -->
-					<button class="insert_btn" type="submit">
-						<img style="width: 20px;" th:src="@{/img/plus_white.png}"><span>등록하기</span>
-					</button>
+				<div class="filter_box">
+					<div class="filter_box_title">이메일<span class="red">*</span></div>
+					<div>
+						<input class="input_manager_email" type="text" placeholder="이메일">
+					</div>
+				</div>
+				<div class="filter_box">
+					<div class="filter_box_title">비밀번호<span class="red">*</span></div>
+					<div>
+						<input class="input_manager_pwd" type="text" placeholder="비밀번호">
+					</div>
+				</div>
+				<div class="filter_box">
+					<div class="filter_box_title">전화번호<span class="red">*</span></div>
+					<div>
+						<input class="input_manager_tel" type="text" placeholder="전화번호">
+					</div>
 				</div>
 			</div>
-		</form>
+			<div>
+				<!-- 등록하기 버튼 -->
+				<button class="insert_btn" type="submit" onclick="insertManager()">
+					<img style="width: 20px;" th:src="@{/img/plus_white.png}"><span>등록하기</span>
+				</button>
+			</div>
+		</div>
 		<!-- 업무담당자 등록하기 -->
 
 
@@ -146,24 +144,23 @@
 								style="display: none;" th:value="${manager.mngrNm}">
 							</td>
 							<td class="manager_tel">
-								<div class="update_div" th:text="${manager.mngrTel}"></div> 
-								<input
+								<div class="update_div" th:text="${manager.mngrTel}"></div> <input
 								type="text" class="update_input mngr_tel_input"
 								style="display: none;" th:value="${manager.mngrTel}">
 							</td>
 							<td th:text="${manager.userEmail}"></td>
 							<td>
-								<div class="update_div mngr_status" th:text="${manager.cmcdNm}"></div> 
-								<select
-								class="update_input mngr_status_input" style="display: none;"
-								th:value="${manager.userCd}">
+								<div class="update_div mngr_status" th:text="${manager.cmcdNm}"></div>
+								<select class="update_input mngr_status_input"
+								style="display: none;" th:value="${manager.userCd}">
 									<option th:each="mngrCommonCode: ${mngrCommonCodeList}"
 										th:value="${mngrCommonCode.cmcdId}"
 										th:text="${mngrCommonCode.cmcdNm}"
 										th:selected="${mngrCommonCode.cmcdId == manager.userCd}"></option>
 							</select>
 							</td>
-							<td class="last_login_dt" th:text="${#dates.format(manager.lastLoginDt,'yyyy-MM-dd hh:mm:ss')}">
+							<td class="last_login_dt"
+								th:text="${#dates.format(manager.lastLoginDt,'yyyy-MM-dd hh:mm:ss')}">
 							</td>
 							<td class="btn_td">
 								<button class="update_btn" type="button" onclick="editRow(this)">수정</button>
@@ -239,6 +236,58 @@
 			inputElement2.value = "";
 		}
 
+		//등록하기
+		function insertManager(){
+			var managerNm = document.querySelector(".input_manager_name").value;
+			var managerEmail = document.querySelector(".input_manager_email").value;
+			var managerPwd = document.querySelector(".input_manager_pwd").value;
+			var managerTel = document.querySelector(".input_manager_tel").value;
+			
+			// 이메일 형식 검사
+			var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+			
+			//모두 입력했는지 확인
+			if (managerNm === "" || managerEmail === "" || managerPwd === "" || managerTel === "") {
+    			alert("입력 필드를 모두 채워주세요.");
+			} else if (!emailPattern.test(managerEmail)) {
+			    alert("올바른 이메일 형식을 입력하세요.");
+			} else {
+				//이메일 유효성 검사
+				$.ajax({
+            					url: '/admin/manager/check_email',
+            					async:true,
+            					method: 'POST',
+            					data: {
+            						managerEmail : managerEmail
+            					},
+            					success : function(response){
+            						if(response == 'fail'){
+            							alert("이미 존재하는 이메일 주소입니다.");
+            						}else if(response == 'success'){
+            							//모두 완벽하다면
+                        				$.ajax({
+                        					url: '/admin/manager/insert',
+                        					async:true,
+                        					method: 'POST',
+                        					data: {
+                        						managerNm : managerNm,
+                        						managerEmail : managerEmail,
+                        						managerPwd : managerPwd,
+                        						managerTel : managerTel
+                        					},
+                        					success : function(response){
+                        						if(response == 'success'){
+                        							alert("업무담당자가 등록되었습니다.");
+                        							window.location.href = "/admin/manager/list";
+                        						}
+                        					}
+                        				});
+            						}
+            					}
+            				});
+			}
+		}
+		
 		//조회
 		function search() {
 			//input값 비어있으면 모두 입력하라고 알리기

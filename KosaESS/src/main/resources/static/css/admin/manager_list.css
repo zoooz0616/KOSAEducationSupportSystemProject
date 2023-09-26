@@ -203,3 +203,8 @@
 	margin: 2px;
 	padding: 0 5px;
 }
+
+.red {
+	color: red;
+	vertical-align: middle;
+}

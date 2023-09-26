@@ -589,6 +589,10 @@ public class AdminService implements IAdminService {
 		return adminRepository.getStudentList();
 	}
 	
+	@Override
+	public int getManagerEmailCnt(String managerEmail) {
+		return adminRepository.getManagerEmailCnt(managerEmail);
+	}
 	
 	
 	

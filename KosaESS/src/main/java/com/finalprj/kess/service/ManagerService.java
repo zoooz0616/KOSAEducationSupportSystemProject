@@ -35,8 +35,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<StudentInfoDTO> getStudentListByClssId(String clssId) {
-		return managerRepository.getStudentListByClssId(clssId);
+	public List<StudentInfoDTO> getStudentListByClssId(String clssId, String keyword, List<String> cmptList) {
+		return managerRepository.getStudentListByClssId(clssId, keyword, cmptList);
 	}
 
 	@Override
@@ -121,6 +121,11 @@ public class ManagerService implements IManagerService {
 	@Override
 	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly) {
 		return managerRepository.getWlogListByClssIds(clssId, startDate, endDate, stdtNm, isDelete, resnOnly);
+	}
+
+	@Override
+	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId) {
+		return managerRepository.getStudentListByOnlyClssId(classId);
 	}
 
 //	@Override

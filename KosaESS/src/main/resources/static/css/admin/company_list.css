@@ -88,13 +88,10 @@ a {
 	background: #E7EFF3;
 }
 
-.company_insert *{
-	margin: 5px;
-}
-
-.company_insert span{
+.company_insert > span{
 	color: #0E5881;
     font-weight: bold;
+    margin: 5px;
 }
 
 .table_wrap {
@@ -113,7 +110,6 @@ a {
 }
 
 .content_info_wrap button {
-	width: 60px;
 	border: none;
 	border-radius: 3px;
 	background: #0E5881;
@@ -121,18 +117,24 @@ a {
 	font-size: 15px;
 	font-weight: bold;
 	margin: 5px;
+	padding: 5px;
 	height: 30px;
+	display: flex;
 }
 
 .insert_btn {
-	width: 60px;
 	border: none;
 	border-radius: 3px;
 	background: #0E5881;
 	color: white;
 	font-weight: bold;
 	padding: 5px;
-	margin-left: 5px;
+	margin: 5px;
+	display:flex;
+}
+
+.insert_btn img{
+	width: 20px;
 }
 
 .table_wrap table tr td button {
@@ -145,6 +147,18 @@ a {
 
 .update_btn {
 	background-color: #3E799A;
+	display:flex;
+}
+
+.update_btn > img{
+	width: 20px;
+}
+
+.save_btn{
+	display:flex;
+}
+.save_btn > img{
+	width: 20px;
 }
 
 .delete_btn {
@@ -182,4 +196,9 @@ a {
 
 .cmpy_img_div .cmpy_img{
 	width:400px;
+}
+
+.red{
+	color: red;
+	vertical-align: middle;
 }

@@ -1,12 +1,23 @@
 var paramList = new URLSearchParams(location.search);
 var thisClassId = paramList.get('classId');
-var chkAll = $("#chkAllStdt");//전체 체크박스
+
+var chkAll = $("#chkAllStdt");//"전체" 학생 체크박스
 var chkList = $("input[name=checkedStdt]");//존재하는 stdt체크박스 리스트
-var isChecked = chkAll.prop("checked");//체크된 stdt체크박스 리스트
-var allChecked = chkList.filter(":checked").length === chkList.length;
+var isChecked = chkAll.prop("checked");//"전체(학생)" 체크박스의 상태값(true 아니면 false)
+var allChecked = chkList.filter(":checked").length === chkList.length;//학생 체크박스가 전체 체크됐는지 여부
+
+var chkAllcmpt = $("#chk_all_cmpt");//"전체" 이수상태 체크박스
+var chkcmptList = $("input[class=cmpt_checkbox]");//존재하는 stdt체크박스 리스트
+var chkAllcmptChecked = chkAllcmpt.prop("checked");//"전체(학생)" 체크박스의 상태값(true 아니면 false)
+var chkcmptAllChecked = chkcmptList.filter(":checked").length === chkcmptList.length;//학생 체크박스에서 체크 된 리스트
+
 var stdtListTable = document.getElementById('stdt_list_table_tbody');//tbody 선택하기
 var date = new Date();
 var year = date.getFullYear();
+
+var radioBtns = $("input[name=default_period]");
+
+var selectClassId = $("#classId");
 
 //오늘 기준 이번 달의 첫 날 반환
 function getFirstDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var day = "01";return year + "-" + month + "-" + day;}
@@ -15,7 +26,18 @@ function getLastDay(){var month = ("0" + (1 + date.getMonth())).slice(-2);var la
 //tbody의 모든 내용을 삭제
 function clearTable(){if(stdtListTable.firstChild != null){while (stdtListTable.firstChild) {stdtListTable.removeChild(stdtListTable.firstChild);}}}
 
-//현재 체크된 목록을 반환 <<< 3번 할 때 쓸 예정
+//현재 체크된 라디오 버튼의 값에 따라 start/end Date를 변경
+function setSearchPeriod(){
+	if($("input[name='default_period']:checked").val()=="thisClassPeriod"){
+		$('#startDate').val($('#start_date_save').val());
+		$('#endDate').val($('#end_date_save').val());
+	} else {
+		$('#startDate').val("1990-01-01");
+		$('#endDate').val("1991-01-01");
+	}
+}
+
+//현재 체크된 교육생 목록을 반환
 function getCheckedStdt() {
 	const checkedStdts = [];
 	chkList.each(function () {
@@ -24,6 +46,19 @@ function getCheckedStdt() {
 		}
 	});
 	return checkedStdts;
+}
+//End
+
+//현재 체크된 이수 상태 목록을 반환
+function getCheckedCmpts() {
+	const checkedCmpts = [];
+	checkedCmpts.push('CMPT');
+	chkcmptList.each(function () {
+		if ($(this).prop("checked")) {
+			checkedCmpts.push($(this).val());
+		}
+	});
+	return checkedCmpts;
 }
 //End
 
@@ -43,29 +78,72 @@ function changeSelectBox(){
 			if(thisClassId == (String)((String)(document.getElementById('classId').options[i].value.split("(")[1]).split(",")[0]).split("=")[1]){
 				document.getElementById('classId').selectedIndex=i;
 				//$("#classId option").prop("selected",true);
-				console.log(document.getElementById('classId').options[i].seleted);
-				break;
+				return;
 			}
 		}
 	}
 }
 //End
+
+//classId!=null ? date = start & end date : null 
+function initStartDate(){
+	if(thisClassId != null){
+		$('#startDate').val($('#start_date_save').val());
+		$('#endDate').val($('#end_date_save').val());
+	}
+}
+
 //---------------------------------------------------------------------------
 // 1. 체크박스 컨트롤
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 	
-	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
+	radioBtns.change( function(){
+		console.log($("input[name='default_period']:checked").val());
+		setSearchPeriod();
+	}),
+	
+	selectClassId.change(function(){
+		let targetClassStartDate = ((String)($("#classId").val().split(",")[10])).split("=")[1]
+		let targetClassEndDate = ((String)($("#classId").val().split(",")[11])).split("=")[1]
+		$("#start_date_save").val(targetClassStartDate);
+		$("#end_date_save").val(targetClassEndDate);
+		$("input:radio[name=default_period]").prop('checked',false)
+	}),
+	
+	//검색 기간을 직접 변경하면 라디오버튼 해제
+	$('#startDate').change(function(){
+		$("input:radio[name=default_period]").prop('checked',false)
+	}),
+	$('#endDate').change(function(){
+		$("input:radio[name=default_period]").prop('checked',false)
+	}),
+	
+	//"전체"(교육생) 체크박스의 상태에 따라 나머지 교육생 체크박스의 상태를 변경
 	chkAll.on("change", function () {
 		isChecked = chkAll.prop("checked");
 		chkList.prop("checked", isChecked);
 	}),
 	//End
 	
-	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
+	//교육생 체크박스가 변경될 때 "전체"(교육생) 체크박스 상태 업데이트
 	chkList.on("change", function () {
 		allChecked = chkList.filter(":checked").length === chkList.length;
 		chkAll.prop("checked", allChecked);
+	}),
+	//End
+
+	//"전체"(이수 상태) 체크박스의 상태에 따라 나머지 이수 상태 체크박스의 상태를 변경
+	chkAllcmpt.on("change", function () {
+		chkAllcmptChecked = chkAllcmpt.prop("checked");
+		chkcmptList.prop("checked", chkAllcmptChecked);
+	}),
+	//End
+	
+	//이수 상태 체크박스가 변경될 때 "전체"(이수 상태) 체크박스 상태 업데이트
+	chkcmptList.on("change", function () {
+		chkcmptallChecked = chkcmptList.filter(":checked").length === chkcmptList.length;
+		chkAllcmpt.prop("checked", chkcmptallChecked);
 	}),
 	//End
 	
@@ -73,18 +151,30 @@ $(document).ready(
 	changeTargetClassId(),
 	//End
 	
-	//주소의 classId param이 null이 아니라면 select 박스의 값을 param의 id와 같은 것으로 변경
-	changeSelectBox()
+	//주소의 classId param이 null이 아니라면 hidden select 박스의 값을 param의 id와 같은 것으로 변경
+	changeSelectBox(),
 	//End
+	
+	//classId!=null ? date = start & end date : null 
+	initStartDate()
 	
 );
 //End : 체크박스 컨트롤
 
 // 2. 검색 누르면 검색하세요
 	function search(){
-		//1) tbody의 내용물을 비운다
-		clearTable();
-		$("#chkAllStdt").prop("checked",false);
+		if((document.getElementById('classId').selectedIndex == 0)){
+			alert('교육과정을 선택해주세요.');
+			return;
+		}
+		
+		console.log($("#startDate").val());
+		console.log($("#endDate").val());
+		
+		if(($("#startDate").val()=="")||($("#endDate").val()=="")){
+			alert('검색 기간을 설정해주세요.');
+			return;
+		}
 		
 		//2) tbody에 붙일 내용물을 만든다
 		var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
@@ -92,8 +182,11 @@ $(document).ready(
 		
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
-		if(startDate==''){startDate=getFirstDay();}
-		if(endDate==''){endDate=getLastDay();}
+		//if(startDate==''){startDate=getFirstDay();}
+		//if(endDate==''){endDate=getLastDay();}
+		
+		var inputKeyword = $('.input_keyword').val();
+		var cmptList = getCheckedCmpts();
 		
 		$.ajax({
 			type:'get',
@@ -103,10 +196,13 @@ $(document).ready(
 				classId:targetClassId
  				, startDate:startDate
  				, endDate:endDate
+				, keyword:inputKeyword
+				, cmptList:cmptList
 			},
 			async:false,
 			success: function(stdtListResponse) {
 				clearTable();
+				$("#chkAllStdt").prop("checked",false);
 				
 				//교육과정명 변경 
 				$(".title_a").text(stdtListResponse.thisClassVO.clssNm);
@@ -116,7 +212,13 @@ $(document).ready(
 				
 				//인원 수 입력
 				var stdtList = stdtListResponse.stdtList;
-				document.getElementById("stdtCnt").innerHTML=stdtList.length;
+				if(stdtList.length != 0){
+					document.getElementById("stdtCnt").innerHTML=stdtList.length;
+					$('.stdt_count_unit').css("visibility","visible")
+				}else{
+					document.getElementById("stdtCnt").innerHTML="검색 결과가 없습니다.";
+					$('.stdt_count_unit').css("visibility","hidden")
+				}
 				//End
 
 				//입력 시작
@@ -162,13 +264,14 @@ $(document).ready(
 							var rowWlog = document.createElement('td');
 							rowWlog.innerHTML=stdtList[i].wlogCnt.split(',')[j].substr(10);
 							newRow.appendChild(rowWlog);//출결상태
+							rowWlog.setAttribute("class","number_cell")
 						}
 						},error: function(error){console.log("error: ", error);}
 					})
 					
 					//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
 					var cmptRate = document.createElement('td');
-					cmptRate.innerHTML=(stdtList[i].cmptRate).toFixed(1)+" %";
+					cmptRate.innerHTML=(stdtList[i].cmptRate).toFixed(1);
 					//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
 					
 					var rowJob = document.createElement('td');
@@ -178,6 +281,15 @@ $(document).ready(
 					newRow.appendChild(rowJob);
 					//3) tbody에 붙인다
 					stdtListTable.append(newRow);
+					
+					rowChk.setAttribute("class","fixed_length_cell");
+					rowNum.setAttribute("class","fixed_length_cell");
+					rowName.setAttribute("class","fixed_length_cell");
+					rowTel.setAttribute("class","fixed_length_cell");
+					rowGender.setAttribute("class","fixed_length_cell");
+					rowBirth.setAttribute("class","fixed_length_cell");
+					cmptRate.setAttribute("class","number_cell");
+					rowJob.setAttribute("class","fixed_length_cell");
 				}
 				//End
 			},error: function(error){
@@ -295,7 +407,7 @@ $(document).ready(
 							
 							//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
 							var cmptRate = document.createElement('td');
-							cmptRate.innerHTML=(stdtList[i].cmptRate).toFixed(1)+" %";
+							cmptRate.innerHTML=(stdtList[i].cmptRate).toFixed(1);
 							//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
 							
 							var rowJob = document.createElement('td');

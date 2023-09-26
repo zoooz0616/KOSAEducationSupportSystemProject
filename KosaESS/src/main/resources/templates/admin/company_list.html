@@ -38,9 +38,12 @@
 					<div class="content_info_wrap">
 						<div>
 							기업 총 <span class="cnt" th:text="${#lists.size(companyList)}"></span>
-							개
+							개사
 						</div>
-						<button id="delete_btn">선택삭제</button>
+						<button id="delete_btn">
+							<img style="width: 20px;" th:src="@{/img/minus_white.png}">
+							<span>선택삭제</span>
+						</button>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
@@ -48,14 +51,22 @@
 					<form th:action="@{/admin/company/insert}" method="post"
 						enctype="multipart/form-data">
 						<div class="company_insert" style="padding: 5px;">
-							<span>기업명</span> <input type="text" name="cmpyNm"
-								placeholder="기업명"> <span>전화번호</span> <input type="text"
-								name="cmpyTel" placeholder="전화번호"> <span>주소</span> <input
-								type="text" id="streetAdr" name="cmpyAdr" class="form-control"
-								onclick="findAddr()" placeholder="도로명 주소를 입력하세요" readonly>
-							<br> <span>기업로고</span> <input id="lecture_tm_input"
-								type="file" name="file">
-							<button class="insert_btn" type="submit">등록하기</button>
+							<div>
+								<span>기업명<span class="red">*</span></span> <input type="text"
+									name="cmpyNm" placeholder="기업명"> <span>전화번호<span
+									class="red">*</span></span> <input type="text" name="cmpyTel"
+									placeholder="전화번호"> <span>주소<span class="red">*</span></span>
+								<input type="text" id="streetAdr" name="cmpyAdr"
+									class="form-control" onclick="findAddr()"
+									placeholder="도로명 주소를 입력하세요" readonly>
+							</div>
+							<div style="display:flex;    align-items: center;">
+								<span>기업로고</span> <input id="lecture_tm_input" type="file"
+									name="file">
+								<button class="insert_btn" type="submit">
+									<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+								</button>
+							</div>
 						</div>
 					</form>
 					<!-- 기업 등록하기 -->
@@ -66,8 +77,8 @@
 						<table>
 							<thead>
 								<tr class="content_list_th">
-									<th style="width: 5%"><input type="checkbox"
-										id="chkAll" class="lecture_checkbox_all"></th>
+									<th style="width: 5%"><input type="checkbox" id="chkAll"
+										class="lecture_checkbox_all"></th>
 									<th style="width: 5%;">번호</th>
 									<th style="width: 30%;">기업명</th>
 									<th style="width: 15%;">전화번호</th>
@@ -102,9 +113,12 @@
 					<div class="content_info_wrap">
 						<div>기업 상세보기</div>
 						<button class="update_btn" onclick="updateCompany(this)"
-							style="display: none;">수정하기</button>
+							style="display: none;">
+							<img th:src="@{/img/update_white.png}"> <span>수정하기</span></button>
 						<button class="save_btn" onclick="saveCompany(this)"
-							style="display: none;">저장하기</button>
+							style="display: none;">
+							<img th:src="@{/img/save_white.png}">
+							<span>저장하기</span></button>
 					</div>
 					<!-- 상세보기-->
 
@@ -152,9 +166,11 @@
 								</div>
 							</div>
 
-							<div class="detail_input" style="display: none; border: 1px solid #CFDEE6;">
-								<div style="display:flex;">
-									<div style="width: 15%; text-align:center; font-weight:bold; background: #F3F6F8;padding: 5px;">기업로고</div>
+							<div class="detail_input"
+								style="display: none; border: 1px solid #CFDEE6;">
+								<div style="display: flex;">
+									<div
+										style="width: 15%; text-align: center; font-weight: bold; background: #F3F6F8; padding: 5px;">기업로고</div>
 									<div style="padding: 5px;">
 										<input type="file">
 									</div>
@@ -283,7 +299,7 @@
 
 							var updateBtn = document
 									.querySelector(".update_btn");
-							updateBtn.style.display = "inline";
+							updateBtn.style.display = "flex";
 
 							var saveBtn = document.querySelector(".save_btn");
 							saveBtn.style.display = "none";
@@ -388,7 +404,7 @@
 			var divParent = button.closest("div");
 
 			var saveBtn = divParent.querySelector(".save_btn");
-			saveBtn.style.display = "inline";
+			saveBtn.style.display = "flex";
 
 			button.style.display = "none";
 

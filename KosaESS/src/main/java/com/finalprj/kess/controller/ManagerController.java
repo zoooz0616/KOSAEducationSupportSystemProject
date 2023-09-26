@@ -80,7 +80,9 @@ public class ManagerController {
 			}
 			model.addAttribute("classList", classList);
 			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
+			List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CLS");
 			model.addAttribute("classCodeNameList", classCodeNameList);
+			model.addAttribute("cmptCodeNameList", cmptCodeNameList);
 			return "manager/class_list";
 		} else {
 			if(roleCd == null) {
@@ -110,11 +112,14 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		
+		// 학생 정보를 세션에서 가져와서 student 객체에 저장
+		String student = (String) session.getAttribute("student");
+		model.addAttribute("student", student);
+
 		// classDetail 객체를 가져와서 모델에 추가
 		ClassVO classDetail = studentService.selectClass(classId);
-		classDetail.setRgstCnt(managerService.getClassDetailByClssId(classId).getRgstCnt());
 		classDetail.setRgstCnt(managerService.getRgstCountByClssId(classId));
-		model.addAttribute("clss", classDetail);
+		model.addAttribute("classDetail", classDetail);
 
 		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(classId);
 		model.addAttribute("curriculumlist", curriculumlist);
@@ -123,31 +128,6 @@ public class ManagerController {
 		List<FileVO> classFileList = studentService.selectAllClassFile(classId);
 		model.addAttribute("classFileList", classFileList);
 		
-		model.addAttribute("title", "교육 과정 상세");
-//		ClassVO thisClass = new ClassVO();
-//		thisClass = managerService.getClassDetailByClssId(classId);
-//		thisClass.setRgstCnt(managerService.getRgstCountByClssId(classId));
-//		model.addAttribute("clss", thisClass);
-//		
-//		ClassVO classDetail = studentService.selectClass(classId);
-//		model.addAttribute("classDetail", classDetail);
-//		
-//		List<Integer> imageFileSubIdList = managerService.getFileSubIdListByFileId(thisClass.getFileId());
-//		List<FileVO> NonImageFileInfoList = new ArrayList<FileVO>();
-//		for (int i = 0, j = 0; i < imageFileSubIdList.size(); i++) {
-//			FileVO vo = managerService.getFileInfoByIds(thisClass.getFileId(), imageFileSubIdList.get(i));
-//			System.out.println("imageFileSubIdList : " + imageFileSubIdList.get(i));
-//			if (vo.getFileType().split("/")[0].equals("image")) {
-//				j++;
-//			} else {
-//				NonImageFileInfoList.add(vo);
-//				imageFileSubIdList.remove(i);
-//			}
-//		}
-//		List<CurriculumDetailDTO> curriculumlist = studentService.getCurriculumList(classId);
-//		model.addAttribute("curriculumlist", curriculumlist);
-//		model.addAttribute("imageFileSubIdList", imageFileSubIdList);
-//		model.addAttribute("NonImageFileInfoList", NonImageFileInfoList);
 		return "manager/class_detail";
 	}
 
@@ -194,22 +174,28 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		//end
-
-		//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜로 오늘 기준 이번 달의 첫날과 마지막날을 반환
-		if (startDate == null) {
-			startDate = String.valueOf(YearMonth.now().atDay(1));
-		}
-		if (endDate == null) {
-			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-		}
-		//end
-
+		
 		List<ClassVO> classList = new ArrayList<ClassVO>();
+		
 		ClassVO emptyClassVO = new ClassVO();
 		emptyClassVO.setClssNm("교육과정명을 선택하세요");
 		classList.add(emptyClassVO);
+		
+		if(classId!=null) {
+//			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜에 교육과정 시작/종료 일자를 대입
+//			if (startDate == null) {
+//				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
+//			}
+//			if (endDate == null) {
+//				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
+//			}
+//			//end
+			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
+		}else {
+			model.addAttribute("thisClass", emptyClassVO);
+		}
 
-		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);//학생 이름 목록
+		List<StudentInfoDTO> stdtList = managerService.getStudentListByOnlyClssId(classId);//학생 이름 목록
 		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");//수업 목록
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
@@ -228,15 +214,21 @@ public class ManagerController {
 
 			// 이수율 입력하기
 			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
-			stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
+			if(Double.isNaN(stdtTmSum)) {
+				stdtTmSum = 0;
+			}
+			if(managerService.getClassDetailByClssId(classId).getClssTotalTm()==0) {
+				stdt.setCmptRate(0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()>1) {
+				stdt.setCmptRate(100.0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()<0) {
+				stdt.setCmptRate(0);
+			} else {
+				stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
+			}
 		}
 
 		model.addAttribute("title", "교육생 목록");
-		if(classId!=null) {
-			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
-		}else {
-			model.addAttribute("thisClass", emptyClassVO);
-		}
 		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
 		model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
@@ -329,13 +321,16 @@ public class ManagerController {
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
 	@ResponseBody
-	public Map<String, Object> fetchStudentList(@RequestParam("classId") String classId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+	public Map<String, Object> fetchStudentList(
+			@RequestParam("classId") String classId, 
+			@RequestParam("startDate") String startDate, 
+			@RequestParam("endDate") String endDate,
+			@RequestParam("keyword") String keyword,
+			@RequestParam("cmptList[]") List<String> cmptList
+			) {
 
-		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId);
+		List<StudentInfoDTO> stdtList = managerService.getStudentListByClssId(classId, keyword, cmptList);
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-
-//		if (startDate == null || startDate == "") {startDate = String.valueOf(YearMonth.now().atDay(1));}
-//		if (endDate == null || endDate == "") {endDate = String.valueOf(YearMonth.now().atEndOfMonth());}
 
 		for (StudentInfoDTO stdt : stdtList) {
 			stdt.setWlogCnt("");
@@ -344,11 +339,18 @@ public class ManagerController {
 				stdt.appendWlogCnt(",");
 			}
 			double stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
-			double cmptRateUnder = managerService.getClassDetailByClssId(classId).getClssTotalTm();
-			if(cmptRateUnder!=0) {
-			stdt.setCmptRate(100.0 * stdtTmSum/cmptRateUnder);}
-			else {
+			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
+			if(Double.isNaN(stdtTmSum)) {
+				stdtTmSum = 0;
+			}
+			if(managerService.getClassDetailByClssId(classId).getClssTotalTm()==0) {
 				stdt.setCmptRate(0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()>1) {
+				stdt.setCmptRate(100.0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()<0) {
+				stdt.setCmptRate(0);
+			} else {
+				stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
 			}
 		}
 

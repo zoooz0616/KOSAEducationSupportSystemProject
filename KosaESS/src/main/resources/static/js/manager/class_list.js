@@ -61,6 +61,10 @@ function fetchClassList() {
 				classCnt.appendChild(classLimit);
 				classClssCd.innerHTML=filteredClassList[i].clssCd;
 				
+				className.setAttribute("class","variable_length_cell");
+				classAddress.setAttribute("class","variable_length_cell");
+				classClssCd.setAttribute("class","variable_length_cell");
+				
 				newRow.appendChild(classRowNum);
 				newRow.appendChild(className);
 				newRow.appendChild(classPeriod);
