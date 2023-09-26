@@ -188,9 +188,9 @@ $('.openformBtn').on('click', '.submitResn', function() {
 	// 모달 내부의 .submitBtn 버튼 클릭 시
 	modal.on('click', '.submitBtn', function() {
 
-		var resnText = $('.resnText1').val();
+		var resnText = $('.resnText').val();
 		var formData = new FormData();
-		var file = document.querySelector("#fileInput2").files[0];
+		var file = document.querySelector("#fileInput").files[0];
 		formData.append("file", file);
 		formData.append("resnText", resnText)
 		console.log(resnText);
@@ -198,20 +198,18 @@ $('.openformBtn').on('click', '.submitResn', function() {
 		console.log(file);
 		$.ajax({
 			type: 'POST',
-			url: '/student/mypage/submitResn/' + wlogId,
+			url: '/student/write/' + postId,
 			data: formData,
 			processData: false,
 			contentType: false,
 			success: function() {
-				modal2.hide();
-				alert("사유서를 제출하였습니다.");
-				updateWlogTable();
-
+				modal.hide();
+				alert("문의를작성하셨습니다.");
 			}
 		});
 	});
 
-	modal2.on('click', '.closeBtn', function() {
-		modal2.hide();
+	modal.on('click', '.closeBtn', function() {
+		modal.hide();
 	});
 });
