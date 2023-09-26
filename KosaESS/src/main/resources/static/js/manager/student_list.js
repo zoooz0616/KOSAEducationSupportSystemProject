@@ -31,9 +31,12 @@ function setSearchPeriod(){
 	if($("input[name='default_period']:checked").val()=="thisClassPeriod"){
 		$('#startDate').val($('#start_date_save').val());
 		$('#endDate').val($('#end_date_save').val());
-	} else {
-		$('#startDate').val("1990-01-01");
-		$('#endDate').val("1991-01-01");
+	} else if ($("input[name='default_period']:checked").val()=="thisMonth") {
+		$('#startDate').val(getFirstDay());
+		$('#endDate').val(getLastDay());
+	}else{
+		$('#startDate').val(getFirstDay());
+		$('#endDate').val(getLastDay());
 	}
 }
 
@@ -99,7 +102,6 @@ $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 	
 	radioBtns.change( function(){
-		console.log($("input[name='default_period']:checked").val());
 		setSearchPeriod();
 	}),
 	
@@ -167,16 +169,10 @@ $(document).ready(
 			alert('교육과정을 선택해주세요.');
 			return;
 		}
-		
-		console.log($("#startDate").val());
-		console.log($("#endDate").val());
-		
 		if(($("#startDate").val()=="")||($("#endDate").val()=="")){
 			alert('검색 기간을 설정해주세요.');
 			return;
 		}
-		
-		//2) tbody에 붙일 내용물을 만든다
 		var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
 		//var targetClassId = thisClassId;
 		
@@ -319,12 +315,14 @@ $(document).ready(
 	function cmptUpdate(button){
 // 		//1. 선택받은 아이들을 가져온다(var targetList)
 		var targetList = getCheckedStdt();
-	
 // 		//2. 바꿀 값이 뭔지 가져온다(var cmptValue)+어떤 수업인지도 가져온다
 		var targetCmptId = button.value;
-		//var thisClassId = $(".title_a").val();
 		var targetClassId = $("#class_id_save").val();
-
+		
+		console.log(targetList);
+		console.log(targetCmptId);
+		console.log(targetClassId);
+		
 // 		//3. target이랑 cmptValue를 넘긴다
 		$.ajax({
 			//4. update한다
@@ -336,11 +334,8 @@ $(document).ready(
 				,targetCmptId:targetCmptId
 			},
 			success: function(updatedStdtList){
-				clearTable();
 				var startDate = document.getElementById("startDate").value;
 				var endDate = document.getElementById("endDate").value;
-				if(startDate==''){startDate=getFirstDay();}
-				if(endDate==''){endDate=getLastDay();}
 				//var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
 				//========================================================================================
 				$.ajax({
@@ -355,8 +350,9 @@ $(document).ready(
 					async:false,
 					success: function(stdtListResponse) {
 						
-						console.log(targetClassId);
+						console.log("targetClassId : "+targetClassId);
 						
+						clearTable();
 						var stdtList = stdtListResponse.stdtList;
 		
 						//입력 시작
@@ -452,3 +448,8 @@ $(document).ready(
 		//End
 	}
 //End : 이수 상태 변경
+
+//초기화 버튼에 필요한 함수 할당
+function reset(){
+	
+}

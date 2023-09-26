@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -119,8 +120,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly) {
-		return managerRepository.getWlogListByClssIds(clssId, startDate, endDate, stdtNm, isDelete, resnOnly);
+	public List<WorklogDTO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly) {
+		return managerRepository.getWlogListByClssIds(clssId, startDate, endDate, keyword, isDelete, resnOnly);
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -127,6 +128,8 @@ public class ManagerController {
 		// classDetailList 객체를 가져와서 모델에 추가
 		List<FileVO> classFileList = studentService.selectAllClassFile(classId);
 		model.addAttribute("classFileList", classFileList);
+		
+		model.addAttribute("title", "교육 과정 상세");
 		
 		return "manager/class_detail";
 	}
@@ -261,7 +264,7 @@ public class ManagerController {
 			,@RequestParam(required = false) String startDate
 			,@RequestParam(required = false) String endDate
 			,@RequestParam(required = false) String wlogCd
-			,@RequestParam(required = false) String stdtNm
+			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
 			) {
@@ -279,16 +282,16 @@ public class ManagerController {
 		String title = "출퇴근 기록";
 		
 		//reqParam == null ? 초기화
-		if (startDate == null) {
-			startDate = String.valueOf(YearMonth.now().atDay(1));
-		} else {
-			startDate = httpServletRequest.getParameter("startDate");
-		}
-		if (endDate == null) {
-			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
-		} else {
-			endDate = httpServletRequest.getParameter("endDate");
-		}
+//		if (startDate == null) {
+//			startDate = String.valueOf(YearMonth.now().atDay(1));
+//		} else {
+//			startDate = httpServletRequest.getParameter("startDate");
+//		}
+//		if (endDate == null) {
+//			endDate = String.valueOf(YearMonth.now().atEndOfMonth());
+//		} else {
+//			endDate = httpServletRequest.getParameter("endDate");
+//		}
 		//End : reqParam == null ? 초기화
 		//------------------------------------------------------------------------------------
 		
@@ -308,15 +311,16 @@ public class ManagerController {
 			}
 		}
 		
-		List<WorklogVO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, stdtNm, isDelete, resnOnly);
+		List<WorklogDTO> wlogList = new ArrayList<WorklogDTO>();
+		if(clssId != null) {
+			wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		}
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
 		model.addAttribute("title", title);
 		return "manager/wlog_list";
 	}
-	
-	
 	
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
@@ -412,11 +416,23 @@ public class ManagerController {
 			,@RequestParam(required = false) String startDate
 			,@RequestParam(required = false) String endDate
 			,@RequestParam(required = false) String wlogCd
-			,@RequestParam(required = false) String stdtNm
+			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
 			) {
 		
-	return null;
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		
+		Map<String, Object> wlogListResponse = new HashMap<>();
+		wlogListResponse.put("wlogList", wlogList);
+		return wlogListResponse;
 	}
 }

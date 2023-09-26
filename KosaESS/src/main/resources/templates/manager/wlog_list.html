@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/include/manager_header :: header}">
+<head th:replace="~{/include/manager_header_2 :: header}">
 <meta charset="UTF-8">
 </head>
 <head>
@@ -39,12 +39,20 @@
 								</select>
 							</td>
 							<td class="search_filter_name">기간</td>
-							<td class="search_filter_input"><input type="date" id="startDate"><span> ~ </span><input type="date" id="endDate"></td>
+							<td class="search_filter_input">
+								<input type="date" id="startDate" min="1980-01-01"><span> ~ </span><input type="date" id="endDate" min="1980-01-01">
+								<span>이번 달</span>
+								<input type="radio" name="default_period" id="this_month" value="thisMonth">
+								<span>이번 주</span>
+								<input type="radio" name="default_period" id="this_week" value="thisWeek">
+								<span>시작~종료</span>
+								<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
+							</td>
 						</tr>
 						<tr class="search_filter_table_row">
 							<td class="search_filter_name">교육생 이름</td>
 							<td class="search_filter_input">
-								<input type="text" id="search_by_stdt_name">
+								<input type="text" id="search_keyword">
 							</td>
 							<td class="search_filter_name">출석 상태</td>
 							<td class="search_filter_input">
@@ -59,8 +67,8 @@
 							<td class="search_filter_name"></td>
 							<td class="search_filter_input">
 								
-								<span>사유서 포함</span><input type="checkbox" id="fileContainedOnly">
-								<span>삭제</span><input type="checkbox" id="isDelete">
+								<span>사유서 포함 된 기록만 보기</span><input type="checkbox" id="fileContainedOnly">
+								<span>삭제 된 기록 보기</span><input type="checkbox" id="isDelete">
 							</td>
 						</tr>
 					</table>
@@ -68,12 +76,12 @@
 
 				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
-					<button class="search_filter_btn" th:id="searchButton" onclick="search()">검색</button>
+					<button class="search_filter_btn" id="searchButton" onclick="search()">검색</button>
 				</div>
 				<!-- End : 검색 버튼 -->
 			</div>
 			<!-- End : 검색 필터 테이블-->
-
+			
 			<!-- table 시작 -->
 			<table id="wlog_list_table">
 
@@ -81,13 +89,14 @@
 					<tr class="wlog_list_thead_row">
 						<th>번호</th>
 						<th>이름</th>
+						<th>이메일</th>
 						<th>출근</th>
 						<th>퇴근</th>
 						<th>출석 인정 시간</th>
-						<th>출석 상태</th>
+						<th>출석 상태</th><!-- 셀렉박스 -->
 						<th>삭제 여부</th>
 						<th>사유서</th>
-						<th>처리 상태</th>
+						<th>처리 상태</th><!-- 사유서 모달에서 변경함 -->
 					</tr>
 				</thead>
 
@@ -95,6 +104,7 @@
 					<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
 						<td th:text="${wlogStat.count}">번호</td>
 						<td th:text="${wlog.stdtId}">이름</td>
+						<td th:text="${wlog.userEmail}">이메일</td>
 						<td th:text="${wlog.inTm}">출근 기록</td>
 						<td th:text="${wlog.outTm}">퇴근 기록</td>
 						<td th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1) + ' h'}">출석 인정 시간</td>

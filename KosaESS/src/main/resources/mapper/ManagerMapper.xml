@@ -237,11 +237,12 @@
 		]]>
 	</select >
 	
-	<select id="getWlogListByClssIds" resultType="com.finalprj.kess.model.WorklogVO">
+	<select id="getWlogListByClssIds" resultType="com.finalprj.kess.dto.WorklogDTO">
 		<![CDATA[
 			SELECT
 				w.wlog_id
 				, s.stdt_nm AS stdtId --이름
+				, s.user_email AS userEmail --이메일
 				, in_tm --출근
 				, out_tm --퇴근 시간
 				, wlog_total_tm --출석 인정 시간
