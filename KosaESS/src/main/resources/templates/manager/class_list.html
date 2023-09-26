@@ -44,9 +44,10 @@
 							</li>
 						</ul>
 					</div>
-				</div>
-				<div class="search_by_name_btn_wrap">
-					<input type="button" id="search_by_name_btn" value="검색" onclick="search()">
+					<div class="search_btn_wrap">
+						<input type="button" id="search_reset_btn" value="초기화" onclick="search()">
+						<input type="button" id="search_by_name_btn" value="검색" onclick="search()">
+					</div>
 				</div>
 			</div>
 			<!-- End 검색 필터 부분 -->
@@ -69,11 +70,11 @@
 					<tbody class="class_list_table_tbody">
 						<tr id="class_list" th:each="class:${classList}" class="class_list_table_row">
 							<td th:text="${classStat.count}">row number</td>
-							<td><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
+							<td class="variable_length_cell"><a th:text="${class.clssNm}" th:href="@{/manager/class/__${class.clssId}__}"></a></td>
 							<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
-							<td th:text="${class.clssAdr}">class address</td>
+							<td class="variable_length_cell" th:text="${class.clssAdr}">class address</td>
 							<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student?classId=__${class.clssId}__}"></a><span th:text="|/${class.limitCnt}|"></span></td>
-							<td th:text="${class.clssCd}">status</td>
+							<td class="variable_length_cell" th:text="${class.clssCd}">status</td>
 						</tr>
 					</tbody>
 				</table>

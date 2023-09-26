@@ -5,12 +5,11 @@
 </head>
 <head>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<link th:href="@{/css/manager/manager_class_detail.css}"
-	rel="stylesheet" />
-<link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet">
+<link th:href="@{/css/manager/manager_class_detail.css}"rel="stylesheet" />
+<!-- <link th:href="@{/css/manager/manager_post_list.css}" rel="stylesheet"> -->
 <link th:href="@{/css/student/header.css}" rel="stylesheet">
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
-<link th:href="@{/css/student/class_detail.css}" rel="stylesheet">
+<!-- <link th:href="@{/css/student/class_detail.css}" rel="stylesheet"> -->
 </head>
 <body>
 	<!-- 서브바 부분 -->
@@ -18,100 +17,134 @@
 	<!-- End 서브바 -->
 
 	<!-- 컨텐츠 부분 -->
-	<div class="home-section">
-		<!-- title -->
-		<div class="title" th:text="${title}">Title</div>
-		<!-- content wrap-->
-		<div class="content_wrap">
-			<!-- 검색 필터 부분 -->
+	<div class="container" style="display: flex;">
+		<div >
+			<!-- title -->
+			<div class="title" th:text="${title}">Title</div>
+			<!-- content wrap-->
+			<div class="content_wrap">
+				<!-- 검색 필터 부분 -->
 
-			<div class="content">
-				<table>
-					<tr>
-						<th>이름</th>
-						<td colspan="5" th:text="${clss.clssNm}"></td>
-						<th>교육 상태</th>
-						<td style="width: 10%;" th:text="${clss.cmcdNm}"></td>
-					</tr>
-					<tr>
-						<th>지원 기간</th>
-						<td colspan="2"
-							th:text="${clss.aplyStartDd} + ' ~ ' + ${clss.aplyEndDd}"></td>
+				<div class="content">
+					<table class="class_detail_table">
+						<tr>
+							<th>교육명</th>
+							<td class="variable_length_content" colspan="5" th:text="${classDetail.clssNm}"></td>
+							<th>교육 상태</th>
+							<td class="fixed_length_content" style="width: 10%;" th:text="${classDetail.cmcdNm}"></td>
+						</tr>
+						<tr>
+							<th>지원 기간</th>
+							<td colspan="2" class="fixed_length_content"><span
+								th:if="${classDetail.aplyStartDd == null}">미정</span> <span
+								th:if="${classDetail.aplyStartDd != null}"
+								th:text="${classDetail.aplyStartDd} + ' ~ ' +${classDetail.aplyEndDd}"></span></td>
 
-						<th>교육 기간</th>
-						<td colspan="2"
-							th:text="${clss.clssStartDd}+ ' ~ ' + ${clss.clssEndDd}"></td>
-						<th>업무담당자</th>
-						<td th:text="${clss.mngrNm}"></td>
-					</tr>
-					<tr>
-						<th>회사</th>
-						<td colspan="3" th:text="${clss.cmpyNm}"></td>
-						<th>교육 장소</th>
-						<td colspan="3" th:text="${clss.clssAdr}"></td>
-
-					</tr>
-					<tr>
-						<th>총 이수 시간</th>
-						<td th:text="${clss.clssTotalTm} + '시간'"></td>
-						<th>시작 시간</th>
-						<td th:text="${clss.setInTime} + '시'"></td>
-						<th>종료 시간</th>
-						<td th:text="${clss.setOutTime}+ '시'"></td>
-						<th>수강 정원</th>
-						<td>
-							<a th:text="${clss.rgstCnt}" th:href="@{/manager/student?classId=__${clss.clssId}__}"></a>
-							<span th:text="| / ${clss.limitCnt} 명|"></span>
-						</td>
-					</tr>
-				</table>
-				<div>
-					<div>
-						<h3>교육 주요 내용</h3>
-						<h4 th:text="${clss.clssContent}"></h4>
-					</div>
-					<div class="crclTable">
-						<h3>교육 커리큘럼</h3>
-						<table>
-							<tr>
-								<th>강의명</th>
-								<th style="width: 20%;">과목명</th>
-								<th style="width: 24%;">강사이름</th>
-								<th style="width: 15%;">이수시간</th>
-							</tr>
-							<tr th:each="CurriculumDetailDTO : ${curriculumlist}">
-								<td style="width: 35%;" th:text="${CurriculumDetailDTO.lctrNm}"></td>
-								<td th:text="${CurriculumDetailDTO.sbjtNm}"></td>
-								<td th:text="${CurriculumDetailDTO.profNm}"></td>
-								<td class="lctrTm" th:text="${CurriculumDetailDTO.lctrTm}"></td>
-							</tr>
-							<tfoot>
-								<tr>
-									<th colspan="3">총 이수 시간</th>
-									<td class="lctrTotalTm"></td>
+							<th>교육 기간</th>
+							<td class="fixed_length_content" colspan="2"><span
+								th:if="${classDetail.clssStartDd == null}">미정</span> <span
+								th:if="${classDetail.clssStartDd!= null}"
+								th:text="${classDetail.clssStartDd} + ' ~ ' +${classDetail.clssEndDd}"></span></td>
+							<th>업무담당자</th>
+							<td class="fixed_length_content"><span th:if="${classDetail.mngrNm == null}">미정</span><span
+								th:if="${classDetail.mngrNm!= null}"
+								th:text="${classDetail.mngrNm}"></span></td>
+						</tr>
+						<tr>
+							<th>회사</th>
+							<td colspan="3"><span th:if="${classDetail.cmpyNm == null}">미정</span><span
+								class="variable_length_content"
+								th:if="${classDetail.cmpyNm!= null}"
+								th:text="${classDetail.cmpyNm}"></span></td>
+							<th>교육 장소</th>
+							<td colspan="3"><span th:if="${classDetail.clssAdr == null}">미정</span><span
+								class="variable_length_content"
+								th:if="${classDetail.clssAdr!= null}"
+								th:text="${classDetail.clssAdr}"></span></td>
+						</tr>
+						<tr>
+							<th>총 이수 시간</th>
+							<td class="fixed_length_content"><span th:if="${classDetail.clssTotalTm == null}">미정</span><span
+								th:if="${classDetail.clssTotalTm!= null}"
+								th:text="${classDetail.clssTotalTm}+ '시간'"></span></td>
+							<th>시작 시간</th>
+							<td class="fixed_length_content"><span th:if="${classDetail.setInTime == null}">미정</span><span
+								th:if="${classDetail.setInTime!= null}"
+								th:text="${classDetail.setInTime}+ '시'"></span></td>
+							<th>종료 시간</th>
+							<td class="fixed_length_content"><span th:if="${classDetail.setOutTime == null}">미정</span><span
+								th:if="${classDetail.setOutTime!= null}"
+								th:text="${classDetail.setOutTime}+ '시'"></span></td>
+							<th>수강 정원</th>
+							<td class="fixed_length_content">
+							<span th:if="${classDetail.limitCnt == null}">미정</span>
+							<span th:if="${classDetail.limitCnt!= null}"><a th:text="${classDetail.rgstCnt}" th:href="@{/manager/student?classId=__${classDetail.clssId}__}"></a></span>
+							<span th:if="${classDetail.limitCnt!= null}" th:text="| / ${classDetail.limitCnt}명|"></span></td>
+						</tr>
+						<tr>
+							<th>관련 파일</th>
+							<td colspan="7"><ul
+									style="margin: 0; text-align: left; padding-left: 3%;">
+									<li th:each="FileVO : ${classFileList}"><a
+										style="width: 100%; display: flex;"
+										th:if="${FileVO.fType == 'application'}"
+										th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
+										th:title="${FileVO.fileNm}"> <img style="height: 20px;"
+											th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+											style="margin-left: 5px;" th:text="${FileVO.fileNm}"></span><br>
+									</a></li>
+								</ul></td>
+						</tr>
+					</table>
+					<div class="class_detail_div">
+						<div class="class_about">
+							<h3>교육 주요 내용</h3>
+							<div class="class_about_contents">
+								<h4 th:text="${classDetail.clssContent}"></h4>
+							</div>
+						</div>
+						<div class="crclTable">
+							<h3>교육 커리큘럼</h3>
+							<table class="crcl_table">
+								<thead>
+									<tr>
+										<th style="width: 45%;">강의명</th>
+										<th style="width: 25%;">과목명</th>
+										<th style="width: 15%;">강사이름</th>
+										<th style="width: 15%;">이수시간</th>
+									</tr>
+								</thead>
+								<tr th:each="CurriculumDetailDTO : ${curriculumlist}">
+									<td class="variable_length_content" th:text="${CurriculumDetailDTO.lctrNm}"></td>
+									<td class="variable_length_content" th:text="${CurriculumDetailDTO.sbjtNm}"></td>
+									<td class="fixed_length_content" th:text="${CurriculumDetailDTO.profNm}"></td>
+									<td class="fixed_length_content" id="lctrTm" th:text="${CurriculumDetailDTO.lctrTm}"></td>
 								</tr>
-							</tfoot>
-						</table>
-					</div>
-					<div class="classFile">
-						<ul>
-							<li th:each="FileVO : ${classFileList}"><a
-								th:if="${FileVO.fType == 'image'}"> <img
-									th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
-							</a> <a th:if="${FileVO.fType != 'image'}"
-								th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
-								th:title="${FileVO.fileNm}"> <img style="width: 40px;"
-									th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
-									th:text="${FileVO.fileNm}"></span>><br>
-							</a></li>
-						</ul>
+								<tfoot>
+									<tr>
+										<th colspan="3" style="border-bottom: 0;">총 이수 시간</th>
+										<td id="lctrTotalTm"></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div class="classFile">
+							<ul>
+								<li th:each="FileVO : ${classFileList}"><a
+									th:if="${FileVO.fType == 'image'}"> <img
+										th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
+								</a></li>
+							</ul>
+							<h5>기타사항</h5>
+							<h5 th:text="${classDetail.clssEtc}"></h5>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="go_to_list_btn_wrap">
-				<input type="button" value="목록" class="go_to_list_btn"
-					th:onclick="|location.href='@{/manager/class}'|">
+				<div class="go_to_list_btn_wrap">
+					<input type="button" value="목록" class="go_to_list_btn"
+						th:onclick="|location.href='@{/manager/class}'|">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -119,7 +152,7 @@
 		let totalLctrTm = 0;
 
 		//각 lctrTm 값을 가져와서 totalLctrTm에 더합니다.
-		document.querySelectorAll('.lctrTm').forEach(function(element) {
+		document.querySelectorAll('#lctrTm').forEach(function(element) {
 			const lctrTmValue = parseInt(element.textContent);
 			if (!isNaN(lctrTmValue)) {
 				totalLctrTm += lctrTmValue;
@@ -127,7 +160,7 @@
 		});
 
 		//총 이수 시간을 결과를 담고 있는 요소에 설정합니다.
-		document.querySelector('.lctrTotalTm').textContent = totalLctrTm;
+		document.querySelector('#lctrTotalTm').textContent = totalLctrTm;
 	</script>
 </body>
 </html>
