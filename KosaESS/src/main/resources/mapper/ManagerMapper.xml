@@ -112,19 +112,19 @@
 				r.cmpt_cd AS job_Cd
 			FROM stdt s
 				JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
-				JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
+				JOIN (SELECT rgst.stdt_id, rgst.cmpt_cd as cmptCd, rgst.clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
 			WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
 				AND r.clss_id = #{clssId}
-			
+				AND cmptCd IN 
 		]]>
+		<foreach collection="cmptList" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 		<if test='keyword != null'>
 			<![CDATA[
 				AND ((stdt_nm like '%'||#{keyword}||'%')OR(user_email like '%'||#{keyword}||'%'))
 			]]>
 		</if>
-		<foreach collection="cmptList" item="item" open="(" separator="," close=")">
-			AND r.cmpt_cd IN #{item}
-		</foreach>
 		<![CDATA[
 			ORDER BY s.stdt_nm
 		]]>

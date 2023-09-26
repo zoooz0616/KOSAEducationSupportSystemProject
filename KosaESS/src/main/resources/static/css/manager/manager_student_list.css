@@ -63,8 +63,12 @@ select option[value=""][disabled] {
 
 .search_filter_table {
 	width: 100%;
-	font-weight: bold;
 	border-collapse: collapse;
+}
+
+.search_filter_table .search_filter_name{
+	font-weight: bold;
+	width: 10%;
 }
 
 .search_filter_table tr td {

@@ -175,20 +175,25 @@ public class ManagerController {
 		}
 		//end
 		
-		if(classId!=null) {
-			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜로 오늘 기준 이번 달의 첫날과 마지막날을 반환
-			if (startDate == null) {
-				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
-			}
-			if (endDate == null) {
-				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
-			}
-			//end
-		}
 		List<ClassVO> classList = new ArrayList<ClassVO>();
+		
 		ClassVO emptyClassVO = new ClassVO();
 		emptyClassVO.setClssNm("교육과정명을 선택하세요");
 		classList.add(emptyClassVO);
+		
+		if(classId!=null) {
+//			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜에 교육과정 시작/종료 일자를 대입
+//			if (startDate == null) {
+//				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
+//			}
+//			if (endDate == null) {
+//				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
+//			}
+//			//end
+			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
+		}else {
+			model.addAttribute("thisClass", emptyClassVO);
+		}
 
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByOnlyClssId(classId);//학생 이름 목록
 		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");//수업 목록
@@ -209,15 +214,21 @@ public class ManagerController {
 
 			// 이수율 입력하기
 			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
-			stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
+			if(Double.isNaN(stdtTmSum)) {
+				stdtTmSum = 0;
+			}
+			if(managerService.getClassDetailByClssId(classId).getClssTotalTm()==0) {
+				stdt.setCmptRate(0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()>1) {
+				stdt.setCmptRate(100.0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()<0) {
+				stdt.setCmptRate(0);
+			} else {
+				stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
+			}
 		}
 
 		model.addAttribute("title", "교육생 목록");
-		if(classId!=null) {
-			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
-		}else {
-			model.addAttribute("thisClass", emptyClassVO);
-		}
 		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
 		model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
@@ -328,11 +339,18 @@ public class ManagerController {
 				stdt.appendWlogCnt(",");
 			}
 			double stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
-			double cmptRateUnder = managerService.getClassDetailByClssId(classId).getClssTotalTm();
-			if(cmptRateUnder!=0) {
-			stdt.setCmptRate(100.0 * stdtTmSum/cmptRateUnder);}
-			else {
+			stdtTmSum = managerService.getStudentTmSumByIds(classId, stdt.getStdtId());
+			if(Double.isNaN(stdtTmSum)) {
+				stdtTmSum = 0;
+			}
+			if(managerService.getClassDetailByClssId(classId).getClssTotalTm()==0) {
 				stdt.setCmptRate(0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()>1) {
+				stdt.setCmptRate(100.0);
+			} else if(stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm()<0) {
+				stdt.setCmptRate(0);
+			} else {
+				stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
 			}
 		}
 
