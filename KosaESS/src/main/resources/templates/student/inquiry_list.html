@@ -23,6 +23,9 @@
 						placeholder="문의사항명이나 작성자를 검색하세요."> <input type="button"
 						class="searchBtn" value="검색">
 				</div>
+				<div>
+					<input type="button" class="openformBtn" value="글쓰기">
+				</div>
 			</div>
 			<table class="inquiry-table" style="width: 90%; margin: auto;">
 				<thead>
@@ -56,6 +59,31 @@
 				<div class="pages"></div>
 				<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
 					class="right" id="last_page" th:src="@{/img/last_page}"></i>
+			</div>
+		</div>
+	</div>
+	<div class="modal1" style="display: none;">
+		<div class="modalBody" style="height: 590px;">
+			<div class="modalHeader">
+				<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
+			</div>
+			<div class="modalContent">
+				<div class="upload-area">
+					<p>사유서파일을 첨부하세요.</p>
+					<div style="width: 80%;">
+						<input class="upload-name" value="선택된 첨부파일이 없습니다"
+							placeholder="선택된 첨부파일이 없습니다" readonly> <label
+							for="fileInput">파일찾기</label> <input type="file" name="file"
+							id="fileInput" class="fileInput" accept="image/*">
+					</div>
+				</div>
+				<div>
+					<textarea class="resnText" placeholder="사유서 내용을 작성하세요."></textarea>
+				</div>
+				<div class="modalFooter">
+					<button type="reset" class="closeBtn">취소</button>
+					<button type="submit" class="submitBtn">수정</button>
+				</div>
 			</div>
 		</div>
 	</div>

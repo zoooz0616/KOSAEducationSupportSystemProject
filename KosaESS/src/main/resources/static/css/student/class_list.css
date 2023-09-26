@@ -156,6 +156,10 @@ input::placeholder {
 	color: #0E5881;
 }
 
+.list-style a:hover {
+	text-decoration: underline;
+}
+
 .list-style td:nth-child(1) {
 	width: 4%;
 	text-align: center;
@@ -239,4 +243,40 @@ input:checked+lable::before {
 	background: white;
 	border-style: none;
 	height: 60px;
+}
+
+.paging {
+	width: 90%;
+	margin: auto;
+	margin-top: 1%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.paging i {
+	font-size: 15px;
+	border: black;
+}
+
+.pages span {
+	margin: 5px 10px;
+	font-size: 22px;
+	border: black;
+	padding: 5px 12px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.pages {
+	align-items: center;
+	display: flex;
+}
+
+.paging .active {
+	background: #E7EFF3;
+}
+
+a, .searchBtn, select {
+	cursor: pointer;
 }

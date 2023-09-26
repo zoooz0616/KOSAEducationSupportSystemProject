@@ -342,7 +342,26 @@ td button {
 .postTable td:nth-child(5) {
 	width: 13%;
 }
+.postTable th:nth-child(1) {
+	width: 7%;
+}
 
+.postTable th:nth-child(2) {
+	width: 52%;
+	font-weight: bold;
+}
+
+.postTable th:nth-child(3) {
+	width: 15%;
+}
+
+.postTable th:nth-child(4) {
+	width: 13%;
+}
+
+.postTable th:nth-child(5) {
+	width: 13%;
+}
 .reply {
 	list-style: none;
 	border: #0E5881;
