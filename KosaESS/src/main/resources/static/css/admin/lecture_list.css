@@ -93,7 +93,7 @@
 }
 
 .content_info_wrap {
-	    display: flex;
+	display: flex;
     justify-content: space-between;
 	font-weight: bold;
 }
@@ -101,9 +101,11 @@
 .content_info_wrap .cnt {
 	color: #0E5881;
 }
+.content_info_button_wrap {
+	display:flex;
+}
 
 .content_info_wrap button {
-	width: 60px;
 	border: none;
 	border-radius: 3px;
 	background: #0E5881;
@@ -111,7 +113,13 @@
 	font-size: 15px;
 	font-weight: bold;
 	margin: 5px;
+	padding: 5px;
 	height: 30px;
+	display: flex;
+}
+
+.content_info_button_wrap > button > img{
+	width:20px;
 }
 
 .insert_professor div span {
@@ -120,7 +128,6 @@
 }
 
 .insert_btn {
-	width: 60px;
 	border: none;
 	border-radius: 3px;
 	background: #0E5881;
@@ -128,6 +135,11 @@
 	font-weight: bold;
 	padding: 5px;
 	margin-left: 5px;
+	display:flex;
+}
+
+.insert_btn > img{
+	width:20px;
 }
 
 .table_wrap table tr td button {

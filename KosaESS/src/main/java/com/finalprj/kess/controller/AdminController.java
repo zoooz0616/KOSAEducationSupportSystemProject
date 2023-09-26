@@ -1485,15 +1485,35 @@ public class AdminController {
 
 		return "admin/manager_list";
 	}
+	
+	/** 
+	 * 업무담당자 등록시 이메일 유효성 검사
+	 * @author : eunji
+	 * @date : 2023. 9. 26.
+	 * @parameter : managerEmail
+	 * @return : String
+	 */
+	@PostMapping("/manager/check_email")
+	@ResponseBody
+	public String managerEmailCheck(@RequestParam String managerEmail) {
+		int managerCnt = adminService.getManagerEmailCnt(managerEmail);
+		if (managerCnt == 0) {
+			return "success";
+		}else {
+			return "fail";
+		}
+	}
+
 
 	/** 
 	 * 업무담당자 등록
 	 * @author : eunji
 	 * @date : 2023. 9. 18.
-	 * @parameter : managerNm, managerTel, managerEmail,managerEmail
+	 * @parameter : managerNm, managerTel, managerEmail,managerPwd
 	 * @return : String
 	 */
-	@RequestMapping("/manager/insert")
+	@PostMapping("/manager/insert")
+	@ResponseBody
 	public String managerInsert(@RequestParam String managerNm, @RequestParam String managerTel, 
 			@RequestParam String managerEmail, @RequestParam String managerPwd) {
 		ManagerVO managerVO = new ManagerVO();
@@ -1505,7 +1525,7 @@ public class AdminController {
 
 		adminService.insertManagerVO(managerVO);
 
-		return "redirect:/admin/manager/list";
+		return "success";
 	}
 
 	/**

@@ -844,8 +844,7 @@
 		user_email,
 		mngr_nm,
 		mngr_tel,
-		rgster_id,
-		
+		rgster_id
 	)
 	values(
 		#{mngrId}, 
@@ -1242,7 +1241,13 @@ order by stdt.stdt_nm
 	]]>
 	</select>
 
-
+	<select id="getManagerEmailCnt" parameterType="string" resultType="int">
+	<![CDATA[
+		select count(user_email)
+		from lgin
+		where user_email = #{managerEmail} and role_cd = 'ROL0000003' and user_cd != 'USR0000003'
+	]]>
+	</select>
 
 
 

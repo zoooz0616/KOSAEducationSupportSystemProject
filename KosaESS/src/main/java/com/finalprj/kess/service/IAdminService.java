@@ -148,4 +148,5 @@ public interface IAdminService {
 	void deleteInquiryReply(String replyId);
 	int getFileCnt(String fileId);
 	List<StudentVO> getStudentList();
+	int getManagerEmailCnt(String managerEmail);
 }
