@@ -220,27 +220,59 @@
 	<insert id="insertClassVO"
 		parameterType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
-		insert into clss
-		values(#{clssId}, #{mngrId},#{cmpyId},#{clssNm},#{clssContent},#{limitCnt},
-		#{aplyStartDt},#{aplyEndDt},#{clssStartDd},#{clssEndDd},#{setInTm},#{setOutTm},#{clssCd},
-		#{clssAdr},#{clssTotalTm},#{fileId},#{clssEtc},systimestamp, #{rgsterId}, null, null, 'N')		
+		insert into clss (
+			clss_id, 
+			mngr_id, 
+			cmpy_id, 
+			clss_nm, 
+			clss_content, 
+			limit_cnt, 
+			aply_start_dt, 
+			aply_end_dt, 
+			clss_start_dd, 
+			clss_end_dd, 
+			set_in_tm, 
+			set_out_tm, 
+			clss_cd,
+			clss_adr, 
+			clss_total_tm, 
+			file_id, 
+			clss_etc, 
+			rgster_id)
+		values(
+			#{clssId}, 
+			#{mngrId},
+			#{cmpyId},
+			#{clssNm},
+			#{clssContent},
+			#{limitCnt},
+			#{aplyStartDt},
+			#{aplyEndDt},
+			#{clssStartDd},
+			#{clssEndDd},
+			#{setInTm},
+			#{setOutTm},
+			#{clssCd},
+			#{clssAdr},
+			#{clssTotalTm},
+			#{fileId},
+			#{clssEtc}, 
+			#{rgsterId})		
 	]]>
 	</insert>
 
 	<insert id="insertCurriculumVO"
 		parameterType="com.finalprj.kess.model.CurriculumVO">
 		<![CDATA[
-        insert into crcl
-        VALUES
-        (
-        #{clssId},
-        #{lctrId},
-        systimestamp,
-        #{rgsterId},
-        null,
-        null,
-        'N'
-        )
+        insert into crcl (
+        	clss_id,
+        	lctr_id,
+        	rgster_id)
+        VALUES(
+        	#{clssId},
+        	#{lctrId},
+        	#{rgsterId}
+        	)
 		]]>
 	</insert>
 
@@ -276,15 +308,14 @@
 	]]>
 	</select>
 
-	<update id="deleteFile">
-		update flup
-		set delete_yn = 'Y'
-		where file_id=#{fileId} and file_sub_id
-		in (
-		<foreach item="subId" collection="fileSubIds" separator=",">
-			#{subId}
+	<update id="deleteFile" parameterType="string">
+		<foreach collection="fileSubIds" item="subId"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update flup
+			set delete_yn =
+			'Y'
+			where file_id=#{fileId} and file_sub_id =#{subId}
 		</foreach>
-		)
 	</update>
 
 	<select id="getMaxFileSubId" parameterType="string"
@@ -441,8 +472,14 @@
 	<insert id="insertSubjectVO"
 		parameterType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
-	insert into sbjt
-	values (#{sbjtId}, #{sbjtNm}, systimestamp, 'MNGR000001', null, null, 'N')
+	insert into sbjt (
+		sbjt_id,
+		sbjt_nm,
+		rgster_id)
+	values (
+		#{sbjtId}, 
+		#{sbjtNm}, 
+		'MNGR000001')
 	]]>
 	</insert>
 
@@ -465,8 +502,14 @@
 	<insert id="insertProfessorVO"
 		parameterType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
-	insert into prof
-	values (#{profId}, #{profNm}, #{profTel}, #{profEmail}, systimestamp, 'MNGR000001', null, null, 'N')
+	insert into prof (
+		prof_id,
+		prof_nm,
+		prof_tel,
+		prof_email,
+		rgster_id)
+	values (
+		#{profId}, #{profNm}, #{profTel}, #{profEmail},'MNGR000001')
 	]]>
 	</insert>
 
@@ -489,8 +532,10 @@
 	<insert id="insertLectureVO"
 		parameterType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
-	insert into lctr
-	values (#{lctrId}, #{sbjtId}, #{profId}, #{lctrNm}, #{lctrTm}, null, systimestamp, 'MNGR000001', null, null, 'N')
+	insert into lctr (
+		lctr_id, sbjt_id, prof_id, lctr_nm, lctr_tm, rgst_etc, rgster_id
+	)
+	values (#{lctrId}, #{sbjtId}, #{profId}, #{lctrNm}, #{lctrTm}, null, 'MNGR000001')
 	]]>
 	</insert>
 
@@ -544,7 +589,7 @@
 		join cmcd on cmcd.cmcd_id = post.post_cd
 		join mngr on mngr.mngr_id = post.rgster_id
 		where post.post_id like 'NOTC%' and post.delete_yn='N'
-		order by post_id desc
+		order by post_cd, post_id desc
 	]]>
 	</select>
 
@@ -566,7 +611,7 @@
 		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
 		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
 		WHERE post_id LIKE 'INQY%' AND delete_yn = 'N'
-		ORDER BY post.rgst_dt DESC
+		order by post_cd, post_id desc
 		]]>
 	</select>
 
@@ -625,8 +670,21 @@
 	<insert id="insertNoticeVO"
 		parameterType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
-		insert into post
-		values(#{postId}, null, #{postTitle}, #{postContent},0, 'PST0000001', #{fileId}, systimestamp, #{rgsterId}, null, null, 'N')
+		insert into post (
+			post_id,
+			post_title,
+			post_content,
+			post_cd,
+			file_id,
+			rgster_id
+		)
+		values(
+			#{postId},
+			#{postTitle}, 
+			#{postContent},
+			'PST0000001', 
+			#{fileId},
+			#{rgsterId})
 	]]>
 	</insert>
 
@@ -636,6 +694,8 @@
 		select *
 		from post
 		join cmcd on cmcd.cmcd_id = post.post_cd
+		left join stdt on stdt.stdt_id = post.rgster_id
+		left join mngr on mngr.mngr_id = post.rgster_id
 		where post_id = #{postId}
 	]]>
 	</select>
@@ -702,7 +762,7 @@
 			</when>
 		</choose>
 		and post_id not like 'RPLY%'
-		order by post_id desc
+		order by post_cd, post_id desc
 	</select>
 
 	<select id="getReplyList" parameterType="string"
@@ -710,7 +770,7 @@
 	<![CDATA[
 		select *
 		from post
-		where master_id =#{postId}
+		where master_id =#{postId} and delete_yn='N'
 		order by rgst_dt
 	]]>
 	</select>
@@ -726,8 +786,21 @@
 	<insert id="insertReplyVO"
 		parameterType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
-		insert into post
-		values(#{postId}, #{masterId}, #{postTitle}, #{postContent}, 0, 'PST0000001', null, systimestamp, #{rgsterId}, null, null, 'N')
+		insert into post (
+			post_id,
+			master_id,
+			post_title,
+			post_content,
+			post_cd,
+			rgster_id
+		)
+		values(
+			#{postId}, 
+			#{masterId}, 
+			#{postTitle}, 
+			#{postContent},
+			'PST0000001',
+			#{rgsterId})
 	]]>
 	</insert>
 
@@ -749,16 +822,37 @@
 	<insert id="insertLgin"
 		parameterType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
-	insert into lgin
-	values(#{userEmail}, #{userPwd}, null, 'ROL0000003', 'USR0000001')
+	insert into lgin (
+		user_email,
+		user_pwd,
+		role_cd,
+		user_cd
+	)
+	values(
+		#{userEmail}, 
+		#{userPwd},
+		'ROL0000003', 
+		'USR0000001')
 	]]>
 	</insert>
 
 	<insert id="insertManager"
 		parameterType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
-	insert into mngr
-	values(#{mngrId}, #{userEmail}, #{mngrNm}, #{mngrTel}, systimestamp, 'MNGR000001', null, null)
+	insert into mngr (
+		mngr_id,
+		user_email,
+		mngr_nm,
+		mngr_tel,
+		rgster_id,
+		
+	)
+	values(
+		#{mngrId}, 
+		#{userEmail}, 
+		#{mngrNm}, 
+		#{mngrTel},
+		'MNGR000001')
 	]]>
 	</insert>
 
@@ -769,11 +863,17 @@
 		from mngr
 		join lgin on lgin.user_email = mngr.user_email
 		join cmcd on cmcd.cmcd_id = lgin.user_cd
-		where mngr.user_email like #{mngrEmail}||'%'
-			and mngr.mngr_nm like #{mngrNm}||'%'
-			and lgin.role_cd = 'ROL0000003'
+		where lgin.role_cd = 'ROL0000003'
+		]]>
+		<choose>
+			<when test="searchInputCategory == 'mngr_nm'">
+				AND mngr_nm LIKE '%'||#{searchInput}||'%'
+			</when>
+			<when test="searchInputCategory == 'user_email'">
+				AND mngr.user_email LIKE '%'||#{searchInput}||'%'
+			</when>
+		</choose>
 		order by mngr_id
-	]]>
 	</select>
 
 	<update id="deleteLgin" parameterType="java.util.List">
@@ -915,8 +1015,21 @@
 	<insert id="insertCompanyVO"
 		parameterType="com.finalprj.kess.model.CompanyVO">
 	<![CDATA[
-		insert into cmpy
-		values(#{cmpyId}, #{cmpyNm}, #{cmpyTel}, #{cmpyAdr}, #{fileId}, systimestamp, 'MNGR000001', null, null, 'N')
+		insert into cmpy (
+			cmpy_id,
+			cmpy_nm,
+			cmpy_tel,
+			cmpy_adr,
+			file_id,
+			rgster_id
+		)
+		values(
+			#{cmpyId}, 
+			#{cmpyNm}, 
+			#{cmpyTel}, 
+			#{cmpyAdr}, 
+			#{fileId},
+			'MNGR000001')
 	]]>
 	</insert>
 
@@ -964,8 +1077,17 @@
 	<insert id="insertGroupCode"
 		parameterType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
-		insert into cmcd
-		values(#{cmcdId}, #{tpcdId}, #{cmcdNm}, 'Y', systimestamp, 'MNGR000001', null, null)
+		insert into cmcd (
+			cmcd_id,
+			tpcd_id,
+			cmcd_nm,
+			rgster_id
+		)
+		values(
+			#{cmcdId}, 
+			#{tpcdId}, 
+			#{cmcdNm},
+			'MNGR000001')
 	]]>
 	</insert>
 
@@ -1035,18 +1157,28 @@
 	<insert id="insertDetailcode"
 		parameterType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
-	insert into cmcd
-	values(#{cmcdId}, #{tpcdId}, #{cmcdNm}, 'Y', systimestamp, 'MNGR000001', null, null)
+	insert into cmcd (
+		cmcd_id,
+		tpcd_id,
+		cmcd_nm,
+		rgster_id
+	)
+	values(
+		#{cmcdId}, 
+		#{tpcdId}, 
+		#{cmcdNm},
+		'MNGR000001')
 	]]>
 	</insert>
 
 
-	<update id="updateDetailCode" parameterType="string">
+	<update id="updateDetailCode" parameterType="hashmap">
 	<![CDATA[
 	update cmcd
 	set
 		cmcd_nm = #{cmcdNm},
 		use_yn = #{useYn},
+		cmcd_order = #{cmcdOrder}
 		updt_dt = systimestamp,
 		updter_id ='MNGR000001'
 	where cmcd_id = #{cmcdId}
@@ -1056,17 +1188,59 @@
 	<select id="getStudentEmailByAplyId" parameterType="string"
 		resultType="string">
 		select user_email from stdt
-		where stdt_id = (select stdt_id from aply where aply_id=#{aplyId})
+		where stdt_id = (select stdt_id
+		from aply where aply_id=#{aplyId})
 	</select>
-	
+
 	<select id="getClssNmByAplyId" parameterType="string"
 		resultType="string">
 		select clss_nm
 		from clss
-		where clss_id = (select clss_id from aply where aply_id=#{aplyId})
+		where clss_id = (select clss_id from
+		aply where aply_id=#{aplyId})
 	</select>
 
+	<update id="deleteInquiryReply" parameterType="string">
+	<![CDATA[
+	update post
+	set 
+		delete_yn='Y',
+		updt_dt = systimestamp,
+		updter_id = 'MNGR000001'
+	where post_id = #{replyId}
+	
+	]]>
+	</update>
 
+	<select id="getFileCnt" parameterType="string" resultType="int">
+	<![CDATA[
+		select count(file_sub_id)
+		from flup
+		where file_id = #{fileId} and delete_yn='N'
+	]]>
+	</select>
+
+	<select id="getStudentList"
+		resultType="com.finalprj.kess.model.StudentVO">
+	<![CDATA[
+	select 
+    stdt.stdt_id,
+    lgin.user_email,
+    stdt.stdt_nm,
+    b.cmcd_nm as "genderNm",
+    stdt.birth_dd,
+    stdt.stdt_tel,
+    c.cmcd_nm as "jobNm",
+    a.cmcd_nm as  "userNm",
+    lgin.last_login_dt
+from stdt
+left join lgin on lgin.user_email = stdt.user_email
+left join cmcd a on a.cmcd_id = lgin.user_cd
+left join cmcd b on b.cmcd_id = stdt.gender_cd
+left join cmcd c on c.cmcd_id = stdt.job_cd
+order by stdt.stdt_nm
+	]]>
+	</select>
 
 
 

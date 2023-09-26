@@ -180,6 +180,6 @@
 	width: 15px;
 }
 
-.inquiry_check, .rgster_nm, .inquiry_num, .inquiry_file, .inquiry_hit, .inquiry_status {
+.inquiry_check, .rgster_nm, .rgst_dd, .inquiry_num, .inquiry_file, .inquiry_hit, .inquiry_status {
 	text-align: center;
 }

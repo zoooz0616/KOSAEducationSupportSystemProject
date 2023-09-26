@@ -2,18 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/include/manager_header :: header}">
 <meta charset="UTF-8">
-<title>Notice List</title>
 </head>
 <head>
 <link th:href="@{/css/admin/manager_list.css}" rel="stylesheet">
-<link href="/css/datepicker.css" rel="stylesheet" type="text/css"
-	media="all">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Air datepicker css -->
-<script src="/js/datepicker.js"></script>
-<!-- Air datepicker js -->
-<script src="/js/datepicker.ko.js"></script>
-<!-- 달력 한글 추가를 위해 커스텀 -->
 </head>
 <body>
 	<!-- 서브바-->
@@ -41,19 +33,14 @@
 			<div class="search_filter_wrap">
 				<!-- 업무담당자 명 -->
 				<div class="filter_box">
-					<div class="filter_box_title">이름</div>
-					<div>
-						<input class="search_input" id="manager_name" placeholder="이름"
-							value="" type="text" list="search_option" required>
+					<div class="filter_box_title">
+						<select class="search_input_category">
+							<option th:value="mngr_nm" th:text="이름"></option>
+							<option th:value="user_email" th:text="이메일"></option>
+						</select>
 					</div>
-				</div>
-
-				<!-- 업무담당자 이메일 -->
-				<div class="filter_box">
-					<div class="filter_box_title">이메일</div>
 					<div>
-						<input class="search_input" id="manager_email" placeholder="이메일"
-							value="" type="text" list="search_option" required>
+						<input class="search_input" type="text" id="search_input" value="">
 					</div>
 				</div>
 			</div>
@@ -120,8 +107,8 @@
 			<!-- 컨텐츠 개수와 버튼 wrap -->
 			<div class="content_info_wrap">
 				<div class="content_info">
-					<span>업무담당자 총 <span class="class_list_cnt"
-						th:text="${#lists.size(managerList)}">classListCnt</span>명
+					<span>업무담당자 총 <span class="manager_list_cnt"
+						th:text="${#lists.size(managerList)}"></span>명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
@@ -138,45 +125,53 @@
 				<table class="content_list_table" id="class_list_table">
 					<thead>
 						<tr class="content_list_th">
-							<th style="width: 30px;"><input type="checkbox" id="chkAll"></th>
-							<th>업무담당자 이름</th>
-							<th>전화번호</th>
-							<th>이메일</th>
-							<th>계정상태</th>
-							<th>마지막 로그인 일시</th>
-							<th style="width: 100px;">버튼</th>
+							<th style="width: 5%;"><input type="checkbox" id="chkAll"></th>
+							<th style="width: 5%;">번호</th>
+							<th style="width: 10%;">업무담당자 이름</th>
+							<th style="width: 20%;">전화번호</th>
+							<th style="width: 20%;">이메일</th>
+							<th style="width: 10%;">계정상태</th>
+							<th style="width: 20%;">마지막 로그인 일시</th>
+							<th style="width: 10%;">버튼</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="manager: ${managerList}">
+						<tr th:each="manager, iterStat: ${managerList}">
 							<td class="input_check_td"><input class="input_check"
 								type="checkbox" name="chk" th:value="${manager.mngrId}"></td>
-							<td>
-								<div class="update_div" th:text="${manager.mngrNm}"></div> 
-								<input type="text"
-								class="update_input mngr_nm_input" style="display: none;" th:value="${manager.mngrNm}">
+							<td class="manager_num" th:text="${iterStat.index + 1}"></td>
+							<td class="manager_name">
+								<div class="update_div" th:text="${manager.mngrNm}"></div> <input
+								type="text" class="update_input mngr_nm_input"
+								style="display: none;" th:value="${manager.mngrNm}">
 							</td>
-							<td>
-								<div class="update_div"  th:text="${manager.mngrTel}"></div> 
-								<input type="text"
-								class="update_input mngr_tel_input" style="display: none;" th:value="${manager.mngrTel}">
+							<td class="manager_tel">
+								<div class="update_div" th:text="${manager.mngrTel}"></div> 
+								<input
+								type="text" class="update_input mngr_tel_input"
+								style="display: none;" th:value="${manager.mngrTel}">
 							</td>
 							<td th:text="${manager.userEmail}"></td>
 							<td>
-								<div class="update_div"  th:text="${manager.cmcdNm}"></div> 
-								<select class="update_input mngr_status_input" style="display: none;" th:value="${manager.userCd}">
-									<option value="USR0000001">활성화</option>
-									<option value="USR0000002">휴면</option>
-								</select>
+								<div class="update_div mngr_status" th:text="${manager.cmcdNm}"></div> 
+								<select
+								class="update_input mngr_status_input" style="display: none;"
+								th:value="${manager.userCd}">
+									<option th:each="mngrCommonCode: ${mngrCommonCodeList}"
+										th:value="${mngrCommonCode.cmcdId}"
+										th:text="${mngrCommonCode.cmcdNm}"
+										th:selected="${mngrCommonCode.cmcdId == manager.userCd}"></option>
+							</select>
 							</td>
-							<td th:text="${manager.lastLoginDt}"></td>
+							<td class="last_login_dt" th:text="${#dates.format(manager.lastLoginDt,'yyyy-MM-dd hh:mm:ss')}">
+							</td>
 							<td class="btn_td">
-							<button
-									class="update_btn" type="button" onclick="editRow(this)">수정</button>
+								<button class="update_btn" type="button" onclick="editRow(this)">수정</button>
 								<button class="save_btn" type="button" style="display: none;"
 									onclick="saveRow(this)">저장</button>
 								<button class="cancel_btn" type="button" style="display: none;"
-									onclick="cancelEdit(this)">취소</button></td>
+									onclick="cancelEdit(this)">취소</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -232,19 +227,29 @@
 					});
 				});
 
-		//초기화
+		//초기화 버튼
 		function resetInput() {
-			var inputElements = document.querySelectorAll(".search_input");
+			// 모든 요소를 선택
+			const inputElement1 = document
+					.querySelector(".search_input_category");
+			inputElement1.value = "mngr_nm";
 
-			inputElements.forEach(function(input) {
-				input.value = "";
-			});
+			// 모든 요소를 선택
+			const inputElement2 = document.querySelector(".search_input");
+			inputElement2.value = "";
 		}
 
 		//조회
 		function search() {
-			var mngrNm = document.querySelector("#manager_name").value;
-			var mngrEmail = document.querySelector("#manager_email").value;
+			//input값 비어있으면 모두 입력하라고 알리기
+			var searchInput = document.querySelector("#search_input").value;
+			if (searchInput.value === null) {
+				alert("모든 요소를 입력하세요.");
+			} else{
+				var searchInputCategory = document
+				.querySelector(".search_input_category").value;
+				
+				console.log(searchInput + searchInputCategory);
 
 			$
 					.ajax({
@@ -252,13 +257,18 @@
 						async : true,
 						method : 'POST',
 						data : {
-							mngrNm : mngrNm,
-							mngrEmail : mngrEmail
+							searchInputCategory : searchInputCategory,
+							searchInput : searchInput,
 						},
 						success : function(response) {
-
 							var managerList = response.managerList;
 							console.log(managerList);
+							
+							//건수 초기화
+							var cnt = document.querySelector(".manager_list_cnt");
+							cnt.innerHTML = managerList.length;
+							
+							
 							// tbody 요소 찾기
 							var tbody = document.querySelector("tbody");
 
@@ -287,33 +297,43 @@
 								inputCheck.value = manager.mngrId;
 								tdCheck.appendChild(inputCheck);
 								tr.appendChild(tdCheck);
+								
+								//Num
+								var tdNum = document.createElement("td");
+								tdNum.className ="manager_num";
+								tdNum.innerText = i+1;
+								tr.appendChild(tdNum);
 
 								//mngrNm
 								var tdMngrNm = document.createElement("td");
+								tdMngrNm.className="manager_name";
 								var divMngrNm = document.createElement("div");
 								divMngrNm.className = "update_div";
 								divMngrNm.textContent = manager.mngrNm;
-								var inputMngrNm = document.createElement("input");
-								inputMngrNm.type="text";
-								inputMngrNm.className="update_input mngr_nm_input";
+								var inputMngrNm = document
+										.createElement("input");
+								inputMngrNm.type = "text";
+								inputMngrNm.className = "update_input mngr_nm_input";
 								inputMngrNm.style.display = "none";
 								inputMngrNm.value = manager.mngrNm;
-								
+
 								tdMngrNm.appendChild(divMngrNm);
 								tdMngrNm.appendChild(inputMngrNm);
 								tr.appendChild(tdMngrNm);
 
 								//mngrTel
 								var tdMngrTel = document.createElement("td");
+								tdMngrTel.className="manager_tel";
 								var divMngrTel = document.createElement("div");
-								divMngrTel.className="update_div";
+								divMngrTel.className = "update_div";
 								divMngrTel.textContent = manager.mngrTel;
-								var inputMngrTel = document.createElement("input");
-								inputMngrTel.type="text";
-								inputMngrTel.className="update_input mngr_tel_input";
-								inputMngrTel.style.display="none";
-								inputMngrTel.value= manager.mngrTel;
-								
+								var inputMngrTel = document
+										.createElement("input");
+								inputMngrTel.type = "text";
+								inputMngrTel.className = "update_input mngr_tel_input";
+								inputMngrTel.style.display = "none";
+								inputMngrTel.value = manager.mngrTel;
+
 								tdMngrTel.appendChild(divMngrTel);
 								tdMngrTel.appendChild(inputMngrTel);
 								tr.appendChild(tdMngrTel);
@@ -326,12 +346,12 @@
 								//status
 								var tdStatus = document.createElement("td");
 								var divStatus = document.createElement("div");
-								divStatus.className ="update_div";
+								divStatus.className = "update_div mngr_status";
 								divStatus.textContent = manager.cmcdNm;
-								var selectStatus = document.createElement("select");
+								var selectStatus = document
+										.createElement("select");
 								selectStatus.className = "update_input mngr_status_input";
-								selectStatus.style.display= "none";
-								selectStatus.value=manager.userCd;
+								selectStatus.style.display = "none";
 								var option1 = document.createElement("option");
 								option1.value = "USR0000001";
 								option1.text = "활성화";
@@ -340,49 +360,56 @@
 								option2.text = "휴면";
 								selectStatus.appendChild(option1);
 								selectStatus.appendChild(option2);
-								
+								selectStatus.value = manager.userCd;
+
 								tdStatus.appendChild(divStatus);
 								tdStatus.appendChild(selectStatus);
 								tr.appendChild(tdStatus);
 
 								//lastLoginDt
 								var tdLastLogin = document.createElement("td");
-								tdLastLogin.textContent = formatTimestamp(manager.lastLoginDt);
+								tdLastLogin.className="last_login_dt";
+								if (manager.lastLoginDt != null) {
+									tdLastLogin.textContent = formatTimestamp(manager.lastLoginDt);
+								}
 								tr.appendChild(tdLastLogin);
 
 								//updateBtn
 								var tdButton = document.createElement("td");
 								tdButton.className = "btn_td";
-								
+
 								//수정 버튼 생성
-								var updateBtn = document.createElement("button");
+								var updateBtn = document
+										.createElement("button");
 								updateBtn.className = "update_btn";
-								updateBtn.type="button";
+								updateBtn.type = "button";
 								updateBtn.textContent = "수정";
 								updateBtn.onclick = function() {
-								    editRow(this);
+									editRow(this);
 								};
-								
+
 								// 저장 버튼 생성
-								var saveButton = document.createElement("button");
+								var saveButton = document
+										.createElement("button");
 								saveButton.className = "save_btn";
 								saveButton.type = "button";
 								saveButton.style.display = "none"; // 초기에는 숨겨진 상태
 								saveButton.textContent = "저장";
 								saveButton.onclick = function() {
-								    saveRow(this);
+									saveRow(this);
 								};
-								
+
 								// 취소 버튼 생성
-								var cancelButton = document.createElement("button");
+								var cancelButton = document
+										.createElement("button");
 								cancelButton.className = "cancel_btn";
 								cancelButton.type = "button";
 								cancelButton.style.display = "none"; // 초기에는 숨겨진 상태
 								cancelButton.textContent = "취소";
 								cancelButton.onclick = function() {
-								    cancelEdit(this);
+									cancelEdit(this);
 								};
-								
+
 								tdButton.appendChild(updateBtn);
 								tdButton.appendChild(saveButton);
 								tdButton.appendChild(cancelButton);
@@ -393,6 +420,7 @@
 
 						}
 					});
+			}
 
 		}
 
@@ -409,7 +437,7 @@
 			const seconds = String(date.getSeconds()).padStart(2, '0');
 			const milliseconds = date.getMilliseconds();
 
-			formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+			formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
 			return formattedTimestamp;
 		}
@@ -449,7 +477,7 @@
 			console.log(mngrNm);
 			console.log(mngrTel);
 			console.log(mngrStatus);
-			
+
 			$.ajax({
 				url : '/admin/manager/update',
 				method : 'POST',

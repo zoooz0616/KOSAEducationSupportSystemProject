@@ -11,20 +11,34 @@
 		style="width: 100%;"></div>
 	<div class="container" style="float: none; margin: 0 auto;">
 		<div class="content" style="align-items: center; height: 100vh;">
-			<div class="login con" style="width: 40%;">
-				<form th:action="@{/login}" method="post" class="">
-					<div class="">
-						<label for="email"></label> <input style="width: 50%;" type="text"
-							name="email" id="id" class="" placeholder="아이디(이메일)">
+			<div class="login con" style="width: 30%;">
+				<form th:action="@{/login}" method="post" class="" style="width: 100%; text-align:center;">
+					<div class="" style="width: 100%;"s>
+						<label for="email"></label> 
+						<input style="width: 80%;" type="text"
+							name="email" id="id" class="" placeholder="아이디(이메일)"
+							autocomplete="off">
 					</div>
-					<div class="">
-						<label for="pwd"></label> <input style="width: 50%;" type="password"
-							name="pwd" id="pwd" class="" placeholder="비밀번호">
+					<div class="" style="width: 100%;">
+						<label for="pwd"></label> 
+						<input style="width: 80%;"
+							type="password" name="pwd" id="pwd" class="" placeholder="비밀번호"
+							autocomplete="off">
 					</div>
-					<div class="submit" style="margin:auto";>
-						<input style="width: 80%;" type="submit" class="loginBtn" th:value="로그인">
+					<div class="submit" style="width: 100%;">
+						<input type="submit" style="width: 87%;" class="loginBtn" th:value="로그인">
 					</div>
 				</form>
+
+				<div
+					style="display: flex; justify-content: space-evenly; font-weight: bold; margin-top: 5px;">
+					<div>
+						<a>아이디/비밀번호 찾기</a>
+					</div>
+					<div>
+						<a th:href="@{/student/join}">회원가입</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

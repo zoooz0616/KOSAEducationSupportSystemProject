@@ -183,7 +183,7 @@
 	border-bottom: 1px solid #0E5881;
 }
 
-.input_check_td{
+.manager_name, .manager_tel, .input_check_td, .last_login_dt, .manager_num, .mngr_status{
 	text-align:center;
 }
 
@@ -201,5 +201,5 @@
 	font-weight: bold;
 	display: flex;
 	margin: 2px;
-	padding: 5px;
+	padding: 0 5px;
 }

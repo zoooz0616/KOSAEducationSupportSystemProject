@@ -160,27 +160,11 @@
 	font-weight: bold;
 }
 
-.content_list_table tr td a:hover {
-	color: #0E5881;
-	font-weight: bold;
-	text-decoration: underline;
-}
-
 .content_list_th {
 	background: #F3F6F8;
 	color: #0E5881;
 }
 
-.content_list_td img {
-	width: 15px;
-}
-
-.content_list_td td .notice_title {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.notice_check, .mngr_nm, .notice_num, .notice_file, .rgst_dd, .notice_hit, .notice_status {
+.student_check, .student_num, .student_name, .student_gender, .student_birthday, .student_tel, .student_job, .student_status{
 	text-align: center;
 }

@@ -66,19 +66,19 @@
 						<table>
 							<thead>
 								<tr class="content_list_th">
-									<th style="width: 30px;"><input type="checkbox"
+									<th style="width: 5%"><input type="checkbox"
 										id="chkAll" class="lecture_checkbox_all"></th>
-									<th style="width: 10%;">ID</th>
-									<th style="width: 25%;">기업명</th>
-									<th style="width: 10%;">전화번호</th>
-									<th>주소</th>
+									<th style="width: 5%;">번호</th>
+									<th style="width: 30%;">기업명</th>
+									<th style="width: 15%;">전화번호</th>
+									<th style="width: 45%;">주소</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="company: ${companyList}">
+								<tr th:each="company, iterStat: ${companyList}">
 									<td style="text-align: center;"><input type="checkbox"
 										class="check_box" name="chk" th:value="${company.cmpyId}"></td>
-									<td class="cmpy_id" th:text="${company.cmpyId}"></td>
+									<td style="text-align: center;" th:text="${iterStat.index + 1}"></td>
 									<td><span class="cmpy_nm" th:text="${company.cmpyNm}"
 										onclick="companyDetail(this)"></span></td>
 									<td th:text="${company.cmpyTel}"></td>

@@ -64,6 +64,7 @@
 								<tr class="content_list_th">
 									<th style="width: 30px;"><input type="checkbox"
 										id="groupChkAll" class="lecture_checkbox_all"></th>
+									<th>번호</th>
 									<th>공통코드ID</th>
 									<th>코드구분</th>
 									<th>코드구분명</th>
@@ -72,10 +73,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="groupCode: ${groupCodeList}">
+								<tr th:each="groupCode,iterStat : ${groupCodeList}">
 									<td style="text-align: center;"><input type="checkbox"
 										class="group_chk" name="groupChk"
 										th:value="${groupCode.cmcdId}"></td>
+									<td th:text="${iterStat.index + 1}"></td>
 									<td><div onclick="detailCodeList(this)"
 											class="group_code_id" th:text="${groupCode.cmcdId}"></div></td>
 									<td th:text="${groupCode.tpcdId}"></td>
@@ -145,8 +147,10 @@
 								<thead>
 									<tr class="content_list_th">
 										<th style="width: 30px;"><input type="checkbox" id="detailChkAll"></th>
+										<th>번호</th>
 										<th>상세코드ID</th>
 										<th>상세코드명</th>
+										<th>우선순위</th>
 										<th>사용여부</th>
 										<th style="width: 100px;">버튼</th>
 									</tr>
@@ -368,6 +372,9 @@
 									var td1 = document.createElement("td");
 									td1.innerHTML = '<input type="checkbox" name="detailChk" class="detail_chk" value="' + detailCode.cmcdId + '">';
 									td1.style.textAlign = "center";
+									
+									var tdNum = document.createElement("td");
+									tdNum.innerHTML = i+1;
 
 									var td2 = document.createElement("td");
 									td2.innerHTML = detailCode.cmcdId;
@@ -376,9 +383,14 @@
 									td3.innerHTML = '<div class="detail_update_div">'
 											+ detailCode.cmcdNm
 											+ '</div><input class="detail_update_input detail_cmcd_nm" type="text" value="' + detailCode.cmcdNm + '" style="display: none;">';
-
-									var td4 = document.createElement("td");
+											
+									var td4	= document.createElement("td");
 									td4.innerHTML = '<div class="detail_update_div">'
+											+ detailCode.cmcdOrder
+											+ '</div><input class="detail_update_input detail_cmcd_order" type="text" value="' + detailCode.cmcdOrder + '" style="display: none;">';
+
+									var td5 = document.createElement("td");
+									td5.innerHTML = '<div class="detail_update_div">'
 											+ detailCode.useYn + '</div>';
 
 									// <select> 요소 생성
@@ -407,20 +419,22 @@
 									}
 									select.appendChild(optionN);
 
-									td4.appendChild(select);
+									td5.appendChild(select);
 
-									var td5 = document.createElement("td");
-									td5.innerHTML = '<button class="detail_code_update_btn" onclick="detailEditRow(this)">수정</button>'
+									var td6 = document.createElement("td");
+									td6.innerHTML = '<button class="detail_code_update_btn" onclick="detailEditRow(this)">수정</button>'
 											+ '<button style="display: none;" class="detail_code_save_btn" onclick="detailSaveRow(this)">저장</button>'
 											+ '<button style="display: none;" class="detail_code_cancel_btn" onclick="detailCancelEdit(this)">취소</button>';
-									td5.style.textAlign = "center";
+									td6.style.textAlign = "center";
 
 									// <tr> 요소에 <td> 요소들 추가
 									tr.appendChild(td1);
+									tr.appendChild(tdNum);
 									tr.appendChild(td2);
 									tr.appendChild(td3);
 									tr.appendChild(td4);
 									tr.appendChild(td5);
+									tr.appendChild(td6);
 
 									// <tr> 요소를 <tbody>에 추가
 									tbody.appendChild(tr);
@@ -576,6 +590,7 @@
 			var cmcdId = row.querySelector(".detail_chk").value;
 			var cmcdNm = row.querySelector(".detail_cmcd_nm").value;
 			var useYn = row.querySelector(".detail_use_yn").value;
+			var cmcdOrder = row.querySelector(".detail_cmcd_order").value;
 
 			$.ajax({
 				url : '/admin/commoncode/update/detailcode',
@@ -583,7 +598,8 @@
 				data : {
 					cmcdId : cmcdId,
 					cmcdNm : cmcdNm,
-					useYn : useYn
+					useYn : useYn,
+					cmcdOrder : cmcdOrder
 				},
 				success : function(response) {
 					console.log(response);

@@ -110,7 +110,7 @@ a:hover{
 }
 
 .home-section .content_bottom div button {
-	width: 180px;
+	width: 150px;
 	height: 40px;
 	border: none;
 	border-radius: 3px;
@@ -126,4 +126,37 @@ a:hover{
 
 .home-section .content_bottom .btn_wrap .insert_btn {
 	background: #0E5881;
+}
+
+.add_file {
+	border:none;
+	background: none;
+	font-weight: bold;
+	color: #0E5881;
+	display: flex;
+	cursor: pointer;
+}
+
+.delete_file{
+	border:none;
+	background: none;
+	font-weight: bold;
+	color: #0E5881;
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+.file_wrap {
+	display:flex;
+	align-items: center;
+}
+
+.add_file_img{
+	width:20px;
+}
+
+.file_img {
+	width:20px;
+	height:20px;
+	margin-right: 5px;
 }

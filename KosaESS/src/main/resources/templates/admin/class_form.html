@@ -6,7 +6,7 @@
 </head>
 <head>
 <link th:href="@{/css/admin/class_form.css}" rel="stylesheet">
-<link href="/css/datepicker.css" rel="stylesheet" type="text/css"
+<link href="/css/datepicker.css" rel="stylesheet" tyfpe="text/css"
 	media="all">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Air datepicker css -->
@@ -29,7 +29,7 @@
 			<div class="title" th:text="${title}">title</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list}">교육과정
 					관리</a> > <a th:href="@{/admin/class/__${act}__}" th:text="${title}">title</a>
 			</div>
 		</div>
@@ -46,22 +46,15 @@
 
 					<!-- 첫번째 줄 -->
 					<div class="row">
-						<div class="col">
-							<div class="col_title">교육과정 ID</div>
-							<div class="col_content">
-								<input th:if="${act=='insert' or act=='update'}"
-									th:name="clssId" type="text" th:value="${classVO.clssId}"
-									readonly> <span th:if="${act}=='select'"
-									th:text="${classVO.clssId}"></span>
-							</div>
-						</div>
+						<input type="hidden" name="clssId" th:value="${classVO.clssId}">
 
 						<div class="col">
-							<div class="col_title">교육과정명</div>
+							<div class="col_title">교육과정명<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></div>
 							<div class="col_content">
-								<input style="width: 200px;" th:if="${act}=='insert'"
+								<input style="width: 100%;" th:if="${act}=='insert'"
 									type="text" th:name="clssNm" required> <input
-									style="width: 200px;" th:if="${act}=='update'" type="text"
+									style="width: 100%;" th:if="${act}=='update'" type="text"
 									th:name="clssNm" th:value="${classVO.clssNm}" required>
 								<span style="width: 300px;" th:if="${act}=='select'"
 									th:text="${classVO.clssNm}"></span>
@@ -70,17 +63,19 @@
 						</div>
 
 						<div class="col">
-							<div class="col_title">지원 기간</div>
+							<div class="col_title">지원 기간<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" type="datetime-local"
-									th:name="aplyStartDt" th:value="null"> <input
-									th:if="${act}=='update'" type="datetime-local"
+								<input th:if="${act}=='insert'" type="datetime-local" style="width:40%;"
+									th:name="aplyStartDt" th:value="null"> 
+								<input
+									th:if="${act}=='update'" type="datetime-local" style="width:40%;"
 									th:name="aplyStartDt" th:value="${classVO.aplyStartDt}">
 								<span th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.aplyStartDt, 'yyyy-MM-dd HH:mm')}"></span>
-								~ <input th:if="${act}=='insert'" type="datetime-local"
+								~ <input th:if="${act}=='insert'" type="datetime-local" style="width:40%;"
 									th:name="aplyEndDt" th:value="null"> <input
-									th:if="${act}=='update'" type="datetime-local"
+									th:if="${act}=='update'" type="datetime-local" style="width:40%;"
 									th:name="aplyEndDt" th:value="${classVO.aplyEndDt}"> <span
 									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.aplyEndDt, 'yyyy-MM-dd HH:mm')}"></span>
@@ -88,17 +83,18 @@
 						</div>
 
 						<div class="col">
-							<div class="col_title">교육 기간</div>
+							<div class="col_title">교육 기간<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" id="datepicker1" type="text"
-									th:name="clssStartDd" th:value="null" placeholder="연도-월-일"> <input
-									th:if="${act}=='update'" id="datepicker1" type="text"
+								<input th:if="${act}=='insert'" id="datepicker1" type="text" style="width:40%;"
+									th:name="clssStartDd" th:value="null" placeholder="연도-월-일">
+								<input th:if="${act}=='update'" id="datepicker1" type="text" style="width:40%;"
 									th:name="clssStartDd" th:value="${classVO.clssStartDd}">
 								<span th:if="${act}=='select'" th:text="${classVO.clssStartDd}"></span>
 
-								~ <input th:if="${act}=='insert'" id="datepicker2" type="text"
-									th:name="clssEndDd" th:value="null" placeholder="연도-월-일"> <input
-									th:if="${act}=='update'" id="datepicker2" type="text"
+								~ <input th:if="${act}=='insert'" id="datepicker2" type="text" style="width:40%;"
+									th:name="clssEndDd" th:value="null" placeholder="연도-월-일">
+								<input th:if="${act}=='update'" id="datepicker2" type="text" style="width:40%;"
 									th:name="clssEndDd" th:value="${classVO.clssEndDd}"> <span
 									th:if="${act}=='select'" th:text="${classVO.clssEndDd}"></span>
 
@@ -110,7 +106,8 @@
 					<!-- 두번째 줄 -->
 					<div class="row">
 						<div class="col">
-							<div class="col_title">교육 시간</div>
+							<div class="col_title">교육 시간<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></div>
 							<div class="col_content">
 								<input th:if="${act}=='insert'" type="time" th:name="setInTm"
 									th:value="null"> <input th:if="${act}=='update'"
@@ -130,17 +127,18 @@
 
 						<div class="col">
 							<div class="col_title">교육 장소</div>
-							<div class="col_content" style="width: 300px;">
+							<div class="col_content" style="width: 80%;">
 								<input style="width: 100%;" th:if="${act}=='insert'" type="text"
 									th:name="clssAdr"> <input style="width: 100%;"
 									th:if="${act}=='update'" type="text" th:name="clssAdr"
 									th:value="${classVO.clssAdr}"> <span
-									th:if="${act}=='select'" th:text="${classVO.clssAdr} "></span>
+									th:if="${act}=='select'" th:text="${classVO.clssAdr} ? ${classVO.clssAdr} : '미정'"></span>
 							</div>
 						</div>
 
 						<div class="col">
-							<div class="col_title">교육 상태</div>
+							<div class="col_title">교육 상태<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></div>
 							<div class="col_content">
 								<select th:if="${act}=='insert'" th:name="clssCd">
 									<option th:each="classCommonCode: ${classCommonCodeList}"
@@ -155,8 +153,13 @@
 							</div>
 						</div>
 
+
+					</div>
+
+					<!-- 세번째 줄 -->
+					<div class="row">
 						<div class="col">
-							<div class="col_title" style="width: 80px; text-align: center;">업체</div>
+							<div class="col_title">기업</div>
 							<div class="col_content">
 								<select th:if="${act}=='insert'" th:name="cmpyId">
 									<option value="">미정</option>
@@ -167,12 +170,13 @@
 									<option th:each="company: ${companyList}"
 										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"
 										th:selected="${company.cmpyId == classVO.cmpyId}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.cmpyNm}"></span>
+								</select> 
+									<span th:if="${act}=='select'" th:text="${classVO.cmpyNm} ? ${classVO.cmpyNm} : '미정'"></span>
 							</div>
 						</div>
 
 						<div class="col">
-							<div class="col_title" style="width: 80px; text-align: center;">인원</div>
+							<div class="col_title">인원</div>
 							<div class="col_content">
 								<input th:if="${act}=='insert'" type="number" th:name="limitCnt"
 									th:value="0"> <input th:if="${act}=='update'"
@@ -188,37 +192,37 @@
 								<select th:if="${act}=='insert'" th:name="mngrId">
 									<option value="">미정</option>
 									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}" th:text="${manager.mngrNm}"></option>
+										th:value="${manager.mngrId}" th:text="|${manager.mngrNm}(${manager.userEmail})|"></option>
 								</select> <select th:if="${act}=='update'" th:name="mngrId">
 									<option value="">미정</option>
 									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}" th:text="${manager.mngrNm}"
+										th:value="${manager.mngrId}" th:text="|${manager.mngrNm}(${manager.userEmail})|"
 										th:selected="${manager.mngrId == classVO.mngrId}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrNm}"></span>
+								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrNm} ? ${classVO.mngrNm} : '미정' "></span>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row2">
 						<div class="col2">
 							<div class="col_title">교육 개요</div>
-							<div class="col_content" style="width: 350px; height: 100%;">
-								<div
-									style="border: 1px solid #777777; display: flex; justify-content: center; align-items: center; border-radius: 5px; background: white; width: 100%; height: 100%;">
-									<input th:if="${act}=='insert'" type="text"
-										th:name="clssContent"
-										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
-									<input th:if="${act}=='update'" type="text"
-										th:name="clssContent" th:value="${classVO.clssContent}"
-										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
+							<div class="col_content" style="width: 90%;">
+								<div>
+									<input th:if="${act}=='insert'" type="text" style="width: 100%;"
+										th:name="clssContent">
+									<input th:if="${act}=='update'" type="text" style="width: 100%;"
+										th:name="clssContent" th:value="${classVO.clssContent}">
 									<span th:if="${act}=='select'" th:text="${classVO.clssContent}"></span>
 								</div>
 							</div>
-						</div>
-
-						<div class="col2">
-							<div class="col_title">강의 내용</div>
-							<div class="col_content" style="width: 900px;">
+						</div>	
+					</div>
+					
+					<div class="row3">
+						<div class="col3">
+							<div class="col_title">강의 내용<span th:if="${act=='insert' or act=='update'}"
+							class="star">*</span></div>
+							<div class="col_content" style="width: 90%;">
 								<div th:if="${act=='insert' or act=='update'}"
 									class="content_info_btn_wrap">
 									<!-- 선택삭제 버튼 -->
@@ -241,7 +245,8 @@
 											<th><div>강사이름</div></th>
 										</tr>
 										<tr th:if="${act}=='insert'" class="lecture_row">
-											<td><input type="checkbox"></td>
+											<td><input type="checkbox">
+											<input class="lecture_time" type="hidden" value="0"></td>
 											<td><select id="lecture_select"
 												onchange="lectureSelect(this.value)" name="lctrId">
 													<option value="">=== 강의를 선택하세요. ===</option>
@@ -253,12 +258,12 @@
 												value="subjectName" disabled></td>
 											<td><input id="professor_name" name="" type="text"
 												value="professorName" disabled></td>
-											<td><input class="lecture_time" type="hidden" value="0"></td>
 										</tr>
 
 										<tr th:if="${act}=='update'" class="lecture_row"
 											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td><input type="checkbox"></td>
+											<td><input type="checkbox"><input class="lecture_time" type="hidden"
+												th:value="${curriculumDetail.lctrTm}"></td>
 											<td><select id="lecture_select"
 												onchange="lectureSelect(this.value)" name="lctrId">
 													<option value="">=== 강의를 선택하세요. ===</option>
@@ -271,30 +276,27 @@
 												th:value="${curriculumDetail.sbjtNm}" disabled></td>
 											<td><input id="professor_name" name="profId" type="text"
 												th:value="${curriculumDetail.profNm}" disabled></td>
-											<td><input class="lecture_time" type="hidden"
-												th:value="${curriculumDetail.lctrTm}"></td>
 										</tr>
 
 										<tr th:if="${act}=='select'" class="lecture_row"
 											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td><input type="checkbox" disabled></td>
+											<td><input type="checkbox" disabled><input class="lecture_time" type="hidden" value="0"></td>
 											<td><span
 												th:text="${curriculumDetail.lctrNm}+' ('+${curriculumDetail.lctrTm}+')'"></span></td>
 											<td><span th:text="${curriculumDetail.sbjtNm}"></span></td>
 											<td><span th:text="${curriculumDetail.profNm}"></span></td>
-											<td><input class="lecture_time" type="hidden" value="0"></td>
 										</tr>
 									</table>
 									<div>
 										<!-- 총 이수시간을 저장할 숨겨진 입력 필드 -->
 										<input type="hidden" id="clss_total_tm" th:name="clssTotalTm"
-											th:value="0">
+											th:value="${classVO.clssTotalTm}">
 										<div>
 											총 이수시간 : <span th:if="${act}=='insert'"
 												class="class_total_tm">0</span> <span
 												th:if="${act}=='update'" class="class_total_tm"
-												th:text="${classVO.clssTotalTm}">0</span> <span
-												th:if="${act}=='select'" th:text="${classVO.clssTotalTm}">0</span>
+												th:text="${classVO.clssTotalTm}"></span> <span
+												th:if="${act}=='select'" th:text="${classVO.clssTotalTm}"></span>
 										</div>
 									</div>
 								</div>
@@ -302,12 +304,11 @@
 						</div>
 					</div>
 
-					<div class="row2">
-						<div class="col2">
+					<div class="row3">
+						<div class="col3">
 							<div class="col_title">첨부 파일</div>
-							<div class="col_content" style="width: 800px;">
-
-								<div th:if="${act}=='insert'">
+							<div class="col_content">
+								<div th:if="${act=='insert' or act=='update'}">
 									<div class="file_list">
 										<div class="file_wrap">
 											<div class="file_input">
@@ -355,8 +356,9 @@
 									</div>
 								</div>
 								<div th:if="${act}=='select'" class="file_detail" id="file_drag">
-									<div th:each="file: ${fileList}" style="display: flex;">
-										<img style="width: 30px;" th:src="@{/img/file_gray.png}">
+									<div th:if="${fileList ==null}">첨부파일 없음</div>
+									<div th:each="file: ${fileList}" style="display: flex;align-items: center;">
+										<img style="width: 15px; height:15px; margin-right: 5px;" th:src="@{/img/file.png}">
 										<div>
 											<a style="text-decoration-line: none; color: #0E5881;"
 												th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
@@ -367,16 +369,13 @@
 
 							</div>
 						</div>
-						<div class="col2">
-							<div class="col_title" style="width: 80px; text-align: center;">기타</div>
-							<div class="col_content" style="width: 500px; height: 100%;">
-								<div
-									style="border: 1px solid #777777; display: flex; justify-content: center; align-items: center; border-radius: 5px; background: white; width: 100%; height: 100%;">
-									<input th:if="${act}=='insert'" type="text" th:name="clssEtc"
-										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
-									<input th:if="${act}=='update'" type="text" th:name="clssEtc"
-										th:value="${classVO.clssEtc}"
-										style="width: 97%; border: none; outline: none; background: white; height: 97%;">
+						<div class="col3">
+							<div class="col_title">기타</div>
+							<div class="col_content" style="width: 90%; height: 100%;">
+								<div style="width: 100%; height: 100%;">
+									<input th:if="${act}=='insert'" type="text" th:name="clssEtc" style="width: 100%; height: 100%;">
+									<input th:if="${act}=='update'" type="text" th:name="clssEtc" style="width: 100%; height: 100%;"
+										th:value="${classVO.clssEtc}">
 									<span th:if="${act}=='select'" th:text="${classVO.clssEtc}"></span>
 								</div>
 							</div>
@@ -393,12 +392,12 @@
 				<!-- select일 때 -->
 				<div th:if="${act}=='select'"
 					style="display: flex; justify-content: center;">
-					<div class="submit_btn" onclick="deleteClass()">삭제하기
-					</div>
+					<div class="delete_btn" onclick="deleteClass()">삭제</div>
 					<div class="submit_btn">
 						<a style="color: #fff; text-decoration-line: none;"
-							th:href="@{/admin/class/update/__${classVO.clssId}__}">수정하기</a>
+							th:href="@{/admin/class/update/__${classVO.clssId}__}">수정</a>
 					</div>
+					<div class="submit_btn"><a style="color: #fff; text-decoration-line: none;" th:href="@{/admin/class/list}">목록</a></div>
 				</div>
 			</form>
 		</div>
@@ -817,11 +816,11 @@
 	    	var classId = document.querySelector("#clssId").value;
 	    	console.log(classId);
 	    	$.ajax({
-				url : "/admin/cls/delete/"+classId, // 컨트롤러 엔드포인트
+				url : "/admin/class/delete/"+classId, // 컨트롤러 엔드포인트
 				type : "POST",
 				success : function(response) {
 					alert("삭제되었습니다.");
-					location.href = "http://localhost:8080/admin/class";
+					location.href = "/admin/class/list";
 				},
 				error : {
 				}

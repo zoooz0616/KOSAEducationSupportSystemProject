@@ -96,7 +96,6 @@ a:hover{
 
 .home-section .content_middle table tr td input {
 	padding: 5px;
-	margin: 5px;
 }
 
 .home-section .content_middle table tr td div {
@@ -160,4 +159,18 @@ a:hover{
 	font-weight: bold;
 	padding: 5px;
 	margin: 0 0 0 10px;
+}
+
+.x_btn {
+	border: none;
+    border-radius: 5px;
+    background: #f1a77e;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    height: fit-content;
+}
+
+.x_btn img {
+	width:20px;
 }

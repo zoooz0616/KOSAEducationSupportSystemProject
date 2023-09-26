@@ -22,17 +22,16 @@ input {
 	display: flex;
 	margin: 0 40px 40px 40px;
 	padding-top: 40px;
+	justify-content: space-between;
 }
 
 .home-section .content_top .title {
 	font-size: 20px;
 	color: #333333;
 	font-weight: bold;
-	width: 80%;
 }
 
 .home-section .content_top .route a {
-	width: 20%;
 	color: #0E5881;
 	text-decoration-line: none;
 	font-weight: bold;
@@ -60,11 +59,14 @@ input {
 }
 
 .class_form_content .row .col {
+	width: 33%;
 	display: flex;
 	margin: 0 10px 0 0;
 }
 
 .class_form_content .row .col .col_title {
+	text-align: center;
+	width: 100px;
 	margin-right: 5px;
 	background: #E7EFF3;
 	padding: 5px;
@@ -73,27 +75,58 @@ input {
 .class_form_content .row .col .col_content {
 	margin-top: 7px;
 	height: 100%;
+	width: 80%;
 }
 
 .class_form_content .row2 {
 	display: flex;
 	border-bottom: 1px solid #0E5881;
-	height: 250px;
 }
 
 .class_form_content .row2 .col2 {
+	width: 100%;
 	margin: 0 5px 0 0;
 	display: flex;
 }
 
 .class_form_content .row2 .col2 .col_title {
-	margin-right: 5px;
+	width: 100px;
 	background: #E7EFF3;
 	padding: 5px;
-	padding-top: 120px;
+	text-align: center;
 }
 
 .class_form_content .row2 .col2 .col_content {
+	padding: 5px;
+}
+
+.class_form_content .row2 .col2 .col_content div input {
+	width: 100%;
+}
+
+.class_form_content .row3 {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+}
+
+.class_form_content .row3 .col3 {
+	width: 100%;
+	margin: 0 5px 0 0;
+	display: flex;
+}
+
+.class_form_content .row3 .col3 .col_title {
+	width: 100px;
+	background: #E7EFF3;
+	padding: 5px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 250px;
+}
+
+.class_form_content .row3 .col3 .col_content {
 	padding: 5px;
 }
 
@@ -101,11 +134,11 @@ input {
 	width: 20px;
 }
 
-.col2 .col_content .content_info_btn_wrap {
+.col3 .col_content .content_info_btn_wrap {
 	display: flex;
 }
 
-.col2 .col_content .content_info_btn_wrap div {
+.col3 .col_content .content_info_btn_wrap div {
 	background: #0E5881;
 	color: white;
 	border: none;
@@ -139,6 +172,19 @@ th {
 	width: 100%;
 }
 
+form .delete_btn {
+	font-size: 20px;
+	background: #CFDEE6;;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	width: 150px; height : 40px;
+	margin: 10px;
+	text-align: center;
+	height: 40px;
+}
+
 form .submit_btn {
 	font-size: 20px;
 	background: #0E5881;
@@ -146,10 +192,10 @@ form .submit_btn {
 	border: none;
 	border-radius: 3px;
 	font-weight: bold;
-	width: 100px;
-	height: 35px;
+	width: 150px; height : 40px;
 	margin: 10px;
 	text-align: center;
+	height: 40px;
 }
 
 .file_table {
@@ -209,4 +255,9 @@ form .submit_btn {
 	overflow: hidden;
 	clip: rect(0, 0, 0, 0);
 	border: 0;
+}
+
+.star {
+	color: red;
+	vertical-align: middle;
 }
