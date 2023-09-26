@@ -1499,6 +1499,7 @@ public class AdminController {
 		int managerCnt = adminService.getManagerEmailCnt(managerEmail);
 		if (managerCnt == 0) {
 			return "success";
+			
 		}else {
 			return "fail";
 		}
