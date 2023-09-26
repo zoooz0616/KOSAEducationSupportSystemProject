@@ -285,4 +285,14 @@ public class StudentService implements IStudentService {
 		return studentRepository.searchInquiries(keyword);
 	}
 
+	@Override
+	public List<PostVO> searchPostList(String stdtId) {
+		return studentRepository.searchPostList(stdtId);
+	}
+
+	@Override
+	public List<PostVO>getReply(String postId) {
+		return studentRepository.getReply(postId);
+	}
+
 }

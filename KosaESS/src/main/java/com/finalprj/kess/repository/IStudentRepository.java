@@ -131,4 +131,8 @@ public interface IStudentRepository {
 
 	int SearchClassesCnt(String keyword, String ingClass);
 
+	List<PostVO> searchPostList(String stdtId);
+
+	List<PostVO> getReply(String postId);
+
 }

@@ -320,6 +320,7 @@ public class StudentController {
 		java.util.Date inlogTimeDd = sdf.parse(inlogTime);
 
 		Double totalTm = 0.0;
+		Double standardTm = (double) ((clssOutTimeDd.getTime() - clssInTimeDd.getTime()) / 2000 / (60 * 60));
 		System.out.println(inlogTmDd);
 		System.out.println(newOutTmDd);
 		boolean areDatesEqual = sdfd.format(inlogTmDd).equals(sdfd.format(newOutTmDd));
@@ -334,7 +335,7 @@ public class StudentController {
 					else
 						totalTm = diffHours;
 					totalTm = diffHours;
-					if (totalTm < 4)
+					if (totalTm < standardTm)
 						outlogCd = ("WOK0000004");
 
 				} else if (inlogCd.equals("WOK0000002")) { // 수업마무리시간 - 출근시간
@@ -345,7 +346,7 @@ public class StudentController {
 					else
 						totalTm = diffHours;
 					totalTm = diffHours;
-					if (totalTm < 4)
+					if (totalTm < standardTm)
 						outlogCd = ("WOK0000004");
 				}
 
@@ -359,7 +360,7 @@ public class StudentController {
 					else
 						totalTm = diffHours;
 					totalTm = diffHours;
-					if (totalTm < 4)
+					if (totalTm < standardTm)
 						outlogCd = "WOK0000004";
 
 				} else if (inlogCd.equals("WOK0000002")) { // 퇴근시간 - 출근시간
@@ -370,7 +371,7 @@ public class StudentController {
 					else
 						totalTm = diffHours;
 					totalTm = diffHours;
-					if (totalTm < 4)
+					if (totalTm < standardTm)
 						outlogCd = ("WOK0000004");
 				}
 
@@ -704,6 +705,9 @@ public class StudentController {
 		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
 		model.addAttribute("wlogList", wlogList);
 
+		List<PostVO> postList = studentService.searchPostList(stdtId);
+		model.addAttribute("postList", postList);
+
 		return "student/mypage";
 	}
 
@@ -961,5 +965,33 @@ public class StudentController {
 		studentService.updateResndt(resnId, stdtId, resnText);
 
 		return "redirect:/student/mypage";
+	}
+
+	@PostMapping("/show/reply")
+	@ResponseBody
+	public List<Map<String, Object>> getReply(@RequestParam("postId") String postId) {
+		List<Map<String, Object>> responseList = new ArrayList<>(); // 리스트 생성
+
+		// postId를 사용하여 답변 정보 가져오기 (studentService.getReply(postId) 호출)
+		List<PostVO> replyList = studentService.getReply(postId);
+
+		for (PostVO replyVO : replyList) {
+			Map<String, Object> response = new HashMap<>(); // 각각의 답변 정보를 담을 Map 생성
+			Date rgstDate = replyVO.getRgstDd();
+			String rgstDd = new SimpleDateFormat("yyyy-MM-dd").format(rgstDate);
+
+			Map<String, String> inquiry = new HashMap<>();
+			inquiry.put("id", replyVO.getPostId());
+			inquiry.put("title", replyVO.getPostTitle());
+			inquiry.put("content", replyVO.getPostContent());
+			inquiry.put("name", replyVO.getMngrNm());
+			inquiry.put("date", rgstDd);
+
+			response.put("inquiry", inquiry);
+
+			responseList.add(response); // 답변 정보를 리스트에 추가
+		}
+
+		return responseList;
 	}
 }
