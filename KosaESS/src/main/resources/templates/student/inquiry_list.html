@@ -6,6 +6,7 @@
 <link th:href="@{/css/student/inquiry_list.css}" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <meta charset="UTF-8">
 </head>
 <body>
@@ -18,8 +19,9 @@
 		<div class="content" style="flex-direction: column;">
 			<div class="search">
 				<div class="searchform">
-					<input type="text" class="searchInput" placeholder="문의사항명이나 작성자를 검색하세요.">
-					<input type="button" class="searchBtn" value="검색">
+					<input type="text" class="searchInput"
+						placeholder="문의사항명이나 작성자를 검색하세요."> <input type="button"
+						class="searchBtn" value="검색">
 				</div>
 			</div>
 			<table class="inquiry-table" style="width: 90%; margin: auto;">
@@ -48,72 +50,15 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="paging">
+				<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i
+					class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+				<div class="pages"></div>
+				<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+					class="right" id="last_page" th:src="@{/img/last_page}"></i>
+			</div>
 		</div>
 	</div>
-	<script>
-		$('.goInquiryDetail').click(function() {
-			// 서버로 조회수 증가 요청을 보냅니다.
-			var clickedRow = $(this).closest('tr');
-			var postId = clickedRow.find('td:hidden span').text();
-			$.ajax({
-				type : 'POST',
-				url : '/student/incrementHit',
-				data : {
-					postId : postId
-				},
-				success : function() {
-					window.location.href = '/student/inquiry/' + postId;
-				}
-			});
-		});
-		$('.searchInput').on('keyup', function(event) {
-			if (event.key === "Enter") {
-				$('.searchBtn').trigger('click');
-			}
-		});
-		// 검색 버튼 클릭 시의 처리 코드
-		$('.searchBtn').click(function() {
-			// 검색어를 가져옵니다.
-			var searchKeyword = $('.searchInput').val().trim();
-
-			// Ajax 요청을 보냅니다.
-			$.ajax({
-				type : 'GET',
-				url : '/student/inquiry/search',
-				data : {
-					keyword : searchKeyword,
-				},
-				success : function(data) {
-					// 받은 데이터로 테이블을 업데이트합니다.
-					var inquiryTable;
-					inquiryTable = $('.inquiry-table tbody');
-					inquiryTable.empty(); // 테이블 내용을 비웁니다.
-
-					for (var i = 0; i < data.length; i++) {
-						var postVO = data[i];
-						var row = $('<tr class="inquiryRow"></tr>');
-						row.append('<td><span >' + (i + 1) + '</span></td>');
-						row.append('<td><a><span class="goInquiryDetail" style="font-size: 17px;">' + postVO.postTitle + '</span></a></td>');
-						if(postVO.mngrNm == null){
-							row.append('<td><span>'+ postVO.stdtNm +'</span></td>')
-						}else if(postVO.stdtNm == null){
-							row.append('<td><span>'+ postVO.mngrNm +'</span></td>')
-						}
-						row.append('<td><span>'+ postVO.rgstDd +'</span></td>')
-						row.append('<td><span>'+ postVO.postHit +'</span></td>')
-						row.append('<td><span>'+ postVO.cmcdNm +'</span></td>')
-						row.append('<td style="display: none;"><span>'+ postVO.postId +'</span></td>')
-						inquiryTable.append(row);
-					}
-					$('.totalRowCount').text(data.length);
-				}
-			});
-		});
-
-		function updateTable() {
-			// 검색 버튼 클릭 이벤트 호출
-			$('.searchBtn').trigger('click');
-		}
-	</script>
+	<script src="/js/student/inquiry_detail.js"></script>
 </body>
 </html>
