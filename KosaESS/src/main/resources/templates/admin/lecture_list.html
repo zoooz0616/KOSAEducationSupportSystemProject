@@ -40,7 +40,27 @@
 							강의 총 <span class="cnt" th:text="${#lists.size(lectureList)}"></span>
 							개
 						</div>
-						<button id="lecture_delete_btn">선택삭제</button>
+						<div class="content_info_button_wrap" style="display: flex;">
+							<button id="lecture_delete_btn">
+								<img th:src="@{/img/minus_white.png}" style="width: 20px;">
+								<span>선택삭제</span>
+							</button>
+							
+							<button id="lecture_update_btn">
+								<img th:src="@{/img/update_white.png}" style="width: 20px;">
+								<span>수정하기</span>
+							</button>
+							
+							<button id="lecture_cancel_btn">
+								<img th:src="@{/img/x_white.png}" style="width: 20px;">
+								<span>수정취소</span>
+							</button>
+							
+							<button id="lecture_save_btn">
+								<img th:src="@{/img/save_white.png}" style="width: 20px;">
+								<span>저장하기</span>
+							</button>
+						</div>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
@@ -60,7 +80,10 @@
 						</div>
 						<div>
 							<button class="insert_btn" type="button"
-								onclick="insertLecture()">등록하기</button>
+								onclick="insertLecture()" style="display: flex;">
+								<img th:src="@{/img/plus_white.png}" style="width: 20px;">
+								등록하기
+							</button>
 						</div>
 					</div>
 					<!-- 강의 등록하기 -->
@@ -75,8 +98,6 @@
 								<th>과목명</th>
 								<th>강사명</th>
 								<th>이수시간</th>
-								<th>사용여부</th>
-								<th style="width: 100px;">관리</th>
 							</tr>
 							<tr th:each="lecture, iterStat : ${lectureList}">
 								<td style="text-align: center;"><input type="checkbox"
@@ -92,14 +113,6 @@
 									<input style="display: none; width: 50px;"
 									class="lecture_input lecture_tm" type="text"
 									th:value="${lecture.lctrTm}"></td>
-								<td><span th:text="${lecture.deleteYn}"></span></td>
-								<td style="text-align: center;">
-									<button class="lecture_span" onclick="updateLecture(this)">수정</button>
-									<button style="display: none;" class="lecture_input"
-										onclick="saveLecture(this)">저장</button>
-									<button style="display: none;" class="lecture_input"
-										onclick="cancelEdit(this)">취소</button>
-								</td>
 							</tr>
 						</table>
 					</div>
@@ -119,10 +132,26 @@
 							과목 총 <span class="cnt" th:text="${#lists.size(subjectList)}"></span>
 							개
 						</div>
-						<div>
-							<button id="subject_delete_btn">선택삭제</button>
-							<button>수정하기</button>
-							<button>저장하기</button>
+						<div class="content_info_button_wrap">
+							<button id="subject_delete_btn">
+								<img th:src="@{/img/minus_white.png}">
+								<span>선택삭제</span>
+							</button>
+							
+							<button id="subject_update_btn">
+								<img th:src="@{/img/update_white.png}">
+								<span>수정하기</span>
+							</button>
+							
+							<button id="subject_cancel_btn">
+								<img th:src="@{/img/x_white.png}">
+								<span>수정취소</span>
+							</button>
+							
+							<button id="subject_save_btn">
+								<img th:src="@{/img/save_white.png}">
+								<span>저장하기</span>
+							</button>
 						</div>
 					</div>
 					<!-- 총 개수 및 버튼-->
@@ -136,7 +165,8 @@
 
 						<div>
 							<button class="insert_btn" type="button"
-								onclick="insertSubject()">등록하기</button>
+								onclick="insertSubject()">
+								<img th:src="@{/img/plus_white.png}">등록하기</button>
 						</div>
 					</div>
 					<!-- 과목 등록하기 -->
@@ -148,8 +178,6 @@
 								<th><input type="checkbox" class="subject_checkbox_all"></th>
 								<th>번호</th>
 								<th>과목명</th>
-								<th>사용여부</th>
-								<th style="width: 100px;">관리</th>
 							</tr>
 							<tr th:each="subject, iterStat : ${subjectList}">
 								<td style="text-align: center;"><input type="checkbox"
@@ -158,14 +186,6 @@
 								<td><span th:text="${subject.sbjtNm}" class="subject_span"></span>
 									<input style="display: none;" type="text"
 									class="subject_input subject_nm" th:value="${subject.sbjtNm}">
-								</td>
-								<td th:text="${subject.deleteYn}"></td>
-								<td style="text-align: center;">
-									<button class="subject_span" onclick="updateSubject(this)">수정</button>
-									<button style="display: none;" class="subject_input"
-										onclick="saveSubject(this)">저장</button>
-									<button style="display: none;" class="subject_input"
-										onclick="SubjectCancelEdit(this)">취소</button>
 								</td>
 							</tr>
 						</table>
@@ -182,10 +202,26 @@
 							강사 총 <span class="cnt" th:text="${#lists.size(professorList)}"></span>
 							명
 						</div>
-						<div>
-							<button id="professor_delete_btn">선택삭제</button>
-							<button id="professor_update_btn">수정하기</button>
-							<button id="professor_save_btn" style="display:none">저장하기</button>
+						<div class="content_info_button_wrap">
+							<button id="professor_delete_btn">
+								<img th:src="@{/img/minus_white.png}">
+								<span>선택삭제</span>
+							</button>
+							
+							<button id="professor_update_btn">
+								<img th:src="@{/img/update_white.png}">
+								<span>수정하기</span>
+							</button>
+							
+							<button id="professor_cancel_btn">
+								<img th:src="@{/img/x_white.png}">
+								<span>수정취소</span>
+							</button>
+							
+							<button id="professor_save_btn">
+								<img th:src="@{/img/save_white.png}">
+								<span>저장하기</span>
+							</button>
 						</div>
 					</div>
 
@@ -203,7 +239,8 @@
 						</div>
 						<div>
 							<button class="insert_btn" type="button"
-								onclick="insertProfessor()">등록하기</button>
+								onclick="insertProfessor()">
+								<img th:src="@{/img/plus_white.png}">등록하기</button>
 						</div>
 					</div>
 					<!-- 강사 등록하기 -->
@@ -217,7 +254,6 @@
 								<th>강사명</th>
 								<th>전화번호</th>
 								<th>이메일</th>
-								<th>사용여부</th>
 							</tr>
 							<tr th:each="professor, iterStat : ${professorList}">
 								<td style="text-align: center;"><input type="checkbox"
@@ -238,13 +274,6 @@
 									class="professor_input professor_email"
 									style="display: none; width: 200px;"
 									th:value="${professor.profEmail}"></td>
-								<td><span th:text="${professor.deleteYn}"
-									class="lecture_span"></span>
-									<select class="professor_input" style="display:none;">
-										<option value="Y">Y</option>
-										<option value="X">X</option>
-									</select>
-								</td>
 							</tr>
 						</table>
 					</div>
