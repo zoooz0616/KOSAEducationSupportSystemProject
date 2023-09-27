@@ -20,12 +20,23 @@
 				<table>
 					<tr>
 						<th>공지사항 제목</th>
-						<td colspan="3"><span th:text="${noticeDetail.postTitle}"></span></td>
+						<td style="text-align: left;"><span
+							style="margin-left: 20px;" th:text="${noticeDetail.postTitle}"></span></td>
+						<th>게시일자</th>
+						<td style="width: 15%;"><span th:text="${noticeDetail.rgstDd}"></span></td>
 					</tr>
 					<tr>
-						<th>게시일자</th>
-						<td><span th:text="${noticeDetail.rgstDd}"></span></td>
-
+						<th>관련 파일</th>
+						<td><ul
+								style="margin: 0; text-align: left; padding-left: 3%;">
+								<li th:each="FileVO : ${noticeFileList}"><a
+									style="width: 100%; display: flex;"
+									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
+									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
+										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+										style="margin-left: 5px;" th:text="${FileVO.fileNm}"></span><br>
+								</a></li>
+							</ul></td>
 						<th>조회수</th>
 						<td><span th:text="${noticeDetail.postHit}"></span></td>
 					</tr>
@@ -34,19 +45,6 @@
 					<div>
 						<h4 th:utext="${noticeDetail.postContent}"></h4>
 					</div>
-				</div>
-				<div class="postFile">
-					<ul>
-						<li th:each="FileVO : ${noticeFileList}"><a
-							th:if="${FileVO.fType == 'image'}"> <img
-								th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
-						</a> <a th:if="${FileVO.fType == 'application'}"
-							th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
-							th:title="${FileVO.fileNm}"> <img style="width: 40px;"
-								th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
-								th:text="${FileVO.fileNm}"></span>><br>
-						</a></li>
-					</ul>
 				</div>
 			</div>
 			<div

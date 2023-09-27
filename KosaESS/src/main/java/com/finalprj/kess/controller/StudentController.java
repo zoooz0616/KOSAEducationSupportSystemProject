@@ -393,7 +393,7 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/notice")
+	@GetMapping("/notice/list")
 	public String noticeList(Model model) {
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllNotice();
@@ -443,7 +443,7 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/notice/{postId}")
+	@GetMapping("/notice/view/{postId}")
 	public String noticeDetail(@PathVariable String postId, Model model) {
 		PostVO noticeDetail = studentService.selectNotice(postId);
 		model.addAttribute("noticeDetail", noticeDetail);
@@ -461,7 +461,7 @@ public class StudentController {
 	 * @parameter : model
 	 * @return :
 	 */
-	@GetMapping("/inquiry")
+	@GetMapping("/inquiry/list")
 	public String inquiryList(Model model) {
 		List<PostVO> postList = new ArrayList<PostVO>();
 		postList = studentService.selectAllInquiry();
@@ -486,6 +486,69 @@ public class StudentController {
 		model.addAttribute("inquiriesList", searchResults);
 		return searchResults;
 	}
+	
+
+	/**
+	 * @author : dabin
+	 * @return 
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@PostMapping("/inquiry/writeform")
+	@ResponseBody
+	public String InquiryWrite(HttpSession session) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		return stdtId;
+	}
+
+	@GetMapping("/inquiry/writegoform")
+	public String goInquiryWrite() {
+		return "student/inquiry_write";
+	}
+	
+	
+	// 문의사항 글쓰기
+
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9.20.
+	 * @parameter : model
+	 * @return :
+	 */
+
+	@PostMapping("/inquiry/write")
+	@ResponseBody
+	public void write(@RequestParam("file") MultipartFile file, @RequestParam("title") String title,
+			@RequestParam("content") String content, HttpSession session, Model model) throws IOException {
+
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		// 업로드하기
+		String maxFileId = uploadFileService.getMaxFileId();
+		int subFileId = 1;
+		FileVO fileVO = new FileVO();
+		fileVO.setFileId(maxFileId);
+		fileVO.setFileSubId(subFileId);
+		fileVO.setFileNm(file.getOriginalFilename());
+		fileVO.setFileSize(file.getSize());
+		fileVO.setFileType(file.getContentType());
+		fileVO.setFileContent(file.getBytes());
+		uploadFileService.uploadFile(fileVO);
+		subFileId++;
+
+		String maxPostId = studentService.getMaxPostId();
+		PostVO post = new PostVO();
+		post.setPostId(maxPostId);
+		post.setPostTitle(title);
+		post.setPostContent(content);
+		post.setPostCd("PST0000003");
+		post.setFileId(maxFileId);
+		post.setRgsterId(stdtId);
+		studentService.uploadInquiry(post);
+
+	}
 
 	// 문의사항 상세화면
 
@@ -496,7 +559,7 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/inquiry/{postId}")
+	@GetMapping("/inquiry/view/{postId}")
 	public String inquiryDetail(@PathVariable String postId, Model model) {
 		PostVO inquiryDetail = studentService.selectInquiry(postId);
 		model.addAttribute("inquiryDetail", inquiryDetail);
@@ -518,7 +581,7 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/class")
+	@GetMapping("/class/list")
 	public String classList(Model model) {
 		model.addAttribute("student", student);
 
@@ -537,7 +600,7 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/class/{clssId}")
+	@GetMapping("/class/view/{clssId}")
 	public String classdetail(@PathVariable String clssId, Model model, HttpSession session) {
 		// 학생 정보를 세션에서 가져와서 student 객체에 저장
 		String student = (String) session.getAttribute("student");
@@ -696,14 +759,17 @@ public class StudentController {
 	@GetMapping("/mypage")
 	public String mypageMain(HttpSession session, Model model) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
-		model.addAttribute("applyList", applyList);
-
+		/*
+		 * List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
+		 * model.addAttribute("applyList", applyList);
+		 */
 		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
 		model.addAttribute("rgstList", rgstList);
 
-		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
-		model.addAttribute("wlogList", wlogList);
+		/*
+		 * List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		 * model.addAttribute("wlogList", wlogList);
+		 */
 
 		List<PostVO> postList = studentService.searchPostList(stdtId);
 		model.addAttribute("postList", postList);

@@ -16,7 +16,7 @@ $(document).ready(function() {
 					var row = $('<tr class="aplyRow"></tr>');
 
 					row.append('<td><span >' + (i + 1) + '</span></td>');
-					row.append('<td>' + ApplyDetailDTO.clssNm + '</td>');
+					row.append('<td style="word-break: keep-all;">' + ApplyDetailDTO.clssNm + '</td>');
 					row.append('<td><span>' + ApplyDetailDTO.aplyStartDd + '<br> ~ ' + ApplyDetailDTO.aplyEndDd + '</span></td>');
 					row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 					row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
@@ -176,7 +176,7 @@ $(document).ready(function() {
 						var outTmDd = formatTimestamp(WorklogVO.outTm);
 
 					row.append('<td><span >' + (i + 1) + '</span></td>');
-					row.append('<td>' + WorklogVO.clssNm + '</td>');
+					row.append('<td style="word-break: keep-all;">' + WorklogVO.clssNm + '</td>');
 					row.append('<td>' + inTmDd + '</td>');
 					row.append('<td>' + outTmDd + '</td>');
 					if (WorklogVO.wlogNm == '정상') {
@@ -332,51 +332,42 @@ $('#passwordInput').on('keyup', function(event) {
 	}
 });
 
-$('.showReply').click(function() {
-	$('.reply').slideUp(300);
-	// 현재 클릭된 행의 다음 형제 요소를 찾습니다.
-	var replyRow = $(this).closest('li').find(
-		'.reply');
-	var postId = $(this).closest('li').find(
-		'td:last-child').text().trim(); // 버튼을 누른 행에 있는 postId 가져오기
+function toggleReply(button) {
+	var replyContainer = $(button).closest('li').find('.reply-container');
+	var postId = $(button).closest('li').find('td:last-child').text().trim();
+	var otherButtons = $('.toggleReplyButton').not(button);
 
-	var ulContainer = $(this).closest('li').find(
-		'.reply-container');
+	if (replyContainer.css('display') === 'none') {
+		// 다른 답변 컨테이너를 닫습니다.
+		$('.reply-container').slideUp(300);
+		otherButtons.val("확인하기");
 
-	// Ajax 요청을 보내서 답변 목록을 가져옵니다.
-	$.ajax({
-		type: "POST",
-		url: "/student/show/reply",
-		data: {
-			postId: postId
-		},
-		success: function(response) {
-			// 답변 목록을 새로운 ul 요소로 생성합니다.
-			var ul = $('<ul class="reply">');
+		// 현재 클릭한 답변 컨테이너를 엽니다.
+		$.ajax({
+			type: "POST",
+			url: "/student/show/reply",
+			data: {
+				postId: postId
+			},
+			success: function(response) {
+				var ul = $('<ul class="reply">');
 
-			// 각 답변을 ul 요소에 추가합니다.
-			for (var i = 0; i < response.length; i++) {
-				var reply = response[i];
-				var li = $('<li>');
-				li.append('<div>답변 제목: '
-					+ reply.inquiry.title
-					+ '</div>');
-				li.append('<div>답변 내용: '
-					+ reply.inquiry.content
-					+ '</div>');
-				li.append('<div style="display:flex; justify-content: flex-end;"><span>답변 날짜: '
-					+ reply.inquiry.date
-					+ '</span><span>답변자: '
-					+ reply.inquiry.name
-					+ '</span></div>');
-				ul.append(li);
+				for (var i = 0; i < response.length; i++) {
+					var reply = response[i];
+					var li = $('<li>');
+					li.append('<div>답변 제목: ' + reply.inquiry.title + '</div>');
+					li.append('<div style="word-break: keep-all;">답변 내용: ' + reply.inquiry.content + '</div>');
+					li.append('<div style="display:flex; justify-content: flex-end;"><span>답변 날짜: ' + reply.inquiry.date + '</span><span>답변자: ' + reply.inquiry.name + '</span></div>');
+					ul.append(li);
+				}
+
+				replyContainer.html(ul).hide().slideDown(300);
+				button.value = "닫기";
 			}
-
-			// ul을 reply-container에 추가하고 보여줍니다.
-			ulContainer.html(ul).hide().slideToggle(300);
-			replyRow
-				.css('display', 'block'); // 또는 'inline' 등 적절한 값으로 설정합니다.
-		}
-	});
-});
-
+		});
+	} else {
+		// 답변 컨테이너를 닫고 버튼 텍스트를 "확인하기"로 변경합니다.
+		replyContainer.slideUp(300);
+		button.value = "확인하기";
+	}
+}

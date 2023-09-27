@@ -77,7 +77,7 @@
 							th:text="${classVO.clssAdr}"></span>
 						<td><span th:text="${classVO.limitCnt}"></span></td>
 						<td><a class="applyBtn"
-							th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
+							th:href="@{/student/class/view/__${classVO.clssId}__}">지원하기</a></td>
 					</tr> -->
 				</tbody>
 			</table>
@@ -97,7 +97,7 @@
 							</div>
 						</td>
 						<td th:text="${classVO.clssNm}"
-							style="font-weight: bold; font-size: 18px;">교육과정명</td>
+							style="font-weight: bold; font-size: 18px; word-break: keep-all">교육과정명</td>
 						<td><span>지원기간: </span><span
 							th:if="${classVO.aplyStartDd == null}">미정</span> <span
 							th:if="${classVO.aplyStartDd != null}"
@@ -112,7 +112,7 @@
 							<span th:text="'  /  '"></span> <span>정원: </span> <span
 							th:text="${classVO.limitCnt}"></span></td>-->
 						<td><a class="applyBtn"
-							th:href="@{/student/class/__${classVO.clssId}__}">지원하기</a></td>
+							th:href="@{/student/class/view/__${classVO.clssId}__}">지원하기</a></td>
 					</tr>
 				</tbody>
 			</table>
