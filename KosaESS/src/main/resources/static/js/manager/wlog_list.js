@@ -2,9 +2,14 @@ var chkAll = $("#chkAll");//"전체" 체크박스
 var chkList = $("input[class=chkWokCd]");//출석 상태 체크박스 리스트
 var isChecked = chkAll.prop("checked");//"전체" 체크박스의 체크 상태(true 또는 false)
 var allChecked = chkList.filter(":checked").length === chkList.length;
-var wlogListTable = document.getElementById('wlog_list_tbody');//tbody 선택하기
+var wlogListTable = $('#wlog_list_tbody');//tbody 선택하기
 var date = new Date();
 var year = date.getFullYear();
+var stdtListTable = document.getElementById('stdt_list_table_tbody');//tbody 선택하기
+var date = new Date();
+var year = date.getFullYear();
+
+var radioBtns = $("input[name=default_period]");
 
 //오늘 기준 이번 달의 첫 날 반환
 function getFirstDay() { var month = ("0" + (1 + date.getMonth())).slice(-2); var day = "01"; return year + "-" + month + "-" + day; }
@@ -12,11 +17,12 @@ function getFirstDay() { var month = ("0" + (1 + date.getMonth())).slice(-2); va
 function getLastDay() { var month = ("0" + (1 + date.getMonth())).slice(-2); var lastDay = new Date(year, month, 0).getDate(); return year + "-" + month + "-" + lastDay; }
 //tbody의 모든 내용을 삭제
 function clearTable() {
-	if (wlogListTable.firstChild != null) {
+	/*if (wlogListTable.firstChild != null) {
 		while (wlogListTable.firstChild) {
 			wlogListTable.removeChild(wlogListTable.firstChild);
 		}
-	}
+	}*/
+	wlogListTable.empty();
 }
 
 //체크된 출석 상태 반환
@@ -31,10 +37,30 @@ function getFilterCd() {
 }
 //End
 
+//현재 체크된 라디오 버튼의 값에 따라 start/end Date를 변경
+function setSearchPeriod(){
+	if($("input[name='default_period']:checked").val()=="thisClassPeriod"){
+		$('#startDate').val($('#start_date_save').val());
+		$('#endDate').val($('#end_date_save').val());
+	} else if ($("input[name='default_period']:checked").val()=="thisMonth") {
+		$('#startDate').val(getFirstDay());
+		$('#endDate').val(getLastDay());
+	}else{
+		$('#startDate').val(getFirstDay());
+		$('#endDate').val(getLastDay());
+	}
+}
+//End
+
 //---------------------------------------------------------------------------
 // 1. 체크박스 컨트롤
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
+	
+	radioBtns.change( function(){
+		setSearchPeriod();
+	}),
+	
 	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
 	chkAll.on("change", function() {
 		isChecked = chkAll.prop("checked");
@@ -58,18 +84,18 @@ $(document).ready(
 //End : 체크박스 컨트롤
 
 // 2. 검색 누르면 검색하세요
+var outputString = "Show Modal";
 function showModal() {
-	var outputString = "Show Modal";
 	console.log(outputString);
 	outputString = outputString + "!";
 }
 
 function search() {
-	//1) tbody의 내용물을 비운다
-	clearTable();
-
+	
+	var targetClassId = $('#class_selector option:selected').val();
+	
 	// 교육과정이 선택되지 않았다면 알림을 띄우고 탈출한다
-	if(targetClassId == null){
+	if(targetClassId == ''){
 		$(".look_at_me").css("display","flex");
 		$(".look_at_me").fadeIn(200);
 		$(".look_at_me .read_this").text("교육과정을 선택하세요");
@@ -77,103 +103,103 @@ function search() {
 		$(".look_at_me").fadeOut(200);
 		return;
 	}
+	// End
 	
-	//2) tbody에 붙일 내용물을 만든다
-	var targetClassId = document.getElementById('class_selector').options[document.getElementById('class_selector').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
 	var startDate = document.getElementById("startDate").value;
 	var endDate = document.getElementById("endDate").value;
-	var stdtNm = document.getElementById("search_by_stdt_name").value;
+	
+	// 검색 기간이 선택되지 않았다면 알림을 띄우고 탈출한다
+	if(startDate == '' || endDate == ''){
+		$(".look_at_me").css("display","flex");
+		$(".look_at_me").fadeIn(200);
+		$(".look_at_me .read_this").text("검색 기간을 선택하세요");
+		$(".look_at_me").delay(800);
+		$(".look_at_me").fadeOut(200);
+		return;
+	}
+	// End
+	
+	targetClassId = targetClassId.split("(")[1];
+	targetClassId = targetClassId.split(",")[0];
+	targetClassId = targetClassId.split("=")[1];
+	
+	var keyword = $("#search_keyword").val();
 	var wlogCd = getFilterCd();
-	if (startDate == '') { startDate = getFirstDay(); }
-	if (endDate == '') { endDate = getLastDay(); }
-
+	var isDeleteVal = $('#isDelete').is(':checked');
+	var resnOnlyVal = $('#fileContainedOnly').is(':checked');
+	
+	//ㅇㅋ
+	
 	console.log(targetClassId);
-	console.log(startDate);
-	console.log(endDate);
-	console.log(wlogCd);
-	console.log(stdtNm);
-
+	
 	$.ajax({
 		type: 'get',
-		url: '/manager/wlog/search', // 서버의 엔드포인트 URL
+		url: '/manager/worklog/search', // 서버의 엔드포인트 URL
 		// 			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
 		data: {
-			classId: targetClassId
+			clssId: targetClassId
 			, startDate: startDate
 			, endDate: endDate
+			, wlogCd:wlogCd
+			, isDelete:isDeleteVal
+			, resnOnly:resnOnlyVal
+			, keyword:keyword
 		},
 		async: false,
-		success: function(stdtListResponse) {
+		success: function(wlogListResponse) {
+			var wlogList = wlogListResponse.wlogList;
+			
+			// 테이블 초기화
 			clearTable();
 
-			//교육과정명 변경 
-			$(".title_a").text(stdtListResponse.thisClassVO.clssNm);
-			$(".title_a").attr("id", "className");
-			$(".title_a").val(stdtListResponse.thisClassVO.clssId);
-			$(".title_a").attr("href", "/manager/class/" + stdtListResponse.thisClassVO.clssId);
-
 			//인원 수 입력
-			var stdtList = stdtListResponse.stdtList;
-			document.getElementById("stdtCnt").innerHTML = stdtList.length;
+			document.getElementById("wlogCnt").innerHTML = wlogList.length;
 			//End
 
 			//입력 시작
-			for (let i = 0; i < stdtList.length; i++) {
-				var newRow = document.createElement("tr");
-				newRow.className = "stdt_list_table_row";
+			for (let i = 0; i < wlogList.length; i++) {
+				// 새 행 생성
+				var newRow = $('<tr></tr>');
+				newRow.className = "wlog_list_tbody_row";//행 클래스 입력
 
-				//체크박스 생성
-				var inputChk = document.createElement('input');
-				inputChk.value = stdtList[i].stdtId;
-				inputChk.setAttribute('name', 'chkStdt');
-				inputChk.type = 'checkBox';
+				var rowChk = $('<td></td>');
+				var rowNum = $('<td></td>');
+				var rowName = $('<td></td>');
+				var rowEmail = $('<td></td>');
+				var rowInTime = $('<td></td>');
+				var rowOutTime = $('<td></td>');
+				var rowTotalTime = $('<td></td>');
+				var rowWlogCd = $('<td></td>');
+				var rowIsDelete = $('<td></td>');
+				var rowResn = $('<td></td>');
+				var rowResnCd = $('<td></td>');
 
-				var rowChk = document.createElement('td');
-				rowChk.appendChild(inputChk);//체크박스
-				var rowNum = document.createElement('td');
-				rowNum.innerHTML = i + 1;//행 번호
-				var rowName = document.createElement('td');
-				rowName.innerHTML = stdtList[i].stdtNm;//이름
-				var rowEmail = document.createElement('td');
-				rowEmail.innerHTML = stdtList[i].userEmail;//이메일
-				var rowTel = document.createElement('td');
-				rowTel.innerHTML = stdtList[i].stdtTel;//전화번호
-				var rowGender = document.createElement('td');
-				rowGender.innerHTML = stdtList[i].genderCd;//성
-				var rowBirth = document.createElement('td');
-				rowBirth.innerHTML = stdtList[i].birthDd;//생일
+				rowChk.html('<input type="checkbox" class="chk_wlog">');
+				rowChk.attr("class","chk_wlog");
+				rowChk.attr("value",wlogList[i].stdtId);
+				rowNum.text(i+1);
+				rowName.text(wlogList[i].stdtNm);
+				rowEmail.text(wlogList[i].userEmail);
+				rowInTime.text(wlogList[i].inTm);
+				rowOutTime.text(wlogList[i].outTm);
+				rowTotalTime.text(Number(wlogList[i].wlogTotalTm).toFixed(1));
+				rowWlogCd.text(wlogList[i].wlogCd);
+				rowIsDelete.text(wlogList[i].deleteYn);
+				rowResn.text(wlogList[i].resnId);
+				rowResnCd.text(wlogList[i].prcsCd);
 
-				newRow.appendChild(rowChk);
-				newRow.appendChild(rowNum);
-				newRow.appendChild(rowName);
-				newRow.appendChild(rowEmail);
-				newRow.appendChild(rowTel);
-				newRow.appendChild(rowGender);
-				newRow.appendChild(rowBirth);
-				$.ajax({
-					type: 'get',
-					url: '/manager/student/search/codename',
-					async: false,
-					success: function(wlogResponse) {
-						wlogCodeNameList = wlogResponse.wlogCodeList;
-						for (let j = 0; j < wlogCodeNameList.length; j++) {
-							var rowWlog = document.createElement('td');
-							rowWlog.innerHTML = stdtList[i].wlogCnt.split(',')[j].substr(10);
-							newRow.appendChild(rowWlog);//출결상태
-						}
-					}, error: function(error) { console.log("error: ", error); }
-				})
-
-				//▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽수정 필요
-				var cmptRate = document.createElement('td');
-				cmptRate.innerHTML = (stdtList[i].cmptRate).toFixed(1) + " %";
-				//△△△△△△△△△△△△△△△△△△△△△△△△△△△수정 필요
-
-				var rowJob = document.createElement('td');
-				rowJob.innerHTML = stdtList[i].jobCd;
-
-				newRow.appendChild(cmptRate);
-				newRow.appendChild(rowJob);
+				newRow.append(rowChk);
+				newRow.append(rowNum);
+				newRow.append(rowName);
+				newRow.append(rowEmail);
+				newRow.append(rowInTime);
+				newRow.append(rowOutTime);
+				newRow.append(rowTotalTime);
+				newRow.append(rowWlogCd);
+				newRow.append(rowIsDelete);
+				newRow.append(rowResn);
+				newRow.append(rowResnCd);
+				
 				//3) tbody에 붙인다
 				wlogListTable.append(newRow);
 			}
