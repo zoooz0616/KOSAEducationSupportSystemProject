@@ -1671,7 +1671,7 @@ public class AdminController {
 		
 		return studentList;
 	}
-	
+
 	/**
 	 * 교육생 선택삭제
 	 * @author : eunji
