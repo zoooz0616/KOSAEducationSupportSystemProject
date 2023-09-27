@@ -1655,7 +1655,36 @@ public class AdminController {
 		return "admin/student_list";
 	}
 
+	/**
+	 * 교육생 검색
+	 * @author : eunji
+	 * @date : 2023. 9. 27.
+	 * @parameter : stdtNm,clssId,genderCd,jobCd,userCd
+	 * @return : String
+	 */
+	@GetMapping("/student/search")
+	@ResponseBody
+	public List<StudentVO> searchStudent(@RequestParam(name = "stdtNm", required = false) String stdtNm, @RequestParam String clssId,
+			@RequestParam String genderCd, @RequestParam String jobCd, @RequestParam String userCd){
+		
+		List<StudentVO> studentList = adminService.getSearchStudentList(stdtNm, clssId, genderCd, jobCd, userCd);;
+		
+		return studentList;
+	}
 
+	/**
+	 * 교육생 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : selectedStudentIds
+	 * @return : String
+	 */
+	@PostMapping("/student/delete")
+	@ResponseBody
+	public String deleteStudent(@RequestParam("selectedStudentIds[]") List<String> selectedStudentIds) {
+		adminService.deleteStudentList(selectedStudentIds);
+		return "success";
+	}
 
 
 	/**
