@@ -1,7 +1,6 @@
 @charset "UTF-8";
 
 .resn_modal_wrap{
-/* 	border: 1px solid black; */
 	width : 100%;
 	z-index: 20;
 	display: flex;
@@ -17,6 +16,8 @@
 /* 	display : fixed; */
 }
 
-.resn_modal_wrap .resn_modal .wlog_info {
-	display: table-row;
+.resn_modal_wrap .resn_modal .wlog_info{
+	justify-content: center;
+	display: flex;
+	position: fixed;
 }
