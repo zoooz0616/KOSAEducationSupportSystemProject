@@ -45,18 +45,18 @@
 								<img th:src="@{/img/minus_white.png}" style="width: 20px;">
 								<span>선택삭제</span>
 							</button>
-							
-							<button id="lecture_update_btn">
+
+							<button id="lecture_update_btn" onclick="enterLectureEditMode()">
 								<img th:src="@{/img/update_white.png}" style="width: 20px;">
 								<span>수정하기</span>
 							</button>
-							
-							<button id="lecture_cancel_btn">
-								<img th:src="@{/img/x_white.png}" style="width: 20px;">
-								<span>수정취소</span>
+
+							<button id="lecture_cancel_btn" onclick="cancelLectureEditMode()"
+								style="display: none;">
+								<img th:src="@{/img/x_white.png}" style="width: 20px;"> <span>수정취소</span>
 							</button>
-							
-							<button id="lecture_save_btn">
+
+							<button id="lecture_save_btn" style="display: none;">
 								<img th:src="@{/img/save_white.png}" style="width: 20px;">
 								<span>저장하기</span>
 							</button>
@@ -67,16 +67,19 @@
 					<!-- 강의 등록하기 -->
 					<div class="insert_lecture insert" style="padding: 5px;">
 						<div>
-							<span>과목명</span> <select id="subject_id_input">
-								<option th:each="subject: ${ySubjectList}"
+							<span>과목명<span class="red">*</span></span> <select
+								id="subject_id_input">
+								<option th:each="subject: ${subjectList}"
 									th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}">
-							</select> <span>강사명</span> <select id="professor_id_input">
-								<option th:each="professor: ${yProfessorList}"
+							</select> <span>강사명<span class="red">*</span></span> <select
+								id="professor_id_input">
+								<option th:each="professor: ${professorList}"
 									th:value="${professor.profId}" th:text="${professor.profNm}">
-							</select> <span>강의명</span> <input id="lecture_nm_input" value=""
-								type="text" placeholder="강의명" style="width: 150px;"> <span>이수시간</span>
-							<input id="lecture_tm_input" type="number" value="0"
-								style="width: 100px;">
+							</select> <span>강의명<span class="red">*</span></span> <input
+								id="lecture_nm_input" value="" type="text" placeholder="강의명"
+								style="width: 150px;"> <span>이수시간<span
+								class="red">*</span></span> <input id="lecture_tm_input" type="number"
+								value="0" style="width: 100px;">
 						</div>
 						<div>
 							<button class="insert_btn" type="button"
@@ -92,26 +95,39 @@
 					<div class="table_wrap lecture_table">
 						<table>
 							<tr class="content_list_th">
-								<th><input type="checkbox" class="lecture_checkbox_all"></th>
-								<th>번호</th>
-								<th>강의명</th>
-								<th>과목명</th>
-								<th>강사명</th>
-								<th>이수시간</th>
+								<th style="width: 5%;"><input type="checkbox"
+									class="lecture_checkbox_all"></th>
+								<th style="width: 10%;">번호</th>
+								<th style="width: 40%;">강의명</th>
+								<th style="width: 25%;">과목명</th>
+								<th style="width: 10%;">강사명</th>
+								<th style="width: 10%;">이수시간</th>
 							</tr>
 							<tr th:each="lecture, iterStat : ${lectureList}">
-								<td style="text-align: center;"><input type="checkbox"
+								<td class="td_lecture_check_box"><input type="checkbox"
 									th:value="${lecture.lctrId}" class="lecture_checkbox_item"></td>
-								<td th:text="${iterStat.index + 1}"></td>
-								<td><span th:text="${lecture.lctrNm}" class="lecture_span"></span>
-									<input style="display: none; width: 200px;"
-									class="lecture_input lecture_nm" type="text"
-									th:value="${lecture.lctrNm}"></td>
-								<td><span th:text="${lecture.sbjtNm}"></span></td>
-								<td><span th:text="${lecture.profNm}"></span></td>
-								<td><span th:text="${lecture.lctrTm}" class="lecture_span"></span>
-									<input style="display: none; width: 50px;"
-									class="lecture_input lecture_tm" type="text"
+								<td class="td_lecture_num" th:text="${iterStat.index + 1}"></td>
+								<td><span class="lecture_span" th:text="${lecture.lctrNm}"></span>
+									<input style="display: none;" class="lecture_input lecture_nm"
+									type="text" th:value="${lecture.lctrNm}"></td>
+								<td><span class="lecture_span" th:text="${lecture.sbjtNm}"></span>
+									<select class="lecture_select lecture_sbjt"
+									style="display: none;">
+										<option th:each="subject: ${subjectList}"
+											th:value="subject.sbjtId" th:text="${subject.sbjtNm}"
+											th:selected="${subject.sbjtId == lecture.sbjtId}">
+								</select></td>
+								<td class="td_lecture_professor"><span class="lecture_span"
+									th:text="${lecture.profNm}"></span> <select
+									class="lecture_select lecture_prof" style="display: none;">
+										<option th:each="professor: ${professorList}"
+											th:value="professor.profId" th:text="${professor.profNm}"
+											th:selected="${professor.profId == lecture.profId}">
+								</select></td>
+								<td class="td_lecture_tm"><span class="lecture_span"
+									th:text="${lecture.lctrTm}"></span> <input
+									style="display: none; width: 80px;"
+									class="lecture_input lecture_tm" type="number"
 									th:value="${lecture.lctrTm}"></td>
 							</tr>
 						</table>
@@ -134,23 +150,19 @@
 						</div>
 						<div class="content_info_button_wrap">
 							<button id="subject_delete_btn">
-								<img th:src="@{/img/minus_white.png}">
-								<span>선택삭제</span>
+								<img th:src="@{/img/minus_white.png}"> <span>선택삭제</span>
 							</button>
-							
-							<button id="subject_update_btn">
-								<img th:src="@{/img/update_white.png}">
-								<span>수정하기</span>
+
+							<button id="subject_update_btn" onclick="enterSubjectEditMode()">
+								<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
 							</button>
-							
-							<button id="subject_cancel_btn">
-								<img th:src="@{/img/x_white.png}">
-								<span>수정취소</span>
+
+							<button id="subject_cancel_btn" onclick="cancelSubjectEditMode()" style="display: none;">
+								<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
 							</button>
-							
-							<button id="subject_save_btn">
-								<img th:src="@{/img/save_white.png}">
-								<span>저장하기</span>
+
+							<button id="subject_save_btn" style="display: none;">
+								<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
 							</button>
 						</div>
 					</div>
@@ -159,14 +171,15 @@
 					<!-- 과목 등록하기 -->
 					<div class="insert_subject insert" style="padding: 5px;">
 						<div>
-							<span style="color: #0E5881; font-weight: bold;">과목명</span> <input
+							<span>과목명<span class="red">*</span></span> <input
 								id="subject_input" type="text" placeholder="과목명">
 						</div>
 
 						<div>
 							<button class="insert_btn" type="button"
 								onclick="insertSubject()">
-								<img th:src="@{/img/plus_white.png}">등록하기</button>
+								<img th:src="@{/img/plus_white.png}">등록하기
+							</button>
 						</div>
 					</div>
 					<!-- 과목 등록하기 -->
@@ -175,15 +188,16 @@
 					<div class="table_wrap subject_table">
 						<table>
 							<tr class="content_list_th">
-								<th><input type="checkbox" class="subject_checkbox_all"></th>
-								<th>번호</th>
-								<th>과목명</th>
+								<th style="width: 10%;"><input type="checkbox"
+									class="subject_checkbox_all"></th>
+								<th style="width: 10%;">번호</th>
+								<th style="width: 80%;">과목명</th>
 							</tr>
 							<tr th:each="subject, iterStat : ${subjectList}">
-								<td style="text-align: center;"><input type="checkbox"
+								<td class="td_subject_check_box"><input type="checkbox"
 									class="subject_checkbox_item" th:value="${subject.sbjtId}"></td>
-								<td th:text="${iterStat.index + 1}"></td>
-								<td><span th:text="${subject.sbjtNm}" class="subject_span"></span>
+								<td class="td_subject_num" th:text="${iterStat.index + 1}"></td>
+								<td><span class="subject_span" th:text="${subject.sbjtNm}" ></span>
 									<input style="display: none;" type="text"
 									class="subject_input subject_nm" th:value="${subject.sbjtNm}">
 								</td>
@@ -204,23 +218,21 @@
 						</div>
 						<div class="content_info_button_wrap">
 							<button id="professor_delete_btn">
-								<img th:src="@{/img/minus_white.png}">
-								<span>선택삭제</span>
+								<img th:src="@{/img/minus_white.png}"> <span>선택삭제</span>
 							</button>
-							
-							<button id="professor_update_btn">
-								<img th:src="@{/img/update_white.png}">
-								<span>수정하기</span>
+
+							<button id="professor_update_btn"
+								onclick="enterProfessorEditMode()">
+								<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
 							</button>
-							
-							<button id="professor_cancel_btn">
-								<img th:src="@{/img/x_white.png}">
-								<span>수정취소</span>
+
+							<button id="professor_cancel_btn" style="display: none;"
+								onclick="cancelProfessorEditMode()">
+								<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
 							</button>
-							
-							<button id="professor_save_btn">
-								<img th:src="@{/img/save_white.png}">
-								<span>저장하기</span>
+
+							<button id="professor_save_btn" style="display: none;">
+								<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
 							</button>
 						</div>
 					</div>
@@ -230,17 +242,19 @@
 					<!-- 강사 등록하기 -->
 					<div class="insert_professor insert" style="padding: 5px;">
 						<div>
-							<span>강사명</span> <input id="professor_name_input" type="text"
-								placeholder="강사명" style="width: 50px;"> <span>전화번호</span>
+							<span>강사명<span class="red">*</span></span> <input
+								id="professor_name_input" type="text" placeholder="강사명"
+								style="width: 50px;"> <span>전화번호<span class="red">*</span></span>
 							<input id="professor_tel_input" type="text" placeholder="전화번호"
-								style="width: 100px;"> <span>이메일</span> <input
-								id="professor_email_input" type="email" placeholder="이메일"
+								style="width: 100px;"> <span>이메일<span class="red">*</span></span>
+							<input id="professor_email_input" type="email" placeholder="이메일"
 								style="width: 150px;">
 						</div>
 						<div>
 							<button class="insert_btn" type="button"
 								onclick="insertProfessor()">
-								<img th:src="@{/img/plus_white.png}">등록하기</button>
+								<img th:src="@{/img/plus_white.png}">등록하기
+							</button>
 						</div>
 					</div>
 					<!-- 강사 등록하기 -->
@@ -249,22 +263,23 @@
 					<div class="table_wrap professor_table">
 						<table>
 							<tr class="content_list_th">
-								<th><input type="checkbox" class="professor_checkbox_all"></th>
-								<th>번호</th>
-								<th>강사명</th>
-								<th>전화번호</th>
-								<th>이메일</th>
+								<th style="width: 5%;"><input type="checkbox"
+									class="professor_checkbox_all"></th>
+								<th style="width: 10%;">번호</th>
+								<th style="width: 20%;">강사명</th>
+								<th style="width: 30%;">전화번호</th>
+								<th style="width: 35%;">이메일</th>
 							</tr>
 							<tr th:each="professor, iterStat : ${professorList}">
-								<td style="text-align: center;"><input type="checkbox"
+								<td class="td_professor_check_box"><input type="checkbox"
 									class="professor_checkbox_item" th:value="${professor.profId}"></td>
-								<td th:text="${iterStat.index + 1}"></td>
-								<td><span class="professor_span"
+								<td class="td_professor_num" th:text="${iterStat.index + 1}"></td>
+								<td class="td_professor_name"><span class="professor_span"
 									th:text="${professor.profNm}"></span> <input
 									class="professor_input professor_nm"
-									style="display: none; width: 50px;"
+									style="display: none; width: 100px;"
 									th:value="${professor.profNm}"></td>
-								<td><span class="professor_span"
+								<td class="td_professor_tel"><span class="professor_span"
 									th:text="${professor.profTel}"></span> <input
 									class="professor_input professor_tel"
 									style="display: none; width: 100px;"
@@ -548,85 +563,177 @@
 									});
 						});
 
-		//취소버튼
-		function LectureCancelEdit(button) {
-			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
-			row.classList.remove("editing"); // 수정 모드 종료
+	//강의 수정하기 모드
+	function enterLectureEditMode(){
+		const deleteBtn = document.querySelector('#lecture_delete_btn');//강의 선택삭제 버튼
+        const updateBtn = document.querySelector('#lecture_update_btn');//강의 수정하기 버튼
+        const cancelBtn = document.querySelector('#lecture_cancel_btn');//강의 수정취소 버튼
+        const saveBtn = document.querySelector('#lecture_save_btn');//강의 저장하기 버튼
 
-			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
-			var spans = row.querySelectorAll('.lecture_input');
-			spans.forEach(function(span) {
-				span.style.display = 'none';
-			});
+        //버튼 display 수정
+        deleteBtn.style.display = 'none';
+        updateBtn.style.display = 'none';
+        cancelBtn.style.display = 'flex';
+        saveBtn.style.display = 'flex';
+        
+        //본래의 span 숨기기
+        const lectureSpans = document.querySelectorAll('.lecture_span');
+        lectureSpans.forEach((lectureSpan)=>{
+        	lectureSpan.style.display = 'none';
+        });
+        
+        //editInput과 editSelect 보이게 하기
+        const lectureEdits = document.querySelectorAll('.lecture_input, .lecture_select');
+        lectureEdits.forEach((lectureEdit)=>{
+        	lectureEdit.style.display = 'block';
+        });
+	}
+	
+	//강의 수정하기 취소
+    function cancelLectureEditMode() {
+    	const deleteBtn = document.querySelector('#lecture_delete_btn');//강의 선택삭제 버튼
+        const updateBtn = document.querySelector('#lecture_update_btn');//강의 수정하기 버튼
+        const cancelBtn = document.querySelector('#lecture_cancel_btn');//강의 수정취소 버튼
+        const saveBtn = document.querySelector('#lecture_save_btn');//강의 저장하기 버튼
 
-			var inputs = row.querySelectorAll('.lecture_span');
-			inputs.forEach(function(input) {
-				input.style.display = 'inline-block';
-			});
-		}
+      	//버튼 display 수정
+        deleteBtn.style.display = 'flex';
+        updateBtn.style.display = 'flex';
+        cancelBtn.style.display = 'none';
+        saveBtn.style.display = 'none';
+        
+      	//본래의 span 보이기
+        const lectureSpans = document.querySelectorAll('.lecture_span');
+        lectureSpans.forEach((lectureSpan)=>{
+        	lectureSpan.style.display = 'block';
+        });
+        
+        //editInput과 editSelect 숨기기
+        const lectureEdits = document.querySelectorAll('.lecture_input, .lecture_select');
+        lectureEdits.forEach((lectureEdit)=>{
+        	lectureEdit.style.display = 'none';
+        });
+    }
 
-		//강의 수정
-		function updateLecture(button) {
-			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
-			var row = button.closest('tr');
+  	//과목 수정하기 모드
+	function enterSubjectEditMode(){
+		const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
+        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
+        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
+        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
 
-			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
-			var spans = row.querySelectorAll('.lecture_span');
-			spans.forEach(function(span) {
-				span.style.display = 'none';
-			});
+        //버튼 display 수정
+        deleteBtn.style.display = 'none';
+        updateBtn.style.display = 'none';
+        cancelBtn.style.display = 'flex';
+        saveBtn.style.display = 'flex';
+        
+        //본래의 span 숨기기
+        const subjectSpans = document.querySelectorAll('.subject_span');
+        subjectSpans.forEach((subjectSpan)=>{
+        	subjectSpan.style.display = 'none';
+        });
+        
+        //editInput 보이게 하기
+        const subjectEdits = document.querySelectorAll('.subject_input');
+        subjectEdits.forEach((subjectEdit)=>{
+        	subjectEdit.style.display = 'block';
+        });
+	}	
+	
+	//과목 수정하기 취소
+	function cancelSubjectEditMode(){
+		const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
+        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
+        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
+        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
 
-			var inputs = row.querySelectorAll('.lecture_input');
-			inputs.forEach(function(input) {
-				input.style.display = 'inline-block';
-			});
+      	//버튼 display 수정
+        deleteBtn.style.display = 'flex';
+        updateBtn.style.display = 'flex';
+        cancelBtn.style.display = 'none';
+        saveBtn.style.display = 'none';
+        
+      	//본래의 span 보이기
+        const subjectSpans = document.querySelectorAll('.subject_span');
+        subjectSpans.forEach((subjectSpan)=>{
+        	subjectSpan.style.display = 'block';
+        });
+        
+        //editInput숨기기
+        const subjectEdits = document.querySelectorAll('.subject_input');
+        subjectEdits.forEach((subjectEdit)=>{
+        	subjectEdit.style.display = 'none';
+        });
+	}
+	
+	
+	//강사 수정하기 모드
+	function enterProfessorEditMode(){
+		const deleteBtn = document.querySelector('#professor_delete_btn');//강사 선택삭제 버튼
+        const updateBtn = document.querySelector('#professor_update_btn');//강사 수정하기 버튼
+        const cancelBtn = document.querySelector('#professor_cancel_btn');//강사 수정취소 버튼
+        const saveBtn = document.querySelector('#professor_save_btn');//강사 저장하기 버튼
 
-		}
+        //버튼 display 수정
+        deleteBtn.style.display = 'none';
+        updateBtn.style.display = 'none';
+        cancelBtn.style.display = 'flex';
+        saveBtn.style.display = 'flex';
+        
+        //본래의 span 숨기기
+        const professorSpans = document.querySelectorAll('.professor_span');
+        professorSpans.forEach((professorSpan)=>{
+        	professorSpan.style.display = 'none';
+        });
+        
+        //editInput 보이게 하기
+        const professorEdits = document.querySelectorAll('.professor_input');
+        	professorEdits.forEach((professorEdit)=>{
+        	professorEdit.style.display = 'block';
+        });
+	}	
+	
+	//강사 수정하기 취소
+	function cancelProfessorEditMode(){
+		const deleteBtn = document.querySelector('#professor_delete_btn');//강사 선택삭제 버튼
+        const updateBtn = document.querySelector('#professor_update_btn');//강사 수정하기 버튼
+        const cancelBtn = document.querySelector('#professor_cancel_btn');//강사 수정취소 버튼
+        const saveBtn = document.querySelector('#professor_save_btn');//강사 저장하기 버튼
 
-		//강의 저장
-		function saveLecture(button) {
-			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
-			var row = button.closest('tr');
+      	//버튼 display 수정
+        deleteBtn.style.display = 'flex';
+        updateBtn.style.display = 'flex';
+        cancelBtn.style.display = 'none';
+        saveBtn.style.display = 'none';
+        
+      	//본래의 span 보이기
+        const professorSpans = document.querySelectorAll('.professor_span');
+        professorSpans.forEach((professorSpan)=>{
+        	professorSpan.style.display = 'block';
+        });
+        
+        //editInput숨기기
+        const professorEdits = document.querySelectorAll('.professor_input');
+    	professorEdits.forEach((professorEdit)=>{
+    	professorEdit.style.display = 'none';
+    	});
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-			//id값, nm, tm값 가져와서 비동기처리
-			var lectureId = row.querySelector(".lecture_checkbox_item").value;
-			var lectureNm = row.querySelector(".lecture_nm").value;
-			var lectureTm = row.querySelector(".lecture_tm").value;
-
-			$.ajax({
-				url : '/admin/lecture/update',
-				method : 'POST',
-				data : {
-					lectureId : lectureId,
-					lectureNm : lectureNm,
-					lectureTm : lectureTm
-				},
-				success : function(response) {
-					console.log(response);
-					if (response == "success") {
-						alert("수정되었습니다.");
-						window.location.href = "/admin/lecture/list";
-					}
-				}
-			});
-		}
-
-		//취소버튼
-		function SubjectCancelEdit(button) {
-			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
-			row.classList.remove("editing"); // 수정 모드 종료
-
-			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
-			var spans = row.querySelectorAll('.subject_input')
-			spans.forEach(function(span) {
-				span.style.display = 'none';
-			});
-
-			var inputs = row.querySelectorAll('.subject_span')
-			inputs.forEach(function(input) {
-				input.style.display = 'inline-block';
-			});
-		}
 
 		//과목 수정
 		function updateSubject(button) {
@@ -670,8 +777,6 @@
 				}
 			});
 		}
-
-		//강사 취소
 
 		//강사 수정
 		function updateProfessor(button) {

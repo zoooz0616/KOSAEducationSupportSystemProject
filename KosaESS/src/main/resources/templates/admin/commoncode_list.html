@@ -36,9 +36,30 @@
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						공통코드 총 <span class="cnt" th:text="${#lists.size(groupCodeList)}"></span>
-						건
-						<button id="group_delete_btn">선택삭제</button>
+						<div>
+							공통코드 총 <span class="cnt" th:text="${#lists.size(groupCodeList)}"></span>
+							건
+						</div>
+						<div class="content_info_btn_wrap">
+							<button id="group_delete_btn">
+								<img th:src="@{/img/minus_white.png}">선택삭제
+							</button>
+							
+							<button id="group_update_btn">
+								<img th:src="@{/img/update_white.png}">
+								<span>수정하기</span>
+							</button>
+							
+							<button id="group_cancel_btn">
+								<img th:src="@{/img/x_white.png}">
+								<span>수정취소</span>
+							</button>
+							
+							<button id="group_save_btn">
+								<img th:src="@{/img/save_white.png}">
+								<span>저장하기</span>
+							</button>
+						</div>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
@@ -112,9 +133,30 @@
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						상세코드 총 <span class="detailCodeCnt"
-							th:text="${#lists.size(detailCodeList)}">0</span> 건
-						<button type="button" id="detail_delete_btn">선택삭제</button>
+						<div>
+							상세코드 총 <span class="detailCodeCnt"
+								th:text="${#lists.size(detailCodeList)}">0</span> 건
+						</div>
+						<div class="content_info_btn_wrap">
+							<button type="button" id="detail_delete_btn">
+								<img th:src="@{/img/minus_white.png}">선택삭제
+							</button>
+							
+							<button id="detail_update_btn">
+								<img th:src="@{/img/update_white.png}">
+								<span>수정하기</span>
+							</button>
+							
+							<button id="detail_cancel_btn">
+								<img th:src="@{/img/x_white.png}">
+								<span>수정취소</span>
+							</button>
+							
+							<button id="detail_save_btn">
+								<img th:src="@{/img/save_white.png}">
+								<span>저장하기</span>
+							</button>
+						</div>
 					</div>
 					<!-- 총 개수 및 버튼-->
 
@@ -146,7 +188,8 @@
 								class="detail_code_table">
 								<thead>
 									<tr class="content_list_th">
-										<th style="width: 30px;"><input type="checkbox" id="detailChkAll"></th>
+										<th style="width: 30px;"><input type="checkbox"
+											id="detailChkAll"></th>
 										<th>번호</th>
 										<th>상세코드ID</th>
 										<th>상세코드명</th>
@@ -172,24 +215,18 @@
 
 	<script>
 		//체크박스 전체선택
-		document
-				.addEventListener(
-						"DOMContentLoaded",
-						function() {
-							//그룹코드
-							const chkAll = document
-									.getElementById("groupChkAll");
-							const checkboxes = document
-									.querySelectorAll(".group_chk");
+		document.addEventListener("DOMContentLoaded", function() {
+			//그룹코드
+			const chkAll = document.getElementById("groupChkAll");
+			const checkboxes = document.querySelectorAll(".group_chk");
 
-							chkAll.addEventListener("change", function() {
-								checkboxes.forEach(function(checkbox) {
-									checkbox.checked = chkAll.checked;
-								});
-							});
+			chkAll.addEventListener("change", function() {
+				checkboxes.forEach(function(checkbox) {
+					checkbox.checked = chkAll.checked;
+				});
+			});
 
-
-						});
+		});
 
 		//그룹코드 선택삭제
 		document
@@ -372,9 +409,9 @@
 									var td1 = document.createElement("td");
 									td1.innerHTML = '<input type="checkbox" name="detailChk" class="detail_chk" value="' + detailCode.cmcdId + '">';
 									td1.style.textAlign = "center";
-									
+
 									var tdNum = document.createElement("td");
-									tdNum.innerHTML = i+1;
+									tdNum.innerHTML = i + 1;
 
 									var td2 = document.createElement("td");
 									td2.innerHTML = detailCode.cmcdId;
@@ -383,8 +420,8 @@
 									td3.innerHTML = '<div class="detail_update_div">'
 											+ detailCode.cmcdNm
 											+ '</div><input class="detail_update_input detail_cmcd_nm" type="text" value="' + detailCode.cmcdNm + '" style="display: none;">';
-											
-									var td4	= document.createElement("td");
+
+									var td4 = document.createElement("td");
 									td4.innerHTML = '<div class="detail_update_div">'
 											+ detailCode.cmcdOrder
 											+ '</div><input class="detail_update_input detail_cmcd_order" type="text" value="' + detailCode.cmcdOrder + '" style="display: none;">';
@@ -463,23 +500,19 @@
 			selectDetailCodeList(cmcdId);
 		}
 
-	//상세코드 전체선택
-		document
-				.addEventListener(
-						"DOMContentLoaded",
-						function() {
-							const chkdetailAll = document
-									.getElementById("detailChkAll");
-							const checkdetailboxes = document
-									.querySelectorAll('.detail_chk:checked"]');
+		//상세코드 전체선택
+		document.addEventListener("DOMContentLoaded", function() {
+			const chkdetailAll = document.getElementById("detailChkAll");
+			const checkdetailboxes = document
+					.querySelectorAll('.detail_chk:checked"]');
 
-							chkdetailAll.addEventListener("change", function() {
-								checkdetailboxes.forEach(function(checkbox) {
-									console.log("바뀜");
-									checkbox.checked = chkdetailAll.checked;
-								});
-							});
-						}); 
+			chkdetailAll.addEventListener("change", function() {
+				checkdetailboxes.forEach(function(checkbox) {
+					console.log("바뀜");
+					checkbox.checked = chkdetailAll.checked;
+				});
+			});
+		});
 
 		//상세코드 선택삭제
 		document.querySelector("#detail_delete_btn").addEventListener(

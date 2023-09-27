@@ -158,17 +158,6 @@
 		from lctr
 		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
 		join prof on prof.prof_id = lctr.prof_id
-		order by lctr_id
-	]]>
-	</select>
-
-	<select id="getYLectureList"
-		resultType="com.finalprj.kess.model.LectureVO">
-	<![CDATA[
-		select *
-		from lctr
-		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
-		join prof on prof.prof_id = lctr.prof_id
 		where lctr.delete_yn = 'N'
 		order by lctr_id
 	]]>
@@ -439,7 +428,8 @@
 	<![CDATA[
 		select *
 		from prof
-		order by prof_id
+		where delete_yn='N'
+		order by prof_nm
 	]]>
 	</select>
 
@@ -448,7 +438,8 @@
 	<![CDATA[
 		select *
 		from sbjt
-		order by sbjt_id
+		where delete_yn='N'
+		order by sbjt_nm
 	]]>
 	</select>
 
@@ -929,26 +920,6 @@
 	]]>
 	</update>
 
-	<select id="getYSubjectList"
-		resultType="com.finalprj.kess.model.SubjectVO">
-	<![CDATA[
-	select *
-	from sbjt
-	where delete_yn='N'
-	order by sbjt_nm
-	]]>
-	</select>
-
-	<select id="getYProfessorList"
-		resultType="com.finalprj.kess.model.ProfessorVO">
-	<![CDATA[
-	select *
-	from prof
-	where delete_yn='N'
-	order by prof_nm
-	]]>
-	</select>
-
 	<update id="updateLecture"
 		parameterType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
@@ -1249,6 +1220,19 @@ order by stdt.stdt_nm
 	]]>
 	</select>
 
+	<update id="updateCompany" parameterType="com.finalprj.kess.model.CompanyVO">
+	<![CDATA[
+	 update cmpy
+	 set
+	 	cmpy_nm = #{cmpyNm},
+	 	cmpy_tel = #{cmpyTel},
+	 	cmpy_adr = #{cmpyAdr},
+	 	file_id = #{fileId},
+	 	updt_dt = systimestamp,
+	 	updter_id = 'MNGR000001'
+	 where cmpy_id = #{cmpyId}
+	]]>
+	</update>
 
 
 

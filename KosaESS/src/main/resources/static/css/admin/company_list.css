@@ -88,7 +88,7 @@ a {
 	background: #E7EFF3;
 }
 
-.company_insert > span{
+.company_insert div > span{
 	color: #0E5881;
     font-weight: bold;
     margin: 5px;
@@ -166,6 +166,7 @@ a {
 }
 
 .company_detail_table tr th{
+	color: #0E5881;
 	background:#F3F6F8;
 }
 
@@ -189,13 +190,12 @@ a {
 	margin-top: 45%;
 }
 
-.cmpy_img_div{
+.cmpy_img_div, .td_checkbox, .td_num{
 	text-align: center;
-    margin: 20px;
 }
 
 .cmpy_img_div .cmpy_img{
-	width:400px;
+	width:200px;
 }
 
 .red{

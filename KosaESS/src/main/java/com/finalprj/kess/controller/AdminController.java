@@ -319,7 +319,7 @@ public class AdminController {
 			adminService.deleteFile(postVO.getFileId(), deleteFiles);
 			System.out.println("+++++++++++++++++++++"+deleteFiles);
 		}
-		
+
 		//fileId가 널이 아닐 때 file개수가 0 이면 fileId null로 변경
 		if (postVO.getFileId() != null) {
 			int fileCnt = adminService.getFileCnt(postVO.getFileId());
@@ -327,7 +327,7 @@ public class AdminController {
 				postVO.setFileId(null);
 			}
 		}		
-				
+
 		//파일을 첨부하지 않았다면 maxFileId는 그대로 fileList는 null.
 		String maxFileId = postVO.getFileId();
 		List<FileVO> fileList = null;
@@ -508,7 +508,7 @@ public class AdminController {
 		adminService.deleteAllInquiry(selectedInquiryIds);
 		return "success";
 	}
-	
+
 	/**
 	 * 문의사항 답변 삭제
 	 * @author : eunji
@@ -521,7 +521,7 @@ public class AdminController {
 	public String inquiryReplyDelete(@PathVariable String replyId) {
 		System.out.println("++++++++++++++++");
 		System.out.println(replyId);
-		
+
 		//답변 deleteYn='Y'로 업데이트
 		adminService.deleteInquiryReply(replyId);
 		return "success";
@@ -564,7 +564,7 @@ public class AdminController {
 		//교육상태 리스트
 		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
 		model.addAttribute("classCommonCodeList", classCommonCodeList);
-		
+
 		List<CompanyVO> companyList = adminService.getCompanyList();
 		model.addAttribute("companyList", companyList);
 
@@ -652,7 +652,7 @@ public class AdminController {
 		model.addAttribute("managerList", managerList);
 
 		//강의 리스트
-		List<LectureVO> lectureList = adminService.getYLectureList();
+		List<LectureVO> lectureList = adminService.getLectureList();
 		model.addAttribute("lectureList", lectureList);
 
 		return "admin/class_form";
@@ -891,16 +891,16 @@ public class AdminController {
 		//현 교육과정의 fileId값 가져오기 
 		String fileId = classVO.getFileId();
 
-		
+
 		//삭제되거나 변경전 파일 아이디들(deleteFileIds) 있다면 update deleteYn='Y'
 		if (fileSubIds != null) {
 			adminService.deleteFile(fileId, fileSubIds);
 		}
-		
+
 		//만약 null이라면 파일이 없었음. fileId 생성해줌.
-				if(fileId == null) {
-					fileId = uploadFileService.getMaxFileId();
-				}
+		if(fileId == null) {
+			fileId = uploadFileService.getMaxFileId();
+		}
 
 
 		//추가한 파일 insert하기.파일 변경이 없거나 모두 삭제시 fileList는 null.
@@ -1123,25 +1123,19 @@ public class AdminController {
 	 */
 	@RequestMapping("/lecture/list")
 	public String lecture(HttpSession session, Model model) {
-		//강사 리스트  생성
-		List<ProfessorVO> professorList = adminService.getProfessorList();
-		model.addAttribute("professorList", professorList);
+		//강의 리스트 생성
+		List<LectureVO> lectureList = adminService.getLectureList();
+		model.addAttribute("lectureList", lectureList);
 
 		//과목 리스트 생성
 		List<SubjectVO> subjectList = adminService.getSubjectList();
 		model.addAttribute("subjectList", subjectList);
 
-		//강의 리스트 생성
-		List<LectureVO> lectureList = adminService.getLectureList();
-		model.addAttribute("lectureList", lectureList);
+		//강사 리스트  생성
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+		model.addAttribute("professorList", professorList);
 
-		//강의를 만들기 위한 과목 리스트
-		List<SubjectVO> ySubjectList = adminService.getYSubjectList();
-		model.addAttribute("ySubjectList", ySubjectList);
 
-		//강의를 만들기 위한 강사 리스트
-		List<ProfessorVO> yProfessorList = adminService.getYProfessorList();
-		model.addAttribute("yProfessorList", yProfessorList);
 
 		return "admin/lecture_list";
 	}
@@ -1416,9 +1410,10 @@ public class AdminController {
 	 * @throws IOException 
 	 */
 	@PostMapping("/company/insert")
-	public String companyInsert(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttrs,
-			@RequestParam String cmpyNm, @RequestParam String cmpyTel, 
-			@RequestParam String cmpyAdr) throws IOException {
+	@ResponseBody
+	public List<CompanyVO> companyInsert(@RequestParam(name="file", required = false) MultipartFile file, RedirectAttributes redirectAttrs,
+			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel, 
+			@RequestParam("cmpyAdr") String cmpyAdr) throws IOException {
 
 		String fileId = null; 
 		FileVO fileVO = null;
@@ -1445,10 +1440,56 @@ public class AdminController {
 		adminService.insertCompanyVO(fileVO, companyVO);
 
 
+		List<CompanyVO> companyList = adminService.getCompanyList();
 		//파일 업로드 후 파일 아이디 값으로 객체 생성
 
-		return "redirect:/admin/company/list";
+		return companyList;
 	}
+	
+	/**
+	 * 기업 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 26.
+	 * @parameter : selectedCompanyIds
+	 * @return : String
+	 * @throws IOException 
+	 */
+	@PostMapping("/company/update/{cmpyId}")
+	@ResponseBody
+	public List<CompanyVO> updateCompany(@PathVariable String cmpyId, 
+			@RequestParam(name="file", required = false) MultipartFile file, RedirectAttributes redirectAttrs,
+			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel, 
+			@RequestParam("cmpyAdr") String cmpyAdr) throws IOException {
+		
+		CompanyVO companyVO = adminService.getCompanyVO(cmpyId);
+		companyVO.setCmpyNm(cmpyNm);
+		companyVO.setCmpyTel(cmpyTel);
+		companyVO.setCmpyAdr(cmpyAdr);
+		
+		String fileId = companyVO.getFileId();
+		FileVO fileVO = null;
+		
+		if (file != null && !file.isEmpty()) {
+			fileVO = new FileVO();
+			fileId = uploadFileService.getMaxFileId();
+			fileVO.setFileId(fileId);
+			fileVO.setFileSubId(1);
+			fileVO.setFileNm(file.getOriginalFilename());
+			fileVO.setFileSize(file.getSize());
+			fileVO.setFileType(file.getContentType());
+			fileVO.setFileContent(file.getBytes());
+		}
+		
+		companyVO.setFileId(fileId);
+		
+		adminService.updateCompany(fileVO, companyVO);
+		
+		
+		List<CompanyVO> companyList = adminService.getCompanyList();
+		
+		return companyList;
+	}
+	
 
 	/**
 	 * 기업 선택삭제
@@ -1478,14 +1519,14 @@ public class AdminController {
 		//업무담당자 리스트
 		List<ManagerVO> managerList = adminService.getManagerList();
 		model.addAttribute("managerList", managerList);
-		
+
 		//계정 기준정보 리스트
 		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
 		model.addAttribute("mngrCommonCodeList", mngrCommonCodeList);
 
 		return "admin/manager_list";
 	}
-	
+
 	/** 
 	 * 업무담당자 등록시 이메일 유효성 검사
 	 * @author : eunji
@@ -1499,7 +1540,7 @@ public class AdminController {
 		int managerCnt = adminService.getManagerEmailCnt(managerEmail);
 		if (managerCnt == 0) {
 			return "success";
-			
+
 		}else {
 			return "fail";
 		}
@@ -1579,7 +1620,7 @@ public class AdminController {
 		adminService.deleteManagerList(selectedManagerIds);
 		return "success";
 	}
-	
+
 	/**
 	 * 교육생 목록조회
 	 * @author : eunji
@@ -1592,14 +1633,29 @@ public class AdminController {
 		//교육생 리스트
 		List<StudentVO> studentList = adminService.getStudentList();
 		model.addAttribute("studentList", studentList);
+
+		//검색부분
 		
 		//교육과정 리스트
 		List<ClassVO> classList = adminService.getClassList();
 		model.addAttribute("classList", classList);
+		
+		//성별 commoncode
+		List<CommonCodeVO> genderList = adminService.getCommonCodeList("GRP0000006");
+		model.addAttribute("genderList", genderList);
+		
+		//직업 commoncode
+		List<CommonCodeVO> jobList = adminService.getCommonCodeList("GRP0000007");
+		model.addAttribute("jobList", jobList);
+		
+		//계정상태 commoncode
+		List<CommonCodeVO> statusList = adminService.getCommonCodeList("GRP0000008");
+		model.addAttribute("statusList", statusList);
+		
 		return "admin/student_list";
 	}
-	
-	
+
+
 
 
 	/**
