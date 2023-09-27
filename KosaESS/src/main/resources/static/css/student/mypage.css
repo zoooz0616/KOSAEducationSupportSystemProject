@@ -231,6 +231,22 @@ td button {
 	margin: 0 2%;
 }
 
+.cancel, .drop {
+	background-color: #F1A77E;
+}
+
+.toggleReplyButton {
+	padding: 7px;
+	border: 0;
+	font-size: 13px;
+	font-weight: bold;
+	border-radius: 5px;
+	background-color: #0E5881;
+	color: white;
+	margin: 0 2%;
+	width: 60%;
+}
+
 .applyTable td:nth-child(1) {
 	width: 7%;
 }
@@ -342,6 +358,7 @@ td button {
 .postTable td:nth-child(5) {
 	width: 13%;
 }
+
 .postTable th:nth-child(1) {
 	width: 7%;
 }
@@ -362,6 +379,7 @@ td button {
 .postTable th:nth-child(5) {
 	width: 13%;
 }
+
 .reply {
 	list-style: none;
 	border: #0E5881;
@@ -374,6 +392,7 @@ td button {
 	padding: 1%;
 	border-bottom: 1px solid #0E5881;
 }
-.reply span{
+
+.reply span {
 	padding-left: 2%;
 }

@@ -295,4 +295,14 @@ public class StudentService implements IStudentService {
 		return studentRepository.getReply(postId);
 	}
 
+	@Override
+	public String getMaxPostId() {
+		return studentRepository.getMaxPostId();
+	}
+
+	@Override
+	public void uploadInquiry(PostVO post) {
+		studentRepository.uploadInquiry(post);
+	}
+
 }

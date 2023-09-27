@@ -24,7 +24,7 @@
 						class="searchBtn" value="검색">
 				</div>
 				<div>
-					<input type="button" class="openformBtn" value="글쓰기">
+					<input type="submit" class="openformBtn" value="글쓰기">
 				</div>
 			</div>
 			<table class="inquiry-table" style="width: 90%; margin: auto;">
@@ -62,31 +62,28 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal1" style="display: none;">
-		<div class="modalBody" style="height: 590px;">
-			<div class="modalHeader">
-				<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
-			</div>
-			<div class="modalContent">
-				<div class="upload-area">
-					<p>사유서파일을 첨부하세요.</p>
-					<div style="width: 80%;">
-						<input class="upload-name" value="선택된 첨부파일이 없습니다"
-							placeholder="선택된 첨부파일이 없습니다" readonly> <label
-							for="fileInput">파일찾기</label> <input type="file" name="file"
-							id="fileInput" class="fileInput" accept="image/*">
-					</div>
-				</div>
-				<div>
-					<textarea class="resnText" placeholder="사유서 내용을 작성하세요."></textarea>
-				</div>
-				<div class="modalFooter">
-					<button type="reset" class="closeBtn">취소</button>
-					<button type="submit" class="submitBtn">수정</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script src="/js/student/inquiry_detail.js"></script>
+	<script>
+	
+	const openformBtn = document.querySelector('.openformBtn');
+
+	openformBtn.addEventListener('click', () => {
+		$.ajax({
+			url: '/student/inquiry/writeform',
+			method: 'post',
+			success: function(stdtId) {
+				if (stdtId == "") {
+					var result = confirm("로그인 후 문의작성이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
+
+					if (result) {
+						window.location.href = '/login'; // 로그인 페이지로 이동
+					}
+				} else{
+					window.location.href = '/student/inquiry/writegoform';
+				}
+			}
+		});
+	});
+	</script>
+	<script src="/js/student/inquiry_list.js"></script>
 </body>
 </html>

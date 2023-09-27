@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/inquiry_write.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<link rel="icon" href="/img/icon.png" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+	<div class="container">
+		<div class="maintext">
+			<h1 style="color: #0E5881; margin-top: 3%;">문의사항 작성하기</h1>
+		</div>
+		<div class="content" style="flex-direction: column;">
+			<table class="writeTable">
+				<tbody>
+					<tr>
+						<th>문의 제목</th>
+						<td><input class="title" type="text"></td>
+					</tr>
+					<tr>
+
+						<th>문의 내용</th>
+						<td><textarea class="postContent"></textarea></td>
+					</tr>
+					<tr>
+						<th>파일 첨부</th>
+						<td><div>
+								<input class="upload-name" value="선택된 첨부파일이 없습니다"
+									placeholder="선택된 첨부파일이 없습니다" readonly> <label
+									for="fileInput">파일찾기</label> <input type="file" name="file"
+									id="fileInput" class="fileInput">
+							</div></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="writeBtn">
+				<button class="submitInquiry">문의하기</button>
+				<button class="back">뒤로가기</button>
+			</div>
+		</div>
+	</div>
+	<script>
+	const backBtn = document.querySelector('.back');
+
+	backBtn.addEventListener('click', () => {
+		location.replace('/student/inquiry/list');
+	});
+	
+	$("#fileInput").on('change',function(){
+		  var fileName = $("#fileInput").val();
+		  $(".upload-name").val(fileName);
+		});
+
+	const submitBtn = document.querySelector('.submitInquiry');
+	submitBtn.addEventListener('click', () => {
+
+		var title = $('.title').val();
+		var content = $('.postContent').val();
+		var formData = new FormData();
+		var file = document.querySelector("#fileInput").files[0];
+		formData.append("file", file);
+		formData.append("title", title);
+		formData.append("content", content);
+		$.ajax({
+			type: 'POST',
+			url: '/student/inquiry/write',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function() {
+				alert("문의작성을 완료하였습니다.");
+				window.location.href = '/student/inquiry/list';
+			}
+		});
+	});
+	</script>
+</body>
+</html>
