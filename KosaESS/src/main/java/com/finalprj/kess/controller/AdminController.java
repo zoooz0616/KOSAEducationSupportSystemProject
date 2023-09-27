@@ -1450,7 +1450,7 @@ public class AdminController {
 	 * 기업 수정
 	 * @author : eunji
 	 * @date : 2023. 9. 26.
-	 * @parameter : selectedCompanyIds
+	 * @parameter : cmpyId, file, redirectAttrs, cmpyNm, cmpyTel, cmpyAdr
 	 * @return : String
 	 * @throws IOException 
 	 */
