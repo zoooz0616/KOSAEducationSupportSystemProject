@@ -53,18 +53,20 @@
 	width: 40%;
 }
 
-.search_filter_btn_wrap{
+.search_btn_wrap{
 	justify-content: center;
 	display: flex;
 }
 
-.search_filter_btn{
+.search_btn_wrap input{
 	width: 60px;
 	background-color: #0E5881;
-	margin: 10px 0 10px 0;
+/* 	margin: 10px 0 10px 0; */
+	margin : 0.1em;
 	color: white;
 	font-weight: bold;
 	font-size: 20px;
+	border : none;
 }
 
 .search_filter_table td{
