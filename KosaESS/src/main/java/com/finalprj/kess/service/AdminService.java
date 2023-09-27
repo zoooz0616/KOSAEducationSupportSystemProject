@@ -588,6 +588,19 @@ public class AdminService implements IAdminService {
 		
 		adminRepository.updateCompany(companyVO);
 	}
+
+	@Override
+	public List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd,
+			String userCd) {
+		return adminRepository.getSearchStudentList(stdtNm, clssId, genderCd, jobCd, userCd);
+	}
+
+	@Override
+	@Transactional
+	public void deleteStudentList(List<String> selectedStudentIds) {
+		adminRepository.deleteLginStudent(selectedStudentIds);
+		adminRepository.deleteStudentList(selectedStudentIds);
+	}
 	
 	
 	

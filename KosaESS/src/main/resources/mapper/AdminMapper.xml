@@ -1234,7 +1234,71 @@ order by stdt.stdt_nm
 	]]>
 	</update>
 
+	<select id="getSearchStudentList" parameterType="string" resultType="com.finalprj.kess.model.StudentVO">
+		select distinct
+			stdt.stdt_id,
+			stdt.user_email,
+			stdt.stdt_nm,
+			stdt.gender_cd,
+			stdt.birth_dd,
+			stdt.stdt_tel,
+			stdt.job_cd,
+			lgin.user_cd,
+			
+			stdt.rgst_dt,
+			stdt.rgster_id,
+			stdt.updt_dt,
+			stdt.updter_id,
+			
+			u.cmcd_nm		as "userNm",
+			g.cmcd_nm		as "genderNm",
+			j.cmcd_nm		as "jobNm",
+			lgin.last_login_dt
+		from stdt
+		left join lgin on lgin.user_email = stdt.user_email
+		left join cmcd u on u.cmcd_id = lgin.user_cd
+		left join cmcd g on g.cmcd_id = stdt.gender_cd
+		left join cmcd j on j.cmcd_id = stdt.job_cd
+		left join rgst on rgst.stdt_id = stdt.stdt_id
+		
+		where stdt.stdt_nm like '%'||#{stdtNm}||'%'
+			<if test="clssId != 'all'">
+    			AND rgst.clss_id = #{clssId}
+  			</if>
+  			<if test="genderCd != 'all'">
+    			AND stdt.gender_cd = #{genderCd}
+  			</if>
+  			<if test="jobCd != 'all'">
+    			AND stdt.job_cd = #{jobCd}
+  			</if>
+  			<if test="userCd != 'all'">
+    			AND lgin.user_cd = #{userCd}
+  			</if>
+  		order by stdt.stdt_nm
+	</select>
+	
+	<update id="deleteLginStudent" parameterType="java.util.List">
+		<foreach collection="selectedStudentIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update lgin
+			set
+			user_cd =
+			'USR0000003'
+			where user_email = (select user_email from stdt where
+			stdt_id = #{item})
+		</foreach>
+	</update>
 
+	<update id="deleteStudentList" parameterType="java.util.List">
+		<foreach collection="selectedStudentIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update stdt
+			set
+				updt_dt = SYSTIMESTAMP,
+				updter_id = 'MNGR000001'
+			where stdt_id=#{item}
+		</foreach>
+	</update>
 
 
 
