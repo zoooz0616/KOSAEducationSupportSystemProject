@@ -1,0 +1,61 @@
+input {
+	padding: 10px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.title {
+	width: 95%;
+}
+
+.postContent {
+	width: 95%;
+	height: 420px;
+	padding: 10px;
+	font-size: 15px;
+	font-weight: bold;
+	resize: none;
+}
+
+input[type="file"] {
+	display: none;
+}
+
+.upload-name {
+	border: 1px solid #dddddd;
+	color: black;
+	width: 85%;
+}
+
+label {
+	margin-left: 1.5%;
+	padding: 0.7%;
+	background-color: #0E5881;
+	color: white;
+	border-radius: 5px;
+}
+
+.writeBtn {
+	text-align: center;
+	margin-top: 3%;
+}
+
+button {
+	padding: 0.7%;
+	border: 0;
+	font-size: 18px;
+	font-weight: bold;
+	border-radius: 5px;
+	background-color: #0E5881;
+	color: white;
+	margin: 0 2%;
+}
+
+th {
+	background: #E7EFF3;
+	padding: 4px 0px;
+}
+
+.writeTable td {
+	padding: 0;
+}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="header">
 <head>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
 <title>KOSA 교육 지원 시스템</title>
 </head>
@@ -16,9 +17,9 @@
 
 				<nav>
 					<ul class="barlist">
-						<li><a th:href="@{/student/class}">교육과정지원</a></li>
-						<li><a th:href="@{/student/notice}">공지사항</a></li>
-						<li><a th:href="@{/student/inquiry}">문의사항</a></li>
+						<li><a th:href="@{/student/class/list}">교육과정지원</a></li>
+						<li><a th:href="@{/student/notice/list}">공지사항</a></li>
+						<li><a th:href="@{/student/inquiry/list}">문의사항</a></li>
 						<li><a class="mypage" th:href="@{/login}"
 							style="display: flex; align-items: center; width: 100%;">로그인
 								<img th:src="@{/img/in.png}"
@@ -32,9 +33,9 @@
 				<!-- 로그인 후의 헤더 -->
 				<nav>
 					<ul class="barlist">
-						<li><a th:href="@{/student/class}">교육과정지원</a></li>
-						<li><a th:href="@{/student/notice}">공지사항</a></li>
-						<li><a th:href="@{/student/inquiry}">문의사항</a></li>
+						<li><a th:href="@{/student/class/list}">교육과정지원</a></li>
+						<li><a th:href="@{/student/notice/list}">공지사항</a></li>
+						<li><a th:href="@{/student/inquiry/list}">문의사항</a></li>
 						<li><a class="mypage" th:href="@{/student/mypage}">마이페이지</a></li>
 						<li><a class="mypage" th:href="@{/logout}"
 							style="display: flex; align-items: center; width: 100%;">로그아웃

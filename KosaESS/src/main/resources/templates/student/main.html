@@ -120,12 +120,12 @@
 			<div class="class con" style="width: 45%;">
 				<h2 style="margin-bottom: 0;">접수중인 교육</h2>
 				<a class="plus" style="display: block; text-align: end;"
-					th:href="@{/student/class}">+</a>
+					th:href="@{/student/class/list}">+</a>
 				<hr>
 				<table>
 					<tr th:each="classVO : ${classList}">
 						<td style="width: 70%;"><a
-							th:href="@{/student/class/__${classVO.clssId}__}"
+							th:href="@{/student/class/view/__${classVO.clssId}__}"
 							th:text="${classVO.clssNm}"></a></td>
 						<td style="width: 30%; text-align: right;"
 							th:text="${classVO.aplyStartDd} +' ~ '+ ${classVO.aplyEndDd}"></td>
@@ -135,12 +135,12 @@
 			<div class="notice con" style="background: #E7EFF3; width: 40%;">
 				<h2 style="margin-bottom: 0;">공지사항</h2>
 				<a class="plus" style="display: block; text-align: end;"
-					th:href="@{/student/notice}">+</a>
+					th:href="@{/student/notice/list}">+</a>
 				<hr>
 				<table>
 					<tr th:each="postVO : ${postList}">
 						<td style="width: 75%;"><a
-							th:href="@{/student/notice/__${postVO.postId}__}"
+							th:href="@{/student/notice/view/__${postVO.postId}__}"
 							th:text="${postVO.postTitle}"></a></td>
 						<td style="width: 25%; text-align: right;"
 							th:text="${postVO.rgstDd}"></td>

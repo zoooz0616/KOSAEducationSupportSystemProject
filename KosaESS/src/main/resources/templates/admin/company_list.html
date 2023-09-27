@@ -48,48 +48,49 @@
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 기업 등록하기 -->
-					<form th:action="@{/admin/company/insert}" method="post"
-						enctype="multipart/form-data">
 						<div class="company_insert" style="padding: 5px;">
 							<div>
-								<span>기업명<span class="red">*</span></span> <input type="text"
-									name="cmpyNm" placeholder="기업명"> <span>전화번호<span
-									class="red">*</span></span> <input type="text" name="cmpyTel"
-									placeholder="전화번호"> <span>주소<span class="red">*</span></span>
+								<span>기업명<span class="red">*</span></span> 
+								<input type="text"
+									name="cmpyNm" placeholder="기업명"> 
+								<span>전화번호<span
+									class="red">*</span></span> 
+								<input type="text" name="cmpyTel"
+									placeholder="전화번호"> 
+								<span>주소<span class="red">*</span></span>
 								<input type="text" id="streetAdr" name="cmpyAdr"
 									class="form-control" onclick="findAddr()"
 									placeholder="도로명 주소를 입력하세요" readonly>
 							</div>
-							<div style="display:flex;    align-items: center;">
-								<span>기업로고</span> <input id="lecture_tm_input" type="file"
+							<div style="display: flex; align-items: center;">
+								<span>기업CI</span> <input id="lecture_tm_input" type="file" accept="image/*"
 									name="file">
-								<button class="insert_btn" type="submit">
+								<button class="insert_btn" type="button" onclick="insertCompany()">
 									<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
 								</button>
 							</div>
 						</div>
-					</form>
 					<!-- 기업 등록하기 -->
 
 					<!-- 리스트 -->
 					<div class="table_wrap"
 						style="height: 90%; border: 1px solid #CFDEE6;">
-						<table>
+						<table class="company_list_table">
 							<thead>
 								<tr class="content_list_th">
-									<th style="width: 5%"><input type="checkbox" id="chkAll"
-										class="lecture_checkbox_all"></th>
+									<th style="width: 5%"><input type="checkbox" id="chkAll" name="select_all"
+										class="lecture_checkbox_all" onclick="selectAll(this)"></th>
 									<th style="width: 5%;">번호</th>
 									<th style="width: 30%;">기업명</th>
 									<th style="width: 15%;">전화번호</th>
 									<th style="width: 45%;">주소</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="tbody">
 								<tr th:each="company, iterStat: ${companyList}">
-									<td style="text-align: center;"><input type="checkbox"
-										class="check_box" name="chk" th:value="${company.cmpyId}"></td>
-									<td style="text-align: center;" th:text="${iterStat.index + 1}"></td>
+									<td class="td_checkbox"><input type="checkbox"
+										class="check_box" name="select" onclick="checkSelectAll()" th:value="${company.cmpyId}"></td>
+									<td class="td_num" th:text="${iterStat.index + 1}"></td>
 									<td><span class="cmpy_nm" th:text="${company.cmpyNm}"
 										onclick="companyDetail(this)"></span></td>
 									<td th:text="${company.cmpyTel}"></td>
@@ -112,13 +113,22 @@
 					<!-- 상세보기 -->
 					<div class="content_info_wrap">
 						<div>기업 상세보기</div>
-						<button class="update_btn" onclick="updateCompany(this)"
-							style="display: none;">
-							<img th:src="@{/img/update_white.png}"> <span>수정하기</span></button>
-						<button class="save_btn" onclick="saveCompany(this)"
-							style="display: none;">
-							<img th:src="@{/img/save_white.png}">
-							<span>저장하기</span></button>
+						<div style="display: flex;">
+							<button class="update_btn" onclick="updateCompany(this)"
+								style="display: none;">
+								<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
+							</button>
+
+							<button class="cancel_btn" onclick="cancelUpdateCompany(this)"
+								style="display: none;">
+								<img th:src="@{/img/x_white.png}" style="width: 20px;"> <span>수정취소</span>
+							</button>
+
+							<button class="save_btn" onclick="saveCompany(this)"
+								style="display: none;">
+								<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
+							</button>
+						</div>
 					</div>
 					<!-- 상세보기-->
 
@@ -130,16 +140,12 @@
 							<div style="display: flex;">
 								<table class="company_detail_table">
 									<tr>
-										<th style="width: 15%;">기업ID</th>
-										<td style="width: 20%;">
-											<div class="detail_cmpy_id"></div>
-										</td>
 										<th style="width: 15%;">기업명</th>
-										<td style="width: 50%;">
+										<td style="width: 50%;"><input class="detail_cmpy_id"
+											type="hidden">
 											<div class="detail_cmpy_nm detail_cmpy"></div> <input
 											class="detail_cmpy_nm_input detail_input" type="text"
-											style="display: none;">
-										</td>
+											style="display: none;"></td>
 									</tr>
 									<tr>
 										<th>전화번호</th>
@@ -148,12 +154,27 @@
 											class="detail_cmpy_tel_input detail_input" type="text"
 											style="display: none;">
 										</td>
+									</tr>
+									<tr>
 										<th>주소</th>
 										<td>
 											<div class="detail_cmpy_adr detail_cmpy"></div> <input
 											id="address" onclick="findAddrUpdate()"
 											class="detail_cmpy_adr_input detail_input" type="text"
 											style="display: none;">
+										</td>
+									</tr>
+									<tr>
+										<th>기업CI</th>
+										<td>
+											<div class="cmpy_img_div detail_cmpy">
+												<img class="cmpy_img">
+											</div>
+											<div class="detail_input" style="display: none;">
+												<div style="padding: 5px;">
+													<input class="detail_cmpy_file_input" type="file" accept="image/*">
+												</div>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -166,16 +187,7 @@
 								</div>
 							</div>
 
-							<div class="detail_input"
-								style="display: none; border: 1px solid #CFDEE6;">
-								<div style="display: flex;">
-									<div
-										style="width: 15%; text-align: center; font-weight: bold; background: #F3F6F8; padding: 5px;">기업로고</div>
-									<div style="padding: 5px;">
-										<input type="file">
-									</div>
-								</div>
-							</div>
+
 						</div>
 
 					</div>
@@ -237,9 +249,11 @@
 							});
 		}
 	</script>
-
-
 	<script>
+		//클릭한 기업 저장
+		var selectedCompany="";
+	
+	
 		//insert할 때 도로명 주소 찾기
 		function findAddr() {
 			new daum.Postcode(
@@ -279,8 +293,111 @@
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
+		//기업 refresh
+		function updateCompanyList(companyList){
+			//tbody 비우기
+			var tbody = document.querySelector(".company_list_table tbody");
+			$("#tbody").empty();
+			console.log(companyList);
+			
+			for(var i=0; i< companyList.length; i++){
+				var company = companyList[i];
+				
+				var trCompany = document.createElement("tr");
+				
+				var tdCheckbox = document.createElement("td");
+				tdCheckbox.className="td_checkbox";
+				var inputCheckbox = document.createElement("input");
+				inputCheckbox.type = "checkbox";
+				inputCheckbox.className ="check_box";
+				inputCheckbox.name="chk";
+				inputCheckbox.value = company.cmpyId;
+				
+				tdCheckbox.appendChild(inputCheckbox);
+				trCompany.appendChild(tdCheckbox);
+				
+				var tdNum = document.createElement("td");
+				tdNum.className = "td_num";
+				tdNum.textContent = i+1;
+				
+				trCompany.appendChild(tdNum);
+				
+				var tdCmpyNm = document.createElement("td");
+				var spanCmpyNm = document.createElement("span");
+				spanCmpyNm.className="cmpy_nm";
+				spanCmpyNm.textContent = company.cmpyNm;
+				spanCmpyNm.onclick = function(){
+					companyDetail(this);
+				}
+				
+				tdCmpyNm.appendChild(spanCmpyNm);
+				trCompany.appendChild(tdCmpyNm);
+				
+				var tdCmpyTel = document.createElement("td");
+				tdCmpyTel.textContent = company.cmpyTel;
+				
+				trCompany.appendChild(tdCmpyTel);
+				
+				var tdCmpyAdr = document.createElement("td");
+				tdCmpyAdr.textContent = company.cmpyAdr;
+				
+				trCompany.appendChild(tdCmpyAdr);
+				
+				console.log(trCompany);
+				
+				//tbody에 tr추가
+				tbody.appendChild(trCompany);
+			}
+		}
+	
+	
+	
+		//기업 등록하기
+		function insertCompany(){
+			var insertDiv = document.querySelector(".company_insert");
+			
+			var cmpyNmInput = insertDiv.querySelector('input[name="cmpyNm"]');
+			var cmpyTelInput = insertDiv.querySelector('input[name="cmpyTel"]');
+			var cmpyAdrInput = insertDiv.querySelector('input[name="cmpyAdr"]');
+			var fileInput = insertDiv.querySelector('input[name="file"]');
+			
+			var cmpyNm = cmpyNmInput.value;
+			var cmpyTel = cmpyTelInput.value;
+			var cmpyAdr = cmpyAdrInput.value;
+			
+			var formData = new FormData();
+			var file = fileInput.files[0];
+			formData.append("file", file);
+			formData.append("cmpyNm", cmpyNm);
+			formData.append("cmpyTel", cmpyTel);
+			formData.append("cmpyAdr", cmpyAdr);
+			
+			$.ajax({
+				url: '/admin/company/insert',
+				method: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(companyList){
+					//input값 비우기
+					cmpyNmInput.value="";
+					cmpyTelInput.value="";
+					cmpyAdrInput.value="";
+					fileInput.value="";
+					
+					//기업 리스트 새로 불러오기
+					updateCompanyList(companyList);
+				}
+			});
+			
+		}
+	
 		//기업 누르면 상세보기 발생
 		function companyDetail(button) {
+			//누른 기업 저장
+			selectedCompany=button;
+			
+			
 			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
 			var cmpyId = row.querySelector(".check_box").value;
 
@@ -297,9 +414,13 @@
 									.querySelector(".not_selected");
 							notselected.style.display = "none";
 
+							//버튼 display
 							var updateBtn = document
 									.querySelector(".update_btn");
 							updateBtn.style.display = "flex";
+							
+							var cancelBtn = document.querySelector(".cancel_btn");
+							cancelBtn.display = "none";
 
 							var saveBtn = document.querySelector(".save_btn");
 							saveBtn.style.display = "none";
@@ -307,16 +428,30 @@
 							var selected = document
 									.querySelector(".company_table_wrap");
 
+							//div나타내기
+							var detailCmpyDivs = document.querySelectorAll(".detail_cmpy");
+							detailCmpyDivs.forEach(function(detailDiv) {
+								detailDiv.style.display = "block";
+							});
+
+							//input숨기기
+							var detailCmpyInputs = document.querySelectorAll(".detail_input");
+							detailCmpyInputs.forEach(function(detailInput) {
+								detailInput.style.display = "none";
+							});
+							
+							//데이터 뿌리기
 							var table = document
 									.querySelector(".company_detail_table");
 
-							var tdCmpyId = table
+							var inputCmpyId = table
 									.querySelector(".detail_cmpy_id");
-							tdCmpyId.textContent = cmpyVO.cmpyId;
+							inputCmpyId.value = cmpyVO.cmpyId;
 
 							var tdCmpyNm = table
 									.querySelector(".detail_cmpy_nm");
 							tdCmpyNm.textContent = cmpyVO.cmpyNm;
+							
 							var tdCmpyNmInput = table
 									.querySelector(".detail_cmpy_nm_input");
 							tdCmpyNmInput.value = cmpyVO.cmpyNm;
@@ -324,6 +459,7 @@
 							var tdCmpyTel = table
 									.querySelector(".detail_cmpy_tel");
 							tdCmpyTel.textContent = cmpyVO.cmpyTel;
+							
 							var tdCmpyTelInput = table
 									.querySelector(".detail_cmpy_tel_input");
 							tdCmpyTelInput.value = cmpyVO.cmpyTel;
@@ -352,18 +488,30 @@
 					});
 		}
 
-		//전체 선택
-		document.addEventListener("DOMContentLoaded", function() {
-			const chkAll = document.getElementById("chkAll");
-			const checkboxes = document
-					.querySelectorAll('input[type="checkbox"][name="chk"]');
-
-			chkAll.addEventListener("change", function() {
-				checkboxes.forEach(function(checkbox) {
-					checkbox.checked = chkAll.checked;
-				});
+		//전체선택
+		function selectAll(selectAll){
+			//모든 체크박스들
+			const checkboxes = document.querySelectorAll('input[name="select"]');
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = selectAll.checked;
 			});
-		});
+		}
+		
+		//개별 선택
+		function checkSelectAll(){
+			//전체선택 체크박스
+			const selectAll = document.querySelector('input[name="select_all"]');
+			//모든 체크박스
+			const checkboxes = document.querySelectorAll('input[name="select"]');
+			//선택된 체크박스
+			const checked = document.querySelectorAll('input[name="select"]:checked');
+			
+			if(checkboxes.length == checked.length){
+				selectAll.checked = true;
+			}else{
+				selectAll.checked = false;
+			}
+		}
 
 		//선택삭제
 		document.querySelector("#delete_btn").addEventListener(
@@ -391,7 +539,7 @@
 						success : function(response) {
 							console.log(response);
 							if (response == "success") {
-								alert("선택한 기업이 삭제되었습니다..");
+								alert("선택한 기업이 삭제되었습니다.");
 								window.location.href = "/admin/company/list";
 							}
 						}
@@ -405,6 +553,9 @@
 
 			var saveBtn = divParent.querySelector(".save_btn");
 			saveBtn.style.display = "flex";
+			
+			var cancelBtn = divParent.querySelector(".cancel_btn");
+			cancelBtn.style.display = "flex";
 
 			button.style.display = "none";
 
@@ -420,6 +571,91 @@
 				detailInput.style.display = "block";
 			});
 
+		}
+
+		//수정취소
+		function cancelUpdateCompany(button) {
+			//자기 자신의 가장 가까운 부모div의 저장버튼을 활성화 하고 자기 자신은 숨기기
+			var divParent = button.closest("div");
+
+			var updateBtn = divParent.querySelector(".update_btn");
+			updateBtn.style.display = "flex";
+			
+			var saveBtn = divParent.querySelector(".save_btn");
+			saveBtn.style.display = "none";
+
+			button.style.display = "none";
+
+			//div 나타내기
+			var detailCmpyDivs = document.querySelectorAll(".detail_cmpy");
+			detailCmpyDivs.forEach(function(detailDiv) {
+				detailDiv.style.display = "block";
+			});
+
+			//input 숨기기
+			var detailCmpyInputs = document.querySelectorAll(".detail_input");
+			detailCmpyInputs.forEach(function(detailInput) {
+				detailInput.style.display = "none";
+			});
+		}
+		
+		//저장하기
+		function saveCompany(button){
+			//자기 자신의 가장 가까운 부모div의 저장버튼을 활성화 하고 자기 자신은 숨기기
+			var divParent = button.closest("div");
+
+			var updateBtn = divParent.querySelector(".update_btn");
+			updateBtn.style.display = "flex";
+			
+			var cancelBtn = divParent.querySelector(".cancel_btn");
+			cancelBtn.style.display = "none";
+
+			button.style.display = "none";
+			
+			
+			//input의 값들 가져오기
+			var cmpyId = document.querySelector(".detail_cmpy_id").value;
+			var cmpyNm = document.querySelector(".detail_cmpy_nm_input").value;
+			var cmpyTel = document.querySelector(".detail_cmpy_tel_input").value;
+			var cmpyAdr = document.querySelector(".detail_cmpy_adr_input").value;
+			
+			var fileInput = document.querySelector(".detail_cmpy_file_input");
+			var formData = new FormData();
+			var file = fileInput.files[0];
+			
+			formData.append("file", file);
+			formData.append("cmpyNm", cmpyNm);
+			formData.append("cmpyTel", cmpyTel);
+			formData.append("cmpyAdr", cmpyAdr);
+			
+			
+			//div 나타내기
+			var detailCmpyDivs = document.querySelectorAll(".detail_cmpy");
+			detailCmpyDivs.forEach(function(detailDiv) {
+				detailDiv.style.display = "block";
+			});
+
+			//input 숨기기
+			var detailCmpyInputs = document.querySelectorAll(".detail_input");
+			detailCmpyInputs.forEach(function(detailInput) {
+				detailInput.style.display = "none";
+			});
+			
+			//ajax로 update하기
+			$.ajax({
+						url : '/admin/company/update/'+cmpyId,
+						method : 'POST',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success : function(companyList) {
+							alert("수정이 완료되었습니다.");
+							updateCompanyList(companyList);
+							companyDetail(selectedCompany);
+						}
+					});
+			
+			//성공하면 수정완료 alert날리고 div에 값들 변경해주기
 		}
 
 		//update할 때 도로명 주소 찾기

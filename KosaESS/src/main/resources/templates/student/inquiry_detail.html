@@ -20,15 +20,16 @@
 				<table>
 					<tr>
 						<th>문의사항 제목</th>
-						<td colspan="3"><span th:text="${inquiryDetail.postTitle}"></span></td>
+						<td colspan="3" style="text-align: left;"><span
+							style="margin-left: 20px;" th:text="${inquiryDetail.postTitle}"></span></td>
 						<th>답변상태</th>
 						<td><span th:text="${inquiryDetail.cmcdNm}"></span></td>
 					</tr>
 					<tr>
 						<th>게시일자</th>
-						<td><span th:text="${inquiryDetail.rgstDd}"></span></td>
+						<td style="width: 20%;"><span th:text="${inquiryDetail.rgstDd}"></span></td>
 						<th>조회수</th>
-						<td style="width: 10%;"><span
+						<td style="width: 15%;"><span
 							th:text="${inquiryDetail.postHit}"></span></td>
 						<th>글 작성자</th>
 						<td><span th:if="${inquiryDetail.stdtNm == null}"
@@ -36,26 +37,27 @@
 							th:if="${inquiryDetail.mngrNm == null}"
 							th:text="${inquiryDetail.stdtNm}"></span></td>
 					</tr>
+					<tr>
+						<th>관련 파일</th>
+						<td colspan="7"><ul
+								style="margin: 0; text-align: left; padding-left: 3%;">
+								<li th:each="FileVO : ${inquiryFileList}"><a
+									style="width: 100%; display: flex;"
+									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
+									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
+										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
+										style="margin-left: 5px;" th:text="${FileVO.fileNm}"></span><br>
+								</a></li>
+							</ul></td>
+					</tr>
 				</table>
 				<div style="width: 80%;">
 					<div>
-						<h4 th:utext="${inquiryDetail.postContent}"></h4>
+						<pre>
+							<h4 th:utext="${inquiryDetail.postContent}"></h4>
+					</pre>
 					</div>
 				</div>
-				<div class="postFile">
-					<ul>
-						<li th:each="FileVO : ${inquiryFileList}"><a
-							th:if="${FileVO.fType == 'image'}"> <img
-								th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
-						</a> <a th:if="${FileVO.fType == 'application'}"
-							th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
-							th:title="${FileVO.fileNm}"> <img style="width: 40px;"
-								th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
-								th:text="${FileVO.fileNm}"></span>><br>
-						</a></li>
-					</ul>
-				</div>
-
 			</div>
 			<div class="content" style="padding: 0 2%;">
 				<ul style="width: 100%;">
@@ -67,7 +69,9 @@
 							</tr>
 							<tr>
 								<th>답변 내용</th>
-								<td colspan="3"><span th:text="${postVO.postContent}"></span></td>
+								<td colspan="3"><pre>
+										<span th:utext="${postVO.postContent}"></span>
+								</pre></td>
 							</tr>
 							<tr>
 								<th>답변자</th>

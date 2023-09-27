@@ -53,7 +53,7 @@ document.querySelector('.lctrTotalTm').textContent = totalLctrTm;
 const backBtn = document.querySelector('.back');
 
 backBtn.addEventListener('click', () => {
-	location.replace('/student/class');
+	location.replace('/student/class/list');
 });
 
 const topBtn = document.querySelector(".moveTopBtn");
