@@ -178,7 +178,7 @@ $(document).ready(function() {
 
 				// 각 열에 해당하는 데이터를 행에 추가합니다.
 				row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
-				row.append('<td style="font-size: 18px;">' + classVO.clssNm + '</td>');
+				row.append('<td style="font-size: 18px; word-break: keep-all">' + classVO.clssNm + '</td>');
 				if (classVO.aplyStartDd == null) {
 					row.append('<td><span>미정</span></td>');
 				} else {
@@ -203,7 +203,7 @@ $(document).ready(function() {
 					row.append('<td><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
 				} else {
 					row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
-				} var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
+				} var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
 				row.append($('<td>').append(applyBtn));
 				// 행을 테이블에 추가합니다.
 				classTable.append(row);
@@ -229,7 +229,7 @@ $(document).ready(function() {
 				} else {
 					row.append('<td class="classImg"><div style="width: 100%; text-align: center;"><img src="/img/logo.png"></div>');
 				}
-				row.append('<td style="font-weight: bold; font-size: 18px;">' + classVO.clssNm + '</td>');
+				row.append('<td style="font-weight: bold; font-size: 18px; word-break: keep-all">' + classVO.clssNm + '</td>');
 				if (classVO.aplyStartDd == null) {
 					row.append('<td><span>지원:  미정  </span></td>');
 				} else {
@@ -251,7 +251,7 @@ $(document).ready(function() {
 					else
 						row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: 미정  </span></td>');
 				}*/
-				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/' + classVO.clssId).text('자세히보기');
+				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
 				row.append($('<td>').append(applyBtn));
 				// 행을 테이블에 추가합니다.
 				classTable.append(row);
@@ -298,20 +298,6 @@ $(document).ready(function() {
 		// 검색 버튼 클릭 이벤트 호출
 		$('.searchBtn').trigger('click');
 	}
-	$('.inquiry-table').on('click', '.goInquiryDetail', function() {
-		var clickedRow = $(this).closest('tr');
-		var postId = clickedRow.find('td:hidden span').text();
-		$.ajax({
-			type: 'POST',
-			url: '/student/incrementHit',
-			data: {
-				postId: postId
-			},
-			success: function() {
-				window.location.href = '/student/inquiry/' + postId;
-			}
-		});
-	});
 });
 const topBtn = document.querySelector(".moveTopBtn");
 

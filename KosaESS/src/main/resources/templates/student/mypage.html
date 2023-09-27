@@ -202,12 +202,14 @@
 											<td th:text="${postVO.postTitle}"></td>
 											<td th:text="${postVO.rgstDd}"></td>
 											<td th:text="${postVO.cmcdNm}"></td>
-											<td><button class="showReply" style="display: none;">확인하기</button></td>
+											<td><input type="button" class="toggleReplyButton"
+												style="display: none;" value="확인하기"
+												onclick="toggleReply(this)"></td>
 											<td th:text="${postVO.postId}" style="display: none;"></td>
 										</tr>
 									</tbody>
 								</table>
-								<div class="reply-container"></div>
+								<div class="reply-container" style="display: none;"></div>
 							</li>
 						</ul>
 					</div>
@@ -246,7 +248,7 @@
 									<input class="upload-name2" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
 										for="fileInput2">파일찾기</label> <input type="file" name="file"
-										id="fileInput2" class="fileInput" accept="image/*">
+										id="fileInput2" class="fileInput">
 								</div>
 
 							</div>
@@ -275,7 +277,7 @@
 									<input class="upload-name3" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
 										for="fileInput3">파일찾기</label> <input type="file" name="file"
-										id="fileInput3" class="fileInput" accept="image/*">
+										id="fileInput3" class="fileInput">
 								</div>
 							</div>
 							<div>
@@ -308,8 +310,7 @@
 
 		for (var i = 0; i < postList.length; i++) {
 			var postCd = postList[i].postCd;
-			var postId = postList[i].postId;
-			var showReplyElement = $('.showReply').eq(i);
+			var showReplyElement = $('.toggleReplyButton').eq(i);
 
 			if (postCd === 'PST0000004') {
 				showReplyElement.css('display', 'revert');

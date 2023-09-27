@@ -20,8 +20,8 @@ table td {
 
 table th {
 	background-color: #E7EFF3;
+	width:15%;
 }
-
 
 .content {
 	padding: 5% 2%;
@@ -61,7 +61,6 @@ ul {
 	display: flex;
 	justify-content: space-evenly;
 }
-
 
 .btn button {
 	padding: 0 3%;
@@ -109,8 +108,22 @@ ul {
 	margin: 0 2%;
 }
 
-.reply th{
+pre {
+	white-space: pre-wrap;
+}
+
+.reply th {
 	width: 20%;
 }
 
+.reply pre {
+	display: flex;
+}
 
+.reply td {
+	text-align: left;
+}
+
+.reply span {
+	margin-left: 20px;
+}

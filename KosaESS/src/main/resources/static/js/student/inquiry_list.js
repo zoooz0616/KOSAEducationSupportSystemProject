@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	const countPerPage = 10; // 페이지당 데이터 건수
-	const showPageCnt = 5;
+	var countPerPage = 10; // 페이지당 데이터 건수
+	var showPageCnt = 5;
 	let todoData = [];
 
 	// 검색 버튼 클릭 이벤트 핸들러
@@ -11,7 +11,7 @@ $(document).ready(function() {
 		// Ajax 요청을 보냅니다.
 		$.ajax({
 			type: 'GET',
-			url: '/student/notice/search',
+			url: '/student/inquiry/search',
 			data: {
 				keyword: searchKeyword,
 			},
@@ -19,9 +19,9 @@ $(document).ready(function() {
 				todoData = data;
 
 				// 받은 데이터로 테이블을 업데이트합니다.
-				var noticeTable;
-				noticeTable = $('.notice-table tbody');
-				noticeTable.empty();
+				var inquiryTable;
+				inquiryTable = $('.inquiry-table tbody');
+				inquiryTable.empty(); // 테이블 내용을 비웁니다.
 				setTable(1);
 				setPaging(1);
 			}
@@ -83,18 +83,24 @@ $(document).ready(function() {
 		const filteredData = todoData.slice(startIdx, endIdx);
 
 
-		const noticeTable = $('.notice-table tbody');
-		noticeTable.empty();
+		const inquiryTable = $('.inquiry-table tbody');
+		inquiryTable.empty();
 
-		for (let i = 0; i < filteredData.length; i++) {
-			const postVO = filteredData[i];
-			const row = $('<tr class="noticeRow"></tr>');
-			row.append('<td><span>' + (i + startIdx + 1) + '</span></td>');
-			row.append('<td><a><span class="goNoticeDetail" style="font-size: 17px;">' + postVO.postTitle + '</span></a></td>');
-			row.append('<td><span>' + postVO.rgstDd + '</span></td>');
-			row.append('<td><span>' + postVO.postHit + '</span></td>');
-			row.append('<td style="display: none;"><span>' + postVO.postId + '</span></td>');
-			noticeTable.append(row);
+		for (var i = 0; i < filteredData.length; i++) {
+			var postVO = filteredData[i];
+			var row = $('<tr class="inquiryRow"></tr>');
+			row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
+			row.append('<td><a><span class="goInquiryDetail" style="font-size: 17px;">' + postVO.postTitle + '</span></a></td>');
+			if (postVO.mngrNm == null) {
+				row.append('<td><span>' + postVO.stdtNm + '</span></td>')
+			} else if (postVO.stdtNm == null) {
+				row.append('<td><span>' + postVO.mngrNm + '</span></td>')
+			}
+			row.append('<td><span>' + postVO.rgstDd + '</span></td>')
+			row.append('<td><span>' + postVO.postHit + '</span></td>')
+			row.append('<td><span>' + postVO.cmcdNm + '</span></td>')
+			row.append('<td style="display: none;"><span>' + postVO.postId + '</span></td>')
+			inquiryTable.append(row);
 		}
 	}
 
@@ -137,10 +143,8 @@ $(document).ready(function() {
 		// 검색 버튼 클릭 이벤트 호출
 		$('.searchBtn').trigger('click');
 	}
-	$('.notice-table').on('click', '.goNoticeDetail', function() {
-		// 서버로 조회수 증가 요청을 보냅니다.
+	$('.inquiry-table').on('click', '.goInquiryDetail', function() {
 		var clickedRow = $(this).closest('tr');
-
 		var postId = clickedRow.find('td:hidden span').text();
 		$.ajax({
 			type: 'POST',
@@ -149,26 +153,14 @@ $(document).ready(function() {
 				postId: postId
 			},
 			success: function() {
-				window.location.href = '/student/notice/view/' + postId;
+				window.location.href = '/student/inquiry/view/' + postId;
 			}
 		});
 	});
-	$('.searchInput').on('keyup', function(event) {
-		if (event.key === "Enter") {
-			$('.searchBtn').trigger('click');
-		}
-	});
 });
 
-const backBtn = document.querySelector('.back');
-
-backBtn.addEventListener('click', () => {
-	location.replace('/student/notice/list');
-});
-
-const topBtn = document.querySelector(".moveTopBtn");
-
-// 버튼 클릭 시 맨 위로 이동
-topBtn.addEventListener('click', () => {
-	window.scrollTo({ top: 0, behavior: "smooth" });
+$('.searchInput').on('keyup', function(event) {
+	if (event.key === "Enter") {
+		$('.searchBtn').trigger('click');
+	}
 });

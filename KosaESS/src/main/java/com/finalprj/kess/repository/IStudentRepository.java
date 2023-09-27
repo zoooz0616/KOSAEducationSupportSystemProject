@@ -135,4 +135,8 @@ public interface IStudentRepository {
 
 	List<PostVO> getReply(String postId);
 
+	String getMaxPostId();
+
+	void uploadInquiry(PostVO post);
+
 }

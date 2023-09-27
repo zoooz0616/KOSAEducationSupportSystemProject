@@ -535,8 +535,7 @@
 	</select>
 
 	<!-- 지원서 파일 업로드 -->
-	<insert id="uploadAplyFile"
-		parameterType="com.finalprj.kess.model.FileVO">
+	<insert id="uploadAplyFile">
 	<![CDATA[
 		insert into aply
 		(aply_id, stdt_id, clss_id, aply_cd, file_id, rgster_id)
@@ -928,7 +927,24 @@
 			ORDER BY post.rgst_dt DESC
 	]]>
 
+	</select>
 
+	<!-- 문의작성하기 -->
+	<insert id="uploadInquiry">
+	<![CDATA[
+		insert into post
+		(post_id, post_title, post_content, post_cd, file_id, rgster_id)
+		values(#{postId}, #{postTitle}, #{postContent}, #{postCd}, #{fileId},#{rgsterId})
+	]]>
+	</insert>
+
+	<!-- 문의 사항 postId MAX값 가져오기 -->
+	<select id="getMaxPostId" resultType="string">
+	<![CDATA[
+		select 'INQY'||LPAD((max(cast(substr(post_id,5) as number(6)))+1),6,'0')
+		from post
+		where post_id like 'INQY%'
+	]]>
 	</select>
 
 </mapper>
