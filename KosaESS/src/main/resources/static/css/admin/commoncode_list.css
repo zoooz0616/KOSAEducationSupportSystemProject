@@ -104,14 +104,28 @@ a {
 
 .content_info_wrap {
 	font-weight: bold;
+	display: flex;
+	align-items: center;
+    justify-content: space-between;
 }
 
 .content_info_wrap .cnt , .detailCodeCnt {
 	color: #0E5881;
 }
 
+.content_info_btn_wrap {
+	display: flex;
+}
+
+.content_info_btn_wrap > button {
+	display: flex;
+}
+
+.content_info_btn_wrap > button > img{
+	width: 20px;
+}
+
 .content_info_wrap button {
-	width: 60px;
 	border: none;
 	border-radius: 3px;
 	background: #0E5881;
@@ -119,6 +133,7 @@ a {
 	font-size: 15px;
 	font-weight: bold;
 	margin: 5px;
+	padding: 5px;
 	height: 30px;
 }
 

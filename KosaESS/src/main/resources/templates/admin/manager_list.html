@@ -106,7 +106,7 @@
 			<div class="content_info_wrap">
 				<div class="content_info">
 					<span>업무담당자 총 <span class="manager_list_cnt"
-						th:text="${#lists.size(managerList)}"></span>명
+						th:text="${#lists.size(managerList)}"></span> 명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
@@ -123,7 +123,7 @@
 				<table class="content_list_table" id="class_list_table">
 					<thead>
 						<tr class="content_list_th">
-							<th style="width: 5%;"><input type="checkbox" id="chkAll"></th>
+							<th style="width: 5%;"><input type="checkbox" id="chkAll" name="select_all" onclick="selectAll(this)"></th>
 							<th style="width: 5%;">번호</th>
 							<th style="width: 10%;">업무담당자 이름</th>
 							<th style="width: 20%;">전화번호</th>
@@ -136,7 +136,7 @@
 					<tbody>
 						<tr th:each="manager, iterStat: ${managerList}">
 							<td class="input_check_td"><input class="input_check"
-								type="checkbox" name="chk" th:value="${manager.mngrId}"></td>
+								type="checkbox" name="select" onclick="checkSelectAll()"  th:value="${manager.mngrId}"></td>
 							<td class="manager_num" th:text="${iterStat.index + 1}"></td>
 							<td class="manager_name">
 								<div class="update_div" th:text="${manager.mngrNm}"></div> <input
@@ -178,18 +178,30 @@
 		<!-- Content Bottom-->
 	</div>
 	<script>
-		//전체 선택
-		document.addEventListener("DOMContentLoaded", function() {
-			const chkAll = document.getElementById("chkAll");
-			const checkboxes = document
-					.querySelectorAll('input[type="checkbox"][name="chk"]');
-
-			chkAll.addEventListener("change", function() {
-				checkboxes.forEach(function(checkbox) {
-					checkbox.checked = chkAll.checked;
-				});
-			});
+	//전체선택
+	function selectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
 		});
+	}
+	
+	//개별 선택
+	function checkSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
 
 		//선택삭제
 		document.querySelector("#delete_btn").addEventListener(

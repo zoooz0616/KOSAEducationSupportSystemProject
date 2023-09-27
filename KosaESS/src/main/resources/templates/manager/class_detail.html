@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/include/manager_header :: header}">
+<head th:replace="~{/include/manager_header_2 :: header}">
 <meta charset="UTF-8">
 </head>
 <head>
@@ -17,12 +17,12 @@
 	<!-- End 서브바 -->
 
 	<!-- 컨텐츠 부분 -->
-	<div class="container" style="display: flex;">
-		<div >
-			<!-- title -->
-			<div class="title" th:text="${title}">Title</div>
+	<div class="home-section">
+<!-- 	<div class="container"> -->
 			<!-- content wrap-->
 			<div class="content_wrap">
+			<!-- title -->
+			<div class="title" th:text="${title}">Title</div>
 				<!-- 검색 필터 부분 -->
 
 				<div class="content">
@@ -147,7 +147,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+<!-- 	</div> -->
 	<script>
 		let totalLctrTm = 0;
 
@@ -161,6 +161,7 @@
 
 		//총 이수 시간을 결과를 담고 있는 요소에 설정합니다.
 		document.querySelector('#lctrTotalTm').textContent = totalLctrTm;
+		document.querySelector('#lctrTotalTm').className='fixed_length_content';
 	</script>
 </body>
 </html>

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -53,7 +54,7 @@ public interface IManagerService {
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
-	public List<WorklogVO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String stdtNm, String isDelete, String resnOnly);
+	public List<WorklogDTO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 

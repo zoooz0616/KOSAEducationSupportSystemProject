@@ -443,23 +443,8 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<SubjectVO> getYSubjectList() {
-		return adminRepository.getYSubjectList();
-	}
-
-	@Override
-	public List<ProfessorVO> getYProfessorList() {
-		return adminRepository.getYProfessorList();
-	}
-	
-	@Override
 	public void updateLecture(LectureVO lectureVO) {
 		adminRepository.updateLecture(lectureVO);	
-	}
-	
-	@Override
-	public List<LectureVO> getYLectureList() {
-		return adminRepository.getYLectureList();
 	}
 	
 	@Override
@@ -594,6 +579,15 @@ public class AdminService implements IAdminService {
 		return adminRepository.getManagerEmailCnt(managerEmail);
 	}
 	
+	@Override
+	@Transactional
+	public void updateCompany(FileVO fileVO, CompanyVO companyVO) {
+		if (fileVO != null) {
+			uploadFileRepository.uploadFile(fileVO);
+		}
+		
+		adminRepository.updateCompany(companyVO);
+	}
 	
 	
 	

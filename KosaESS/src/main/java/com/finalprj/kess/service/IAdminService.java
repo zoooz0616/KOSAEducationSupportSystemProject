@@ -120,10 +120,7 @@ public interface IAdminService {
 	void deleteManagerList(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);
 	void updateManager(ManagerVO managerVO);
-	List<SubjectVO> getYSubjectList();
-	List<ProfessorVO> getYProfessorList();
 	void updateLecture(LectureVO lectureVO);
-	List<LectureVO> getYLectureList();
 	SubjectVO getSubjectVO(String subjectId);
 	void updateSubject(SubjectVO subjectVO);
 	ProfessorVO getProfessorVO(String professorId);
@@ -149,4 +146,5 @@ public interface IAdminService {
 	int getFileCnt(String fileId);
 	List<StudentVO> getStudentList();
 	int getManagerEmailCnt(String managerEmail);
+	void updateCompany(FileVO fileVO, CompanyVO companyVO);
 }

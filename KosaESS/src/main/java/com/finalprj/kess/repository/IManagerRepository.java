@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
@@ -59,7 +60,7 @@ public interface IManagerRepository {
 
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
 
-	public List<WorklogVO> getWlogListByClssIds(@Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("stdtNm") String stdtNm, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly);
+	public List<WorklogDTO> getWlogListByClssIds(@Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 

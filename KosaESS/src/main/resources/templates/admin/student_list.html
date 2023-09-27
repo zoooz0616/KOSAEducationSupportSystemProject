@@ -51,6 +51,45 @@
 						</select>
 					</div>
 				</div>
+				
+				<!-- 성별 -->
+				<div class="filter_box">
+					<div class="filter_box_title">성별</div>
+					<div>
+						<select class="search_input_status">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="gender: ${genderList}"
+								th:value="${gender.cmcdId}"
+								th:text="${gender.cmcdNm}"></option>
+						</select>
+					</div>
+				</div>
+				
+				<!-- 직업 -->
+				<div class="filter_box">
+					<div class="filter_box_title">직업</div>
+					<div>
+						<select class="search_input_status">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="job: ${jobList}"
+								th:value="${job.cmcdId}"
+								th:text="${job.cmcdNm}"></option>
+						</select>
+					</div>
+				</div>
+				
+				<!-- 계정상태 -->
+				<div class="filter_box">
+					<div class="filter_box_title">계정상태</div>
+					<div>
+						<select class="search_input_status">
+							<option value="all" th:text="전체">전체</option>
+							<option th:each="status: ${statusList}"
+								th:value="${status.cmcdId}"
+								th:text="${status.cmcdNm}"></option>
+						</select>
+					</div>
+				</div>
 			</div>
 			<!-- Search Filter wrap -->
 
@@ -73,7 +112,7 @@
 			<div class="content_info_wrap">
 				<div class="content_info">
 					<span>교육생 총 <span class="inquiry_list_cnt"
-						th:text="${#lists.size(studentList)}"></span>명
+						th:text="${#lists.size(studentList)}"></span> 명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
