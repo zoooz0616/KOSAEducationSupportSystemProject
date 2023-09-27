@@ -231,7 +231,7 @@ td button {
 	margin: 0 2%;
 }
 
-.cancel, .drop{
+.cancel, .drop {
 	background-color: #F1A77E;
 }
 
@@ -244,7 +244,7 @@ td button {
 	background-color: #0E5881;
 	color: white;
 	margin: 0 2%;
-	width:60%;
+	width: 60%;
 }
 
 .applyTable td:nth-child(1) {
