@@ -13,10 +13,14 @@ public class WorklogDTO {
 	private String stdtNm;//교육생 이름
 	private String userEmail;//교육생 이메일
 	private String clssId;//교육과정id
+	
 	private Timestamp inTm;//출근시간
 	private Timestamp outTm;//퇴근시간
 	private Date inTmDd;//출근시간
 	private Date outTmDd;//퇴근시간
+	private String strInTmDd;//출근시간
+	private String strOutTmDd;//퇴근시간
+	
 	private String wlogCd;//출퇴근 상태
 	private double wlogTotalTm;//총 근무시간
 	private Timestamp rgstDt;//등록일시

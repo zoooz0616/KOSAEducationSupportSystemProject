@@ -5,134 +5,174 @@
 </head>
 <head>
 	<link th:href="@{/css/manager/manager_wlog_list.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/modal_style.css}" rel="stylesheet" />
 </head>
 <body>
-	<!-- 얼럴트 -->
-	<div class="look_at_me">
-		<span class="read_this">이봐!</span>
+
+<!-- 서브바 부분 -->
+<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
+<!-- End 서브바 -->
+
+<!-- 얼럴트 -->
+<div class="look_at_me">
+	<span class="read_this">이봐!</span>
+</div>
+<!-- End : 얼럴트 -->
+
+<!-- 컨텐츠 부분 -->
+<div class="home-section">
+	<!-- title -->
+	<div class="title_wrap">
+		<span class="title" th:text="${title}"></span><br>
 	</div>
-	<!-- End : 얼럴트 -->
 
-	<!-- 서브바 부분 -->
-	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
-	<!-- End 서브바 -->
+	<!-- content wrap-->
+	<div class="content_wrap">
+		<div class="search_filter_wrap">
+			<!-- 검색 필터 테이블 -->
+			<div class="search_filter_table_wrap">
+				<table class="search_filter_table">
+					<tr class="search_filter_table_row">
+						<td class="search_filter_name">교육과정명</td>
+						<td class="search_filter_input">
+							<select id="class_selector">
+								<option value="" disabled selected>교육과정명을 선택하세요</option>
+								<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
+							</select>
+						</td>
+						<td class="search_filter_name">기간</td>
+						<td class="search_filter_input">
+							<input type="date" id="startDate" min="1980-01-01"><span> ~ </span><input type="date" id="endDate" min="1980-01-01">
+							<span>이번 달</span>
+							<input type="radio" name="default_period" id="this_month" value="thisMonth">
+							<span>이번 주</span>
+							<input type="radio" name="default_period" id="this_week" value="thisWeek">
+							<span>시작~종료</span>
+							<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
+						</td>
+					</tr>
+					<tr class="search_filter_table_row">
+						<td class="search_filter_name">교육생 이름</td>
+						<td class="search_filter_input">
+							<input type="text" id="search_keyword">
+						</td>
+						<td class="search_filter_name">출석 상태<br>기록 상태</td>
+						<td class="search_filter_input">
+							<span>전체</span><input type="checkbox" id="chkAll">
+							<span th:each="wlogCd:${wlogCdList}"><span th:text="${wlogCd.cmcdNm}"></span><input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}"></span>
+							<br>
+							<span>사유서 포함 된 기록만 보기</span><input type="checkbox" id="fileContainedOnly">
+							<span>삭제 된 기록 보기</span><input type="checkbox" id="isDelete">
+						</td>
+					</tr>
+				</table>
+			</div>
 
-	<!-- 컨텐츠 부분 -->
-	<div class="home-section">
-		<!-- title -->
-		<div class="title_wrap">
-			<span class="title" th:text="${title}"></span><br>
+			<!-- 검색 버튼 -->
+			<div class="search_btn_wrap">
+				<input type="button" id="search_reset_btn" value="초기화" onclick="search()">
+				<input type="button" id="search_by_name_btn" value="검색" onclick="search()">
+			</div>
+			<!-- End : 검색 버튼 -->
 		</div>
-
-		<!-- content wrap-->
-		<div class="content_wrap">
-			<div class="search_filter_wrap">
-				<!-- 검색 필터 테이블 -->
-				<div class="search_filter_table_wrap">
-					<table class="search_filter_table">
-						<tr class="search_filter_table_row">
-							<td class="search_filter_name">교육과정명</td>
-							<td class="search_filter_input">
-								<select id="class_selector">
-									<option value="" disabled selected>교육과정명을 선택하세요</option>
-									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
-								</select>
-							</td>
-							<td class="search_filter_name">기간</td>
-							<td class="search_filter_input">
-								<input type="date" id="startDate" min="1980-01-01"><span> ~ </span><input type="date" id="endDate" min="1980-01-01">
-								<span>이번 달</span>
-								<input type="radio" name="default_period" id="this_month" value="thisMonth">
-								<span>이번 주</span>
-								<input type="radio" name="default_period" id="this_week" value="thisWeek">
-								<span>시작~종료</span>
-								<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
-							</td>
-						</tr>
-						<tr class="search_filter_table_row">
-							<td class="search_filter_name">교육생 이름</td>
-							<td class="search_filter_input">
-								<input type="text" id="search_keyword">
-							</td>
-							<td class="search_filter_name">출석 상태</td>
-							<td class="search_filter_input">
-								<span>전체</span><input type="checkbox" id="chkAll">
-								<span th:each="wlogCd:${wlogCdList}"><span th:text="${wlogCd.cmcdNm}"></span><input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}"></span>
-							</td>
-						</tr>
-						<tr class="search_filter_table_row">
-							<td class="search_filter_name"></td>
-							<td class="search_filter_input">
-							</td>
-							<td class="search_filter_name"></td>
-							<td class="search_filter_input">
-								
-								<span>사유서 포함 된 기록만 보기</span><input type="checkbox" id="fileContainedOnly">
-								<span>삭제 된 기록 보기</span><input type="checkbox" id="isDelete">
-							</td>
-						</tr>
-					</table>
-				</div>
-
-				<!-- 검색 버튼 -->
-				<div class="search_btn_wrap">
-					<input type="button" id="search_reset_btn" value="초기화" onclick="search()">
-					<input type="button" id="search_by_name_btn" value="검색" onclick="search()">
-				</div>
-				<!-- End : 검색 버튼 -->
-			</div>
-			<!-- End : 검색 필터 테이블-->
+		<!-- End : 검색 필터 테이블-->
+		
+		<!-- 테이블 조작 -->
+		<div class="table_controller" id="tableController">
+			<span>
+				<span th:text="${wlogCnt}" id="wlogCnt"></span>
+				<span class="wlog_count_unit">건</span>
+			</span>
+			<span th:each="wlogCd:${wlogCdList}" class="wlog_controller">
+				<button onclick="wlogUpdate(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
+			</span>
+		</div>
+		<!-- End : 테이블 조작 -->
+		
+		<!-- table 시작 -->
+		<table id="wlog_list_table">
+			<thead id="wlog_list_thead">
+				<tr class="wlog_list_thead_row">
+					<th><input type="checkbox" id="chk_all_wlog"></th>
+					<th>번호</th>
+					<th>이름</th>
+					<th>이메일</th>
+					<th>출근</th>
+					<th>퇴근</th>
+					<th>출석 인정 시간<br>(h)</th>
+					<th>출석 상태</th><!-- 셀렉박스 -->
+					<th>삭제 여부</th>
+					<th>사유서</th>
+					<th>처리 상태</th><!-- 사유서 모달에서 변경함 -->
+				</tr>
+			</thead>
 			
-			<!-- 테이블 조작 -->
-			<div class="table_controller" id="tableController">
-				<span>
-					<span th:text="${wlogCnt}" id="wlogCnt"></span>
-					<span class="wlog_count_unit">건</span>
-				</span>
-				<span th:each="wlogCd:${wlogCdList}" class="wlog_controller">
-					<button onclick="wlogUpdate(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
-				</span>
-			</div>
-			<!-- End : 테이블 조작 -->
-			
-			<!-- table 시작 -->
-			<table id="wlog_list_table">
-				<thead id="wlog_list_thead">
-					<tr class="wlog_list_thead_row">
-						<th><input type="checkbox" id="chk_all_wlog"></th>
-						<th>번호</th>
-						<th>이름</th>
-						<th>이메일</th>
-						<th>출근</th>
-						<th>퇴근</th>
-						<th>출석 인정 시간<br>(h)</th>
-						<th>출석 상태</th><!-- 셀렉박스 -->
-						<th>삭제 여부</th>
-						<th>사유서</th>
-						<th>처리 상태</th><!-- 사유서 모달에서 변경함 -->
-					</tr>
-				</thead>
-				
-				<tbody id="wlog_list_tbody">
-					<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
-						<td> <input type="checkbox" class="chk_wlog"> </td>
-						<td class="row_number" th:text="${wlogStat.count}">번호</td>
-						<td class="row_name" th:text="${wlog.stdtId}">이름</td>
-						<td class="row_email" th:text="${wlog.userEmail}">이메일</td>
-						<td class="row_intime" th:text="${wlog.inTm}">출근 기록</td>
-						<td class="row_outtime" th:text="${wlog.outTm}">퇴근 기록</td>
-						<td class="row_totaltime" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
-						<td class="row_wlogcode" th:text="${wlog.wlogCd}">출석 상태</td>
-						<td class="row_isdelete" th:text="${wlog.deleteYn}">삭제 여부</td>
-						<td class="file_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal()" th:value="${wlog.resnId}" src="/img/file.png"></td>
-						<td class="row_resncode" th:text="${wlog.prscCd}">처리 상태</td>
-					</tr>
-				</tbody>
+			<tbody id="wlog_list_tbody">
+				<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
+					<td> <input type="checkbox" class="chk_wlog"> </td>
+					<td class="row_number" th:text="${wlogStat.count}">번호</td>
+					<td class="row_name" th:text="${wlog.stdtId}">이름</td>
+					<td class="row_email" th:text="${wlog.userEmail}">이메일</td>
+					<td class="row_intime" th:text="${wlog.inTm}">출근 기록</td>
+					<td class="row_outtime" th:text="${wlog.outTm}">퇴근 기록</td>
+					<td class="row_totaltime" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
+					<td class="row_wlogcode" th:text="${wlog.wlogCd}">출석 상태</td>
+					<td class="row_isdelete" th:text="${wlog.deleteYn}">삭제 여부</td>
+					<td class="file_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal(this)" th:value="${wlog.resnId}" src="/img/file.png"></td>
+					<td class="row_resncode" th:text="${wlog.prscCd}">처리 상태</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- End : table 시작-->
+	</div>
+</div>
+<!-- 사유서 조회 모달 -->
+<div class="resn_modal_wrap">
+	<div class="resn_modal">
+	
+		<div class="wlog_info">
+			<table>
+				<tr>
+					<th>이름</th>
+					<th>이메일</th>
+					<th>출근</th>
+					<th>퇴근</th>
+					<th>출석 상태</th>
+					<th>사유서 처리 상태</th>
+				</tr>
+				<tr>
+					<td>이름</td>
+					<td>이메일</td>
+					<td>출근</td>
+					<td>퇴근</td>
+					<td>출석 상태</td>
+					<td>사유서 처리 상태</td>
+				</tr>
 			</table>
-			<!-- End : table 시작-->
+		</div>
+		
+		<div class="resn_content">
+			<div class="resn_file_list_wrap">
+				<ul class="resn_file_list">
+					<li>파일 목록 영역</li>
+				</ul>
+			</div>
+			<div class="resn_text">
+				사유서 내용
+			</div>
+		</div>
+		
+		<div class="resn_controller">
+			<input type="button" value="버튼 영역">
 		</div>
 	</div>
+</div>
+<!-- End : 사유서 조회 모달 -->
+
+
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/manager/alert_box.js"></script>
 <script src="/js/manager/wlog_list.js"></script>
 </html>

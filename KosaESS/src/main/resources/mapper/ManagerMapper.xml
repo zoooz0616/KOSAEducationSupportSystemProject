@@ -244,8 +244,8 @@
 				, s.stdt_id AS stdtid --id
 				, s.stdt_nm AS stdtNm --이름
 				, s.user_email AS userEmail --이메일
-				, in_tm --출근
-				, out_tm --퇴근 시간
+				, in_tm AS strInTmDd--출근
+				, out_tm AS strOutTmDd--퇴근 시간
 				, wlog_total_tm --출석 인정 시간
 				, c1.cmcd_nm as wlogCd --출석 상태
 				, w.delete_yn --삭제 여부

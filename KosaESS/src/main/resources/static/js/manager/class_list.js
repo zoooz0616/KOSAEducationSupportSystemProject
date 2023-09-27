@@ -30,7 +30,9 @@ function fetchClassList() {
 			var tbody =$("tbody");
 			tbody.addClass('class_list_table_tbody');
 			tbody.empty();
-		
+			
+			alertFade(filteredClassList.length+"건이 검색되었습니다.","CFDEE6","0E5881");
+			
 			for (let i=0;i<filteredClassList.length;i++) {
 				
 				var newRow = document.createElement('tr');
@@ -76,6 +78,7 @@ function fetchClassList() {
 		},
 		error : function(error) {
 			console.log("Error : ",error)
+			alertFade("검색에 실패하였습니다.","F9DCCB","FF333E");
 		}
 	});
 }

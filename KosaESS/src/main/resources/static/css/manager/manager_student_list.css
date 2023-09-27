@@ -27,8 +27,8 @@ select option[value=""][disabled] {
 }
 
 .home-section .title_wrap{
-	margin-top: 40px;
-	margin-left: 40px;
+/* 	margin-top: 40px; */
+/* 	margin-left: 40px; */
 }
 
 .home-section .title {
@@ -36,6 +36,7 @@ select option[value=""][disabled] {
 	color: #333333;
 	font-size: 30px;
 	font-weight: bold;
+	margin : 40px;
 }
 
 .content_wrap {

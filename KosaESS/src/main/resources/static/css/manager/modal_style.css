@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.resn_modal_wrap{
+/* 	border: 1px solid black; */
+	width : 100%;
+	z-index: 20;
+	display: flex;
+/* 	position : fixed; */
+	justify-content: center;
+	align-items: center;
+}
+
+.resn_modal{
+	border: 1px solid black;
+	width : 70%;
+/* 	height : 70%; */
+/* 	display : fixed; */
+}
+
+.resn_modal_wrap .resn_modal .wlog_info {
+	display: table-row;
+}

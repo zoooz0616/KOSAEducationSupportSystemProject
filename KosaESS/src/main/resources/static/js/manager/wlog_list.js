@@ -84,10 +84,9 @@ $(document).ready(
 //End : 체크박스 컨트롤
 
 // 2. 검색 누르면 검색하세요
-var outputString = "Show Modal";
-function showModal() {
-	console.log(outputString);
-	outputString = outputString + "!";
+function showModal(resnIcon) {
+	var thisResnId = resnIcon.getAttribute("value");
+	console.log(thisResnId);
 }
 
 function search() {
@@ -96,11 +95,7 @@ function search() {
 	
 	// 교육과정이 선택되지 않았다면 알림을 띄우고 탈출한다
 	if(targetClassId == ''){
-		$(".look_at_me").css("display","flex");
-		$(".look_at_me").fadeIn(200);
-		$(".look_at_me .read_this").text("교육과정을 선택하세요");
-		$(".look_at_me").delay(800);
-		$(".look_at_me").fadeOut(200);
+		alertFade("교육과정을 선택하세요.","F9DCCB","FF333E")
 		return;
 	}
 	// End
@@ -110,11 +105,7 @@ function search() {
 	
 	// 검색 기간이 선택되지 않았다면 알림을 띄우고 탈출한다
 	if(startDate == '' || endDate == ''){
-		$(".look_at_me").css("display","flex");
-		$(".look_at_me").fadeIn(200);
-		$(".look_at_me .read_this").text("검색 기간을 선택하세요");
-		$(".look_at_me").delay(800);
-		$(".look_at_me").fadeOut(200);
+		alertFade("검색 기간을 입력하세요.","F9DCCB","FF333E")
 		return;
 	}
 	// End
@@ -129,8 +120,6 @@ function search() {
 	var resnOnlyVal = $('#fileContainedOnly').is(':checked');
 	
 	//ㅇㅋ
-	
-	console.log(targetClassId);
 	
 	$.ajax({
 		type: 'get',
@@ -148,6 +137,8 @@ function search() {
 		async: false,
 		success: function(wlogListResponse) {
 			var wlogList = wlogListResponse.wlogList;
+			
+			alertFade(wlogList.length+"건이 검색되었습니다.","9FBCCD","0E5881");
 			
 			// 테이블 초기화
 			clearTable();
@@ -175,19 +166,48 @@ function search() {
 				var rowResnCd = $('<td></td>');
 
 				rowChk.html('<input type="checkbox" class="chk_wlog">');
-				rowChk.attr("class","chk_wlog");
 				rowChk.attr("value",wlogList[i].stdtId);
 				rowNum.text(i+1);
 				rowName.text(wlogList[i].stdtNm);
 				rowEmail.text(wlogList[i].userEmail);
-				rowInTime.text(wlogList[i].inTm);
-				rowOutTime.text(wlogList[i].outTm);
+				rowInTime.html(wlogList[i].strInTmDd.split(" ")[0]+"<br>"+wlogList[i].strInTmDd.split(" ")[1].split(".")[0]);
+				rowOutTime.html(wlogList[i].strOutTmDd.split(" ")[0]+"<br>"+wlogList[i].strOutTmDd.split(" ")[1].split(".")[0]);
 				rowTotalTime.text(Number(wlogList[i].wlogTotalTm).toFixed(1));
 				rowWlogCd.text(wlogList[i].wlogCd);
 				rowIsDelete.text(wlogList[i].deleteYn);
-				rowResn.text(wlogList[i].resnId);
+				if(wlogList[i].resnId!=null){
+					rowResn.html(
+						$('<img>',{
+						src:'/img/file.png'
+						,value:wlogList[i].resnId
+						,class:'resn_icon'
+						})
+						/*
+						.css({
+							cursor:'pointer'
+							,width:'15px'
+							,height: '15px'
+						})
+						*/
+					);
+				}
+				
+				$('.resn_icon').attr("onclick","showModal(this)");
+				
 				rowResnCd.text(wlogList[i].prcsCd);
-
+				
+				rowChk.attr("class","chk_wlog");
+				rowNum.attr("class","row_number");
+				rowName.attr("class","row_name");
+				rowEmail.attr("class","row_email");
+				rowInTime.attr("class","row_intime");
+				rowOutTime.attr("class","row_outtime");
+				rowTotalTime.attr("class","row_totaltile");
+				rowWlogCd.attr("class","row_wlogcode");
+				rowIsDelete.attr("class","row_isdelete");
+				rowResn.attr("class","file_cell");
+				rowResnCd.attr("class","row_resncode");
+				
 				newRow.append(rowChk);
 				newRow.append(rowNum);
 				newRow.append(rowName);

@@ -5,11 +5,18 @@
 </head>
 <head>
 	<link th:href="@{/css/manager/manager_class_list.css}" rel="stylesheet">
+	<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
 </head>
 <body>
 	<!-- 서브바 부분 -->
 	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
 	<!-- End 서브바 -->
+	
+	<!-- 얼럴트 -->
+		<div class="look_at_me">
+			<span class="read_this">이봐!</span>
+		</div>
+	<!-- End : 얼럴트 -->
 
 	<!-- 컨텐츠 부분 -->
 	<div class="home-section">
@@ -83,7 +90,8 @@
 		<!-- END : content wrap-->
 	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="/js/manager/class_list.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/manager/class_list.js"></script>
+<script src="/js/manager/alert_box.js"></script>
 </body>
 </html>

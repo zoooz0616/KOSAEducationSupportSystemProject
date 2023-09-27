@@ -166,11 +166,11 @@ $(document).ready(
 // 2. 검색 누르면 검색하세요
 	function search(){
 		if((document.getElementById('classId').selectedIndex == 0)){
-			alert('교육과정을 선택해주세요.');
+			alertFade("교육과정을 선택하세요.","F9DCCB","FF333E");
 			return;
 		}
 		if(($("#startDate").val()=="")||($("#endDate").val()=="")){
-			alert('검색 기간을 설정해주세요.');
+			alertFade("검색 기간을 입력하세요.","F9DCCB","FF333E");
 			return;
 		}
 		var targetClassId = document.getElementById('classId').options[document.getElementById('classId').selectedIndex].value.split("(")[1].split(",")[0].split("=")[1];
@@ -197,8 +197,14 @@ $(document).ready(
 			},
 			async:false,
 			success: function(stdtListResponse) {
+				//인원 수 입력
+				var stdtList = stdtListResponse.stdtList;
+				
+				alertFade(stdtList.length+"명이 검색되었습니다.","CFDEE6","0E5881");
+				
 				clearTable();
 				$("#chkAllStdt").prop("checked",false);
+				
 				
 				//교육과정명 변경 
 				$(".title_a").text(stdtListResponse.thisClassVO.clssNm);
@@ -206,8 +212,6 @@ $(document).ready(
 				$(".title_a").val(stdtListResponse.thisClassVO.clssId);
 				$(".title_a").attr("href", "/manager/class/"+stdtListResponse.thisClassVO.clssId);
 				
-				//인원 수 입력
-				var stdtList = stdtListResponse.stdtList;
 				if(stdtList.length != 0){
 					document.getElementById("stdtCnt").innerHTML=stdtList.length;
 					$('.stdt_count_unit').css("visibility","visible")
