@@ -261,9 +261,18 @@
 				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
 				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
 			WHERE
-				in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
-				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
+				w.clss_id in (select clss_id from clss WHERE mngr_id = #{mngrId})
 		]]>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='endDate!=""'>
+			<![CDATA[
+				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
 		<if test='isDelete eq "true"'>
 			<![CDATA[
 				AND w.delete_yn='N' 

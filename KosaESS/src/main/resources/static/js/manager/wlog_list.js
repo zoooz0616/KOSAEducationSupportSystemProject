@@ -142,6 +142,18 @@ $(document).ready(
 // 2. 검색 누르면 검색하세요
 function showModal(resnIcon) {
 	var thisResnId = resnIcon.getAttribute("value");
+	$.ajax({
+		type: 'get',
+		url: '/manager/worklog/resnContent',
+		data: {
+			resnId:thisResnId
+		},
+		success: function(response) {
+			console.log(response)
+		},error: function(error) {
+			console.log("error: ", error);
+		}
+	})
 	console.log(thisResnId);
 }
 
@@ -161,12 +173,14 @@ function search() {
 	var startDate = document.getElementById("startDate").value;
 	var endDate = document.getElementById("endDate").value;
 	
+	/*
 	// 검색 기간이 선택되지 않았다면 알림을 띄우고 탈출한다
 	if(startDate == '' || endDate == ''){
 		alertFade("검색 기간을 입력하세요.","F9DCCB","FF333E")
 		return;
 	}
 	// End
+	*/
 	
 	
 	if(targetClassId != ''){
@@ -233,8 +247,16 @@ function search() {
 				rowNum.text(i+1);
 				rowName.text(wlogList[i].stdtNm);
 				rowEmail.text(wlogList[i].userEmail);
-				rowInTime.html(wlogList[i].strInTmDd.split(" ")[0]+"<br>"+wlogList[i].strInTmDd.split(" ")[1].split(".")[0]);
-				rowOutTime.html(wlogList[i].strOutTmDd.split(" ")[0]+"<br>"+wlogList[i].strOutTmDd.split(" ")[1].split(".")[0]);
+				if(wlogList[i].strInTmDd != null){
+					rowInTime.html(wlogList[i].strInTmDd.split(" ")[0]+"<br>"+wlogList[i].strInTmDd.split(" ")[1].split(".")[0]);
+				}else{
+					rowInTime.text("-")
+				}
+				if(wlogList[i].strOutTmDd != null){
+					rowOutTime.html(wlogList[i].strOutTmDd.split(" ")[0]+"<br>"+wlogList[i].strOutTmDd.split(" ")[1].split(".")[0]);
+				}else{
+					rowOutTime.text("-")
+				}
 				rowTotalTime.text(Number(wlogList[i].wlogTotalTm).toFixed(1));
 				rowWlogCd.text(wlogList[i].wlogCd);
 				rowIsDelete.text(wlogList[i].deleteYn);

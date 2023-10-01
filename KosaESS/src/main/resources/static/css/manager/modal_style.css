@@ -3,7 +3,8 @@
 .resn_modal_wrap{
 	width : 100%;
 	z-index: 20;
-	display: flex;
+	display : none;
+/* 	display: flex; */
 /* 	position : fixed; */
 	justify-content: center;
 	align-items: center;

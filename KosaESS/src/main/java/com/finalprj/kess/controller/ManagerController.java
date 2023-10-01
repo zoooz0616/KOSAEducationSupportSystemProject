@@ -32,6 +32,7 @@ import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
@@ -299,7 +300,7 @@ public class ManagerController {
 		
 		List<WorklogDTO> wlogList = new ArrayList<WorklogDTO>();
 		if(clssId != null) {
-			wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+			wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly);
 		}
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
 		model.addAttribute("wlogCnt", wlogList.size());
@@ -416,7 +417,7 @@ public class ManagerController {
 		}
 		//End : 유저 필터링
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate((String)session.getAttribute("mngrId"), clssId, startDate, endDate, keyword, isDelete, resnOnly);
 		
 		Map<String, Object> wlogListResponse = new HashMap<>();
 		wlogListResponse.put("wlogList", wlogList);
@@ -441,6 +442,27 @@ public class ManagerController {
 		
 		Map<String, Object> response = new HashMap<>();
 		response.put("classDetail", targetClass);
+		return response;
+	}
+	@GetMapping("/worklog/resnContent")
+	@ResponseBody
+	public Map<String, Object> getResnContent(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@RequestParam String resnId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		ReasonVO thisResn = null;
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("resnContent", thisResn);
 		return response;
 	}
 }

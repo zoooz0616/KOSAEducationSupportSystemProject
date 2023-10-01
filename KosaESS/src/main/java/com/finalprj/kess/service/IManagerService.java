@@ -46,7 +46,6 @@ public interface IManagerService {
 	public String getLatestClassIdByMngrId(String mngrId);
 
 	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword);
-//	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString);
 
 	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId);
 
@@ -54,9 +53,7 @@ public interface IManagerService {
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
-	public List<WorklogDTO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly);
+	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
-
-//	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate);
 }
