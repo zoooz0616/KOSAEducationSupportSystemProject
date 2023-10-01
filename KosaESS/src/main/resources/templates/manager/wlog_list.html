@@ -24,7 +24,15 @@
 <div class="home-section">
 	<!-- title -->
 	<div class="title_wrap">
-		<span class="title" th:text="${title}"></span><br>
+		<span class="title" th:text="${title}"></span>
+		<br>
+<!-- 		<input id="class_id_save" type="text" style="display: none;"> -->
+<!-- 		<input id="start_date_save" type="text" style="display: none;" th:value="${thisClass.clssId!=null?thisClass.clssStartDd:null}"> -->
+<!-- 		<input id="end_date_save" type="text" style="display: none;" th:value="${thisClass.clssId!=null?thisClass.clssEndDd:null}"> -->
+<!-- 		<input id="keyword_save" type="text" style="display: none;"> -->
+<!-- 		<div style="display: none;"> -->
+<!-- 			<input th:each="cmptCN:${cmptCodeNameList}" class="cmpt_checkbox_save" th:name="${cmptCN.cmcdId}" type="checkbox" checked="checked" th:value="${cmptCN.cmcdId}"> -->
+<!-- 		</div> -->
 	</div>
 
 	<!-- content wrap-->
@@ -44,6 +52,7 @@
 						<td class="search_filter_name">기간</td>
 						<td class="search_filter_input">
 							<input type="date" id="startDate" min="1980-01-01"><span> ~ </span><input type="date" id="endDate" min="1980-01-01">
+							<br>
 							<span>이번 달</span>
 							<input type="radio" name="default_period" id="this_month" value="thisMonth">
 							<span>이번 주</span>
@@ -71,7 +80,7 @@
 
 			<!-- 검색 버튼 -->
 			<div class="search_btn_wrap">
-				<input type="button" id="search_reset_btn" value="초기화" onclick="search()">
+				<input type="button" id="search_reset_btn" value="초기화" onclick="reset()">
 				<input type="button" id="search_by_name_btn" value="검색" onclick="search()">
 			</div>
 			<!-- End : 검색 버튼 -->

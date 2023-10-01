@@ -186,12 +186,12 @@ public class ManagerController {
 		
 		if(classId!=null) {
 //			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜에 교육과정 시작/종료 일자를 대입
-//			if (startDate == null) {
-//				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
-//			}
-//			if (endDate == null) {
-//				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
-//			}
+			if (startDate == null) {
+				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
+			}
+			if (endDate == null) {
+				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
+			}
 //			//end
 			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
 		}else {
@@ -230,7 +230,7 @@ public class ManagerController {
 				stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
 			}
 		}
-
+		
 		model.addAttribute("title", "교육생 목록");
 		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
@@ -421,5 +421,26 @@ public class ManagerController {
 		Map<String, Object> wlogListResponse = new HashMap<>();
 		wlogListResponse.put("wlogList", wlogList);
 		return wlogListResponse;
+	}
+	@GetMapping("/worklog/getPeriod")
+	@ResponseBody
+	public Map<String, Object> getClassPeriod(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@RequestParam String clssId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		ClassVO targetClass = managerService.getClassDetailByClssId(clssId);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("classDetail", targetClass);
+		return response;
 	}
 }

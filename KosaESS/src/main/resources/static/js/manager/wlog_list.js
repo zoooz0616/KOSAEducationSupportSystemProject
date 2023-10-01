@@ -25,6 +25,21 @@ function clearTable() {
 	wlogListTable.empty();
 }
 
+//오늘 기준 이번 주의 월요일, 일요일을 각각 반환
+function getThisWeek(){
+	let thisWeek = [];
+	for(let i=0; i<7; i++) {
+		let resultDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - (i + new Date().getDay()));
+		let yyyy = resultDay.getFullYear();
+		let mm = Number(resultDay.getMonth()) + 1;
+		let dd = resultDay.getDate();
+		mm = String(mm).length === 1 ? '0' + mm : mm;
+		dd = String(dd).length === 1 ? '0' + dd : dd;
+		thisWeek[i] = yyyy + '-' + mm + '-' + dd;
+	}
+	return thisWeek;
+}
+
 //체크된 출석 상태 반환
 function getFilterCd() {
 	const checkedWokCds = [];
@@ -40,17 +55,58 @@ function getFilterCd() {
 //현재 체크된 라디오 버튼의 값에 따라 start/end Date를 변경
 function setSearchPeriod(){
 	if($("input[name='default_period']:checked").val()=="thisClassPeriod"){
-		$('#startDate').val($('#start_date_save').val());
-		$('#endDate').val($('#end_date_save').val());
-	} else if ($("input[name='default_period']:checked").val()=="thisMonth") {
+		let thisClassId = $('#class_selector option:selected').val();
+		thisClassId = thisClassId.split('(')[1];
+		thisClassId = thisClassId.split(',')[0];
+		thisClassId = thisClassId.split('=')[1];
+		console.log(thisClassId);
+		
+		$.ajax({
+			type: 'get',
+			url: '/manager/worklog/getPeriod', // 서버의 엔드포인트 URL
+			data: {
+				clssId: thisClassId
+			},
+			async: false,
+			success: function(response) {
+				$("#startDate").val(response.classDetail.clssStartDd);
+				$("#endDate").val(response.classDetail.clssEndDd);
+			}
+			, error: function(error) {
+				console.log(error);
+			}
+		})
+	}else if ($("input[name='default_period']:checked").val()=="thisMonth") {
 		$('#startDate').val(getFirstDay());
 		$('#endDate').val(getLastDay());
 	}else{
-		$('#startDate').val(getFirstDay());
-		$('#endDate').val(getLastDay());
+		$('#startDate').val(getThisWeek()[6]);//월요일 넣기
+		$('#endDate').val(getThisWeek()[0]);//일요일 넣기
 	}
 }
 //End
+
+//초기화 버튼에 필요한 함수 할당
+function reset(){
+	// 검색 결과는 그대로
+
+	// 날짜 초기화(null), 라디오 버튼 초기화 
+	$('#startDate').val(null);
+	$('#endDate').val(null);
+	$("input:radio[name=default_period]").prop('checked',false)
+
+	//교육과정 선택상자 0번 선택
+	document.getElementById('class_selector').selectedIndex=0;
+	
+	// 이수상태 체크박스 전부 체크
+	$('#chkAll').prop("checked", true);
+	$('.chkWokCd').prop("checked", true);
+	$('#fileContainedOnly').prop("checked", false);
+	$('#isDelete').prop("checked", false);
+	
+	// 검색어 null 
+	$('#search_keyword').val(null)
+}
 
 //---------------------------------------------------------------------------
 // 1. 체크박스 컨트롤
@@ -93,12 +149,14 @@ function search() {
 	
 	var targetClassId = $('#class_selector option:selected').val();
 	
+	/*
 	// 교육과정이 선택되지 않았다면 알림을 띄우고 탈출한다
 	if(targetClassId == ''){
 		alertFade("교육과정을 선택하세요.","F9DCCB","FF333E")
 		return;
 	}
 	// End
+	/*/
 	
 	var startDate = document.getElementById("startDate").value;
 	var endDate = document.getElementById("endDate").value;
@@ -110,9 +168,14 @@ function search() {
 	}
 	// End
 	
-	targetClassId = targetClassId.split("(")[1];
-	targetClassId = targetClassId.split(",")[0];
-	targetClassId = targetClassId.split("=")[1];
+	
+	if(targetClassId != ''){
+		targetClassId = targetClassId.split("(")[1];
+		targetClassId = targetClassId.split(",")[0];
+		targetClassId = targetClassId.split("=")[1];
+	}else{
+		targetClassId = null
+	}
 	
 	var keyword = $("#search_keyword").val();
 	var wlogCd = getFilterCd();

@@ -232,8 +232,12 @@
 	<select id="getStudentTmSumByIds">
 		<![CDATA[
 		SELECT nvl(sum(nvl(wlog_total_tm,0)),0)
-		FROM wlog
-		WHERE clss_id = #{classId} AND stdt_id = #{stdtId}
+		FROM wlog w
+			JOIN clss c ON w.clss_id = c.clss_id
+		WHERE w.clss_id = #{classId}
+			AND w.stdt_id = #{stdtId}
+			AND w.in_tm > c.clss_start_dd
+			AND w.out_tm < c.clss_end_dd
 		]]>
 	</select >
 	
@@ -257,8 +261,7 @@
 				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
 				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
 			WHERE
-				w.clss_id=#{clssId}
-				AND in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
+				in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
 				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
 		]]>
 		<if test='isDelete eq "true"'>
@@ -269,6 +272,11 @@
 		<if test='resnOnly eq "true"'>
 			<![CDATA[
 				AND w.wlog_id in (SELECT wlog_id FROM resn WHERE delete_yn='N')
+			]]>
+		</if>
+		<if test='clssId!=""'>
+			<![CDATA[
+				AND w.clss_id=#{clssId}
 			]]>
 		</if>
 		<if test='keyword!=""'>
