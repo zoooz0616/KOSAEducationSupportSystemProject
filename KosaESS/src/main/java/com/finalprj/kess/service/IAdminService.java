@@ -147,4 +147,6 @@ public interface IAdminService {
 	List<StudentVO> getStudentList();
 	int getManagerEmailCnt(String managerEmail);
 	void updateCompany(FileVO fileVO, CompanyVO companyVO);
+	List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd, String userCd);
+	void deleteStudentList(List<String> selectedStudentIds);
 }
