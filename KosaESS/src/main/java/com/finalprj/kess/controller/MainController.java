@@ -190,7 +190,6 @@ public class MainController {
 		//직업 리스트
 		List<CommonCodeVO> jobList = adminService.getCommonCodeList("GRP0000007");
 		model.addAttribute("jobList", jobList);
-
 		return "signup";
 	}
 	
