@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
@@ -298,10 +299,21 @@ public class ManagerController {
 			}
 		}
 		
-		List<WorklogDTO> wlogList = new ArrayList<WorklogDTO>();
-		if(clssId != null) {
-			wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		if(clssId ==null) {
+			clssId ="";
 		}
+		if(startDate ==null) {
+			startDate ="";
+		}
+		if(endDate ==null) {
+			endDate ="";
+		}
+		if(keyword ==null) {
+			keyword="";
+		}
+		
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
 		model.addAttribute("wlogCnt", wlogList.size());
 		model.addAttribute("classList", classList);
@@ -417,7 +429,27 @@ public class ManagerController {
 		}
 		//End : 유저 필터링
 		
+		/*
+		//classId != null 일 경우, 자기가 담당한 교육에 대한 요청인지 확인
+		if(clssId != null) {
+			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"),"", "");
+			List<String> isManagerIdList = new ArrayList<String>();
+			for (ClassVO vo : isManagerChkList) {
+				isManagerIdList.add(vo.getClssId());
+			}
+			if(!isManagerIdList.contains(clssId)) {
+				//탈출
+				return null;//<<<이 부분 에러 페이지 이동으로 수정하기
+			}
+		}
+		*/
+		
 		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate((String)session.getAttribute("mngrId"), clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		
+		for (WorklogDTO dto : wlogList) {
+			dto.setStrInTmDd(dto.getInTmAsString());
+			dto.setStrOutTmDd(dto.getOutTmAsString());
+		}
 		
 		Map<String, Object> wlogListResponse = new HashMap<>();
 		wlogListResponse.put("wlogList", wlogList);
@@ -459,7 +491,11 @@ public class ManagerController {
 		}
 		//End : 유저 필터링
 		
-		ReasonVO thisResn = null;
+		ReasonDTO thisResn = managerService.getResnDetailByResnId(resnId);
+		thisResn.setStrInTmDd(thisResn.getInTmAsString());
+		thisResn.setStrOutTmDd(thisResn.getOutTmAsString());
+		System.out.println(thisResn.getStrInTmDd());
+		System.out.println(thisResn.getStrOutTmDd());
 		
 		Map<String, Object> response = new HashMap<>();
 		response.put("resnContent", thisResn);

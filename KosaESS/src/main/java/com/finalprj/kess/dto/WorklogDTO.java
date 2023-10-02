@@ -36,21 +36,21 @@ public class WorklogDTO {
 	private String prcsCd;//처리 상태
 		
 	public String getInTmAsString() {
-        if (inTm != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return dateFormat.format(inTm);
-        } else {
-            return null;
-        }
-    }
+		if (inTm != null) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			return dateFormat.format(inTm);
+		} else {
+			return null;
+		}
+	}
 
-    // 퇴근시간을 문자열로 반환
-    public String getOutTmAsString() {
-        if (outTm != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return dateFormat.format(outTm);
-        } else {
-            return null;
-        }
-    }
+// 퇴근시간을 문자열로 반환
+	public String getOutTmAsString() {
+		if (outTm != null) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			return dateFormat.format(outTm);
+		} else {
+			return null;
+		}
+	}
 }
