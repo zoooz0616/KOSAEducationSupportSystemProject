@@ -1,0 +1,155 @@
+a{
+	text-decoration: none;
+	color:#0E5881;
+	font-weight: bold;
+}
+
+a:hover{
+	text-decoration: none;
+	color:#0E5881;
+	font-weight: bold;
+	border-bottom: 2px solid #0E5881;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .content_top {
+	display: flex;
+	margin: 0 40px 40px 40px;
+	padding-top: 40px;
+	justify-content: space-between;
+}
+
+.home-section .content_top .title {
+	font-size: 20px;
+	color: #333333;
+	font-weight: bold;
+}
+
+.home-section .content_top .route a {
+	color: #0E5881;
+	text-decoration-line: none;
+	font-weight: bold;
+}
+
+.home-section .content_middle {
+	margin: 40px;
+	display: flex;
+	border-top: 2px solid #0E5881;
+}
+
+.student_form_content {
+	width: 100%;
+}
+
+.student_form_content .row {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+	height: 40px;
+}
+
+.student_form_content .row .col {
+	width: 33%;
+	display: flex;
+	margin: 0 10px 0 0;
+}
+
+.student_form_content .row .col .col_title {
+	color: #0E5881;
+	font-weight: bold;
+	text-align: center;
+	width: 100px;
+	margin-right: 5px;
+	background: #E7EFF3;
+	padding: 5px;
+}
+
+.student_form_content .row .col .col_content {
+	margin-top: 7px;
+	height: 100%;
+}
+
+.student_form_content .row2 {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+}
+
+.student_form_content .row2 .col2 {
+	width: 100%;
+	margin: 0 5px 0 0;
+	display: flex;
+	height: 250px;
+}
+
+.student_form_content .row2 .col2 .col_title {
+	color: #0E5881;
+	font-weight: bold;
+	width: 100px;
+	background: #E7EFF3;
+	padding: 5px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.student_form_content .row2 .col2 .col_content {
+	padding: 5px;
+	width: 90%;
+}
+
+table {
+	width: 100%;
+	border-top: 2px solid #0E5881;
+	border-collapse: collapse;
+}
+
+table tr th {
+	color: #0E5881;
+	font-weight: bold;
+	background: #E7EFF3;;
+}
+
+table tr td {
+	border: 1px solid #E7EFF3;
+}
+
+.td_num, .td_class_id, .td_apply_status, .td_apply_dt, .td_class_status, .td_cmpt_status{
+	text-align:center;
+}
+
+button {
+	font-size: 20px;
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	width: 150px;
+	height: 40px;
+	margin: 10px;
+	height: 40px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.star {
+	color: red;
+	vertical-align: middle;
+}

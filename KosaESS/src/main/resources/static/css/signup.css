@@ -25,7 +25,7 @@ input{
     text-align: right;
     padding-right: 10px;
 }
-/*네이버 로고설정*/
+
 .image{
     height: 32px;
     padding: 20px;
@@ -127,129 +127,6 @@ input{
     border-color: #03c75a;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
 }
-/*IP보안 표시X*/
-#ip-check{
-    display: none;
-}
-/*IP보안 ON/OFF*/
-#ip-context{
-    color:rgb(160, 160, 160);
-    font-weight: 900;
-    display: inline-block;
-    width: 22px;
-}
-/*간편한 로그인 구역*/
-#easy-login-wrap{
-    height: 90px;
-    margin: 0px 10px 35px 10px;
-}
-/*간편한 로그인 텍스트*/
-.easy-login{
-    font-size: 20px;
-    font-weight: 500;
-}
-/*QR & 일회용 로그인 박스 구역*/
-.easy-login-box{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-/*QR코드 로그인*/
-.qr-login{
-    float: left;
-    border: 1px solid #03c75a;
-    background-color: #fff;
-    margin: 0px 4px 0px 0px;
-    line-height: 55px;
-}
-/*일회용 번호 로그인*/
-.onetime-login{
-    float: right;
-    border: 1px solid #03c75a;
-    background-color: #fff;
-    margin: 0px 0px 0px 4px;
-    line-height: 55px;
-}
-/*더욱 간편한 로그인-en모드*/
-.qr-login-en, .facebook-login, .line-login{
-    font-family: Helvetica,Dotum,sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    text-align: left;
-    line-height: 55px;
-    border: solid 1px #dadada;
-    background: #fff;
-    margin-bottom: 10px;
-}
-/*더욱 간편한 로그인 이미지-en모드*/
-.easy-login-box-en img{
-    display: inline-block;
-    vertical-align: middle;
-    margin: 0 10px 0 10px;
-}
-/*찾기 및 회원가입*/
-.find-signup-wrap{
-    height: 100px;
-    grid-template-columns: 1fr 1fr 1fr;
-}
-/*찾기 및 회원가입 글자 희미하게 바꾸기*/
-.find-signup-wrap a{
-    color: rgb(150, 150, 150);
-    text-decoration: none;
-    font-weight: 500;
-}
-.find-signup-wrap span{
-    color: rgb(150, 150, 150);
-    font-weight: 500;
-}
-/*아이디 찾기*/
-.find-id{
-    margin: 3px;
-    font-size: 14px;
-    border-right: 1px solid gainsboro;
-}
-/*아이디 찾기-en모드*/
-.find-id-en{
-    font-size: 14px;
-}
-/*비밀번호 찾기*/
-.find-pw{
-    margin: 3px;
-    font-size: 14px;
-    border-right: 1px solid gainsboro;
-}
-/*회원가입*/
-.sign-up{
-    margin: 3px;
-    font-size: 14px;
-}
-
-/*가로 800px 이상일때*/
-@media(min-width : 800px)
-{
-    .main{
-        width: 460px;
-        margin: auto;
-    }
-
-/*언어설정*/
-.select-lang{
-    margin-top: 20px;
-    width: 550px;
-    padding-right: 10px;
-}
-/*네이버 로고설정*/
-.image{
-    margin-top: 40px;
-    height: 44px;
-    padding: 20px;
-}
-
-/*IP보안 표시*/
-#ip-check{
-    margin-right: 7px;
-    float: right;
-    display:block;
-}
 
 /*회원가입 부분*/
 .main-signup{
@@ -270,6 +147,8 @@ h3{
     border: solid 1px #dadada;
     background: #fff;
     cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
 }
 .signup-input-c{
     display:flex;
@@ -286,7 +165,14 @@ h3{
     height: 29px;
     border: none;
     outline:none;
-    width:100%;
+    width: 100px;
+}
+
+#signup-pw, #signup-pww{
+    height: 29px;
+    border: none;
+    outline:none;
+    width: 300px;
 }
 .signup-at{
     color: rgb(150, 150, 150);
@@ -295,27 +181,51 @@ h3{
     margin-top: 8px;
 }
 .pw-lock{
-    /* content: ''; */
-    /* display: inline-block; */
     top: 50%;
     right: 13px;
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     margin-top: 5px;
-    background-image: url(https://static.nid.naver.com/images/ui/join/m_icon_pw_step.png);
-    background-size: 125px 75px;
+    background-image: url("/img/close_eye.png");
+    background-size: 25px 25px;
     cursor: pointer;
 }
+
+.pw-lock.active {
+	top: 50%;
+    right: 13px;
+    width: 25px;
+    height: 25px;
+    margin-top: 5px;
+    background-image: url('/img/open_eye.png');
+    background-size: 25px 25px;
+    cursor: pointer;
+}
+
+
 .pww-lock{
     /* content: ''; */
     /* display: inline-block; */
     top: 50%;
     right: 13px;
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     margin-top: 5px;
-    background-image: url(https://static.nid.naver.com/images/ui/join/m_icon_pw_step.png);
-    background-size: 125px 75px;
+    background-image: url("/img/close_eye.png");
+    background-size: 25px 25px;
+    cursor: pointer;
+}
+
+.pww-lock.active{
+    /* content: ''; */
+    /* display: inline-block; */
+    top: 50%;
+    right: 13px;
+    width: 25px;
+    height: 25px;
+    margin-top: 5px;
+    background-image: url('/img/open_eye.png');
+    background-size: 25px 25px;
     cursor: pointer;
 }
 
@@ -335,7 +245,7 @@ h3{
     border: none;
     outline:none;
 }
-#signup-name, #signup-gender, #signup-email, #signup-country, #signup-phone, #signup-cnum{
+#signup-name, #signup-gender, #signup-job, #signup-email, #signup-country, #signup-phone, #signup-cnum{
     width:100%;
     height: 29px;
     border: none;
@@ -344,10 +254,14 @@ h3{
 #signup-gender{
     background-color: white;
 }
+
+#signup-job{
+    background-color: white;
+}
 #signup-country{
     background-color: white;
 }
-#signup-birth-mm{
+#signup-birth-mm, #signup-birth-yy{
     background-color: white;
 }
 /*본인 확인 이메일*/
@@ -380,4 +294,50 @@ h3{
     font-weight:bold;
     outline:none;
     cursor: pointer;
-}}
+}
+
+.email_input{
+	border:none;
+}
+
+.email_input, .email_select{
+	width: 100px;
+	margin-right: 2px;
+	
+}
+
+.email_btn {
+	width: 100px;
+	background : #073C5A;
+	color: white;
+	font-weight: bold;
+	border: none;
+	margin: 0px 2px;
+    padding: 3px;
+}
+
+.complete_email_btn{
+	width: 100px;
+	background : gray;
+	color: white;
+	font-weight: bold;
+	border: none;
+	margin: 0px 2px;
+    padding: 3px;
+}
+
+.time_btn {
+	border: 1px solid orange;
+    background: none;
+    color: orange;
+}
+
+.validity_message{
+	font-size: 10px;
+	text-align: left;
+}
+
+.star{
+	color: red;
+	vertical-align: middle;
+}

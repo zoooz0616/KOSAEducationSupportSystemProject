@@ -245,7 +245,7 @@
 											<th><div>강사이름</div></th>
 										</tr>
 										<tr th:if="${act}=='insert'" class="lecture_row">
-											<td><input type="checkbox">
+											<td class="td_check"><input type="checkbox">
 											<input class="lecture_time" type="hidden" value="0"></td>
 											<td><select id="lecture_select"
 												onchange="lectureSelect(this.value)" name="lctrId">
@@ -262,7 +262,7 @@
 
 										<tr th:if="${act}=='update'" class="lecture_row"
 											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td><input type="checkbox"><input class="lecture_time" type="hidden"
+											<td class="td_check"><input type="checkbox"><input class="lecture_time" type="hidden"
 												th:value="${curriculumDetail.lctrTm}"></td>
 											<td><select id="lecture_select"
 												onchange="lectureSelect(this.value)" name="lctrId">
@@ -280,7 +280,7 @@
 
 										<tr th:if="${act}=='select'" class="lecture_row"
 											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td><input type="checkbox" disabled><input class="lecture_time" type="hidden" value="0"></td>
+											<td class="td_check"><input type="checkbox" disabled><input class="lecture_time" type="hidden" value="0"></td>
 											<td><span
 												th:text="${curriculumDetail.lctrNm}+' ('+${curriculumDetail.lctrTm}+')'"></span></td>
 											<td><span th:text="${curriculumDetail.sbjtNm}"></span></td>
@@ -291,7 +291,7 @@
 										<!-- 총 이수시간을 저장할 숨겨진 입력 필드 -->
 										<input type="hidden" id="clss_total_tm" th:name="clssTotalTm"
 											th:value="${classVO.clssTotalTm}">
-										<div>
+										<div style="font-weight: bold;">
 											총 이수시간 : <span th:if="${act}=='insert'"
 												class="class_total_tm">0</span> <span
 												th:if="${act}=='update'" class="class_total_tm"

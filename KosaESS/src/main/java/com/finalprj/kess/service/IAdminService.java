@@ -19,6 +19,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 
@@ -149,4 +150,8 @@ public interface IAdminService {
 	void updateCompany(FileVO fileVO, CompanyVO companyVO);
 	List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd, String userCd);
 	void deleteStudentList(List<String> selectedStudentIds);
+	StudentVO getStudent(String stdtId);
+	
+	List<ApplyVO> getApplyListByStudent(String stdtId);
+	List<RegistrationVO> getRegistListByStudent(String stdtId);
 }
