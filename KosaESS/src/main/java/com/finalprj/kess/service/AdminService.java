@@ -20,6 +20,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IAdminRepository;
@@ -601,6 +602,24 @@ public class AdminService implements IAdminService {
 		adminRepository.deleteLginStudent(selectedStudentIds);
 		adminRepository.deleteStudentList(selectedStudentIds);
 	}
+	
+	@Override
+	public StudentVO getStudent(String stdtId) {
+		return adminRepository.getStudent(stdtId);
+	}
+	
+	@Override
+	public List<ApplyVO> getApplyListByStudent(String stdtId) {
+		return adminRepository.getApplyListByStudent(stdtId);
+	}
+	
+	@Override
+	public List<RegistrationVO> getRegistListByStudent(String stdtId) {
+		return adminRepository.getRegistListByStudent(stdtId);
+	}
+	
+	
+	
 	
 	
 	

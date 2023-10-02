@@ -15,4 +15,9 @@ public class ApplyVO {
 	private String rgsterId;//등록자id
 	private Timestamp updtDt;//수정일시
 	private String updterId;//수정자id
+	
+	private String fileSubId;//파일Subid
+	private String fileNm;//파일명
+	private String clssNm;//교육과정명
+	private String cmcdNm;//지원상태이름
 }
