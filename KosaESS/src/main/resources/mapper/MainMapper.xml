@@ -35,4 +35,33 @@
 	where user_email=#{userEmail}
 	]]>
 	</update>
+	
+	<select id="getEmailCnt" parameterType="string" resultType="int">
+	<![CDATA[
+		select count(user_email) 
+		from lgin
+		where user_email=#{email}
+	]]>
+	</select>
+	
+	<insert id="insertLgin" parameterType="com.finalprj.kess.model.StudentVO">
+	<![CDATA[
+	insert into lgin (user_email, user_pwd, role_cd, user_cd)
+	values(#{userEmail}, #{userPwd},'ROL0000001', 'USR0000001')
+	]]>
+	</insert>
+	
+	<insert id="insertStudent" parameterType="com.finalprj.kess.model.StudentVO">
+	<![CDATA[
+	insert into stdt (stdt_id, user_email, stdt_nm, gender_cd, birth_dd, stdt_tel, job_cd, rgst_dt, rgster_id, receive_mail)
+	values(#{stdtId}, #{userEmail}, #{stdtNm}, #{genderCd}, to_date(#{birthday}, 'YYYY/MM/DD'), #{stdtTel}, #{jobCd}, systimestamp, #{stdtId}, #{receiveMail})
+	]]>
+	</insert>
+	
+	<select id="getMaxStdtId" resultType="string">
+	<![CDATA[
+	select 'STDT'||LPAD((max(cast(substr(stdt_id,5) as number(6)))+1),6,'0')
+	from STDT
+	]]>
+	</select>
 </mapper>
