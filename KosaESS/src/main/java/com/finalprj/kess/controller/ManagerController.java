@@ -287,10 +287,11 @@ public class ManagerController {
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"", "");
+		
 		if(clssId != null) {
-			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId(mngrId,"", "");
 			List<String> isManagerIdList = new ArrayList<String>();
-			for (ClassVO vo : isManagerChkList) {
+			for (ClassVO vo : classList) {
 				isManagerIdList.add(vo.getClssId());
 			}
 			if(!isManagerIdList.contains(clssId)) {
@@ -299,8 +300,13 @@ public class ManagerController {
 			}
 		}
 		
+		ClassVO thisClass;
+		
 		if(clssId ==null) {
 			clssId ="";
+			thisClass = new ClassVO();
+		}else {
+			thisClass = managerService.getClassDetailByClssId(clssId);
 		}
 		if(startDate ==null) {
 			startDate ="";
@@ -314,7 +320,7 @@ public class ManagerController {
 		
 		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly);
 		
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
+		model.addAttribute("thisClass",thisClass);
 		model.addAttribute("wlogCnt", wlogList.size());
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
@@ -494,11 +500,34 @@ public class ManagerController {
 		ReasonDTO thisResn = managerService.getResnDetailByResnId(resnId);
 		thisResn.setStrInTmDd(thisResn.getInTmAsString());
 		thisResn.setStrOutTmDd(thisResn.getOutTmAsString());
-		System.out.println(thisResn.getStrInTmDd());
-		System.out.println(thisResn.getStrOutTmDd());
-		
+		List<CommonCodeVO> resnCdList = managerService.getCodeNameList("RES");
+		resnCdList.remove(0);
 		Map<String, Object> response = new HashMap<>();
 		response.put("resnContent", thisResn);
+		response.put("resnCdList", resnCdList);
 		return response;
+	}
+	
+	@PostMapping("/worklog/update_resn_code")
+	@ResponseBody
+	public String updateResnCd(
+			HttpSession session,
+			@RequestParam String resnId,
+			@RequestParam String resnCd
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		//업데이트
+		managerService.updateResnCd(resnId, resnCd, (String)session.getAttribute("mngrId"));
+		// End : 업데이트
+		return "OK!";
+		// End : 업데이트 결과 전송
 	}
 }

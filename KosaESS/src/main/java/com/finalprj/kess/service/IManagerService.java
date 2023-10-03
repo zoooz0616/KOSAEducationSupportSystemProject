@@ -60,4 +60,6 @@ public interface IManagerService {
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 
 	public ReasonDTO getResnDetailByResnId(String resnId);
+
+	public void updateResnCd(String resnId, String resnCd, String mngrId);
 }

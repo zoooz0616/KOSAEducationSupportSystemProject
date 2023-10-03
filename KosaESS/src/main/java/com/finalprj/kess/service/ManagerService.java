@@ -136,6 +136,11 @@ public class ManagerService implements IManagerService {
 		return managerRepository.getResnDetailByResnId(resnId);
 	}
 
+	@Override
+	public void updateResnCd(String resnId, String resnCd, String mngrId) {
+		managerRepository.updateResnCd(resnId, resnCd, mngrId);
+	}
+
 //	@Override
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
 //		return managerRepository.getStudentListBySearch(classId, startDate, endDate);

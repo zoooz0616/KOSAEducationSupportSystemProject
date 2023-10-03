@@ -219,6 +219,16 @@
 				AND STDT_ID=#{stdtId}
 		]]>
 	</update>
+	<update id="updateResnCd">
+		<![CDATA[
+			UPDATE resn
+			SET
+				resn_cd=#{resnCd}
+				,updt_dt=systimestamp
+				,updter_id=#{mngrId}
+			WHERE resn_id=#{resnId}
+		]]>
+	</update>
 	
 	<select id="getTotalTmByClssId">
 		<![CDATA[
@@ -337,8 +347,8 @@
 				,r.wlog_id
 				,w.clss_id
 				,cl.clss_nm
-				,in_tm AS strInTmDd
-				,out_tm AS strOutTmDd
+				,in_tm --AS strInTmDd
+				,out_tm --AS strOutTmDd
 				,wlog_cd
 				,c2.cmcd_nm as wlogNm
 			FROM resn r

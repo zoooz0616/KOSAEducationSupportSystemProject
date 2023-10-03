@@ -88,6 +88,12 @@ function search(){
 	fetchClassList();
 }
 
+//초기화 버튼을 누르면 검색 조건을 초기화
+function reset(){
+	$('#search_by_name').val("");
+	$('input[type=checkbox]').prop("checked",true);
+}
+
 //---------------------------------------------------------------
 $(document).ready(function () {
 	

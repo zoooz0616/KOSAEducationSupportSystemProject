@@ -56,10 +56,14 @@ function getFilterCd() {
 function setSearchPeriod(){
 	if($("input[name='default_period']:checked").val()=="thisClassPeriod"){
 		let thisClassId = $('#class_selector option:selected').val();
+		if(thisClassId===""){
+			alertFade("교육과정을 선택하세요.","F9DCCB","FF333E");
+			$("input:radio[name=default_period]").prop('checked',false)
+			return;
+		}
 		thisClassId = thisClassId.split('(')[1];
 		thisClassId = thisClassId.split(',')[0];
 		thisClassId = thisClassId.split('=')[1];
-		console.log(thisClassId);
 		
 		$.ajax({
 			type: 'get',
@@ -108,13 +112,68 @@ function reset(){
 	$('#search_keyword').val(null)
 }
 
+function updateResnCode(button){
+	targetResnCode = button;
+	console.log(button.innerText);
+	//console.log(typeof targetResnCode);
+	if(typeof targetResnCode === 'object'){
+		$.ajax({
+		type: 'post',
+		url: '/manager/worklog/update_resn_code', // 서버의 엔드포인트 URL
+		data: {
+			resnId:$('.resn_modal').val()
+			,resnCd:targetResnCode.value
+		},
+		async: false,
+		success: function(response) {
+			if(response != null){
+				$('#modal_prcs_name').text(button.innerText);
+			}
+		},error: function(error) {
+			console.log("error: ", error);
+		}
+		})
+	}
+}
+
 //---------------------------------------------------------------------------
 // 1. 체크박스 컨트롤
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 	
+	//modal 외부를 클릭 시 닫히는 이벤트
+	$(document).mouseup(function (e){
+		let container = $('.resn_modal_wrap');
+		if(container.has(e.target).length === 0){
+			closeModal();
+		}
+	}),
+	
+	// startDate가 바뀌면 endDate의 min을 변경
+	$('#startDate').on("change", function() {
+		$('#endDate').prop("min",$('#startDate').val());
+	}),
+	
+	//라디오뻐튼을 이용해 검색 기간을 자동으로 입력 가능
 	radioBtns.change( function(){
 		setSearchPeriod();
+	}),
+	
+	//classId 선택을 변경할 경우, 숨겨진 시작/종료 일자를 저장하고 라디오버튼의 체크를 해제
+	$('#class_selector').change(function(){
+		let targetClassStartDate = ((String)($('#class_selector').val().split(",")[10])).split("=")[1]
+		let targetClassEndDate = ((String)($('#class_selector').val().split(",")[11])).split("=")[1]
+		$("#start_date_save").val(targetClassStartDate);
+		$("#end_date_save").val(targetClassEndDate);
+		$("input:radio[name=default_period]").prop('checked',false)
+	}),
+	
+	//검색 기간을 직접 변경하면 라디오버튼 해제
+	$('#startDate').change(function(){
+		$("input:radio[name=default_period]").prop('checked',false)
+	}),
+	$('#endDate').change(function(){
+		$("input:radio[name=default_period]").prop('checked',false)
 	}),
 	
 	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
@@ -131,10 +190,12 @@ $(document).ready(
 	})
 	//End
 	//화면이 로딩 되면 출석 상태 전부 체크하기
+	/*
 	,
 	chkAll.prop('checked', true)
 	,
 	chkList.prop('checked', true)
+	*/
 	//End
 );
 //End : 체크박스 컨트롤
@@ -147,7 +208,7 @@ function closeModal(){
 
 // 아이콘을 누르면 모달을 표시
 function showModal(resnIcon) {
-	var thisResnId = resnIcon.getAttribute("value");
+	let thisResnId = resnIcon.getAttribute("value");
 	$.ajax({
 		type: 'get',
 		url: '/manager/worklog/resnContent',
@@ -155,35 +216,26 @@ function showModal(resnIcon) {
 			resnId:thisResnId
 		},
 		success: function(response) {
-			console.log(response)
-			console.log(response.resnContent)
+			//console.log(response)
+			//console.log(response.resnContent)
+			
 			$('.resn_modal_wrap').css("display",'flex');
 			$('body').css("overflow",'hidden');
+			
+			$('.resn_modal').val(response.resnContent.resnId);
 			
 			$('#modal_name').text(response.resnContent.stdtNm);
 			$('#modal_email').text(response.resnContent.userEmail);
 			$('#modal_prcs_name').text(response.resnContent.prcsNm);
 			
-			/*
 			if(response.resnContent.strInTmDd != null){
-				$('#modal_in_time').html(response.resnContent.strInTm);
+				$('#modal_in_time').html(response.resnContent.strInTmDd);
 			}else{
 				$('#modal_in_time').html('-')
 			}
 			
 			if(response.resnContent.strOutTmDd != null){
-				$('#modal_out_time').text(response.resnContent.strOutTm);
-			}else{
-				$('#modal_out_time').text('-')
-			}
-			*/
-			if(response.resnContent.inTm != null){
-				$('#modal_in_time').html(response.resnContent.inTm);
-			}else{
-				$('#modal_in_time').html('-')
-			}
-			if(response.resnContent.outTm != null){
-				$('#modal_out_time').text(response.resnContent.outTm);
+				$('#modal_out_time').text(response.resnContent.strOutTmDd);
 			}else{
 				$('#modal_out_time').text('-')
 			}
@@ -192,11 +244,21 @@ function showModal(resnIcon) {
 			
 			$('.resn_text').text(response.resnContent.resnContent);
 			
+			
+			$('.resn_controller').empty();
+			for(let i = 0;i < response.resnCdList.length;i++){
+				///*
+				let newButton = $('<button onclick="updateResnCode(this)" value = "'+response.resnCdList[i].cmcdId+'" >'+response.resnCdList[i].cmcdNm+'</button>')
+				$('.resn_controller').append(newButton);
+				// */
+				console.log(response.resnCdList[i]);
+				//console.log(response.wlogCdList[i].cmcdNm);
+			}
+			
 		},error: function(error) {
 			console.log("error: ", error);
 		}
 	})
-	console.log(thisResnId);
 }
 
 function search() {
@@ -335,6 +397,29 @@ function search() {
 				wlogListTable.append(newRow);
 			}
 			//End
+			
+			//이수상태 변경이 영향을 받지 않도록 검색 조건 저장
+				//히든 셀렉트 박스 값에 classId 값을 hidden에 저장
+			let classId = $('#class_selector').val().match(/clssId=([A-Z0-9]+)/)[1];
+			$('#class_id_save').val(classId);
+				//히든 start/endDate 상자에 날짜를 저장
+			$('#start_date_save').val($('#startDate').val());
+			$('#end_date_save').val($('#endDate').val());
+				//히든 검색어에 검색어 저장
+			$('#keyword_save').val($('#search_keyword').val());
+				//히든 이수상태 체크박스에 이수상태 저장
+			/*
+			chkcmptList.each(
+				function(i, o){
+					if(o.checked){
+						$("input:checkbox[name="+o.value+"]").prop('checked',true)
+					}else{
+						$("input:checkbox[name="+o.value+"]").prop('checked',false)
+					}
+				}
+			)
+			*/
+			
 		}, error: function(error) {
 			console.log("error: ", error);
 		}

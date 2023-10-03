@@ -131,7 +131,6 @@
 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 						<td class="number_cell" th:text="${#numbers.formatDecimal(stdt.cmptRate, 1, 1)}"></td>
 						<td class="fixed_length_cell" th:text="${stdt.jobCd}">이수여부</td>
-<!-- 						<td class="number_cell" th:text="${stdt.wlogCnt}">?</td> -->
 					</tr>
 				</tbody>
 			</table>
@@ -141,6 +140,6 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:inline="javascript"></script>
-<script src="/js/manager/student_list.js"></script>
 <script src="/js/manager/alert_box.js"></script>
+<script src="/js/manager/student_list.js"></script>
 </html>

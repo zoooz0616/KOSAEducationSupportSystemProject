@@ -52,6 +52,11 @@ function clearTable(){if(stdtListTable.firstChild != null){while (stdtListTable.
 //현재 체크된 라디오 버튼의 값에 따라 start/end Date를 변경
 function setSearchPeriod(){
 	if($("input[name='default_period']:checked").val()=="thisClassPeriod"){
+		if($('#classId').prop('selectedIndex')==0){
+			alertFade("교육과정을 선택하세요.","F9DCCB","FF333E");
+			$("input:radio[name=default_period]").prop('checked',false)
+			return;
+		}
 		$('#startDate').val($('#start_date_save').val());
 		$('#endDate').val($('#end_date_save').val());
 	} else if ($("input[name='default_period']:checked").val()=="thisMonth") {
@@ -157,10 +162,17 @@ function reset(){
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 	
+	// startDate가 바뀌면 endDate의 min을 변경
+	$('#startDate').on("change", function() {
+		$('#endDate').prop("min",$('#startDate').val());
+	}),
+	
+	//라디오버튼으로 검색 기간을 자동 입력
 	radioBtns.change( function(){
 		setSearchPeriod();
 	}),
 	
+	//classId 선택을 변경할 경우, 숨겨진 시작/종료 일자를 저장하고 라디오버튼의 체크를 해제
 	selectClassId.change(function(){
 		let targetClassStartDate = ((String)($("#classId").val().split(",")[10])).split("=")[1]
 		let targetClassEndDate = ((String)($("#classId").val().split(",")[11])).split("=")[1]
@@ -382,7 +394,8 @@ $(document).ready(
 				}else{
 					$("input:checkbox[name="+o.value+"]").prop('checked',false)
 				}
-			})
+			}
+		)
 	}
 //End : 검색 버튼 누르면 검색
 

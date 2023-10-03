@@ -68,5 +68,7 @@ public interface IManagerRepository {
 
 	public ReasonDTO getResnDetailByResnId(String resnId);
 
+	public void updateResnCd(@Param("resnId") String resnId, @Param("resnCd") String resnCd, @Param("mngrId") String mngrId);
+
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }
