@@ -248,8 +248,8 @@
 				, s.stdt_id AS stdtid --id
 				, s.stdt_nm AS stdtNm --이름
 				, s.user_email AS userEmail --이메일
-				, in_tm AS strInTmDd--출근
-				, out_tm AS strOutTmDd--퇴근 시간
+				, in_tm --출근
+				, out_tm --퇴근
 				, wlog_total_tm --출석 인정 시간
 				, c1.cmcd_nm as wlogCd --출석 상태
 				, w.delete_yn --삭제 여부
@@ -273,7 +273,7 @@
 				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
 			]]>
 		</if>
-		<if test='isDelete eq "true"'>
+		<if test='isDelete eq "false"'>
 			<![CDATA[
 				AND w.delete_yn='N' 
 			]]>
@@ -314,6 +314,42 @@
 			WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
 				AND r.clss_id = #{clssId}
 			ORDER BY s.stdt_nm
+		]]>
+	</select>
+	
+	<select id="getResnDetailByResnId" resultType="com.finalprj.kess.dto.ReasonDTO">
+		<![CDATA[
+			SELECT
+				resn_id
+				,resn_content
+				,r.file_id
+				,resn_cd
+				,c1.cmcd_nm as prcsNm
+				,r.rgst_dt
+				,r.updt_dt
+				,r.updter_id
+				,r.delete_yn
+				
+				,r.rgster_id
+				,s.stdt_nm
+				,s.user_email
+				
+				,r.wlog_id
+				,w.clss_id
+				,cl.clss_nm
+				,in_tm AS strInTmDd
+				,out_tm AS strOutTmDd
+				,wlog_cd
+				,c2.cmcd_nm as wlogNm
+			FROM resn r
+				JOIN cmcd c1 ON c1.cmcd_id = resn_cd
+				JOIN stdt s ON s.stdt_id = r.rgster_id
+				JOIN wlog w ON w.wlog_id = r.wlog_id
+				JOIN cmcd c2 ON c2.cmcd_id = w.wlog_cd
+				JOIN clss cl ON cl.clss_id = w.clss_id
+			WHERE
+				resn_id=#{resnId}
+				AND r.delete_yn = 'N'
 		]]>
 	</select>
 	

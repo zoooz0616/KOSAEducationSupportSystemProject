@@ -139,7 +139,13 @@ $(document).ready(
 );
 //End : 체크박스 컨트롤
 
-// 2. 검색 누르면 검색하세요
+// 모달창 외부를 클릭 시 모달창을 제거
+function closeModal(){
+	$('.resn_modal_wrap').css("display",'none');
+	$('body').css("overflow",'auto');
+}
+
+// 아이콘을 누르면 모달을 표시
 function showModal(resnIcon) {
 	var thisResnId = resnIcon.getAttribute("value");
 	$.ajax({
@@ -150,6 +156,42 @@ function showModal(resnIcon) {
 		},
 		success: function(response) {
 			console.log(response)
+			console.log(response.resnContent)
+			$('.resn_modal_wrap').css("display",'flex');
+			$('body').css("overflow",'hidden');
+			
+			$('#modal_name').text(response.resnContent.stdtNm);
+			$('#modal_email').text(response.resnContent.userEmail);
+			$('#modal_prcs_name').text(response.resnContent.prcsNm);
+			
+			/*
+			if(response.resnContent.strInTmDd != null){
+				$('#modal_in_time').html(response.resnContent.strInTm);
+			}else{
+				$('#modal_in_time').html('-')
+			}
+			
+			if(response.resnContent.strOutTmDd != null){
+				$('#modal_out_time').text(response.resnContent.strOutTm);
+			}else{
+				$('#modal_out_time').text('-')
+			}
+			*/
+			if(response.resnContent.inTm != null){
+				$('#modal_in_time').html(response.resnContent.inTm);
+			}else{
+				$('#modal_in_time').html('-')
+			}
+			if(response.resnContent.outTm != null){
+				$('#modal_out_time').text(response.resnContent.outTm);
+			}else{
+				$('#modal_out_time').text('-')
+			}
+			
+			$('#modal_wlog_cd').text(response.resnContent.wlogNm);
+			
+			$('.resn_text').text(response.resnContent.resnContent);
+			
 		},error: function(error) {
 			console.log("error: ", error);
 		}
@@ -160,28 +202,21 @@ function showModal(resnIcon) {
 function search() {
 	
 	var targetClassId = $('#class_selector option:selected').val();
-	
-	/*
-	// 교육과정이 선택되지 않았다면 알림을 띄우고 탈출한다
-	if(targetClassId == ''){
-		alertFade("교육과정을 선택하세요.","F9DCCB","FF333E")
-		return;
-	}
-	// End
-	/*/
-	
 	var startDate = document.getElementById("startDate").value;
 	var endDate = document.getElementById("endDate").value;
 	
 	/*
-	// 검색 기간이 선택되지 않았다면 알림을 띄우고 탈출한다
-	if(startDate == '' || endDate == ''){
-		alertFade("검색 기간을 입력하세요.","F9DCCB","FF333E")
-		return;
+	// 교육과정이 선택되지 않았다면 알림을 띄운다
+	if(targetClassId == ''){
+		alertFade("담당 중인 모든 교육과정의 결과입니다.","F9DCCB","FF333E")
+	}
+	// End
+	// 검색 기간이 선택되지 않았다면 알림을 띄운다
+	if(startDate == '' && endDate == ''){
+		alertFade("모든 기간에 걸친 검색 결과입니다.","F9DCCB","FF333E")
 	}
 	// End
 	*/
-	
 	
 	if(targetClassId != ''){
 		targetClassId = targetClassId.split("(")[1];
@@ -190,18 +225,15 @@ function search() {
 	}else{
 		targetClassId = null
 	}
-	
+
 	var keyword = $("#search_keyword").val();
 	var wlogCd = getFilterCd();
 	var isDeleteVal = $('#isDelete').is(':checked');
 	var resnOnlyVal = $('#fileContainedOnly').is(':checked');
-	
-	//ㅇㅋ
-	
+
 	$.ajax({
 		type: 'get',
 		url: '/manager/worklog/search', // 서버의 엔드포인트 URL
-		// 			/*data: { classId<<컨트롤러에서 받는 위치: classId<<클라이언트가 보내는거})*/
 		data: {
 			clssId: targetClassId
 			, startDate: startDate
@@ -247,13 +279,14 @@ function search() {
 				rowNum.text(i+1);
 				rowName.text(wlogList[i].stdtNm);
 				rowEmail.text(wlogList[i].userEmail);
-				if(wlogList[i].strInTmDd != null){
-					rowInTime.html(wlogList[i].strInTmDd.split(" ")[0]+"<br>"+wlogList[i].strInTmDd.split(" ")[1].split(".")[0]);
+
+				if(wlogList[i].inTm != null){
+					rowInTime.html(wlogList[i].strInTmDd);
 				}else{
 					rowInTime.text("-")
 				}
-				if(wlogList[i].strOutTmDd != null){
-					rowOutTime.html(wlogList[i].strOutTmDd.split(" ")[0]+"<br>"+wlogList[i].strOutTmDd.split(" ")[1].split(".")[0]);
+				if(wlogList[i].outTm!= null){
+					rowOutTime.html(wlogList[i].strOutTmDd);
 				}else{
 					rowOutTime.text("-")
 				}
@@ -267,13 +300,6 @@ function search() {
 						,value:wlogList[i].resnId
 						,class:'resn_icon'
 						})
-						/*
-						.css({
-							cursor:'pointer'
-							,width:'15px'
-							,height: '15px'
-						})
-						*/
 					);
 				}
 				

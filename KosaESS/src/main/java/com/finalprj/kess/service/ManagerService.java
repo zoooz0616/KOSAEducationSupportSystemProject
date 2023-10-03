@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IManagerRepository;
@@ -127,6 +129,11 @@ public class ManagerService implements IManagerService {
 	@Override
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId) {
 		return managerRepository.getStudentListByOnlyClssId(classId);
+	}
+
+	@Override
+	public ReasonDTO getResnDetailByResnId(String resnId) {
+		return managerRepository.getResnDetailByResnId(resnId);
 	}
 
 //	@Override

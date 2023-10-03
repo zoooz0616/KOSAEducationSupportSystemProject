@@ -8,11 +8,13 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 
@@ -63,6 +65,8 @@ public interface IManagerRepository {
 	public List<WorklogDTO> getWlogListByClssIds(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
+
+	public ReasonDTO getResnDetailByResnId(String resnId);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }
