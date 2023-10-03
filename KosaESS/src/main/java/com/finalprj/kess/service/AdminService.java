@@ -618,6 +618,16 @@ public class AdminService implements IAdminService {
 		return adminRepository.getRegistListByStudent(stdtId);
 	}
 	
+	@Override
+	public List<ClassVO> getSearchClassList(String clssNm, String clssCd, String aplyStartDt, String aplyEndDt,
+			String clssStartDd, String clssEndDd, String cmpyId) {
+		return adminRepository.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd, clssEndDd, cmpyId);
+	}
+	
+	@Override
+	public List<String> getClassSearch(String term) {
+		return adminRepository.getClassSearch(term);
+	}
 	
 	
 	
@@ -632,15 +642,5 @@ public class AdminService implements IAdminService {
 	}
 
 
-	@Override
-	public List<String> getClassSearch(String term) {
-		return adminRepository.getClassSearch(term);
-	}
-
-	@Override
-	public List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt,
-			Date aplyEndDt, Date classStartDd, Date classEndDd) {
-		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
-				aplyEndDt, classStartDd, classEndDd);
-	}
+	
 }

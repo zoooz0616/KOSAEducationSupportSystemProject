@@ -28,7 +28,7 @@ import com.finalprj.kess.model.SubjectVO;
 @Mapper
 public interface IAdminRepository {
 	int getWaitClassCnt();
-	List<String> getClassSearch(String term);
+	
 	
 
 	int getNoticeCnt();
@@ -71,14 +71,6 @@ public interface IAdminRepository {
 	void updateAplyPass(List<String> aplyIds);
 	void updateAplyFail(List<String> aplyIds);
 	void deleteClass(List<String> clssIds);
-	
-	List<ClassVO> getSearchClassVOList(
-			@Param("className") String className,
-            @Param("status") List<String> status, //접수예정, 접수중, 접수마감, 교육중, 교육완료, 취소, 폐강
-            @Param("aplyStartDt") Date aplyStartDt,
-            @Param("aplyEndDt") Date aplyEndDt,
-            @Param("classStartDd") Date classStartDd,
-            @Param("classEndDd") Date classEndDd);
 	
 	List<ProfessorVO> getProfessorList();
 	List<SubjectVO> getSubjectList();
@@ -153,5 +145,10 @@ public interface IAdminRepository {
 	
 	List<ApplyVO> getApplyListByStudent(String stdtId);
 	List<RegistrationVO> getRegistListByStudent(String stdtId);
+	
+	List<ClassVO> getSearchClassList(String clssNm, String clssCd, String aplyStartDt, String aplyEndDt,
+			String clssStartDd, String clssEndDd, String cmpyId);
+	
+	List<String> getClassSearch(String term);
 
 }
