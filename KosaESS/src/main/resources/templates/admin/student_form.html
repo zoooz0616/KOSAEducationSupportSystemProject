@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/student_form.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">교육생 상세보기</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/student/list}">교육생 관리</a> > <a
+					th:href="@{/admin/student/view/__${student.stdtId}__}">교육생 상세보기</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+
+		<!-- Content Middle-->
+		<div class="content_middle">
+			<input class="stdt_input_stdt_id" type="hidden" th:value="${student.stdtId}">
+			<div class="student_form_content">
+
+				<!-- 첫번째 줄 -->
+				<div class="row">
+					<div class="col">
+						<div class="col_title">이름</div>
+						<div class="col_content">
+							<span class="stdt_span stdt_span_stdt_nm" th:text="${student.stdtNm}"></span>
+							<input class="stdt_input stdt_input_stdt_nm" type="text" th:value="${student.stdtNm}" style="display:none;">
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="col_title">이메일</div>
+						<div class="col_content" th:text="${student.userEmail}"></div>
+					</div>
+
+					<div class="col">
+						<div class="col_title">연락처</div>
+						<div class="col_content">
+							<span class="stdt_span stdt_span_stdt_tel" th:text="${student.stdtTel}"></span>
+							<input class="stdt_input stdt_input_stdt_tel" type="text" th:value="${student.stdtTel}" style="display:none;">
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="col_title">성별</div>
+						<div class="col_content">
+							<span class="stdt_span stdt_span_gender" th:text="${student.genderNm}"></span>
+							<select class="stdt_input stdt_input_gender" style="display:none;">
+								<option th:each="gender :  ${genderList}" th:value="${gender.cmcdId}" th:text="${gender.cmcdNm}"
+									th:selected="${gender.cmcdId == student.genderCd}">
+							</select>
+						</div>
+					</div>
+				</div>
+				<!-- 첫번째 줄 -->
+
+				<!-- 두번째 줄 -->
+				<div class="row">
+					<div class="col">
+						<div class="col_title">생년월일</div>
+						<div class="col_content">
+							<span class="stdt_span stdt_span_birth_dd" th:text="${student.birthDd}"></span>
+							<input class="stdt_input stdt_input_birth_dd" type="date" th:value="${student.birthDd}" style="display:none;">
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="col_title">직업</div>
+						<div class="col_content">
+							<span class="stdt_span stdt_span_job" th:text="${student.jobNm}"></span>
+							<select class="stdt_input stdt_iput_job" style="display:none;">
+								<option th:each="job: ${jobList}" th:value="${job.cmcdId}" th:text="${job.cmcdNm}"
+									th:selected="${job.cmcdId == student.jobCd}">
+							</select>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="col_title">계정상태</div>
+						<div class="col_content">
+							<span class="stdt_span stdt_span_user_status" th:text="${student.userNm}"></span>
+							<select class="stdt_input stdt_input_user_status" style="display:none;">
+								<option th:each="status: ${statusList}" th:value="${status.cmcdId}" th:text="${status.cmcdNm}"
+									th:selected="${status.cmcdId == student.userCd}"></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="col_title">마지막 접속</div>
+						<div class="col_content" th:text="${student.lastLoginDt}"></div>
+					</div>
+				</div>
+
+				<!-- 세번째 줄 -->
+				<div class="row2">
+					<div class="col2">
+						<div class="col_title">
+							지원 교육<br>내역
+						</div>
+						<div class="col_content">
+							<div th:if="${#lists.size(applyList) == 0}">지원 내역이 없습니다.</div>
+							<table th:if="${#lists.size(applyList) > 0}">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>교육과정ID</th>
+										<th>교육과정명</th>
+										<th>지원상태</th>
+										<th>파일명</th>
+										<th>지원일시</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="apply,iterStat: ${applyList}">
+										<td class="td_num" th:text="${iterStat.index+1}"></td>
+										<td class="td_class_id" th:text="${apply.clssId}"></td>
+										<td><a th:href="@{/admin/class/view/__${apply.clssId}__}" th:text="${apply.clssNm}"></a></td>
+										<td class="td_apply_status" th:text="${apply.cmcdNm}"></td>
+										<td><a th:href="@{/admin/file/__${apply.fileId}__/1}" th:text="${apply.fileNm}"></a></td>
+										<td class="td_apply_dt" th:text="${apply.rgstDt}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<!-- 네번째 줄 -->
+				<div class="row2">
+					<div class="col2">
+						<div class="col_title">
+							수강 교육<br>내역
+						</div>
+						<div class="col_content">
+							<div th:if="${#lists.size(registList) == 0}">수강 내역이 없습니다.</div>
+							<table th:if="${#lists.size(registList) > 0}">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>교육과정ID</th>
+										<th>교육과정명</th>
+										<th>교육상태</th>
+										<th>이수상태</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="regist,iterStat: ${registList}">
+										<td class="td_num" th:text="${iterStat.index+1}"></td>
+										<td class="td_class_id" th:text="${regist.clssId}"></td>
+										<td><a th:href="@{/admin/class/view/__${regist.clssId}__}" th:text="${regist.clssNm}"></a></td>
+										<td class="td_class_status" th:text="${regist.rgstNm}"></td>
+										<td class="td_cmpt_status" th:text="${regist.cmptNm}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- button -->
+		<div class="btn_wrap" style="display: flex; justify-content: center;">
+			<button class="cancel_btn" style="display:none;" onclick="cancelBtn()">취소</button>
+			<button class="save_btn" style="display:none;" onclick="saveBtn()">저장</button>
+			<button class="update_btn" onclick="updateStudent()">수정</button>
+			<button class="list_btn" onclick="location.href ='/admin/student/list'">목록</button>
+		</div>
+		<!-- Content Middle-->
+	</div>
+	<!-- Content Wrap -->
+	<script>
+	//수정하기 버튼
+	function updateStudent(){
+		//버튼 숨기기 및 나타내기
+		const updateBtn = document.querySelector('.update_btn');
+		updateBtn.style.display = 'none';
+		const cancelBtn = document.querySelector('.cancel_btn');
+		cancelBtn.style.display = 'block';
+		const saveBtn = document.querySelector('.save_btn');
+		saveBtn.style.display = 'block';
+		
+		//span 숨기기
+		var stdtSpans = document.querySelectorAll(".stdt_span");
+		stdtSpans.forEach((span)=>{
+			span.style.display = "none";
+		});
+		
+		//input 나타내기
+		var stdtInputs = document.querySelectorAll('.stdt_input');
+		stdtInputs.forEach((input) => {
+			input.style.display = 'block';
+		});
+	}
+	
+	//취소하기 버튼
+	function cancelBtn(){
+		//버튼 숨기기 및 나타내기
+		const updateBtn = document.querySelector('.update_btn');
+		updateBtn.style.display = 'block';
+		const cancelBtn = document.querySelector('.cancel_btn');
+		cancelBtn.style.display = 'none';
+		const saveBtn = document.querySelector('.save_btn');
+		saveBtn.style.display = 'none';
+		
+		//span 나타내기
+		var stdtSpans = document.querySelectorAll(".stdt_span");
+		stdtSpans.forEach((span)=>{
+			span.style.display = "block";
+		});
+		
+		//input 숨기기
+		var stdtInputs = document.querySelectorAll('.stdt_input');
+		stdtInputs.forEach((input) => {
+			input.style.display = 'none';
+		});
+	}
+	
+	//저장하기 버튼
+	function saveBtn(){
+		//버튼 숨기기 및 나타내기
+		const updateBtn = document.querySelector('.update_btn');
+		updateBtn.style.display = 'block';
+		const cancelBtn = document.querySelector('.cancel_btn');
+		cancelBtn.style.display = 'none';
+		const saveBtn = document.querySelector('.save_btn');
+		saveBtn.style.display = 'none';
+		
+		//span 나타내기
+		var stdtSpans = document.querySelectorAll(".stdt_span");
+		stdtSpans.forEach((span)=>{
+			span.style.display = "block";
+		});
+		
+		//input 숨기기
+		var stdtInputs = document.querySelectorAll('.stdt_input');
+		stdtInputs.forEach((input) => {
+			input.style.display = 'none';
+		});
+		
+		const stdtId = document.querySelector('.stdt_input_stdt_id').value;
+		const stdtNm = document.querySelector('.stdt_input_stdt_nm').value;
+		const stdtTel = document.querySelector('.stdt_input_stdt_tel').value;
+		const genderCd = document.querySelector('.stdt_input_gender').value;
+		const birthDd = document.querySelector('.stdt_input_birth_dd').value;
+		const jobCd = document.querySelector('.stdt_input_job').value;
+		const userCd = document.querySelector('.stdt_input_user_status').value;
+		
+		
+		//비동기로 값 전달
+		$.ajax({
+			url: '/admin/update/'+stdtId,
+			method: 'POST',
+			data: {
+				stdtNm : stdtNm,
+				stdtTel : stdtTel,
+				genderCd : genderCd,
+				birthDd : birthDd,
+				jobCd : jobCd,
+				userCd : userCd
+			},
+			success: function(response){
+				if(response == 'success'){
+					alert("수정이 완료되었습니다.");
+					windows.location.href='/admin/student/view/'+stdtId;
+				}
+			}
+		});
+	}
+	
+	</script>
+</body>
+</html>

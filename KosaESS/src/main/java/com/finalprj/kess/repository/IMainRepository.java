@@ -13,4 +13,8 @@ public interface IMainRepository {
 	ManagerVO getManagerVO(String email);
 	void updateLastLoginDt(String userEmail);
 	StudentVO getStudentVO(String email);
+	int getEmailCnt(String email);
+	void insertLgin(StudentVO student);
+	void insertStudent(StudentVO student);
+	String getMaxStdtId();
 }
