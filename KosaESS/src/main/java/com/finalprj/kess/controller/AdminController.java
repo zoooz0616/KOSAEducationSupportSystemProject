@@ -1060,6 +1060,64 @@ public class AdminController {
 		adminService.deleteClass(clssIds);
 		return clssId;
 	}
+	
+	/**
+	 * 교육과정명 자동완성
+	 * @author : eunji
+	 * @date : 2023. 10. 02.
+	 * @parameter : term
+	 * @return : String
+	 */
+	@GetMapping("/class/autocomplete")
+	@ResponseBody
+	public String classAutocomplete(@RequestParam String term) {
+		//자동완성 검색어 목록 생성
+		List<String> autocompleteResults = new ArrayList<>();
+		//결과 생성
+		autocompleteResults = adminService.getClassSearch(term);
+
+		// 결과를 HTML 형태로 변환
+		StringBuilder resultBuilder = new StringBuilder();
+		for (String result : autocompleteResults) {
+			resultBuilder.append("<option value=\"").append(result).append("\">").append(result).append("</option>");
+		}
+
+		return resultBuilder.toString();
+	}	
+	
+	/**
+	 * 교육과정 목록 검색
+	 * @author : eunji
+	 * @date : 2023. 10. 02.
+	 * @parameter : className, status, aplyStartDt, aplyEndDt, classStartDd, classEndDd, cmpyId
+	 * @return : String
+	 */
+	@GetMapping("/class/search")
+	@ResponseBody
+	public List<ClassVO> classSearch(
+			@RequestParam(name="clssNm", required = false) String clssNm, 
+			@RequestParam(name="clssCd", required = false) String clssCd,
+			@RequestParam(name="aplyStartDt", required = false) String aplyStartDt, 
+			@RequestParam(name="aplyEndDt", required = false) String aplyEndDt,
+			@RequestParam(name="clssStartDd", required = false) String clssStartDd, 
+			@RequestParam(name="clssEndDd", required = false) String clssEndDd,
+			@RequestParam(name="cmpyId", required = false) String cmpyId) {
+
+		System.out.println("##########################");
+		System.out.println(clssNm);
+		System.out.println(clssCd);
+		System.out.println(aplyStartDt);
+		System.out.println(aplyEndDt);
+		System.out.println(clssStartDd);
+		System.out.println(clssEndDd);
+		System.out.println(cmpyId);
+		System.out.println("##########################");
+		
+		//검색 결과통해서 교육과정 리스트 객체 생성
+		List<ClassVO> classVOList = adminService.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd, clssEndDd, cmpyId);
+
+		return classVOList;
+	}
 
 	/**
 	 * 교육과정 지원자 목록조회
@@ -1921,53 +1979,9 @@ public class AdminController {
 
 
 
-	@GetMapping("/class/autocomplete")
-	@ResponseBody
-	public String classAutocomplete(@RequestParam String term) {
-		//자동완성 검색어 목록 생성
-		List<String> autocompleteResults = new ArrayList<>();
-		//결과 생성
-		autocompleteResults = adminService.getClassSearch(term);
+	
 
-		// 결과를 HTML 형태로 변환
-		StringBuilder resultBuilder = new StringBuilder();
-		for (String result : autocompleteResults) {
-			resultBuilder.append("<option value=\"").append(result).append("\">").append(result).append("</option>");
-		}
-
-		return resultBuilder.toString();
-	}
-
-	@GetMapping("/class/search")
-	@ResponseBody
-	public List<ClassVO> classSearch(@RequestParam(name="className", required = false) String className, @RequestParam(name="status", required = false) String status,
-			@RequestParam(name="aplyStartDt", required = false) Date aplyStartDt, @RequestParam(name="aplyEndDt", required = false) Date aplyEndDt,
-			@RequestParam(name="classStartDd", required = false) Date classStartDd, @RequestParam(name="classEndDd", required = false) Date classEndDd) {
-
-		logger.warn("className: "+className+" status: "+status);
-		logger.warn("aply: "+aplyStartDt+"~"+aplyEndDt);
-		logger.warn("class: "+classStartDd+"~"+classEndDd);
-
-		//교육과정 상태는 list<string>으로 전달하기(1개 혹은 전체)
-		List<String> statusList = new ArrayList<>();
-
-		if(status.equals("all")) {
-			//교육상태 전체값을 리스트에 넣어 전달
-			List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
-			for(CommonCodeVO commonCodeVO:classCommonCodeList) {
-				statusList.add(commonCodeVO.getCmcdId());
-			}
-		}else {
-			statusList.add(status);
-		}
-
-
-
-		//검색 결과통해서 교육과정 리스트 객체 생성
-		List<ClassVO> classVOList = adminService.getSearchClassVOList(className, statusList, aplyStartDt, aplyEndDt, classStartDd, classEndDd);
-		logger.warn(classVOList.toString());
-		return classVOList;
-	}
+	
 
 	@PostMapping("/class/insert/lectureselect")
 	@ResponseBody

@@ -26,7 +26,7 @@ import com.finalprj.kess.model.SubjectVO;
 public interface IAdminService {
 	
 	int getWaitClassCnt();
-		List<String> getClassSearch(String term);
+		
 	
 
 	
@@ -74,9 +74,6 @@ public interface IAdminService {
 	void updateAplyFail(List<String> aplyIds);
 
 	void deleteClass(List<String> clssIds);
-	
-	List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt, Date aplyEndDt,
-			Date classStartDd, Date classEndDd);
 
 	List<ProfessorVO> getProfessorList();
 	List<SubjectVO> getSubjectList();
@@ -154,4 +151,9 @@ public interface IAdminService {
 	
 	List<ApplyVO> getApplyListByStudent(String stdtId);
 	List<RegistrationVO> getRegistListByStudent(String stdtId);
+	
+	List<ClassVO> getSearchClassList(String clssNm, String clssCd, String aplyStartDt, String aplyEndDt,
+			String clssStartDd, String clssEndDd, String cmpyId);
+	
+	List<String> getClassSearch(String term);
 }
