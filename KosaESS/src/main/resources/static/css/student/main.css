@@ -152,11 +152,11 @@ table td {
 	border-radius: 10px;
 }
 
-#dDay{
-	    margin: 0;
-    font-size: 18px;
-    color: #F1A77E;
-    font-weight: 500;
+#dDay {
+	margin: 0;
+	font-size: 18px;
+	color: #F1A77E;
+	font-weight: 500;
 }
 
 input::placeholder {
@@ -251,6 +251,7 @@ input::placeholder {
 
 .checktm {
 	text-align: center;
+	cursor: default;
 }
 
 .banner-button.active {
