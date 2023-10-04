@@ -22,12 +22,17 @@ var selectClassId = $("#classId");
 
 //오늘 기준 이번 주의 월요일, 일요일을 각각 반환
 function getThisWeek(){
-	let thisWeek = [];
-	for(let i=0; i<7; i++) {
-		let resultDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - (i + new Date().getDay()));
-		let yyyy = resultDay.getFullYear();
-		let mm = Number(resultDay.getMonth()) + 1;
-		let dd = resultDay.getDate();
+	var currentDay = new Date();  
+	var theYear = currentDay.getFullYear();
+	var theMonth = currentDay.getMonth();
+	var theDate  = currentDay.getDate();
+	var theDayOfWeek = currentDay.getDay();
+	var thisWeek = [];
+	for(let i=0; i<2; i++) {
+		var resultDay = new Date(theYear, theMonth, theDate - (theDayOfWeek) + i*6 + 1);
+		var yyyy = resultDay.getFullYear();
+		var mm = Number(resultDay.getMonth()) + 1;
+		var dd = resultDay.getDate();
 		mm = String(mm).length === 1 ? '0' + mm : mm;
 		dd = String(dd).length === 1 ? '0' + dd : dd;
 		thisWeek[i] = yyyy + '-' + mm + '-' + dd;
@@ -63,8 +68,12 @@ function setSearchPeriod(){
 		$('#startDate').val(getFirstDayMonth());
 		$('#endDate').val(getLastDayMonth());
 	}else{
-		$('#startDate').val(getThisWeek()[6]);//월요일 넣기
-		$('#endDate').val(getThisWeek()[0]);//일요일 넣기
+		/*
+		$('#startDate').val(getThisWeek()[0]);//월요일 넣기
+		$('#endDate').val(getThisWeek()[6]);//일요일 넣기
+		*/
+		$('#startDate').val(getThisWeek()[0]);//월요일 넣기
+		$('#endDate').val(getThisWeek()[1]);//일요일 넣기
 	}
 }
 

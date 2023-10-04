@@ -26,12 +26,13 @@
 	<div class="title_wrap">
 		<span class="title" th:text="${title}"></span>
 		<br>
-		<div style="display: none;" class="검색조건저장">
+		<div style="display: none;">
+<!-- 		<div class="검색조건저장"> -->
 			<input id="class_id_save" type="text">
 			<input id="start_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssStartDd:null}">
 			<input id="end_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssEndDd:null}">
 			<input id="keyword_save" type="text">
-			<input type="checkbox" class="chk_wok_save" th:value="${wlogCd.cmcdId}" th:each="wlogCd:${wlogCdList}" checked="checked">
+			<input type="checkbox" class="chk_wok_save" th:value="${wlogCd.cmcdId}" th:name="${wlogCd.cmcdId}" th:each="wlogCd:${wlogCdList}" checked="checked">
 			<input type="checkbox" class="resn_only_save">
 			<input type="checkbox" class="contain_delete_save">
 		</div>
@@ -169,9 +170,12 @@
 		
 		<div class="resn_content">
 			<div class="resn_file_list_wrap">
-				<ul class="resn_file_list">
-					<li>파일 목록 영역</li>
-				</ul>
+				<table class="resn_file_list">
+					<tr>
+						<th>파일 목록</th>
+						<td>파일 링크</td>
+					</tr>
+				</table>
 			</div>
 			<div class="resn_text">
 				사유서 내용

@@ -422,7 +422,6 @@ public class ManagerController {
 			,@RequestParam(required = false) String clssId
 			,@RequestParam(required = false) String startDate
 			,@RequestParam(required = false) String endDate
-			,@RequestParam(required = false) String wlogCd
 			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly

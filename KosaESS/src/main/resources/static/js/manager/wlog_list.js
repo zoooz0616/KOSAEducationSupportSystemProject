@@ -8,6 +8,7 @@ var year = date.getFullYear();
 var stdtListTable = document.getElementById('stdt_list_table_tbody');//tbody 선택하기
 var date = new Date();
 var year = date.getFullYear();
+var isResnChanged;
 
 var radioBtns = $("input[name=default_period]");
 
@@ -27,12 +28,17 @@ function clearTable() {
 
 //오늘 기준 이번 주의 월요일, 일요일을 각각 반환
 function getThisWeek(){
-	let thisWeek = [];
-	for(let i=0; i<7; i++) {
-		let resultDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - (i + new Date().getDay()));
-		let yyyy = resultDay.getFullYear();
-		let mm = Number(resultDay.getMonth()) + 1;
-		let dd = resultDay.getDate();
+	var currentDay = new Date();  
+	var theYear = currentDay.getFullYear();
+	var theMonth = currentDay.getMonth();
+	var theDate  = currentDay.getDate();
+	var theDayOfWeek = currentDay.getDay();
+	var thisWeek = [];
+	for(let i=0; i<2; i++) {
+		var resultDay = new Date(theYear, theMonth, theDate - (theDayOfWeek) + i*6 + 1);
+		var yyyy = resultDay.getFullYear();
+		var mm = Number(resultDay.getMonth()) + 1;
+		var dd = resultDay.getDate();
 		mm = String(mm).length === 1 ? '0' + mm : mm;
 		dd = String(dd).length === 1 ? '0' + dd : dd;
 		thisWeek[i] = yyyy + '-' + mm + '-' + dd;
@@ -40,17 +46,28 @@ function getThisWeek(){
 	return thisWeek;
 }
 
+/*
 //체크된 출석 상태 반환
-function getFilterCd() {
+function getFilterCd(isSaved) {
 	const checkedWokCds = [];
-	chkList.each(function() {
-		if ($(this).prop("checked")) {
-			checkedWokCds.push($(this).val());
-		}
-	});
+	checkedItems.push('RESN');//이거 없으면 "전체" 해제가 작동하지 않음
+	if(isSaved){
+		$('.chk_wok_save').each(function() {
+			if ($(this).prop("checked")) {
+				checkedWokCds.push($(this).val());
+			}
+		});
+	}else{
+		chkList.each(function() {
+			if ($(this).prop("checked")) {
+				checkedWokCds.push($(this).val());
+			}
+		});
+	}
 	return checkedWokCds;
 }
 //End
+*/
 
 //현재 체크된 라디오 버튼의 값에 따라 start/end Date를 변경
 function setSearchPeriod(){
@@ -84,8 +101,8 @@ function setSearchPeriod(){
 		$('#startDate').val(getFirstDay());
 		$('#endDate').val(getLastDay());
 	}else{
-		$('#startDate').val(getThisWeek()[6]);//월요일 넣기
-		$('#endDate').val(getThisWeek()[0]);//일요일 넣기
+		$('#startDate').val(getThisWeek()[0]);//월요일 넣기
+		$('#endDate').val(getThisWeek()[1]);//일요일 넣기
 	}
 }
 //End
@@ -112,15 +129,23 @@ function reset(){
 	$('#search_keyword').val(null)
 }
 
-//현재 체크된 목록을 반환
-function getCheckedItems() {
+//현재 체크된 출석상태 목록을 반환
+function getCheckedItems(isSaved) {
 	const checkedItems = [];
 	checkedItems.push('RESN');//이거 없으면 "전체" 해제가 작동하지 않음
-	$("input[class=chkWokCd]").each(function () {
-		if ($(this).prop("checked")) {
-			checkedItems.push($(this).val());
-		}
-	});
+	if(isSaved){
+		$("input[class=chk_wok_save]").each(function () {
+			if ($(this).prop("checked")) {
+				checkedItems.push($(this).val());
+			}
+		});
+	} else{
+		$("input[class=chkWokCd]").each(function () {
+			if ($(this).prop("checked")) {
+				checkedItems.push($(this).val());
+			}
+		});
+	}
 	return checkedItems;
 }
 
@@ -138,11 +163,8 @@ function getCheckedWlog() {
 
 // 출퇴근 기록 리스트 받고, 버튼 값 받아서 상태 업데이트 후 목록 재 출력
 function updateWlogCode(button){
-	console.log("이거 되긴 됨?????");
 	let targetWlogList = getCheckedWlog();
 	let targetWlogCode = button.value;
-	console.log(targetWlogList);
-	console.log(targetWlogCode);
 	// 출석 상태 업데이트를 한다
 	$.ajax({
 	type: 'post',
@@ -159,11 +181,13 @@ function updateWlogCode(button){
 	}
 	})
 	// 목록을 다시 출력한다
+	reload();
 }
 
 // resn 상태 업데이트(인자가 버튼이면 버튼값으로, 인자가 버튼이 아니라면 그 값으로 업데이트)
 function updateResnCode(button){
 	targetResnCode = button;
+	isResnChanged = true;
 	//console.log(typeof targetResnCode);
 	if(typeof targetResnCode === 'object'){
 		$.ajax({
@@ -253,11 +277,16 @@ $(document).ready(
 function closeModal(){
 	$('.resn_modal_wrap').css("display",'none');
 	$('body').css("overflow",'auto');
+	if(isResnChanged){
+		reload();
+		isResnChanged=false;
+	}
 }
 
 // 아이콘을 누르면 모달을 표시
 function showModal(resnIcon) {
 	let thisResnId = resnIcon.getAttribute("value");
+	isResnChanged = false;
 	$.ajax({
 		type: 'get',
 		url: '/manager/worklog/resnContent',
@@ -293,6 +322,20 @@ function showModal(resnIcon) {
 			
 			$('.resn_text').text(response.resnContent.resnContent);
 			
+			$.ajax({
+				type: 'get',
+				url: '/manager/worklog/resn_file_list',
+				data: {
+					resnId:thisResnId
+				},success: function(resnFileResponse) {
+					resnFileList = resnFileResponse.resnFileList;
+					for(let i = 0; i<resnFileList.length;i++){
+						console.log(resnFileList[i])
+					}
+				},error: function(error) {
+					console.log("error: ", error);
+				}
+			});
 			
 			$('.resn_controller').empty();
 			for(let i = 0;i < response.resnCdList.length;i++){
@@ -337,7 +380,7 @@ function search() {
 	}
 
 	var keyword = $("#search_keyword").val();
-	var wlogCd = getFilterCd();
+	//var wlogCd = getFilterCd();
 	var isDeleteVal = $('#isDelete').is(':checked');
 	var resnOnlyVal = $('#fileContainedOnly').is(':checked');
 	var filterString = getCheckedItems();
@@ -349,7 +392,7 @@ function search() {
 			clssId: targetClassId
 			, startDate: startDate
 			, endDate: endDate
-			, wlogCd:wlogCd
+			//, wlogCd:wlogCd
 			, isDelete:isDeleteVal
 			, resnOnly:resnOnlyVal
 			, keyword:keyword
@@ -386,13 +429,12 @@ function search() {
 				var rowResn = $('<td></td>');
 				var rowResnCd = $('<td></td>');
 
-				rowChk.html('<input type="checkbox" class="chk_wlog">');
-				$('.chk_wlog').attr("value",wlogList[i].wlogId);
-				rowNum.text(i+1);//개발자용 옵션
-				//rowNum.text(wlogList[i].wlogId);
+				rowChk.html('<input type="checkbox" class="chk_wlog" value='+wlogList[i].wlogId+'>');
+				rowNum.text(i+1);
+				//rowNum.text(wlogList[i].wlogId);//개발자용 옵션
 				rowName.text(wlogList[i].stdtNm);
 				rowEmail.text(wlogList[i].userEmail);
-
+				
 				if(wlogList[i].inTm != null){
 					rowInTime.html(wlogList[i].strInTmDd);
 				}else{
@@ -420,7 +462,7 @@ function search() {
 				
 				rowResnCd.text(wlogList[i].prcsCd);
 				
-				rowChk.attr("class","chk_wlog");
+				//rowChk.attr("class","chk_wlog");
 				rowNum.attr("class","row_number");
 				rowName.attr("class","row_name");
 				rowEmail.attr("class","row_email");
@@ -464,8 +506,8 @@ function search() {
 				//히든 이수상태 체크박스에 이수상태 저장
 			$('.resn_only_save').prop('checked', $('#fileContainedOnly').prop('checked'))
 			$('.contain_delete_save').prop('checked', $('#isDelete').prop('checked'))
-			/*
-			chkcmptList.each(
+			///*
+			$("input[class=chkWokCd]").each(
 				function(i, o){
 					if(o.checked){
 						$("input:checkbox[name="+o.value+"]").prop('checked',true)
@@ -474,8 +516,126 @@ function search() {
 					}
 				}
 			)
-			*/
+			//*/
 			
+		}, error: function(error) {
+			console.log("error: ", error);
+		}
+	})
+	//End
+}
+//End : 검색 버튼 누르면 검색
+
+//save 조건에 맞춰서 재출력
+function reload() {
+	let savedClassId = $('#class_id_save').val();
+	let savedStartDate = $('#start_date_save').val();
+	let savedEndDate = $('#end_date_save').val();
+	let savedKeyword = $("#keyword_save").val();
+	let savedIsDeleteVal = $('.contain_delete_save').is(':checked');
+	let savedResnOnlyVal = $('.resn_only_save').is(':checked');
+
+	let savedFilterString = getCheckedItems(true);
+	//let savedWlogCd = getFilterCd(true);
+	
+	$.ajax({
+		type: 'get',
+		url: '/manager/worklog/search', // 서버의 엔드포인트 URL
+		data: {
+			clssId: savedClassId
+			, startDate: savedStartDate
+			, endDate: savedEndDate
+			, isDelete:savedIsDeleteVal
+			, resnOnly:savedResnOnlyVal
+			, keyword:savedKeyword
+			, filterString:savedFilterString
+		},
+		async: false,
+		success: function(wlogListResponse) {
+			let wlogList = wlogListResponse.wlogList;
+			
+			// 테이블 초기화
+			clearTable();
+
+			//입력 시작
+			for (let i = 0; i < wlogList.length; i++) {
+				// 새 행 생성
+				var newRow = $('<tr></tr>');
+				newRow.className = "wlog_list_tbody_row";//행 클래스 입력
+
+				var rowChk = $('<td></td>');
+				var rowNum = $('<td></td>');
+				var rowName = $('<td></td>');
+				var rowEmail = $('<td></td>');
+				var rowInTime = $('<td></td>');
+				var rowOutTime = $('<td></td>');
+				var rowTotalTime = $('<td></td>');
+				var rowWlogCd = $('<td></td>');
+				var rowIsDelete = $('<td></td>');
+				var rowResn = $('<td></td>');
+				var rowResnCd = $('<td></td>');
+
+				rowChk.html('<input type="checkbox" class="chk_wlog" value='+wlogList[i].wlogId+'>');
+				//$('.chk_wlog').attr("value",wlogList[i].wlogId);
+				rowNum.text(i+1);
+				rowName.text(wlogList[i].stdtNm);
+				rowEmail.text(wlogList[i].userEmail);
+
+				if(wlogList[i].inTm != null){
+					rowInTime.html(wlogList[i].strInTmDd);
+				}else{
+					rowInTime.text("-")
+				}
+				if(wlogList[i].outTm!= null){
+					rowOutTime.html(wlogList[i].strOutTmDd);
+				}else{
+					rowOutTime.text("-")
+				}
+				rowTotalTime.text(Number(wlogList[i].wlogTotalTm).toFixed(1));
+				rowWlogCd.text(wlogList[i].wlogCd);
+				rowIsDelete.text(wlogList[i].deleteYn);
+				if(wlogList[i].resnId!=null){
+					rowResn.html(
+						$('<img>',{
+						src:'/img/file.png'
+						,value:wlogList[i].resnId
+						,class:'resn_icon'
+						})
+					);
+				}
+				
+				$('.resn_icon').attr("onclick","showModal(this)");
+				
+				rowResnCd.text(wlogList[i].prcsCd);
+				
+				//rowChk.attr("class","chk_wlog");
+				rowNum.attr("class","row_number");
+				rowName.attr("class","row_name");
+				rowEmail.attr("class","row_email");
+				rowInTime.attr("class","row_intime");
+				rowOutTime.attr("class","row_outtime");
+				rowTotalTime.attr("class","row_totaltile");
+				rowWlogCd.attr("class","row_wlogcode");
+				rowIsDelete.attr("class","row_isdelete");
+				rowResn.attr("class","file_cell");
+				rowResnCd.attr("class","row_resncode");
+				
+				newRow.append(rowChk);
+				newRow.append(rowNum);
+				newRow.append(rowName);
+				newRow.append(rowEmail);
+				newRow.append(rowInTime);
+				newRow.append(rowOutTime);
+				newRow.append(rowTotalTime);
+				newRow.append(rowWlogCd);
+				newRow.append(rowIsDelete);
+				newRow.append(rowResn);
+				newRow.append(rowResnCd);
+				
+				//3) tbody에 붙인다
+				wlogListTable.append(newRow);
+			}
+			//End
 		}, error: function(error) {
 			console.log("error: ", error);
 		}

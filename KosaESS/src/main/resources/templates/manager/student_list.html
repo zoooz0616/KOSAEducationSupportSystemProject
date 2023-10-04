@@ -24,18 +24,14 @@
 		<div class="title_wrap">
 			<span class="title" th:text="${title}"></span>
 			<br>
-			<input id="class_id_save" type="text" style="display: none;">
-			<input id="start_date_save" type="text" style="display: none;" th:value="${thisClass.clssId!=null?thisClass.clssStartDd:null}">
-			<input id="end_date_save" type="text" style="display: none;" th:value="${thisClass.clssId!=null?thisClass.clssEndDd:null}">
-			<input id="keyword_save" type="text" style="display: none;">
 			<div style="display: none;">
-				<input th:each="cmptCN:${cmptCodeNameList}" class="cmpt_checkbox_save" th:name="${cmptCN.cmcdId}" type="checkbox" checked="checked" th:value="${cmptCN.cmcdId}">
+<!-- 			<div> -->
+			<input id="class_id_save" type="text">
+			<input id="start_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssStartDd:null}">
+			<input id="end_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssEndDd:null}">
+			<input id="keyword_save" type="text">
+			<input th:each="cmptCN:${cmptCodeNameList}" class="cmpt_checkbox_save" th:name="${cmptCN.cmcdId}" type="checkbox" checked="checked" th:value="${cmptCN.cmcdId}">
 			</div>
-<!-- 			<input id="class_id_save" type="text" style="display: none;"> -->
-<!-- 			<input id="start_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssStartDd:null}" style="display: none;"> -->
-<!-- 			<input id="end_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssEndDd:null}" style="display: none;"> -->
-<!-- 			<input id="keyword_save" type="text" style="display: none;"> -->
-<!-- 			<input id="cmpt_save" type="text" style="display: none;"> -->
 		</div>
 		<!-- content wrap-->
 		<div class="content_wrap">
