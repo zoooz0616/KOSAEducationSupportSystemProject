@@ -10,18 +10,17 @@
 	width: 100%;
 	align-items: center;
 	height: 5%;
-	border-bottom-style: solid;
-	border-color: #E7EFF3;
-	border-width: thin;
+	border-bottom: 1.5px solid #E7EFF3;
 }
 
 .inquiry-table thead {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
-	background: #0E5881;
-	color: white;
+	background: #E7EFF3;
 	padding: 0.5% 0;
+	color: #0E5881;
+	border-bottom: 2px solid #0E5881;
 }
 
 .inquiry-table thead td {
@@ -38,10 +37,6 @@
 	display: flex;
 	flex-direction: column;
 	border-style: none;
-}
-
-.inquiry-table tbody tr:nth-child(even) {
-	background-color: #F3F6F8;
 }
 
 .inquiry-table td:nth-child(1) {
@@ -83,8 +78,17 @@ a, .searchBtn, .openformBtn {
 	padding: 1% 5%;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 2%;
-	cursor: pointer;
+}
+
+.subsearch {
+	display: flex;
+	justify-content: space-between;
+	margin: 2% 0;
+	align-items: center;
+}
+
+.subsearch h3 {
+	margin: 0;
 }
 
 input {
@@ -103,7 +107,7 @@ input::placeholder {
 	background: #0E5881;
 	color: white;
 	padding: 9px 2%;
-	margin-left:2%;
+	margin-left: 2%;
 }
 
 .searchform {
@@ -149,6 +153,10 @@ input::placeholder {
 }
 
 .openformBtn {
-	background: white;
-	color: #0E5881;
+	background: #0E5881;
+	color: white;
+}
+
+select{
+	cursor: pointer;
 }

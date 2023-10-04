@@ -6,6 +6,15 @@ select option[value=""][disabled] {
 	display: none;
 }
 
+button:hover{
+	cursor: pointer;
+}
+
+/*
+input[type="checkbox"]:hover{
+	cursor:pointer;
+}
+*/
 
 /*-------------------------------------------------------*/
 
@@ -27,8 +36,8 @@ select option[value=""][disabled] {
 }
 
 .home-section .title_wrap{
-	margin-top: 40px;
-	margin-left: 40px;
+/* 	margin-top: 40px; */
+/* 	margin-left: 40px; */
 }
 
 .home-section .title {
@@ -36,6 +45,7 @@ select option[value=""][disabled] {
 	color: #333333;
 	font-size: 30px;
 	font-weight: bold;
+	margin : 40px;
 }
 
 .content_wrap {

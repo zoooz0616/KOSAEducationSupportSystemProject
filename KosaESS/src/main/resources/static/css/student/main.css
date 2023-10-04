@@ -47,13 +47,13 @@
 }
 
 .img2 {
-	background-image: url( "/img/banner2.jpg" );
+	background-image: url( "/img/banner-right.jpg" );
 	content: "";
 	z-index: -1;
 }
 
 .img1 {
-	background-image: url( "/img/banner1.png" );
+	background-image: url( "/img/banner-left.png" );
 	content: "";
 	z-index: -1;
 }
@@ -104,12 +104,14 @@ table {
 
 table a {
 	text-decoration: none;
-	color: #0E5881;
+	color: black;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 a {
 	text-decoration: none;
+	cursor: pointer;
 }
 
 a:hover {
@@ -150,6 +152,13 @@ table td {
 	border-radius: 10px;
 }
 
+#dDay {
+	margin: 0;
+	font-size: 18px;
+	color: #F1A77E;
+	font-weight: 500;
+}
+
 input::placeholder {
 	color: #0E5881;
 }
@@ -160,7 +169,6 @@ input::placeholder {
 	margin: 2% auto;
 	cursor: pointer;
 	width: 100%;
-	
 }
 
 .wlogBtn {
@@ -173,7 +181,7 @@ input::placeholder {
 .submit {
 	align-content: center;
 	width: 60%;
-	margin:auto;
+	margin: auto;
 }
 
 .my {
@@ -212,6 +220,15 @@ input::placeholder {
 	text-align: center;
 }
 
+.aplyList, .rgstList{
+	cursor: pointer;
+}
+
+.aplyList:hover, .rgstList:hover {
+	background: white;
+}
+
+
 .inouttm {
 	display: flex;
 	flex-direction: column;
@@ -243,4 +260,9 @@ input::placeholder {
 
 .checktm {
 	text-align: center;
+	cursor: default;
+}
+
+.banner-button.active {
+	background: #0E5881; /* 활성화된 버튼의 배경색을 변경 */
 }

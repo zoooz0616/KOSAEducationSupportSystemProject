@@ -85,6 +85,49 @@
 		]]>
 	</select>
 
+	<!-- 교육 목록 조회 (달력) -->
+	<select id="getAllEvents"
+		resultType="com.finalprj.kess.model.ClassVO">
+		<![CDATA[
+		SELECT 
+		clss_id,
+		clss_nm,
+		clss_cd,
+		aply_start_dt,
+		aply_end_dt
+		from clss
+		where aply_start_dt IS NOT NULL and (clss_cd ='CLS0000001' or clss_cd ='CLS0000002')
+		]]>
+	</select>
+	
+	<!-- 교육중인 목록 조회 (달력 로그인후) -->
+	<select id="getStdtRgstEvents" parameterType="string"
+		resultType="com.finalprj.kess.model.ClassVO">
+		<![CDATA[
+		 SELECT 
+		clss_id,
+		clss_nm,
+		clss_start_dd,
+		clss_end_dd
+		from clss
+		where clss_id IN (select clss_id from rgst where stdt_id = #{stdtId})
+		]]>
+	</select>
+	
+	<!-- 지원중인 목록 조회 (달력 로그인후) -->
+	<select id="getStdtAplyEvents" parameterType="string"
+		resultType="com.finalprj.kess.model.ClassVO">
+		<![CDATA[
+		 SELECT 
+		clss_id,
+		clss_nm,
+		aply_start_dt,
+		aply_end_dt
+		from clss
+		where (clss_id IN (select clss_id from aply where stdt_id = #{stdtId})) and clss_cd = 'CLS0000002'
+		]]>
+	</select>
+
 	<!-- 공지사항 목록 조회 (메인) -->
 	<select id="selectNoticeMain" parameterType="string"
 		resultType="com.finalprj.kess.model.PostVO">
@@ -149,7 +192,7 @@
 				WHERE post_id LIKE 'NOTC%' and post_cd=
 					(select cmcd_id
 					from cmcd
-					where cmcd_id='PST0000001') and post_title LIKE ('%'|| UPPER(#{keyword}) ||'%')
+					where cmcd_id='PST0000001') and UPPER(post_title) LIKE ('%'|| UPPER(#{keyword}) ||'%')
 				ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
@@ -255,7 +298,7 @@
 		    SELECT cmcd_id
 		    FROM cmcd
 		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
-		) and delete_yn = 'N' and (post_title LIKE ('%'|| UPPER(#{keyword}) ||'%') or stdt_nm LIKE ('%'|| UPPER(#{keyword}) ||'%'))
+		) and delete_yn = 'N' and (UPPER(post_title) LIKE ('%'|| UPPER(#{keyword}) ||'%') or UPPER(stdt_nm) LIKE ('%'|| UPPER(#{keyword}) ||'%'))
 		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
@@ -272,6 +315,7 @@
 			post_title,
 			post_content,
 			post_hit,
+			post.rgster_id,
 			stdt_nm as "stdtNm",
 			mngr_nm as "mngrNm",
 			post.rgst_dt as "rgstDd"
@@ -598,6 +642,7 @@
 	<![CDATA[
 		select 
 			aply_id,
+			clss.clss_id,
 			clss_nm,
 			aply_cd,
 			aply_end_dt,
@@ -877,8 +922,8 @@
 	<insert id="insertPastWlog">
 	<![CDATA[
 		INSERT into wlog
-		(wlog_id, stdt_id, clss_id, in_tm,wlog_cd, rgster_id)
-		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm},#{wlogCd}, #{rgsterId}) 
+		(wlog_id, stdt_id, clss_id, in_tm,out_tm,wlog_cd,wlog_total_tm, rgster_id)
+		values(#{wlogId}, #{stdtId}, #{clssId}, #{inTm}, #{inTm},#{wlogCd},#{wlogTotalTm}, #{rgsterId}) 
 	]]>
 	</insert>
 
@@ -902,6 +947,7 @@
 		 select 
 			post_id,
 			post_title,
+			post_content,
 			post_cd,
             (select cmcd_nm from cmcd where cmcd.cmcd_id = post.post_cd) as "cmcdNm",
 			rgst_dt as "rgstDd"
@@ -946,5 +992,60 @@
 		where post_id like 'INQY%'
 	]]>
 	</select>
+
+	<!-- 문의 사항 업데이트 -->
+	<update id="deleteInquiry">
+	<![CDATA[
+		update post
+		set 
+			delete_yn = 'Y'
+		where post_id=#{postId}
+	]]>
+	</update>
+
+	<!-- 문의 사항 가져오기 -->
+	<select id="getPostVO"
+		resultType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		select post_id,
+			post_title, 
+			post_content,
+			file_id
+			from post
+		where post_id=#{postId}
+	]]>
+	</select>
+
+	<!-- 문의 사항 파일 삭제 -->
+	<update id="deleteFile" parameterType="string">
+		<foreach collection="fileSubIds" item="subId"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update flup
+			set delete_yn =
+			'Y'
+			where file_id=#{fileId} and file_sub_id =#{subId}
+		</foreach>
+	</update>
+
+	<select id="getFileCnt" parameterType="string" resultType="int">
+	<![CDATA[
+		select count(file_sub_id)
+		from flup
+		where file_id = #{fileId} and delete_yn='N'
+	]]>
+	</select>
+
+	<update id="updatePostVO"
+		parameterType="com.finalprj.kess.model.PostVO">
+	<![CDATA[
+		update post
+		set post_title = #{postTitle},
+			post_content = #{postContent},
+			file_id = #{fileId},
+			updt_dt = systimestamp,
+			updter_id = #{stdtId}
+		where post_id=#{postId}
+	]]>
+	</update>
 
 </mapper>

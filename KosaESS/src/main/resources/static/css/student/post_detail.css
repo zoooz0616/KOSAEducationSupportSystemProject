@@ -4,6 +4,10 @@ table {
 	margin-bottom: 5%;
 }
 
+table a {
+	width: fit-content;
+}
+
 th, td {
 	border: 1px solid #9FBCCD;
 	border-collapse: collapse;
@@ -20,7 +24,7 @@ table td {
 
 table th {
 	background-color: #E7EFF3;
-	width:15%;
+	width: 15%;
 }
 
 .content {
@@ -66,7 +70,7 @@ ul {
 	padding: 0 3%;
 }
 
-.back, .openModalBtn {
+.back, .openModalBtn, .update, .delete {
 	background: #0E5881;
 	color: white;
 	padding: 1%;
@@ -75,6 +79,11 @@ ul {
 	font-size: 12px;
 	font-weight: bold;
 	border-radius: 10px;
+	cursor: pointer;
+}
+
+.delete {
+	background: #F1A77E;
 }
 
 .moveTopBtn {
@@ -82,6 +91,7 @@ ul {
 	background: white;
 	border-style: none;
 	height: 60px;
+	cursor: pointer;
 }
 
 .upload-area {
@@ -126,4 +136,10 @@ pre {
 
 .reply span {
 	margin-left: 20px;
+}
+
+.rgstBtn {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
 }
