@@ -8,6 +8,7 @@ public class ClassInsertDTO {
 	private String clssId;//교육과정id
 	private String clssNm;//교육과정명
 	private String clssContent;//교육과정 개요
+	private String clssSubsidy;// 지원금
 	private int limitCnt;//지원가능인원
 
 	private String aplyStartDt;//지원시작일시

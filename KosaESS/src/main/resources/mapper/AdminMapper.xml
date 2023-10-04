@@ -227,7 +227,8 @@
 			clss_total_tm, 
 			file_id, 
 			clss_etc, 
-			rgster_id)
+			rgster_id,
+			clss_subsidy)
 		values(
 			#{clssId}, 
 			#{mngrId},
@@ -246,7 +247,8 @@
 			#{clssTotalTm},
 			#{fileId},
 			#{clssEtc}, 
-			#{rgsterId})		
+			#{rgsterId},
+			#{clssSubsidy})		
 	]]>
 	</insert>
 
@@ -337,7 +339,8 @@
 			clss_total_tm = #{clssTotalTm},
 			clss_etc = #{clssEtc},
 			updt_dt = systimestamp,
-			updter_id = #{updterId}
+			updter_id = #{updterId},
+			clss_subsidy = #{clssSubsidy}
 		where clss_id=#{clssId}
 	]]>
 	</update>

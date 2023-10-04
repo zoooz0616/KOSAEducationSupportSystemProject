@@ -218,22 +218,26 @@
 						selectedManagerIds.push(checkbox.value);
 					});
 
-					console.log(selectedManagerIds);
-					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-					$.ajax({
-						url : '/admin/manager/delete',
-						method : 'POST',
-						data : {
-							selectedManagerIds : selectedManagerIds
-						},
-						success : function(response) {
-							console.log(response);
-							if (response == "success") {
-								alert("선택한 업무담당자가 비활성화되었습니다.");
-								window.location.href = "/admin/manager/list";
+					if(selectedManagerIds.length == 0){
+						alert("삭제할 업무담당자를 선택해주세요.")
+					}else{
+
+						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+						$.ajax({
+							url : '/admin/manager/delete',
+							method : 'POST',
+							data : {
+								selectedManagerIds : selectedManagerIds
+							},
+							success : function(response) {
+								console.log(response);
+								if (response == "success") {
+									alert("선택한 업무담당자가 비활성화되었습니다.");
+									window.location.href = "/admin/manager/list";
+								}
 							}
-						}
-					});
+						});
+					}
 				});
 
 		//초기화 버튼

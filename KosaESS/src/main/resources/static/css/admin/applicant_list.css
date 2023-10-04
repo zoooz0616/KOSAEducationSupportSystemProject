@@ -41,7 +41,6 @@ a {
 
 .content_middle .class_summary {
 	border-top: 2px solid #0E5881;
-	
 	margin: 40px;
 }
 
@@ -53,14 +52,15 @@ a {
 
 .content_middle .class_summary .row .col {
 	display: flex;
-	font-weight: bold;
-	color: #0E5881;
 }
 
 .content_middle .class_summary .row .col .col_title {
 	background: #E7EFF3;
 	text-align: center;
 	width: 100px;
+	
+	font-weight: bold;
+	color: #0E5881;
 }
 
 .content_middle .class_summary .row .col .col_content {
@@ -69,12 +69,15 @@ a {
 
 
 .content_middle .class_summary .row .col .col_content a {
-	text-decoration-line: none;	
+	text-decoration: none;
 	color: #0E5881;
+	font-weight: bold;
 }
 
 .content_middle .class_summary .row .col .col_content a:hover {
-	border-bottom: 2px solid #0E5881;
+	color: #0E5881;
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 .home-section .content_bottom {
@@ -111,6 +114,7 @@ a {
 	display:flex;
 	margin: 2px;
 	padding: 5px;
+	cursor: pointer;
 }
 
 .content_list {
@@ -151,3 +155,7 @@ a {
 	font-weight: bold;
 	text-decoration: underline;
 }
+
+.td_check, .td_num, .td_apply_id, .td_stdt_id, .td_stdt_nm, .td_status{
+	text-align: center;
+} 

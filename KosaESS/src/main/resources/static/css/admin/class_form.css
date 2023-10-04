@@ -61,18 +61,17 @@ input {
 .class_form_content .row .col {
 	width: 33%;
 	display: flex;
-	margin: 0 10px 0 0;
 }
 
 .class_form_content .row .col .col_title {
 	text-align: center;
 	width: 100px;
-	margin-right: 5px;
 	background: #E7EFF3;
 	padding: 5px;
 }
 
 .class_form_content .row .col .col_content {
+	padding-left: 5px;
 	margin-top: 7px;
 	height: 100%;
 	width: 80%;
@@ -84,8 +83,6 @@ input {
 }
 
 .class_form_content .row2 .col2 {
-	width: 100%;
-	margin: 0 5px 0 0;
 	display: flex;
 }
 
@@ -169,6 +166,10 @@ th {
 	width: 100%;
 }
 
+.lecture_table tr td span {
+	margin-left: 5px;
+}
+
 form .delete_btn {
 	font-size: 20px;
 	background: #CFDEE6;;
@@ -176,10 +177,13 @@ form .delete_btn {
 	border: none;
 	border-radius: 3px;
 	font-weight: bold;
-	width: 150px; height : 40px;
-	margin: 10px;
-	text-align: center;
+	width: 150px;
 	height: 40px;
+	margin: 10px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 }
 
 form .submit_btn {
@@ -189,10 +193,13 @@ form .submit_btn {
 	border: none;
 	border-radius: 3px;
 	font-weight: bold;
-	width: 150px; height : 40px;
-	margin: 10px;
-	text-align: center;
+	width: 150px;
 	height: 40px;
+	margin: 10px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 }
 
 .file_table {
@@ -262,4 +269,16 @@ form .submit_btn {
 .td_check {
 	text-align: center;
 	padding: 0px;
+}
+
+a {
+	font-weight: bold;
+	text-decoration-line: none;
+	color: #0E5881;
+}
+
+a:hover {
+	font-weight: bold;
+	border-bottom: 2px solid #0E5881;
+	color: #0E5881;
 }
