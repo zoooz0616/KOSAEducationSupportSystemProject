@@ -90,7 +90,6 @@
 									<th>코드구분</th>
 									<th>코드구분명</th>
 									<th>사용여부</th>
-									<th style="width: 100px;">버튼</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -108,14 +107,6 @@
 										th:value="${groupCode.cmcdNm}" style="display: none;">
 									</td>
 									<td th:text="${groupCode.useYn}"></td>
-									<td style="text-align: center;">
-										<button class="group_code_update_btn"
-											onclick="groupEditRow(this)">수정</button>
-										<button style="display: none;" class="group_code_save_btn"
-											onclick="groupSaveRow(this)">저장</button>
-										<button style="display: none;" class="group_code_cancel_btn"
-											onclick="groupCancelEdit(this)">취소</button>
-									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -195,7 +186,6 @@
 										<th>상세코드명</th>
 										<th>우선순위</th>
 										<th>사용여부</th>
-										<th style="width: 100px;">버튼</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -458,12 +448,6 @@
 
 									td5.appendChild(select);
 
-									var td6 = document.createElement("td");
-									td6.innerHTML = '<button class="detail_code_update_btn" onclick="detailEditRow(this)">수정</button>'
-											+ '<button style="display: none;" class="detail_code_save_btn" onclick="detailSaveRow(this)">저장</button>'
-											+ '<button style="display: none;" class="detail_code_cancel_btn" onclick="detailCancelEdit(this)">취소</button>';
-									td6.style.textAlign = "center";
-
 									// <tr> 요소에 <td> 요소들 추가
 									tr.appendChild(td1);
 									tr.appendChild(tdNum);
@@ -471,7 +455,6 @@
 									tr.appendChild(td3);
 									tr.appendChild(td4);
 									tr.appendChild(td5);
-									tr.appendChild(td6);
 
 									// <tr> 요소를 <tbody>에 추가
 									tbody.appendChild(tr);

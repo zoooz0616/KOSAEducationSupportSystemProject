@@ -528,22 +528,25 @@
 						selectedCompanyIds.push(checkbox.value);
 					});
 
-					console.log(selectedCompanyIds);
-					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-					$.ajax({
-						url : '/admin/company/delete',
-						method : 'POST',
-						data : {
-							selectedCompanyIds : selectedCompanyIds
-						},
-						success : function(response) {
-							console.log(response);
-							if (response == "success") {
-								alert("선택한 기업이 삭제되었습니다.");
-								window.location.href = "/admin/company/list";
+					if(selectedCompanyIds.length == 0){
+						alert("삭제할 기업을 선택해주세요.");
+					}else{
+						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+						$.ajax({
+							url : '/admin/company/delete',
+							method : 'POST',
+							data : {
+								selectedCompanyIds : selectedCompanyIds
+							},
+							success : function(response) {
+								console.log(response);
+								if (response == "success") {
+									alert("선택한 기업이 삭제되었습니다.");
+									window.location.href = "/admin/company/list";
+								}
 							}
-						}
-					});
+						});
+					}
 				});
 
 		//수정하기

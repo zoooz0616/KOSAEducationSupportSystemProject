@@ -20,7 +20,7 @@
 			<div class="title">교육과정 지원자 관리</div>
 			<!-- Route -->
 			<div class="route">
-				 <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class}">교육과정
+				 <a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list}">교육과정
 					관리</a> > <a th:href="@{/admin/class/__${classVO.clssId}__/applicant}">지원자
 					관리</a>
 			</div>
@@ -32,56 +32,39 @@
 			<!-- 교육과정 요약정보 -->
 			<div class="class_summary">
 				<div class="row">
-					<div class="col" style="width: 20%">
+					<div class="col" style="width: 33%">
 						<div class="col_title">교육과정ID</div>
 						<div class="col_content">
 							<span th:text="${classVO.clssId}"></span>
 						</div>
 					</div>
 
-					<div class="col" style="width: 30%">
+					<div class="col" style="width: 33%">
 						<div class="col_title">교육과정명</div>
 						<div class="col_content"
 							style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-							<a th:href="@{/admin/class/__${classVO.clssId}__}"><span
+							<a th:href="@{/admin/class/view/__${classVO.clssId}__}"><span
 								th:text="${classVO.clssNm}"></span></a>
 						</div>
 					</div>
 
-					<div class="col" style="width: 20%">
-						<div class="col_title">업무담당자</div>
-						<div class="col_content">
-							<a th:href="@{/admin/manager/__${classVO.mngrId}__}"><span
-								th:text="${classVO.mngrNm}"></span></a>
-						</div>
-					</div>
-
-					<div class="col" style="width: 20%">
+					<div class="col" style="width: 33%">
 						<div class="col_title">업체명</div>
-						<div class="col_content">
-							<a th:href="@{/admin/company/__${classVO.cmpyId}__}"><span
-								th:text="${classVO.cmpyNm}"></span></a>
-						</div>
-					</div>
-
-					<div class="col" style="width: 10%">
-						<div class="col_title">수강정원</div>
-						<div class="col_content">
-							<span th:text="${classVO.limitCnt}"></span>
+						<div class="col_content" th:text="${classVO.cmpyNm}">
 						</div>
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col" style="width: 40%">
+					<div class="col" style="width: 33%">
 						<div class="col_title">지원기간</div>
 						<div class="col_content">
-							<span th:text="${classVO.aplyStartDt}"></span> ~ <span
-								th:text="${classVO.aplyEndDt}"></span>
+							<span th:text="${#dates.format(classVO.aplyStartDt,'yyyy-MM-dd HH:mm')}"></span> ~ <span
+								th:text="${#dates.format(classVO.aplyEndDt,'yyyy-MM-dd HH:mm')}"></span>
 						</div>
 					</div>
 
-					<div class="col" style="width: 30%">
+					<div class="col" style="width: 33%">
 						<div class="col_title">교육기간</div>
 						<div class="col_content">
 							<span th:text="${classVO.clssStartDd}"></span> ~ <span
@@ -89,15 +72,30 @@
 						</div>
 					</div>
 
-					<div class="col" style="width: 15%">
+					<div class="col" style="width: 33%">
 						<div class="col_title">교육시간</div>
 						<div class="col_content">
 							<span th:text="${#dates.format(classVO.setInTm, 'HH:mm')}"></span>
 							~ <span th:text="${#dates.format(classVO.setOutTm, 'HH:mm')}"></span>
 						</div>
 					</div>
-
-					<div class="col" style="width: 15%">
+				</div>
+				
+				<div class="row">
+					<div class="col" style="width: 33%">
+						<div class="col_title">수강정원</div>
+						<div class="col_content">
+							<span th:text="${classVO.limitCnt}"></span>
+						</div>
+					</div>
+					
+					<div class="col" style="width: 33%">
+						<div class="col_title">업무담당자</div>
+						<div class="col_content" th:text="${classVO.mngrNm}">
+						</div>
+					</div>
+					
+					<div class="col" style="width: 33%">
 						<div class="col_title">교육상태</div>
 						<div class="col_content">
 							<span th:text="${classVO.cmcdNm}"></span>
@@ -134,23 +132,25 @@
 				<div class="content_list">
 					<table class="content_list_table" id="class_list_table">
 						<tr style="background: #F3F6F8;">
-							<th><input type="checkbox" id="chkAll" value=""></th>
-							<th>지원ID</th>
+							<th><input type="checkbox" id="chkAll" value="" name="select_all" onclick="selectAll(this)"></th>
+							<th>번호</th>
 							<th>교육생ID</th>
+							<th>교육생 Email</th>
 							<th>이름</th>
 							<th>지원서</th>
 							<th>지원일시</th>
 							<th>지원상태</th>
 						</tr>
-						<tr id="applicant_list" th:each="apply: ${applyDetailList}">
-							<td style="text-align:center;"><input type="checkbox" name="chk"
+						<tr id="applicant_list" th:each="apply, iterStat: ${applyDetailList}">
+							<td class="td_check"><input type="checkbox" name="select" onclick="checkSelectAll()"
 							th:value="${apply.aplyId}"></td>
-							<td th:text="${apply.aplyId}"></td>
-							<td th:text="${apply.stdtId}"></td>
-							<td th:text="${apply.stdtNm}"></td>
+							<td class="td_num" th:text="${iterStat.index + 1}"></td>
+							<td class="td_stdt_id" th:text="${apply.stdtId}"></td>
+							<td th:text="${apply.userEmail}"></td>
+							<td class="td_stdt_nm" th:text="${apply.stdtNm}"></td>
 							<td><a th:href="@{/download/file/__${apply.fileId}__/__${apply.fileSubId}__}" th:text="${apply.fileNm}"></a></td>
 							<td th:text="${apply.rgstDt}"></td>
-							<td th:text="${apply.cmcdNm}"></td>
+							<td class="td_status" th:text="${apply.cmcdNm}"></td>
 						</tr>
 					</table>
 				</div>
@@ -162,17 +162,30 @@
 	<!-- Content Wrap -->
 
 <script>
-//전체 선택
-document.addEventListener("DOMContentLoaded", function () {
-    const chkAll = document.getElementById("chkAll");
-    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
+//전체선택
+function selectAll(selectAll){
+	//모든 체크박스들
+	const checkboxes = document.querySelectorAll('input[name="select"]');
+	checkboxes.forEach((checkbox) => {
+		checkbox.checked = selectAll.checked;
+	});
+}
 
-    chkAll.addEventListener("change", function () {
-        checkboxes.forEach(function (checkbox) {
-            checkbox.checked = chkAll.checked;
-        });
-    });
-});
+//개별 선택
+function checkSelectAll(){
+	//전체선택 체크박스
+	const selectAll = document.querySelector('input[name="select_all"]');
+	//모든 체크박스
+	const checkboxes = document.querySelectorAll('input[name="select"]');
+	//선택된 체크박스
+	const checked = document.querySelectorAll('input[name="select"]:checked');
+	
+	if(checkboxes.length == checked.length){
+		selectAll.checked = true;
+	}else{
+		selectAll.checked = false;
+	}
+}
 
 //form submit버튼 클릭시 선택한 값이 있는지 확인
 document.addEventListener("DOMContentLoaded", function () {

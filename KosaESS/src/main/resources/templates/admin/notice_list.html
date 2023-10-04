@@ -177,23 +177,29 @@
 					selectedCheckboxes.forEach(function(checkbox) {
 						selectedNoticeIds.push(checkbox.value);
 					});
-
-					console.log(selectedNoticeIds);
-					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-					$.ajax({
-						url : '/admin/notice/delete',
-						method : 'POST',
-						data : {
-							selectedNoticeIds : selectedNoticeIds
-						},
-						success : function(response) {
-							console.log(response);
-							if (response == "success") {
-								alert("공지가 삭제되었습니다.");
-								window.location.href = "/admin/notice/list";
+					
+					//만약 아무것도 선택되어있지 않다면
+			        if (selectedCheckboxes.length === 0) {
+			            alert("삭제할 공지사항을 선택해주세요.");
+			            
+			        }else{
+			        	console.log(selectedNoticeIds);
+						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+						$.ajax({
+							url : '/admin/notice/delete',
+							method : 'POST',
+							data : {
+								selectedNoticeIds : selectedNoticeIds
+							},
+							success : function(response) {
+								console.log(response);
+								if (response == "success") {
+									alert("선택한 공지가 삭제되었습니다.");
+									window.location.href = "/admin/notice/list";
+								}
 							}
-						}
-					});
+						});
+			        }
 				});
 
 		//초기화 버튼
