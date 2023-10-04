@@ -384,6 +384,8 @@ $(document).ready(function() {
 	}
 });
 
+
+
 function formatTimestamp(timestamp) {
 	const date = new Date(timestamp);
 
