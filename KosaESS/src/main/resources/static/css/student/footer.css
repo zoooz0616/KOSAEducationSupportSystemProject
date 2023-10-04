@@ -18,6 +18,7 @@ footer {
 	margin: 2% 0 0 0;
 }
 
+
 .footerBody li img {
 	height: 30px;
 	padding: 2% 0;
@@ -27,6 +28,14 @@ footer {
 	text-decoration: none;
 	color: #E7EFF3;
 	padding: 2%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+button {
+	cursor: pointer;
 }
 
 .footerBody span {

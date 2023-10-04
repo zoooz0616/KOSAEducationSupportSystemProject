@@ -19,11 +19,15 @@ import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
+import com.finalprj.kess.repository.IUploadFileRepository;
 
 @Service
 public class StudentService implements IStudentService {
 	@Autowired
 	IStudentRepository studentRepository;
+
+	@Autowired
+	IUploadFileRepository uploadFileRepository;
 
 	public List<PostVO> selectAllNotice() {
 		return studentRepository.selectAllNotice();
@@ -279,7 +283,7 @@ public class StudentService implements IStudentService {
 	public List<PostVO> searchNotices(String keyword) {
 		return studentRepository.searchNotices(keyword);
 	}
-	
+
 	@Override
 	public List<PostVO> searchInquiries(String keyword) {
 		return studentRepository.searchInquiries(keyword);
@@ -291,7 +295,7 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public List<PostVO>getReply(String postId) {
+	public List<PostVO> getReply(String postId) {
 		return studentRepository.getReply(postId);
 	}
 
@@ -303,6 +307,49 @@ public class StudentService implements IStudentService {
 	@Override
 	public void uploadInquiry(PostVO post) {
 		studentRepository.uploadInquiry(post);
+	}
+
+	@Override
+	public void deleteInquiry(String postId) {
+		studentRepository.deleteInquiry(postId);
+	}
+
+	@Override
+	public PostVO getPostVO(String postId) {
+		return studentRepository.getPostVO(postId);
+	}
+
+	@Override
+	public void deleteFile(String fileId, List<String> deleteFiles) {
+		studentRepository.deleteFile(fileId, deleteFiles);
+	}
+
+	@Override
+	public int getFileCnt(String fileId) {
+		return studentRepository.getFileCnt(fileId);
+	}
+
+	@Override
+	public void updatePostVO(List<FileVO> fileList, PostVO postVO) {
+		if (fileList != null) {
+			for (FileVO fileVO : fileList) {
+				uploadFileRepository.uploadFile(fileVO);
+			}
+		}
+
+		studentRepository.updatePostVO(postVO);
+	}
+
+	public List<ClassVO> getAllEvents() {
+		return studentRepository.getAllEvents();
+	}
+
+	public List<ClassVO> getStdtRgstEvents(String stdtId) {
+		return studentRepository.getStdtRgstEvents(stdtId);
+	}
+	
+	public List<ClassVO> getStdtAplyEvents(String stdtId) {
+		return studentRepository.getStdtAplyEvents(stdtId);
 	}
 
 }

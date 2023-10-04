@@ -30,7 +30,7 @@
 						<td><ul
 								style="margin: 0; text-align: left; padding-left: 3%;">
 								<li th:each="FileVO : ${noticeFileList}"><a
-									style="width: 100%; display: flex;"
+									style="display: flex;"
 									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
 									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
 										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span

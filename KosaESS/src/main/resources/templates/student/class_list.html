@@ -46,8 +46,7 @@
 					</select>
 				</div>
 			</div>
-			<table class="list-style"
-				style="display: none; width: 95%; margin: auto;">
+			<table class="list-style" style="display: none; margin: auto;">
 
 				<thead>
 					<tr class="classRow" style="border: none;">
@@ -58,7 +57,7 @@
 						<td>장소</td>
 						<td>정원</td>
 						<td>교육과정상태</td>
-						<td>지원하기</td>
+						<td>즉시지원</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -79,7 +78,38 @@
 						<td><a class="applyBtn"
 							th:href="@{/student/class/view/__${classVO.clssId}__}">지원하기</a></td>
 					</tr> -->
+						<div class="modal">
+							<div class="modalBody">
+								<div class="modalHeader">
+									<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
+								</div>
+								<form th:action="@{/student/upload/__${classVO.clssId}__}"
+									method="post" id="uploadAplyForm" enctype="multipart/form-data">
+									<div class="modalContent">
+										<div class="upload-area">
+											<p>지원서파일을 여기에 첨부하세요.</p>
+											<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
+											<div style="width: 80%;">
+												<input class="upload-name" value="선택된 첨부파일이 없습니다"
+													placeholder="선택된 첨부파일이 없습니다" readonly> <label
+													for="fileInput">파일찾기</label> <input type="file" name="file"
+													id="fileInput" class="fileInput" multiple accept=".pdf">
+											</div>
+										</div>
+									</div>
+									<div class="modalFooter">
+										<button type="reset" class="closeModalBtn">취소</button>
+										<button type="submit" class="aplyBtn">제출</button>
+									</div>
+								</form>
+							</div>
+						</div>
 				</tbody>
+				<tfoot class="classFoot" style="display: none; height: 300px;">
+					<tr>
+						<td><h3>조회된 결과 없습니다.</h3></td>
+					</tr>
+				</tfoot>
 			</table>
 			<table class="grid-style classTable">
 				<tbody>
@@ -115,7 +145,20 @@
 							th:href="@{/student/class/view/__${classVO.clssId}__}">지원하기</a></td>
 					</tr>
 				</tbody>
+				<tfoot class="classFoot" style="display: none; height: 300px;">
+					<tr>
+						<td><h3>조회된 결과가 없습니다.</h3></td>
+					</tr>
+				</tfoot>
+
 			</table>
+			<div class="paging">
+				<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i
+					class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+				<div class="pages"></div>
+				<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+					class="right" id="last_page" th:src="@{/img/last_page}"></i>
+			</div>
 		</div>
 	</div>
 	<div style="position: fixed; right: 50px; bottom: 20px;">

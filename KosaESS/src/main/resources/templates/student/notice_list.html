@@ -23,7 +23,21 @@
 					<input type="button" class="searchBtn" value="검색">
 				</div>
 			</div>
-			<table class="notice-table" style="width: 90%; margin: auto;">
+			<div class="subsearch">
+				<div>
+					<h3 class="totalcnt">
+						총 <span class="totalRowCount" th:text="${#lists.size(postList)}"></span>건
+					</h3>
+				</div>
+				<div>
+					<span>페이지당 목록 수</span> <select id="pageList">
+						<option value="10">10개씩</option>
+						<option value="20">20개씩</option>
+						<option value="30">30개씩</option>
+					</select>
+				</div>
+			</div>
+			<table class="notice-table" style="margin: auto;">
 				<thead>
 					<tr class="noticeRow" style="border: none;">
 						<td>번호</td>
@@ -41,6 +55,11 @@
 						<td style="display: none;"><span th:text="${postVO.postId}"></span></td>
 					</tr> -->
 				</tbody>
+				<tfoot class="noticeFoot" style="display: none; height: 300px;">
+					<tr>
+						<td><h3>조회된 결과 없습니다.</h3></td>
+					</tr>
+				</tfoot>
 			</table>
 			<div class="paging">
 				<i class="left" id="first_page"><img
@@ -53,6 +72,6 @@
 			</div>
 		</div>
 	</div>
-	<script src="/js/student/notice_detail.js"></script>
+	<script src="/js/student/notice_list.js"></script>
 </body>
 </html>

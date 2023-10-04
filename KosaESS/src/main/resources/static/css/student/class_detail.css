@@ -36,7 +36,7 @@ table th {
 }
 
 .content a {
-	color: black;
+	width: fit-content;
 }
 
 .crclTable {
@@ -95,6 +95,7 @@ ul {
 	font-weight: bold;
 	border-radius: 10px;
 	border: 0;
+	cursor: pointer;
 }
 
 .openModalBtn {
@@ -107,6 +108,7 @@ ul {
 	background: white;
 	border-style: none;
 	height: 60px;
+	cursor: pointer;
 }
 
 .modal {
@@ -124,7 +126,7 @@ ul {
 	top: 50%;
 	left: 50%;
 	width: 500px;
-	height: 520px;
+	height: 410px;
 	text-align: center;
 	background-color: rgb(255, 255, 255);
 	border-radius: 10px;
@@ -144,17 +146,13 @@ ul {
 
 .upload-area {
 	margin: 5% auto;
-	padding: 13% 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	background-color: white;
 	color: black;
-	border-style: dashed;
-	border-color: darkgray;
 	font-size: 18px;
 	width: 90%;
-	border-radius: 10px;
 }
 
 .upload-name {
@@ -252,4 +250,8 @@ ul {
 .viewClass span {
 	color: red;
 	font-size: 15px;
+}
+
+.modal button {
+	cursor: pointer;
 }

@@ -191,6 +191,7 @@ $(document).ready(function() {
 
 					var wlogCd = WorklogVO.wlogCd;
 					var resnId = WorklogVO.resnId;
+					var resnCd = WorklogVO.resnNm;
 					var submitResnElement = row.find('.submitResn');
 					var updateResnElement = row.find('.updateResn');
 					var resnStstusElement = row.find('.resnStstus');
@@ -202,9 +203,15 @@ $(document).ready(function() {
 							resnStstusElement.addClass('hidden');
 						}
 						else {
-							submitResnElement.addClass('hidden');
-							updateResnElement.removeClass('hidden');
-							resnStstusElement.removeClass('hidden');
+							if (resnCd == 'RES0000002' || resnCd == 'RES0000003') {
+								submitResnElement.addClass('hidden');
+								updateResnElement.addClass('hidden');
+								resnStstusElement.removeClass('hidden');
+							} else {
+								submitResnElement.addClass('hidden');
+								updateResnElement.removeClass('hidden');
+								resnStstusElement.removeClass('hidden');
+							}
 						}
 					} else {
 						submitResnElement.addClass('hidden');

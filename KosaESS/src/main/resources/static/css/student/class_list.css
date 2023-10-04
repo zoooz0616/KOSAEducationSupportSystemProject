@@ -17,7 +17,6 @@ ul {
 	padding: 0px 5%;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 2%;
 	cursor: pointer;
 }
 
@@ -51,24 +50,32 @@ input::placeholder {
 .subsearch {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 1%;
+	margin: 2% 0;
 	align-items: center;
 }
 
-.grid-style tr {
+.last {
+	margin-right: 0 !important;
+}
+
+.grid-style tbody tr {
 	display: grid;
 	align-items: center;
 	width: 16%;
 	border: 2px solid #0E5881;
 	padding: 1%;
 	margin-bottom: 3%;
-	margin-right: 1.5%;
+	margin-right: 2.14%;
+}
+
+tfoot td {
+	text-align: center;
+	font-size: 20px !important;
 }
 
 .grid-style tbody {
 	display: flex;
 	flex-wrap: wrap;
-	padding-left: 2%;
 }
 
 .grid-style img {
@@ -117,18 +124,17 @@ input::placeholder {
 	width: 100%;
 	align-items: center;
 	height: 5%;
-	border-bottom-style: solid;
-	border-color: #E7EFF3;
-	border-width: thin;
+	border-bottom: 1.5px solid #E7EFF3;
 }
 
 .list-style thead {
 	display: flex;
 	justify-content: space-between;
 	border-style: none;
-	background: #0E5881;
-	color: white;
+	background: #E7EFF3;
 	padding: 0.5% 0;
+	color: #0E5881;
+	border-bottom: 2px solid #0E5881;
 }
 
 .list-style thead td {
@@ -146,14 +152,9 @@ input::placeholder {
 	padding: 0.5%;
 }
 
-.list-style tbody tr:nth-child(even) {
-	background-color: #F3F6F8;
-}
-
 .list-style a {
 	text-align: center;
 	text-decoration: none;
-	color: #0E5881;
 }
 
 .list-style a:hover {
@@ -243,6 +244,7 @@ input:checked+lable::before {
 	background: white;
 	border-style: none;
 	height: 60px;
+	cursor: pointer;
 }
 
 .paging {
@@ -279,4 +281,128 @@ input:checked+lable::before {
 
 a, .searchBtn, select {
 	cursor: pointer;
+}
+
+.openModalBtn {
+	background: #0E5881;
+	color: white;
+	padding: 5% 8%;
+	border: 0;
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 10px;
+	border: 0;
+	cursor: pointer;
+}
+
+.moveTopBtn {
+	padding: 0;
+	background: white;
+	border-style: none;
+	height: 60px;
+	cursor: pointer;
+}
+
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modalBody {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	height: 410px;
+	text-align: center;
+	background-color: rgb(255, 255, 255);
+	border-radius: 10px;
+	box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+	transform: translateX(-50%) translateY(-50%);
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modalHeader {
+	display: flex;
+	padding: 7%;
+	justify-content: center;
+	background-color: #E7EFF3;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.upload-area {
+	margin: 5% auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: white;
+	color: black;
+	font-size: 18px;
+	width: 90%;
+}
+
+.upload-name {
+	display: inline-block;
+	padding: 3%;
+	vertical-align: middle;
+	border: 1px solid #dddddd;
+	width: 60%;
+	color: black;
+}
+
+.upload-area label {
+	display: inline-block;
+	padding: 3% 5%;
+	color: black;
+	background-color: #E7EFF3;
+	cursor: pointer;
+	font-size: 15px;
+	border-radius: 10px;
+}
+
+.upload-area input[type="file"] {
+	position: absolute;
+	width: 0;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
+}
+
+.modal-footer {
+	padding: 2%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.aplyBtn, .closeModalBtn {
+	padding: 3% 7%;
+	font-weight: bold;
+	border-radius: 10px;
+	color: #FFF;
+	background-color: #0E5881;
+	margin: 0 2%;
+	border: 0;
+	font-size: 15px;
+}
+
+#file-upload-button {
+	padding: 3% 7%;
+	font-weight: 500;
+	border-radius: 10px;
+	color: #FFF;
+	background-color: #0E5881;
+	margin: 0 2%;
+	border: 0;
+}
+
+#fileInput {
+	color: black;
+	padding: 2% 0;
 }

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.sql.Clob;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -101,6 +100,42 @@ public class StudentController {
 		return "student/main";
 	}
 
+	@GetMapping("/events")
+    @ResponseBody
+    public Map<String, Object> getEvents() {
+        // 이벤트 데이터를 DB에서 가져오는 서비스 메서드 호출
+        List<ClassVO> events =  new ArrayList<ClassVO>();
+        events =  studentService.getAllEvents();
+        List<ClassVO> clss1Events = new ArrayList<>();
+        List<ClassVO> clss2Events = new ArrayList<>();
+        
+        // clssCd 별로 이벤트 분류
+        for (ClassVO event : events) {
+            if ("CLS0000001".equals(event.getClssCd())) {
+                clss1Events.add(event);
+            } else if ("CLS0000002".equals(event.getClssCd())) {
+                clss2Events.add(event);
+            }
+        }
+        
+        Map<String, Object> eventsData = new HashMap<String, Object>();
+        eventsData.put("exp", clss1Events);
+        eventsData.put("Ing",clss2Events);
+        return eventsData;
+    }
+
+	@GetMapping("/stdtevents")
+	@ResponseBody
+	public Map<String, Object> getstdtEvents(HttpSession session) {
+		// 이벤트 데이터를 DB에서 가져오는 서비스 메서드 호출
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		Map<String, Object> eventsData = new HashMap<String, Object>();
+		eventsData.put("rgst", studentService.getStdtRgstEvents(stdtId));
+		eventsData.put("aply", studentService.getStdtAplyEvents(stdtId));
+		return eventsData;
+	}
+
 	// 출퇴근 토글 출근!!
 	/**
 	 * @author : dabin
@@ -143,7 +178,7 @@ public class StudentController {
 			// System.out.println("차이 초" + diffSec);
 			// System.out.println("차이 일수" + diffDays);
 
-			if (diffDays > 1) { // 시작일과 1일 이상 차이나는 경우
+			if (diffDays > 0) { // 시작일과 1일 이상 차이나는 경우
 				Calendar cal1 = Calendar.getInstance();
 				Calendar cal2 = Calendar.getInstance();
 
@@ -164,6 +199,7 @@ public class StudentController {
 						pastwlogVO.setInTm(pastDd);
 						pastwlogVO.setWlogCd("WOK0000004");
 						pastwlogVO.setRgsterId(stdtId);
+						pastwlogVO.setWlogTotalTm(0);
 						studentService.insertPastWlog(pastwlogVO);
 
 						// 시작날짜 + 1 일
@@ -214,9 +250,9 @@ public class StudentController {
 			long diffSec = (newInTmDd.getTime() - lastDate.getTime()) / 1000;
 			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
 
-			System.out.println("차이 초" + diffSec);
-			System.out.println("차이 일수" + diffDays);
-			if (diffDays > 2) { // 이전 출석 로그와 2일 이상 차이나는 경우
+			// System.out.println("차이 초" + diffSec);
+			 System.out.println("차이 일수" + diffDays);
+			if (diffDays > 1) { // 이전 출석 로그와 2일 이상 차이나는 경우
 				Calendar cal1 = Calendar.getInstance();
 				Calendar cal2 = Calendar.getInstance();
 
@@ -236,6 +272,7 @@ public class StudentController {
 						pastwlogVO.setInTm(pastDd);
 						pastwlogVO.setWlogCd("WOK0000004");
 						pastwlogVO.setRgsterId(stdtId);
+						pastwlogVO.setWlogTotalTm(0);
 						studentService.insertPastWlog(pastwlogVO);
 
 						// 시작날짜 + 1 일
@@ -330,24 +367,26 @@ public class StudentController {
 				if (inlogCd.equals("WOK0000001")) { // 수업마무리시간 - 수업시작시간
 					Double diffSec = (double) ((clssOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					System.out.println("차이 초" + diffSec);
 					if (diffHours < 0)
 						totalTm = 0.0;
 					else
 						totalTm = diffHours;
-					totalTm = diffHours;
 					if (totalTm < standardTm)
 						outlogCd = ("WOK0000004");
 
 				} else if (inlogCd.equals("WOK0000002")) { // 수업마무리시간 - 출근시간
 					Double diffSec = (double) ((clssOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					System.out.println("차이 초" + diffSec);
 					if (diffHours < 0)
 						totalTm = 0.0;
 					else
 						totalTm = diffHours;
-					totalTm = diffHours;
 					if (totalTm < standardTm)
 						outlogCd = ("WOK0000004");
+					else
+						outlogCd = ("WOK0000002");
 				}
 
 			} else {
@@ -355,24 +394,26 @@ public class StudentController {
 				if (inlogCd.equals("WOK0000001")) { // 퇴근시간 - 수업시작시간
 					Double diffSec = (double) ((newOutTimeDd.getTime() - clssInTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					System.out.println("차이 초" + diffSec);
 					if (diffHours < 0)
 						totalTm = 0.0;
 					else
 						totalTm = diffHours;
-					totalTm = diffHours;
 					if (totalTm < standardTm)
 						outlogCd = "WOK0000004";
 
 				} else if (inlogCd.equals("WOK0000002")) { // 퇴근시간 - 출근시간
 					Double diffSec = (double) ((newOutTimeDd.getTime() - inlogTimeDd.getTime()) / 1000);
 					Double diffHours = diffSec / (60 * 60); // 시간 차이
+					System.out.println("차이 초" + diffSec);
 					if (diffHours < 0)
 						totalTm = 0.0;
 					else
 						totalTm = diffHours;
-					totalTm = diffHours;
 					if (totalTm < standardTm)
 						outlogCd = ("WOK0000004");
+					else
+						outlogCd = ("WOK0000002");
 				}
 
 			}
@@ -486,11 +527,10 @@ public class StudentController {
 		model.addAttribute("inquiriesList", searchResults);
 		return searchResults;
 	}
-	
 
 	/**
 	 * @author : dabin
-	 * @return 
+	 * @return
 	 * @date : 2023. 9.20.
 	 * @parameter : model
 	 * @return :
@@ -507,8 +547,7 @@ public class StudentController {
 	public String goInquiryWrite() {
 		return "student/inquiry_write";
 	}
-	
-	
+
 	// 문의사항 글쓰기
 
 	/**
@@ -560,7 +599,7 @@ public class StudentController {
 	 */
 
 	@GetMapping("/inquiry/view/{postId}")
-	public String inquiryDetail(@PathVariable String postId, Model model) {
+	public String inquiryDetail(@PathVariable String postId, Model model, HttpSession session) {
 		PostVO inquiryDetail = studentService.selectInquiry(postId);
 		model.addAttribute("inquiryDetail", inquiryDetail);
 
@@ -570,7 +609,138 @@ public class StudentController {
 		List<PostVO> replyDetail = studentService.selectReply(postId);
 		model.addAttribute("replyDetail", replyDetail);
 
+		String stdtId = (String) session.getAttribute("stdtId");
+		model.addAttribute("stdtId", stdtId);
+
 		return "student/inquiry_detail";
+	}
+
+	// 문의사항 업데이트 폼 이동
+	/**
+	 * @author : dabin
+	 * @return
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/inquiry/updateform/{postId}")
+	public String updateform(@PathVariable String postId, Model model, HttpSession session) {
+
+		PostVO inquiryDetail = studentService.selectInquiry(postId);
+		model.addAttribute("inquiryDetail", inquiryDetail);
+
+		String stdtId = (String) session.getAttribute("stdtId");
+		model.addAttribute("stdtId", stdtId);
+
+		List<FileVO> inquiryFileList = studentService.selectAllInquiryFile(postId);
+		model.addAttribute("inquiryFileList", inquiryFileList);
+
+		return "student/inquiry_write";
+	}
+
+	// 문의사항 업데이트
+	@PostMapping("/inquiry/update/{postId}")
+	@ResponseBody
+	public String updateInquiry(@PathVariable String postId, @RequestParam("updatedTitle") String updatedTitle,
+			@RequestParam("updatedContent") String updatedContent,
+			@RequestParam(name = "files", required = false) MultipartFile[] files,
+			@RequestParam(name = "deleteFiles", required = false) List<String> deleteFiles, HttpSession session,
+			RedirectAttributes redirectAttrs) {
+
+		String stdtId = (String) session.getAttribute("stdtId");
+
+		PostVO postVO = studentService.getPostVO(postId);
+		postVO.setPostTitle(updatedTitle);
+		postVO.setPostContent(updatedContent);
+		postVO.setUpdterId(stdtId);
+
+		// 삭제한 파일이 있다면
+		if (deleteFiles != null) {
+			// 파일삭제
+			studentService.deleteFile(postVO.getFileId(), deleteFiles);
+			System.out.println("+++++++++++++++++++++" + deleteFiles);
+		}
+
+		// fileId가 널이 아닐 때 file개수가 0 이면 fileId null로 변경
+		if (postVO.getFileId() != null) {
+			int fileCnt = studentService.getFileCnt(postVO.getFileId());
+			if (fileCnt == 0) {
+				postVO.setFileId(null);
+			}
+		}
+
+		// 파일을 첨부하지 않았다면 maxFileId는 그대로 fileList는 null.
+		String maxFileId = postVO.getFileId();
+		List<FileVO> fileList = null;
+
+		// 파일을 첨부했다면 List생성해서 전달
+		if (files[0] != null && !files[0].isEmpty()) {
+			// 원래 파일이 없다면
+			if (maxFileId == null) {
+				maxFileId = uploadFileService.getMaxFileId();
+				int subFileId = 1;
+				fileList = new ArrayList<FileVO>();
+				try {
+					for (MultipartFile file : files) {
+						if (file != null && !file.isEmpty()) {
+							FileVO fileVO = new FileVO();
+							fileVO.setFileId(maxFileId);
+							fileVO.setFileSubId(subFileId);
+							fileVO.setFileNm(file.getOriginalFilename());
+							fileVO.setFileSize(file.getSize());
+							fileVO.setFileType(file.getContentType());
+							fileVO.setFileContent(file.getBytes());
+							fileList.add(fileVO);
+							subFileId++;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				// 원래 파일이 있었다면
+				int subFileId = studentService.getmaxSubId(maxFileId);
+				fileList = new ArrayList<FileVO>();
+				try {
+					for (MultipartFile file : files) {
+						if (file != null && !file.isEmpty()) {
+							FileVO fileVO = new FileVO();
+							fileVO.setFileId(maxFileId);
+							fileVO.setFileSubId(subFileId);
+							fileVO.setFileNm(file.getOriginalFilename());
+							fileVO.setFileSize(file.getSize());
+							fileVO.setFileType(file.getContentType());
+							fileVO.setFileContent(file.getBytes());
+							fileList.add(fileVO);
+							subFileId++;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					redirectAttrs.addFlashAttribute("message", e.getMessage());
+				}
+			}
+		}
+		postVO.setFileId(maxFileId);
+
+		studentService.updatePostVO(fileList, postVO);
+
+		return "student/inquiry/view/{postId}";
+	}
+
+	// 문의사항 삭제
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@GetMapping("/inquiry/delete/{postId}")
+	@ResponseBody
+	public void deleteInquiry(@PathVariable String postId, HttpSession session) {
+		studentService.deleteInquiry(postId);
 	}
 
 	// 교육 리스트확인
@@ -1059,5 +1229,10 @@ public class StudentController {
 		}
 
 		return responseList;
+	}
+
+	@GetMapping("/calendar")
+	public String cal() {
+		return "/student/calendar";
 	}
 }
