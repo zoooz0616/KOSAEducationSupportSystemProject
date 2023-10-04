@@ -11,29 +11,31 @@
 				<div class="links">
 					<h2>Links</h2>
 					<ul>
-						<li><a th:href="@{/student/class}"><img
-								th:src="@{/img/education.png}"></a><span>교육과정지원</span></li>
-						<li><a th:href="@{/student/notice}"><img
-								th:src="@{/img/notice.png}"></a><span>공지사항</span></li>
-						<li><a th:href="@{/student/inquiry}"><img
-								th:src="@{/img/inquiry.png}"></a><span>문의사항</span></li>
+						<li><img th:src="@{/img/education.png}"><a
+							th:href="@{/student/class/list}"><span>교육과정지원</span></a></li>
+						<li><img th:src="@{/img/notice.png}"><a
+							th:href="@{/student/notice/list}"><span>공지사항</span></a></li>
+						<li><img th:src="@{/img/inquiry.png}"><a
+							th:href="@{/student/inquiry/list}"><span>문의사항</span></a></li>
 					</ul>
 				</div>
-				<div class="contact" style="width:30%;">
+				<div class="contact" style="width: 30%;">
 					<h2>Contact</h2>
 					<ul>
 						<li><img th:src="@{/img/ping.png}"><span
 							style="width: 14%">주소 </span><span>서울시 용산구 청파로 61길 5 6F~8F</span></li>
 						<li><img th:src="@{/img/phone.png}"><span>전화번호 </span><span>
 								010-5744-9937</span></li>
-						<li><img th:src="@{/img/email.png}"><span style="width: 12%">이메일 </span><span>
+						<li><img th:src="@{/img/email.png}"><span
+							style="width: 12%">이메일 </span><span>
 								kcceducation@gmail.com</span></li>
 					</ul>
 				</div>
 				<div class="emailJoin">
 					<label for="email"
 						style="padding-bottom: 20%; color: #E7EFF3; font-weight: bold; font-size: 18px;">협회
-						소식을 받아보새요.</label> <input type="email" value="이메일을 입력하세요." id="email" style="width: 80%;">
+						소식을 받아보새요.</label> <input type="email" value="이메일을 입력하세요." id="email"
+						style="width: 80%;">
 					<button type="submit">구독하기</button>
 				</div>
 			</div>

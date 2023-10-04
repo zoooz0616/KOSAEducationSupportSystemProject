@@ -76,8 +76,7 @@
 						<td colspan="7"><ul
 								style="margin: 0; text-align: left; padding-left: 3%;">
 								<li th:each="FileVO : ${classFileList}"><a
-									style="width: 100%; display: flex;"
-									th:if="${FileVO.fType == 'application'}"
+									style="display: flex;" th:if="${FileVO.fType == 'application'}"
 									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
 									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
 										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
@@ -148,7 +147,7 @@
 								<img th:src="@{/img/logo.png}">
 							</div>
 							<a class="moveBtn"
-								th:href="@{/student/class/__${class2.clssId}__}">교육보러가기</a>
+								th:href="@{/student/class/view/__${class2.clssId}__}">교육보러가기</a>
 						</div>
 					</li>
 					<li th:if="${class1 != null}">
@@ -165,7 +164,7 @@
 								<img th:src="@{/img/logo.png}">
 							</div>
 							<a class="moveBtn"
-								th:href="@{/student/class/__${class1.clssId}__}">교육보러가기</a>
+								th:href="@{/student/class/view/__${class1.clssId}__}">교육보러가기</a>
 						</div>
 					</li>
 				</ul>
@@ -192,12 +191,12 @@
 				<div class="modalContent">
 					<div class="upload-area">
 						<p>지원서파일을 여기에 첨부하세요.</p>
-						<p style="color:red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
+						<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
 						<div style="width: 80%;">
 							<input class="upload-name" value="선택된 첨부파일이 없습니다"
 								placeholder="선택된 첨부파일이 없습니다" readonly> <label
 								for="fileInput">파일찾기</label> <input type="file" name="file"
-								id="fileInput" class="fileInput" accept=".pdf">
+								id="fileInput" class="fileInput" multiple accept=".pdf">
 						</div>
 					</div>
 				</div>

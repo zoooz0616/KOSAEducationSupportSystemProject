@@ -139,4 +139,20 @@ public interface IStudentRepository {
 
 	void uploadInquiry(PostVO post);
 
+	void deleteInquiry(String postId);
+
+	PostVO getPostVO(String postId);
+
+	void deleteFile(String fileId, List<String> deleteFiles);
+
+	int getFileCnt(String fileId);
+
+	void updatePostVO(PostVO postVO);
+
+	List<ClassVO> getAllEvents();
+
+	List<ClassVO> getStdtRgstEvents(String stdtId);
+
+	List<ClassVO> getStdtAplyEvents(String stdtId);
+
 }

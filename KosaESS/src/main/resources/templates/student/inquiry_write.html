@@ -11,7 +11,7 @@
 <body>
 	<div th:replace="~{/include/student_header :: header}"
 		style="width: 100%;"></div>
-	<div class="container">
+	<div th:if="${inquiryDetail} == null" class="container">
 		<div class="maintext">
 			<h1 style="color: #0E5881; margin-top: 3%;">문의사항 작성하기</h1>
 		</div>
@@ -33,7 +33,7 @@
 								<input class="upload-name" value="선택된 첨부파일이 없습니다"
 									placeholder="선택된 첨부파일이 없습니다" readonly> <label
 									for="fileInput">파일찾기</label> <input type="file" name="file"
-									id="fileInput" class="fileInput">
+									id="fileInput" class="fileInput" multiple>
 							</div></td>
 					</tr>
 				</tbody>
@@ -44,40 +44,126 @@
 			</div>
 		</div>
 	</div>
-	<script>
-	const backBtn = document.querySelector('.back');
+	<div th:if="${inquiryDetail} != null" class="container">
+		<div class="maintext">
+			<h1 style="color: #0E5881; margin-top: 3%;">문의사항 수정하기</h1>
+		</div>
+		<div class="content" style="flex-direction: column;">
+			<table class="writeTable">
+				<tbody>
+					<tr>
+						<th>문의 제목</th>
+						<td><input class="title" type="text"
+							th:value="${inquiryDetail.postTitle}"></td>
+					</tr>
+					<tr>
 
-	backBtn.addEventListener('click', () => {
-		location.replace('/student/inquiry/list');
-	});
-	
-	$("#fileInput").on('change',function(){
-		  var fileName = $("#fileInput").val();
-		  $(".upload-name").val(fileName);
+						<th>문의 내용</th>
+						<td><textarea class="postContent"
+								th:text="${inquiryDetail.postContent}"></textarea></td>
+					</tr>
+					<tr>
+						<th>파일 첨부</th>
+						<td>
+							<div th:each="file: ${inquiryFileList}" class="file_wrap">
+								<input type="hidden" th:value="${file.fileSubId}"> <img
+									class="file_img" th:src="@{/img/file_icon.png}"
+									style="height: 20px;"> <span th:text="${file.fileNm}"></span>
+								<button class="delete_file" type="button"
+									onclick="deleteFile(this)">삭제</button>
+							</div>
+							<div>
+								<input class="upload-name" value="선택된 첨부파일이 없습니다"
+									placeholder="선택된 첨부파일이 없습니다" readonly> <label
+									for="fileInput">파일찾기</label> <input type="file" name="file"
+									id="fileInput" class="fileInput" onclick="addFile(this)" multiple>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="writeBtn">
+				<button class="updateInquiry">수정하기</button>
+				<button class="back">뒤로가기</button>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+		$(".back").click(function() {
+			location.replace('/student/inquiry/list');
 		});
 
-	const submitBtn = document.querySelector('.submitInquiry');
-	submitBtn.addEventListener('click', () => {
-
-		var title = $('.title').val();
-		var content = $('.postContent').val();
-		var formData = new FormData();
-		var file = document.querySelector("#fileInput").files[0];
-		formData.append("file", file);
-		formData.append("title", title);
-		formData.append("content", content);
-		$.ajax({
-			type: 'POST',
-			url: '/student/inquiry/write',
-			data: formData,
-			processData: false,
-			contentType: false,
-			success: function() {
-				alert("문의작성을 완료하였습니다.");
-				window.location.href = '/student/inquiry/list';
-			}
+		$("#fileInput").on('change', function() {
+			var fileName = $("#fileInput").val();
+			$(".upload-name").val(fileName);
 		});
-	});
+
+		$(".submitInquiry").click(function() {
+
+			var title = $('.title').val();
+			var content = $('.postContent').val();
+			var formData = new FormData();
+			var file = document.querySelector("#fileInput").files[0];
+			formData.append("file", file);
+			formData.append("title", title);
+			formData.append("content", content);
+			$.ajax({
+				type : 'POST',
+				url : '/student/inquiry/write',
+				data : formData,
+				processData : false,
+				contentType : false,
+				success : function() {
+					alert("문의작성을 완료하였습니다.");
+					window.location.href = '/student/inquiry/list';
+				}
+			});
+		});
+
+		$(".updateInquiry").click(function() {
+			// 수정된 데이터 추출
+			var postId = /*[[${inquiryDetail.postId}]]*/'';
+			var updatedTitle = $(".title").val(); // 수정된 제목
+			var updatedContent = $(".postContent").val(); // 수정된 내용
+			var fileInput = $("#fileInput")[0].files; // 선택된 파일
+
+			// FormData 객체 생성
+			var formData = new FormData();
+			formData.append("postId", postId);
+			formData.append("updatedTitle", updatedTitle);
+			formData.append("updatedContent", updatedContent);
+
+			// AJAX 요청 보내기
+			$.ajax({
+				url : '/student/inquiry/update/' + postId,
+				method : 'POST',
+				data : formData,
+				processData : false, // 데이터 처리 방식을 false로 설정
+				contentType : false, // 컨텐츠 타입을 false로 설정
+				success : function() {
+					// 성공 시 처리
+					alert("수정이 완료되었습니다.");
+					window.location.href = '/student/inquiry/view/' + postId; // 수정된 게시물 상세 페이지로 이동
+				},
+			});
+		});
+
+		function addFile(button) {
+			var divParent = button.closest('div');
+			var inputFile = document.createElement('input');
+			inputFile.type = 'file';
+			inputFile.name = 'files';
+
+			divParent.appendChild(inputFile);
+		}
+
+		function deleteFile(button) {
+			var divParent = button.closest('div');
+			var inputHidden = divParent.querySelector('input');
+			inputHidden.name = 'deleteFiles';
+			console.log(inputHidden.value);
+			divParent.style.display = 'none';
+		}
 	</script>
 </body>
 </html>

@@ -1,0 +1,59 @@
+.fc .fc-toolbar.fc-header-toolbar {
+    padding: 1% ;
+    }
+.fc .fc-button:disabled {
+	opacity: 1;
+}
+
+.fc-daygrid-day {
+	height: 80px;
+}
+
+.fc-daygrid-event {
+	   border-radius: 0;
+}
+
+.fc .fc-toolbar-title {
+	font-size: 20px;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+	margin-bottom: 0;
+}
+
+.fc .fc-button {
+	padding: 6px;
+}
+.fc-scrollgrid-sync-table{
+	height:20px;
+}
+.fc .fc-timeGridWeek-button{
+	display:none;
+}
+.fc-col-header-cell-cushion{
+	cursor: default;
+	text-decoration: none;
+}
+.fc-col-header-cell-cushion:hover{
+	    text-decoration: none;
+}
+.fc thead .fc-scroller{
+	   overflow: hidden !important;
+}
+.fc .fc-button {
+	border-radius: 0 !important;
+}
+.fc .fc-button .fc-icon {
+    font-size: 16px;
+}
+
+:root { 
+	--fc-button-bg-color: #3E799A;
+    --fc-button-border-color: #3E799A;
+    --fc-button-hover-bg-color: #0E5881;
+    --fc-button-hover-border-color: #0E5881;
+    --fc-button-active-bg-color: #0E5881;
+    --fc-button-active-border-color: #0E5881;
+	--fc-event-bg-color: #6E9BB3; 
+	--fc-event-border-color:  #6E9BB3;
+}
