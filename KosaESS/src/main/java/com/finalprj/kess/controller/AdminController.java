@@ -965,6 +965,7 @@ public class AdminController {
 		classVO.setLimitCnt(classInsertDTO.getLimitCnt());
 
 		// Date-time(String) to Timestamp
+		
 		try {
 			String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
 			String aplyEndDt = classInsertDTO.getAplyEndDt();
