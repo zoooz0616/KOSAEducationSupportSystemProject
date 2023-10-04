@@ -14,9 +14,11 @@
 			<i class='bx bx-menu' id="btn"><img class="open_icon" th:src="@{/img/open.png}"></i>
 		</div>
 		<ul class="nav-list">
+			<li><a class="icon_img" th:href="@{/__${session.role}__}"> <i class='bx bx-grid-alt'> <img th:src="@{/img/main_white.png}"> </i> <span class="links_name">메인</span> </a> <span class="tooltip">메인</span></li>
 			<li><a th:href="@{/__${session.role}__/class}"> <i class='bx bx-cart-alt'><img th:src="@{/img/class_white.png}"></i> <span class="links_name">교육과정 관리</span> </a> <span class="tooltip">교육과정 관리</span></li>
 			<li><a th:href="@{/__${session.role}__/student}"> <i class='bx bx-heart'><img th:src="@{/img/student_white.png}"></i> <span class="links_name">교육생 관리</span> </a> <span class="tooltip">교육생 관리</span></li>
 			<li><a th:href="@{/__${session.role}__/worklog}"> <i class='bx bx-heart'><img th:src="@{/img/worklog_white.png}"></i> <span class="links_name">출퇴근 관리</span> </a> <span class="tooltip">출퇴근 관리</span></li>
+			<li><a th:href="@{/__${session.role}__/money}"> <i class='bx bx-heart'><img th:src="@{/img/money_icon_white.png}"></i> <span class="links_name">지원금 관리</span> </a> <span class="tooltip">지원금 관리</span></li>
 			<li><a th:href="@{/__${session.role}__/mypage}"> <i class='bx bx-heart'><img th:src="@{/img/mypage_white.png}"></i> <span class="links_name">내 정보 관리</span> </a> <span class="tooltip">내 정보 관리</span></li>
 
 			<li class="profile">

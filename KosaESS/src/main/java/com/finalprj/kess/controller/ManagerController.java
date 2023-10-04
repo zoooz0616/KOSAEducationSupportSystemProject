@@ -33,8 +33,10 @@ import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.WorklogVO;
+import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
 
@@ -52,6 +54,8 @@ public class ManagerController {
 	IManagerService managerService;
 	@Autowired
 	IStudentService studentService;
+	@Autowired
+	IAdminService adminService;
 
 	//	메인 페이지
 	@GetMapping("")
@@ -244,7 +248,7 @@ public class ManagerController {
 		return "manager/student_list";
 	}
 
-	//	개인정보 조회
+	//	개인정보 조회 : 비밀번호 확인
 	@GetMapping("/mypage")
 	public String getMngrInfo(Model model, HttpSession session) {
 		//유저 필터링
@@ -256,8 +260,33 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		
+		model.addAttribute("title", "비밀번호 확인");
 		
-		return "manager/mypage";
+		return "manager/mypage_confirm_pw";
+	}
+	
+	//	개인정보 조회 : 비밀번호 확인
+	@GetMapping("/mypage/confirm_pw")
+	public String confirmPassword(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		
+		ManagerVO thisManager = adminService.getManager(mngrId);
+		if(thisManager.getUserPwd()==httpServletRequest.getParameter("password")) {
+			model.addAttribute("title", "내 정보 관리");
+			model.addAttribute("thisManager", thisManager);
+			return "manager/mypage_updateInfo";
+		}else {
+			return "manager/mypage_confirm_pw";
+		}
 	}
 	
 	@GetMapping("/worklog")

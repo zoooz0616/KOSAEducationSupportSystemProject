@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header_2 :: header}">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+</head>
+<head>
+	<link th:href="@{/css/manager/manager_mypage.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
 </head>
 <body>
+<!-- 서브바 부분 -->
+<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
+<!-- End 서브바 -->
+
+<!-- 얼럴트 -->
+<div class="look_at_me">
+	<span class="read_this">이봐!</span>
+</div>
+<!-- End : 얼럴트 -->
+
+<!-- 컨텐츠 부분 -->
+<div class="home-section">
+	<!-- title -->
+	<div class="title_wrap">
+		<span class="title" th:text="${title}"></span>
+	</div>
+
+	<!-- content wrap-->
+	<div class="content_wrap">
+		<form action = "/mypage/confirm_pw" accept-charset="utf-8" name = "confirm_password" method = "get">
+			<table>
+				<tr>
+					<th>현재 비밀번호</th>
+					<td><input type = "password" name = "password"/></td>
+				</tr>
+			</table>
+			<input type="submit" onclick="location.href='/manager/mypage/confirm_pw'">
+		</form>
+		
+	</div>
+</div>
 
 </body>
 </html>
