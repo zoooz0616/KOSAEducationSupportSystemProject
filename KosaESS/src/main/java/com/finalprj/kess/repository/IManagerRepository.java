@@ -62,7 +62,7 @@ public interface IManagerRepository {
 
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
 
-	public List<WorklogDTO> getWlogListByClssIds(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly);
+	public List<WorklogDTO> getWlogListByClssIds(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly, @Param("filterString") List<String> filterString);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 

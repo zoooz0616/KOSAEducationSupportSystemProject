@@ -128,6 +128,7 @@
 				<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
 					<td> <input type="checkbox" class="chk_wlog"> </td>
 					<td class="row_number" th:text="${wlogStat.count}">번호</td>
+<!-- 					<td class="row_number" th:text="${wlog.wlogId}">번호</td> -->
 					<td class="row_name" th:text="${wlog.stdtNm}">이름</td>
 					<td class="row_email" th:text="${wlog.userEmail}">이메일</td>
 					<td class="row_intime" th:text="${#dates.format(wlog.inTm,'yyyy-MM-dd HH:mm:ss')}">출근 기록</td>

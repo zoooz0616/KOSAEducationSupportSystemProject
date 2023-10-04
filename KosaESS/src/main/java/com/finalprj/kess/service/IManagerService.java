@@ -55,7 +55,7 @@ public interface IManagerService {
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
-	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly);
+	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 

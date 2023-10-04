@@ -303,6 +303,16 @@
 				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE ((s.stdt_nm like '%'||#{keyword}||'%' ) OR (s.user_email like '%'||#{keyword}||'%')))
 			]]>
 		</if>
+		<if test='filterString!=null'>
+		<if test='filterString!=""'>
+			AND w.wlog_cd IN
+			<foreach collection="filterString" item="item" open="(" separator="," close=")">
+				<![CDATA[
+					 #{item}
+				]]>
+			</foreach>
+		</if>
+		</if>
 		<![CDATA[
 			ORDER BY in_tm DESC, stdtNm
 		]]>

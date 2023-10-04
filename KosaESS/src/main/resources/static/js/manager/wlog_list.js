@@ -112,6 +112,19 @@ function reset(){
 	$('#search_keyword').val(null)
 }
 
+//현재 체크된 목록을 반환
+function getCheckedItems() {
+	const checkedItems = [];
+	checkedItems.push('WLOG');//이거 없으면 "전체" 해제가 작동하지 않음
+	$("input[class=chkWokCd]").each(function () {
+		if ($(this).prop("checked")) {
+			checkedItems.push($(this).val());
+		}
+	});
+	return checkedItems;
+}
+
+// resn 상태 업데이트(인자가 버튼이면 버튼값으로, 인자가 버튼이 아니라면 그 값으로 업데이트)
 function updateResnCode(button){
 	targetResnCode = button;
 	console.log(button.innerText);
@@ -292,6 +305,7 @@ function search() {
 	var wlogCd = getFilterCd();
 	var isDeleteVal = $('#isDelete').is(':checked');
 	var resnOnlyVal = $('#fileContainedOnly').is(':checked');
+	var filterString = getCheckedItems();
 
 	$.ajax({
 		type: 'get',
@@ -304,6 +318,7 @@ function search() {
 			, isDelete:isDeleteVal
 			, resnOnly:resnOnlyVal
 			, keyword:keyword
+			, filterString:filterString
 		},
 		async: false,
 		success: function(wlogListResponse) {
@@ -338,7 +353,8 @@ function search() {
 
 				rowChk.html('<input type="checkbox" class="chk_wlog">');
 				rowChk.attr("value",wlogList[i].stdtId);
-				rowNum.text(i+1);
+				rowNum.text(i+1);//개발자용 옵션
+				//rowNum.text(wlogList[i].wlogId);
 				rowName.text(wlogList[i].stdtNm);
 				rowEmail.text(wlogList[i].userEmail);
 

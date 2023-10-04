@@ -269,6 +269,7 @@ public class ManagerController {
 			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
+			,@RequestParam(required = false, value = "filterString[]") List<String> filterString
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
@@ -318,7 +319,7 @@ public class ManagerController {
 			keyword="";
 		}
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
 		
 		model.addAttribute("thisClass",thisClass);
 		model.addAttribute("wlogCnt", wlogList.size());
@@ -386,7 +387,7 @@ public class ManagerController {
 	public Map<String, Object> fetchClassList(
 			HttpSession session
 			,@RequestParam(name="searchKeyword", required=false) String searchKeyword
-			,@RequestParam("filterString[]") List<String> filterString
+			,@RequestParam(value = "filterString[]", required=false) List<String> filterString
 			) {
 		String mngrId = (String) session.getAttribute("mngrId");
 		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString, searchKeyword);
@@ -425,6 +426,7 @@ public class ManagerController {
 			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
+			,@RequestParam("filterString[]") List<String> filterString
 			) {
 		
 		//유저 필터링
@@ -450,7 +452,7 @@ public class ManagerController {
 		}
 		*/
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate((String)session.getAttribute("mngrId"), clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate((String)session.getAttribute("mngrId"), clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
 		
 		for (WorklogDTO dto : wlogList) {
 			dto.setStrInTmDd(dto.getInTmAsString());
