@@ -199,7 +199,8 @@
 									<tbody>
 										<tr>
 											<td><span th:text="${rowStat.index + 1}"></span></td>
-											<td th:text="${postVO.postTitle}"></td>
+											<td><a th:text="${postVO.postTitle}"
+												th:href="@{/student/inquiry/view/__${postVO.postId}__}"></a></td>
 											<td th:text="${postVO.rgstDd}"></td>
 											<td th:text="${postVO.cmcdNm}"></td>
 											<td><input type="button" class="toggleReplyButton"
@@ -209,7 +210,9 @@
 										</tr>
 									</tbody>
 								</table>
-								<div class="reply-container" style="display: none;"></div>
+								<div class="reply-container" style="display: none;">
+									<p th:text="${postVO.postContent}"></p>
+								</div>
 							</li>
 						</ul>
 					</div>
@@ -222,11 +225,12 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>지원서파일을 여기에 첨부하세요.</p>
+								<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
 								<div style="width: 80%;">
 									<input class="upload-name1" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
 										for="fileInput1">파일찾기</label> <input type="file" name="file"
-										id="fileInput1" class="fileInput">
+										id="fileInput1" class="fileInput" multiple accept=".pdf">
 								</div>
 							</div>
 						</div>
@@ -237,13 +241,14 @@
 					</div>
 				</div>
 				<div class="modal2" style="display: none;">
-					<div class="modalBody" style="height: 590px;">
+					<div class="modalBody" style="height: 550px;">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
 						</div>
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
+								<p style="color: red;">※ 한개의 파일만 첨부 가능합니다. ※</p>
 								<div style="width: 80%;">
 									<input class="upload-name2" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
@@ -266,13 +271,14 @@
 					</div>
 				</div>
 				<div class="modal3" style="display: none;">
-					<div class="modalBody" style="height: 590px;">
+					<div class="modalBody" style="height: 550px;">
 						<div class="modalHeader">
 							<h2 class="modalTitle" style="margin: 0;">사유서 작성하기</h2>
 						</div>
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
+								<p style="color: red;">※ 한개의 파일만 첨부 가능합니다. ※</p>
 								<div style="width: 80%;">
 									<input class="upload-name3" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label

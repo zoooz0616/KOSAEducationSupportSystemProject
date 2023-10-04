@@ -22,7 +22,7 @@ openModalBtn.addEventListener('click', () => {
 							modal.style.display = 'block'; // 모달 열기
 						} else {
 							alert("지원불가. \n 해당교육에 대한 지원 내역이 존재합니다. \n 교육 지원 목록으로 돌아갑니다.");
-							window.location.href = '/student/class'; // 교육 지원 목록 페이지로 이동
+							window.location.href = '/student/class/list'; // 교육 지원 목록 페이지로 이동
 						}
 					}
 				});

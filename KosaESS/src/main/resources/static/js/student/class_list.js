@@ -47,7 +47,7 @@ $(document).ready(function() {
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
 				todoData = data;
-
+				$('.totalRowCount').text(data.length);
 				var classTable;
 				if ($('.list-view').hasClass('active')) {
 					// 리스트 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
@@ -65,6 +65,10 @@ $(document).ready(function() {
 					setTable(1);
 					setPaging(1);
 				}
+				if (data.length == 0)
+					$('.classFoot').show();
+				else
+					$('.classFoot').hide();
 			}
 		});
 	});
@@ -176,9 +180,11 @@ $(document).ready(function() {
 				var classVO = filteredData[i];
 				var row = $('<tr class="classRow"></tr>');
 
+
 				// 각 열에 해당하는 데이터를 행에 추가합니다.
 				row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
-				row.append('<td style="font-size: 18px; word-break: keep-all">' + classVO.clssNm + '</td>');
+				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text(classVO.clssNm);
+				row.append($('<td></td>').append(applyBtn));
 				if (classVO.aplyStartDd == null) {
 					row.append('<td><span>미정</span></td>');
 				} else {
@@ -201,14 +207,62 @@ $(document).ready(function() {
 				}
 				if (classVO.cmcdNm == '접수중') {
 					row.append('<td><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
+					var applyButtonCell = $('<td></td>');
+					var applyButton = $('<button class="openModalBtn">지원하기</button>');
+					var applyInput = $('<input type="hidden" name="clssId" value="' + classVO.clssId + '">');
+					applyButtonCell.append(applyButton);
+					applyButtonCell.append(applyInput);
+					row.append(applyButtonCell);
+					console.log(applyInput.value);
 				} else {
 					row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
-				} var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
-				row.append($('<td>').append(applyBtn));
-				// 행을 테이블에 추가합니다.
+					row.append('<td></td>');
+				}
+
 				classTable.append(row);
 			}
+			const modal = document.querySelector('.modal');
+			const closeModalBtn = document.querySelector('.closeModalBtn');
+			var openModalBtns = $('.openModalBtn');
+			// openModalBtn에 클릭 이벤트 리스너 추가
+			openModalBtns.click(function() {
+				// 클릭된 버튼의 data-clssId 값을 가져오기 위해 this를 사용
+				var clssId = $(this).closest('tr').find('input[name="clssId"]').val(); // $(this)를 사용하여 클릭된 버튼의 정보를 가져옵니다.
+				console.log(clssId);
+				$.ajax({
+					url: '/student/class/apply',
+					method: 'GET',
+					success: function(stdtId) {
+						if (stdtId == "") {
+							var result = confirm("로그인 후 지원이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
+							if (result) {
+								window.location.href = '/login'; // 로그인 페이지로 이동
+							}
+						} else {
+							$.ajax({
+								url: '/student/upload/' + clssId + '/check',
+								method: 'GET',
+								success: function(applyYN) {
+									if (applyYN == '0') {
+										modal.style.display = 'block'; // 모달 열기
+									} else {
+										alert("지원불가. \n 해당교육에 대한 지원 내역이 존재합니다.");
+									}
+								}
+							});
+						}
+					}
+				});
+			});
 
+			closeModalBtn.addEventListener('click', () => {
+				modal.style.display = 'none';
+			});
+
+			$("#fileInput").on('change', function() {
+				var fileName = $("#fileInput").val();
+				$(".upload-name").val(fileName);
+			});
 		} else if ($('.grid-view').hasClass('active')) {
 			// 그리드 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
 			classTable = $('.grid-style tbody');
@@ -217,6 +271,11 @@ $(document).ready(function() {
 			for (var i = 0; i < filteredData.length; i++) {
 				var classVO = filteredData[i];
 				var row = $('<tr class="classRow"></tr>');
+
+				// 각 tr 요소를 순회하면서 5의 배수인 경우 클래스를 추가합니다.
+				if ((i + 1) % 5 === 0) {
+					$(row).addClass('last');
+				}
 
 				// 각 열에 해당하는 데이터를 행에 추가합니다.
 				if (classVO.cmcdNm == '접수중') {
@@ -253,6 +312,7 @@ $(document).ready(function() {
 				}*/
 				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
 				row.append($('<td>').append(applyBtn));
+
 				// 행을 테이블에 추가합니다.
 				classTable.append(row);
 			}
@@ -298,6 +358,7 @@ $(document).ready(function() {
 		// 검색 버튼 클릭 이벤트 호출
 		$('.searchBtn').trigger('click');
 	}
+
 });
 const topBtn = document.querySelector(".moveTopBtn");
 
@@ -305,3 +366,4 @@ const topBtn = document.querySelector(".moveTopBtn");
 topBtn.addEventListener('click', () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
