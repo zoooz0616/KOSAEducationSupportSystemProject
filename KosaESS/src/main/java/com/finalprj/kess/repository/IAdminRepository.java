@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CompanyVO;
@@ -19,6 +20,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 
@@ -26,7 +28,7 @@ import com.finalprj.kess.model.SubjectVO;
 @Mapper
 public interface IAdminRepository {
 	int getWaitClassCnt();
-	List<String> getClassSearch(String term);
+	
 	
 
 	int getNoticeCnt();
@@ -69,14 +71,6 @@ public interface IAdminRepository {
 	void updateAplyPass(List<String> aplyIds);
 	void updateAplyFail(List<String> aplyIds);
 	void deleteClass(List<String> clssIds);
-	
-	List<ClassVO> getSearchClassVOList(
-			@Param("className") String className,
-            @Param("status") List<String> status, //접수예정, 접수중, 접수마감, 교육중, 교육완료, 취소, 폐강
-            @Param("aplyStartDt") Date aplyStartDt,
-            @Param("aplyEndDt") Date aplyEndDt,
-            @Param("classStartDd") Date classStartDd,
-            @Param("classEndDd") Date classEndDd);
 	
 	List<ProfessorVO> getProfessorList();
 	List<SubjectVO> getSubjectList();
@@ -144,5 +138,17 @@ public interface IAdminRepository {
 	List<StudentVO> getStudentList();
 	int getManagerEmailCnt(String managerEmail);
 	void updateCompany(CompanyVO companyVO);
+	List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd, String userCd);
+	void deleteStudentList(List<String> selectedStudentIds);
+	void deleteLginStudent(List<String> selectedStudentIds);
+	StudentVO getStudent(String stdtId);
+	
+	List<ApplyVO> getApplyListByStudent(String stdtId);
+	List<RegistrationVO> getRegistListByStudent(String stdtId);
+	
+	List<ClassVO> getSearchClassList(String clssNm, String clssCd, String aplyStartDt, String aplyEndDt,
+			String clssStartDd, String clssEndDd, String cmpyId);
+	
+	List<String> getClassSearch(String term);
 
 }

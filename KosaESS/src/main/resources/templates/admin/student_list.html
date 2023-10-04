@@ -35,7 +35,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육생 이름</div>
 					<div>
-						<input class="search_input" type="text" id="search_input" value="">
+						<input class="search_stdt_nm_input" type="text" id="search_input" value="">
 					</div>
 				</div>
 
@@ -43,7 +43,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육과정</div>
 					<div>
-						<select class="search_input_status">
+						<select class="search_clss_nm_select">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="class: ${classList}"
 								th:value="${class.clssId}"
@@ -56,7 +56,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">성별</div>
 					<div>
-						<select class="search_input_status">
+						<select class="search_gender_select">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="gender: ${genderList}"
 								th:value="${gender.cmcdId}"
@@ -69,7 +69,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">직업</div>
 					<div>
-						<select class="search_input_status">
+						<select class="search_job_select">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="job: ${jobList}"
 								th:value="${job.cmcdId}"
@@ -82,7 +82,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">계정상태</div>
 					<div>
-						<select class="search_input_status">
+						<select class="search_status_select">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="status: ${statusList}"
 								th:value="${status.cmcdId}"
@@ -111,13 +111,13 @@
 			<!-- 컨텐츠 개수와 버튼 wrap -->
 			<div class="content_info_wrap">
 				<div class="content_info">
-					<span>교육생 총 <span class="inquiry_list_cnt"
+					<span>교육생 총 <span class="student_list_cnt"
 						th:text="${#lists.size(studentList)}"></span> 명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 선택삭제 버튼 -->
-					<button type="button" id="delete_btn">
+					<button type="button" id="delete_btn" onclick="deleteStudents()">
 						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
 					</button>
 				</div>
@@ -142,8 +142,8 @@
 							<th style="width: 20%;">마지막 로그인 일시</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="content_list_td" th:each="student, iterStat: ${studentList}">
+					<tbody id="tbody">
+						<tr th:each="student, iterStat: ${studentList}">
 							<td class="student_check"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${student.stdtId}"></td>
@@ -166,5 +166,208 @@
 		</div>
 		<!-- Content Bottom-->
 	</div>
+	
+	<script>
+	//전체선택
+	function selectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//개별 선택
+	function checkSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+	
+	//날짜 형식
+	function formatTimestamp(timestamp) {
+
+		const date = new Date(timestamp);
+
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		const hours = String(date.getHours()).padStart(2, '0');
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+		const seconds = String(date.getSeconds()).padStart(2, '0');
+		const milliseconds = date.getMilliseconds();
+
+		formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+		return formattedTimestamp;
+	}
+	
+	//검색한 학생 리스트 다시 띄우기
+	function updateStudentList(studentList){
+		//tbody
+		var tbody = document.querySelector(".content_list_table tbody");
+		$("#tbody").empty();
+		
+		//총 개수 변경
+		var studentCnt = document.querySelector(".student_list_cnt");
+		studentCnt.textContent = studentList.length;
+		
+		for(var i=0; i<studentList.length; i++){
+			var student = studentList[i];
+			
+			var trStudent = document.createElement("tr");
+			trStudent.className = "content_list_td"	
+			var tdCheck = document.createElement("td");
+			tdCheck.className="student_check";
+			var inputCheck = document.createElement("input");
+			inputCheck.className ="input_check";
+			inputCheck.type="checkbox";
+			inputCheck.name="select";
+			inputCheck.onclick = function(){
+				checkSelectAll();
+			}
+			inputCheck.value = student.stdtId;
+			tdCheck.appendChild(inputCheck);
+			trStudent.appendChild(tdCheck);
+			
+			var tdNum = document.createElement("td");
+			tdNum.className = "student_num";
+			tdNum.textContent = i+1;
+			trStudent.appendChild(tdNum);
+			
+			var tdName = document.createElement("td");
+			tdName.className ="student_name";
+			var aName = document.createElement("a");
+			aName.href = '/admin/student/view/'+student.stdtId;
+			aName.textContent = student.stdtNm;
+			tdName.appendChild(aName);
+			trStudent.appendChild(tdName);
+			
+			var tdEmail = document.createElement("td");
+			tdEmail.className = "student_email";
+			tdEmail.textContent = student.userEmail;
+			trStudent.appendChild(tdEmail);
+			
+			var tdGender = document.createElement("td");
+			tdGender.className ="student_gender";
+			tdGender.textContent = student.genderNm;
+			trStudent.appendChild(tdGender);
+			
+			var tdBirthDd = document.createElement("td");
+			tdBirthDd.className ="student_birthday";
+			tdBirthDd.textContent = student.birthDd;
+			trStudent.appendChild(tdBirthDd);
+			
+			var tdTel = document.createElement("td");
+			tdTel.className="student_tel";
+			tdTel.textContent = student.stdtTel;
+			trStudent.appendChild(tdTel);
+			
+			var tdJob = document.createElement("td");
+			tdJob.className = "student_job";
+			tdJob.textContent = student.jobNm;
+			trStudent.appendChild(tdJob);
+			
+			var tdStatus = document.createElement("td");
+			tdStatus.className = "student_status";
+			tdStatus.textContent = student.userNm;
+			trStudent.appendChild(tdStatus);
+			
+			var tdLastLoginDt = document.createElement("td");
+			tdLastLoginDt.className ="last_login_dt";
+			tdLastLoginDt.textContent =formatTimestamp(student.lastLoginDt);
+			trStudent.appendChild(tdLastLoginDt);
+			
+			tbody.appendChild(trStudent);
+			
+		}
+	}
+	
+	
+	//선택삭제
+	function deleteStudents(){
+		//선택된 교육생의 id
+		var selectedStudentIds = [];
+		
+		//선택된 체크박스 모두 선택
+		var selectedCheckboxes = document.querySelectorAll(".input_check:checked");
+				
+		//체크박스의 value값 배열에 추가
+		selectedCheckboxes.forEach(function(checkbox) {
+			selectedStudentIds.push(checkbox.value);
+		});
+		
+		// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+		$.ajax({
+			url : '/admin/student/delete',
+			method : 'POST',
+			data : {
+				selectedStudentIds : selectedStudentIds
+			},
+			success : function(response) {
+				console.log(response);
+				if (response == "success") {
+					alert("선택한 교육생이 탈퇴처리 되었습니다.");
+					window.location.href = "/admin/student/list";
+				}
+			}
+		});
+	}
+	
+	//초기화 버튼
+	function resetInput(){
+		var stdtNmInput = document.querySelector(".search_stdt_nm_input");
+		var clssNmSelect = document.querySelector(".search_clss_nm_select");
+		var genderSelect = document.querySelector(".search_gender_select");
+		var jobSelect = document.querySelector(".search_job_select");
+		var statusSelect = document.querySelector(".search_status_select");
+		
+		stdtNmInput.value = "";
+		clssNmSelect.value="all";
+		genderSelect.value="all";
+		jobSelect.value="all";
+		statusSelect.value="all";
+	}
+	
+	//조회 버튼
+	function search(){
+		var stdtNm = document.querySelector(".search_stdt_nm_input").value;
+		var clssId = document.querySelector(".search_clss_nm_select").value;
+		var genderCd = document.querySelector(".search_gender_select").value;
+		var jobCd = document.querySelector(".search_job_select").value;
+		var userCd = document.querySelector(".search_status_select").value;
+		
+		//ajax로 보내서 검색 리스트 받아오기
+		$.ajax({
+			url: '/admin/student/search',
+			method: 'GET',
+			data:{
+				stdtNm : stdtNm,
+				clssId : clssId,
+				genderCd : genderCd,
+				jobCd : jobCd,
+				userCd : userCd
+			},
+			success: function(studentList){
+				updateStudentList(studentList);
+			}
+		});
+		//성공하면 input다 ㄱ초기화 하기
+		
+		//tbody 비우고 리스트 비우기
+	}
+	
+	
+	
+	</script>
 </body>
 </html>

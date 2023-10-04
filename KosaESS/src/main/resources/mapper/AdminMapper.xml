@@ -111,7 +111,7 @@
 		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
 		join cmcd on cmcd.cmcd_id = clss.clss_cd
 		where clss.delete_yn='N'
-		order by clss.rgst_dt desc
+		order by clss.clss_id desc
 	]]>
 	</select>
 
@@ -1212,7 +1212,8 @@ order by stdt.stdt_nm
 	]]>
 	</select>
 
-	<select id="getManagerEmailCnt" parameterType="string" resultType="int">
+	<select id="getManagerEmailCnt" parameterType="string"
+		resultType="int">
 	<![CDATA[
 		select count(user_email)
 		from lgin
@@ -1220,7 +1221,8 @@ order by stdt.stdt_nm
 	]]>
 	</select>
 
-	<update id="updateCompany" parameterType="com.finalprj.kess.model.CompanyVO">
+	<update id="updateCompany"
+		parameterType="com.finalprj.kess.model.CompanyVO">
 	<![CDATA[
 	 update cmpy
 	 set
@@ -1233,6 +1235,215 @@ order by stdt.stdt_nm
 	 where cmpy_id = #{cmpyId}
 	]]>
 	</update>
+
+	<select id="getSearchStudentList" parameterType="string"
+		resultType="com.finalprj.kess.model.StudentVO">
+		select distinct
+		stdt.stdt_id,
+		stdt.user_email,
+		stdt.stdt_nm,
+		stdt.gender_cd,
+		stdt.birth_dd,
+		stdt.stdt_tel,
+		stdt.job_cd,
+		lgin.user_cd,
+
+		stdt.rgst_dt,
+		stdt.rgster_id,
+		stdt.updt_dt,
+		stdt.updter_id,
+
+		u.cmcd_nm as "userNm",
+		g.cmcd_nm as "genderNm",
+		j.cmcd_nm as "jobNm",
+		lgin.last_login_dt
+		from stdt
+		left join lgin on lgin.user_email = stdt.user_email
+		left join
+		cmcd u on u.cmcd_id = lgin.user_cd
+		left join cmcd g on g.cmcd_id =
+		stdt.gender_cd
+		left join cmcd j on j.cmcd_id = stdt.job_cd
+		left join
+		rgst on rgst.stdt_id = stdt.stdt_id
+
+		where stdt.stdt_nm like '%'||#{stdtNm}||'%'
+		<if test="clssId != 'all'">
+			AND rgst.clss_id = #{clssId}
+		</if>
+		<if test="genderCd != 'all'">
+			AND stdt.gender_cd = #{genderCd}
+		</if>
+		<if test="jobCd != 'all'">
+			AND stdt.job_cd = #{jobCd}
+		</if>
+		<if test="userCd != 'all'">
+			AND lgin.user_cd = #{userCd}
+		</if>
+		order by stdt.stdt_nm
+	</select>
+
+	<update id="deleteLginStudent" parameterType="java.util.List">
+		<foreach collection="selectedStudentIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update lgin
+			set
+			user_cd =
+			'USR0000003'
+			where user_email = (select user_email from stdt where
+			stdt_id = #{item})
+		</foreach>
+	</update>
+
+	<update id="deleteStudentList" parameterType="java.util.List">
+		<foreach collection="selectedStudentIds" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update stdt
+			set
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where stdt_id=#{item}
+		</foreach>
+	</update>
+
+	<select id="getStudent" parameterType="string"
+		resultType="com.finalprj.kess.model.StudentVO">
+	<![CDATA[
+		select 
+    		stdt.stdt_id,
+    		lgin.user_email,
+    		stdt.stdt_nm,
+    		b.cmcd_nm as "genderNm",
+    		stdt.birth_dd,
+    		stdt.stdt_tel,
+    		c.cmcd_nm as "jobNm",
+    		a.cmcd_nm as  "userNm",
+    		lgin.last_login_dt
+		from stdt
+		left join lgin on lgin.user_email = stdt.user_email
+		left join cmcd a on a.cmcd_id = lgin.user_cd
+		left join cmcd b on b.cmcd_id = stdt.gender_cd
+		left join cmcd c on c.cmcd_id = stdt.job_cd
+		where stdt.stdt_id = #{stdtId}
+	]]>
+	</select>
+
+	<select id="getApplyListByStudent" parameterType="string"
+		resultType="com.finalprj.kess.model.ApplyVO">
+	<![CDATA[
+		select *
+		from aply
+		left join flup on flup.file_id = aply.file_id
+		left join clss on clss.clss_id = aply.clss_id
+		left join cmcd on cmcd.cmcd_id = aply.aply_cd
+		where stdt_id = #{stdtId}
+	]]>
+	</select>
+
+	<select id="getRegistListByStudent" parameterType="string"
+		resultType="com.finalprj.kess.model.RegistrationVO">
+	<![CDATA[
+		select 
+			rgst.rgst_id,
+			rgst.stdt_id,
+			rgst.clss_id,
+			rgst.rgst_cd,
+			rgst.cmpt_cd,
+			rgst.rgst_dt,
+			rgst.rgster_id,
+			rgst.updt_dt,
+			rgst.updter_id,
+			rgst.file_id,
+			flup.file_sub_id,
+			flup.file_nm,
+			clss.clss_nm,
+			c.cmcd_nm	as "rgstNm",
+			r.cmcd_nm	as "cmptNm"
+		from rgst
+		left join flup on flup.file_id = rgst.file_id
+		left join clss on clss.clss_id = rgst.clss_id
+		left join cmcd c on c.cmcd_id = clss.clss_cd
+		left join cmcd r on r.cmcd_id = rgst.cmpt_cd
+		where rgst.stdt_id = #{stdtId}
+	]]>
+	</select>
+
+	<select id="getClassSearch" parameterType="string"
+		resultType="string">
+	<![CDATA[
+		SELECT clss_nm
+		FROM (
+    		SELECT clss_nm
+    		FROM clss
+   			WHERE clss_nm LIKE CONCAT(#{term}, '%')
+		) WHERE ROWNUM <= 10
+	]]>
+	</select>
+
+	<select id="getSearchClassList" parameterType="string"
+		resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+		select *
+		from clss
+		left join mngr on mngr.mngr_id = clss.mngr_id
+		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
+		join cmcd on cmcd.cmcd_id = clss.clss_cd
+		where clss.delete_yn='N'
+			and clss.clss_nm like '%'||#{clssNm}||'%'
+	]]>
+		<if test="clssCd != 'all'">
+			AND clss.clss_cd = #{clssCd}
+		</if>
+		<if test="aplyStartDt != ''">
+			AND clss.aply_start_dt <![CDATA[>=]]>
+			to_date(#{aplyStartDt}, 'YYYY-MM-DD')
+		</if>
+		<if test="aplyEndDt != ''">
+			AND clss.aply_end_dt <![CDATA[<=]]>
+			to_date(#{aplyEndDt}, 'YYYY-MM-DD')
+		</if>
+		<if test="clssStartDd != ''">
+			AND clss.clss_start_dd <![CDATA[>=]]>
+			to_date(#{clssStartDd}, 'YYYY-MM-DD')
+		</if>
+		<if test="clssEndDd != ''">
+			AND clss.clss_end_dd <![CDATA[<=]]>
+			to_date(#{clssEndDd}, 'YYYY-MM-DD')
+		</if>
+		<if test="cmpyId != 'all'">
+			AND clss.cmpy_id = #{cmpyId}
+		</if>	
+	<![CDATA[	
+		order by clss.clss_id desc
+	]]>
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1261,15 +1472,5 @@ order by stdt.stdt_nm
 	]]>
 	</select>
 
-	<select id="getClassSearch" parameterType="string"
-		resultType="string">
-	<![CDATA[
-		SELECT clss_nm
-		FROM (
-    		SELECT clss_nm
-    		FROM clss
-   			WHERE clss_nm LIKE CONCAT(#{term}, '%')
-		) WHERE ROWNUM <= 10
-	]]>
-	</select>
+
 </mapper>

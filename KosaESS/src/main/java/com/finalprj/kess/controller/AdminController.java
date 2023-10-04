@@ -44,6 +44,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.service.IAdminService;
@@ -1059,6 +1060,64 @@ public class AdminController {
 		adminService.deleteClass(clssIds);
 		return clssId;
 	}
+	
+	/**
+	 * 교육과정명 자동완성
+	 * @author : eunji
+	 * @date : 2023. 10. 02.
+	 * @parameter : term
+	 * @return : String
+	 */
+	@GetMapping("/class/autocomplete")
+	@ResponseBody
+	public String classAutocomplete(@RequestParam String term) {
+		//자동완성 검색어 목록 생성
+		List<String> autocompleteResults = new ArrayList<>();
+		//결과 생성
+		autocompleteResults = adminService.getClassSearch(term);
+
+		// 결과를 HTML 형태로 변환
+		StringBuilder resultBuilder = new StringBuilder();
+		for (String result : autocompleteResults) {
+			resultBuilder.append("<option value=\"").append(result).append("\">").append(result).append("</option>");
+		}
+
+		return resultBuilder.toString();
+	}	
+	
+	/**
+	 * 교육과정 목록 검색
+	 * @author : eunji
+	 * @date : 2023. 10. 02.
+	 * @parameter : className, status, aplyStartDt, aplyEndDt, classStartDd, classEndDd, cmpyId
+	 * @return : String
+	 */
+	@GetMapping("/class/search")
+	@ResponseBody
+	public List<ClassVO> classSearch(
+			@RequestParam(name="clssNm", required = false) String clssNm, 
+			@RequestParam(name="clssCd", required = false) String clssCd,
+			@RequestParam(name="aplyStartDt", required = false) String aplyStartDt, 
+			@RequestParam(name="aplyEndDt", required = false) String aplyEndDt,
+			@RequestParam(name="clssStartDd", required = false) String clssStartDd, 
+			@RequestParam(name="clssEndDd", required = false) String clssEndDd,
+			@RequestParam(name="cmpyId", required = false) String cmpyId) {
+
+		System.out.println("##########################");
+		System.out.println(clssNm);
+		System.out.println(clssCd);
+		System.out.println(aplyStartDt);
+		System.out.println(aplyEndDt);
+		System.out.println(clssStartDd);
+		System.out.println(clssEndDd);
+		System.out.println(cmpyId);
+		System.out.println("##########################");
+		
+		//검색 결과통해서 교육과정 리스트 객체 생성
+		List<ClassVO> classVOList = adminService.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd, clssEndDd, cmpyId);
+
+		return classVOList;
+	}
 
 	/**
 	 * 교육과정 지원자 목록조회
@@ -1102,8 +1161,6 @@ public class AdminController {
 				String clssNm = adminService.getClssNmByAplyId(aplyId);
 				mailService.sendMail(recipient,clssNm);
 			}
-
-
 
 		} else if ("불합격".equals(action)) {
 			// "fail" 버튼을 클릭한 경우 실행할 코드
@@ -1382,7 +1439,7 @@ public class AdminController {
 		return response;
 	}
 
-	@GetMapping("file/{fileId}/1")
+	@GetMapping("/file/{fileId}/1")
 	public ResponseEntity<byte[]> getFile(@PathVariable String fileId) {
 		FileVO file = uploadFileService.getFile(fileId, "1");
 
@@ -1655,7 +1712,98 @@ public class AdminController {
 		return "admin/student_list";
 	}
 
+	/**
+	 * 교육생 상세보기
+	 * @author : eunji
+	 * @date : 2023. 9. 28.
+	 * @parameter : stdtId, model
+	 * @return : String
+	 */
+	@GetMapping("/student/view/{stdtId}")
+	public String studenctDetail(@PathVariable String stdtId, Model model) {
+		//교육생 정보
+		StudentVO studentVO = adminService.getStudent(stdtId);
+		model.addAttribute("student", studentVO);
+		
+		//교육생 지원정보
+		List<ApplyVO> applyList =  adminService.getApplyListByStudent(stdtId);
+		model.addAttribute("applyList", applyList);
+		
+		//교육생 수강정보
+		List<RegistrationVO> registList = adminService.getRegistListByStudent(stdtId);
+		model.addAttribute("registList", registList);
+		
+		//성별 리스트
+		List<CommonCodeVO> genderList = adminService.getCommonCodeList("GRP0000006");
+		model.addAttribute("genderList", genderList);
+		
+		//직업 리스트
+		List<CommonCodeVO> jobList = adminService.getCommonCodeList("GRP0000007");
+		model.addAttribute("jobList", jobList);
+		
+		//계정상태 리스트
+		List<CommonCodeVO> statusList = adminService.getCommonCodeList("GRP0000008");
+		model.addAttribute("statusList", statusList);
+		
+		return "admin/student_form";
+	}
+	
+	/**
+	 * 교육생 수정
+	 * @author : eunji
+	 * @date : 2023. 9. 29.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@PostMapping("/student/update/{stdtId}")
+	@ResponseBody
+	public String updateStudent(@PathVariable String stdtId,@RequestParam String stdtNm, @RequestParam String stdtTel, @RequestParam String genderCd,
+				@RequestParam String birthDd, @RequestParam String jobCd, @RequestParam String userCd) {
+		
+		StudentVO studentVO = adminService.getStudent(stdtId);
+		studentVO.setStdtNm(stdtNm);
+		studentVO.setStdtTel(stdtTel);
+		studentVO.setGenderCd(genderCd);
+		studentVO.setBirthDd(Date.valueOf(birthDd));
+		studentVO.setJobCd(jobCd);
+		studentVO.setUserCd(userCd);
+		
+		//adminService.updateStudent(studentVO);
+		
+		return "success";
+	}
+	
+	
+	/**
+	 * 교육생 검색
+	 * @author : eunji
+	 * @date : 2023. 9. 27.
+	 * @parameter : stdtNm,clssId,genderCd,jobCd,userCd
+	 * @return : String
+	 */
+	@GetMapping("/student/search")
+	@ResponseBody
+	public List<StudentVO> searchStudent(@RequestParam(name = "stdtNm", required = false) String stdtNm, @RequestParam String clssId,
+			@RequestParam String genderCd, @RequestParam String jobCd, @RequestParam String userCd){
+		
+		List<StudentVO> studentList = adminService.getSearchStudentList(stdtNm, clssId, genderCd, jobCd, userCd);;
+		
+		return studentList;
+	}
 
+	/**
+	 * 교육생 선택삭제
+	 * @author : eunji
+	 * @date : 2023. 9. 19.
+	 * @parameter : selectedStudentIds
+	 * @return : String
+	 */
+	@PostMapping("/student/delete")
+	@ResponseBody
+	public String deleteStudent(@RequestParam("selectedStudentIds[]") List<String> selectedStudentIds) {
+		adminService.deleteStudentList(selectedStudentIds);
+		return "success";
+	}
 
 
 	/**
@@ -1831,53 +1979,9 @@ public class AdminController {
 
 
 
-	@GetMapping("/class/autocomplete")
-	@ResponseBody
-	public String classAutocomplete(@RequestParam String term) {
-		//자동완성 검색어 목록 생성
-		List<String> autocompleteResults = new ArrayList<>();
-		//결과 생성
-		autocompleteResults = adminService.getClassSearch(term);
+	
 
-		// 결과를 HTML 형태로 변환
-		StringBuilder resultBuilder = new StringBuilder();
-		for (String result : autocompleteResults) {
-			resultBuilder.append("<option value=\"").append(result).append("\">").append(result).append("</option>");
-		}
-
-		return resultBuilder.toString();
-	}
-
-	@GetMapping("/class/search")
-	@ResponseBody
-	public List<ClassVO> classSearch(@RequestParam(name="className", required = false) String className, @RequestParam(name="status", required = false) String status,
-			@RequestParam(name="aplyStartDt", required = false) Date aplyStartDt, @RequestParam(name="aplyEndDt", required = false) Date aplyEndDt,
-			@RequestParam(name="classStartDd", required = false) Date classStartDd, @RequestParam(name="classEndDd", required = false) Date classEndDd) {
-
-		logger.warn("className: "+className+" status: "+status);
-		logger.warn("aply: "+aplyStartDt+"~"+aplyEndDt);
-		logger.warn("class: "+classStartDd+"~"+classEndDd);
-
-		//교육과정 상태는 list<string>으로 전달하기(1개 혹은 전체)
-		List<String> statusList = new ArrayList<>();
-
-		if(status.equals("all")) {
-			//교육상태 전체값을 리스트에 넣어 전달
-			List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
-			for(CommonCodeVO commonCodeVO:classCommonCodeList) {
-				statusList.add(commonCodeVO.getCmcdId());
-			}
-		}else {
-			statusList.add(status);
-		}
-
-
-
-		//검색 결과통해서 교육과정 리스트 객체 생성
-		List<ClassVO> classVOList = adminService.getSearchClassVOList(className, statusList, aplyStartDt, aplyEndDt, classStartDd, classEndDd);
-		logger.warn(classVOList.toString());
-		return classVOList;
-	}
+	
 
 	@PostMapping("/class/insert/lectureselect")
 	@ResponseBody

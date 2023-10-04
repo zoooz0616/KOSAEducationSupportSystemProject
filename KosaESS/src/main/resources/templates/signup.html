@@ -8,128 +8,488 @@
 <link th:href="@{/css/student/main.css}" rel="stylesheet">
 <link th:href="@{/css/student/footer.css}" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
-<script src="login.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
 	<div th:replace="~{/include/student_header :: header}"
 		style="width: 100%;"></div>
 
-	<div class="main-signup" style="margin-top:100px;">
-		<!--웹페이지 상단-->
-		<div>
-			<!--NAVER LOGO-->
-			<div class="logo">
-				<a th:href="@{/student}" title="KOSA교육관리시스템"><img
-					th:src="@{/img/logo.png}" class="image"></a>
-			</div>
-		</div>
+	<div class="main-signup" style="margin-top: 100px;">
 
 		<!--회원가입 부분-->
-		<section class="signup-wrap">
-
-			<div>
-				<!--아이디,비번,비번재확인-->
-
-				<h3>이메일</h3>
-				<span class="signup-input"> <input id="signup-id" type="text"></input>
-				</span>
-
-				<h3>비밀번호</h3>
-				<span class="signup-input"> <input id="signup-pw" type="text"></input>
-					<span class="pw-lock"></span>
-				</span>
-
-				<h3>비밀번호 재확인</h3>
-				<span class="signup-input"> <input id="signup-pww"
-					type="text"></input> <span class="pww-lock"></span>
-				</span>
-
-			</div>
-
-			<div style="margin-top: 35px;">
-				<!--이름,생년월일,성별,이메일-->
-				<h3>이름</h3>
-				<span class="signup-input"> <input id="signup-name"
-					type="text"></input>
-				</span>
-
-				<h3>생년월일</h3>
-				<span style="display: flex;"> <span
-					class="signup-input-birth"> <input id="signup-birth-yy"
-						type="text" placeholder="년(4자)"></input>
-				</span> <span class="signup-input-birth" style="margin-left: 10px;">
-						<select id="signup-birth-mm" class="selectbox" name="month"
-						onchange="">
-							<option value="month">월</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
+		<section class="signup-wrap" style="margin-top: 150px;">
+			<form th:action="@{/student/join}" method='POST'
+				onsubmit="beforeSubmit(event);">
+				<div>
+					<!--아이디,비번,비번재확인-->
+					<h3>
+						이메일<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <input type="hidden"
+						id="user_email" name="userEmail"> <input type="text"
+						id="signup-id" value="" placeholder="이메일 입력"> <span>@</span>
+						<input class="email_input" id="text_email" placeholder="이메일 선택">
+						<select class="email_select" onchange="emailChange(this)">
+							<option value="" disabled selected>선택</option>
+							<option value="naver.com" id="naver.com">naver.com</option>
+							<option value="hanmail.net" id="hanmail.net">hanmail.net</option>
+							<option value="gmail.com" id="gmail.com">gmail.com</option>
+							<option value="nate.com" id="nate.com">nate.com</option>
+							<option value="directly" id="textEmail">직접 입력하기</option>
 					</select>
-				</span> <span class="signup-input-birth" style="margin-left: 10px;">
-						<input id="signup-birth-dd" type="text" placeholder="일"></input>
-				</span>
-				</span>
+						<button type="button" class="email_btn duplicate_email_btn"
+							onclick="confirmEmail()">중복 확인</button>
+						<button type="button" class="complete_email_btn"
+							disabled="disabled" style="display: none;">인증 완료</button>
+					</span>
 
-				<h3>성별</h3>
-				<span class="signup-input"> <select id="signup-gender"
-					class="selectbox" name="gender" onchange="">
-						<option value="gender">성별</option>
-						<option value="man">남자</option>
-						<option value="woman">여자</option>
-						<option value="no">선택 안함</option>
-				</select>
-				</span>
+					<!-- 이메일 인증부분 -->
+					<h3 class="email_verification" style="display: none;">이메일 인증</h3>
+					<span class="signup-input email_verification"
+						style="display: none;"> <input type="text"
+						style="border: none;" id="signup-verification" value=""
+						maxlength="6" placeholder="인증번호 입력"> <span> <span
+							id="remaining_min">3</span>: <span id="remaining_sec">00</span>
+					</span>
+						<button type="button" class="time_btn">시간 연장</button>
+						<button id="complete" type="button" class="email_btn"
+							onclick="verifyCode()">확인</button>
+					</span>
 
-				<h3>직업</h3>
-				<span class="signup-input"> <select id="signup-gender"
-					class="selectbox" name="job" onchange="">
-						<option value="seeker">무직</option>
-						<option value="student">학생</option>
-						<option value="worker">직장인</option>
-						<option value="no">선택 안함</option>
-				</select>
-				</span>
-			</div>
 
-			<div style="margin-top: 35px;">
-				<!--휴대전화-->
-				<h3>휴대전화</h3>
-				<span class="signup-input"> <select id="signup-country"
-					class="selectbox" name="country" onchange="">
-						<option value="ko">대한민국 +82</option>
-				</select>
-				</span>
-				<div style="display: flex;">
-					<span class="signup-input"
-						style="width: 100%; margin: 10px 0px 0px 0px"> <input
-						id="signup-phone" type="text" placeholder="전화번호 입력"></input>
+					<h3>
+						비밀번호<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <input id="signup-pw"
+						name="userPwd" type="password" placeholder="영문자+숫자+특수문자(8자~20자)"
+						oninput="checkPasswordValidity()"></input> <span class="pw-lock"
+						onclick="pwLock(this)"></span>
+					</span>
+					<div id="validityMessage" class="validity_message"></div>
+
+					<h3>
+						비밀번호 재확인<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <input id="signup-pww"
+						type="password" placeholder="영문자+숫자+특수문자(8자~20자)"
+						oninput="checkPasswordSame()"></input> <span class="pww-lock"
+						onclick="pwLock(this)"></span>
+					</span>
+					<div id="sameMessage" class="validity_message"></div>
+
+				</div>
+
+				<div style="margin-top: 35px;">
+					<!--이름,생년월일,성별,이메일-->
+					<h3>
+						이름<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <input id="signup-name"
+						type="text" name="stdtNm" placeholder="이름"></input>
+					</span>
+
+					<h3>
+						생년월일<span class="star">*</span>
+					</h3>
+					<span style="display: flex;"> <input type="hidden"
+						 id="birth_dd" name="birthday"> <span
+						class="signup-input-birth"> <select id="signup-birth-yy"
+							class="selectbox" name="year">
+								<option value="year">년</option>
+						</select>
+					</span> <span class="signup-input-birth" style="margin-left: 10px;">
+							<select id="signup-birth-mm" class="selectbox" name="month"
+							onchange="">
+								<option value="month">월</option>
+								<option value="01">1</option>
+								<option value="02">2</option>
+								<option value="03">3</option>
+								<option value="04">4</option>
+								<option value="05">5</option>
+								<option value="06">6</option>
+								<option value="07">7</option>
+								<option value="08">8</option>
+								<option value="09">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+						</select>
+					</span> <span class="signup-input-birth" style="margin-left: 10px;">
+							<input id="signup-birth-dd" type="text" placeholder="일"></input>
+					</span>
+					</span>
+
+					<h3>
+						성별<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <input type="hidden"
+						name="genderCd" id="gender_cd"> <select id="signup-gender"
+						class="selectbox" name="gender">
+							<option th:each="gender: ${genderList}"
+								th:value="${gender.cmcdId}" th:text="${gender.cmcdNm}">
+					</select>
+					</span>
+
+					<h3>
+						직업<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <input type="hidden"
+						name="jobCd" id="job_cd"> <select id="signup-job"
+						class="selectbox" name="job">
+							<option th:each="job : ${jobList}" th:value="${job.cmcdId}"
+								th:text="${job.cmcdNm}">
+					</select>
 					</span>
 				</div>
-			</div>
 
-			<div>
-				<!--가입하기-->
-				<div class="signup-btn-wrap">
-					<button id="signup-btn">가입하기</button>
+				<div style="margin-top: 35px;">
+					<!--휴대전화-->
+					<h3>
+						휴대전화<span class="star">*</span>
+					</h3>
+					<span class="signup-input"> <select id="signup-country"
+						class="selectbox" name="country" onchange="">
+							<option value="ko">대한민국 +82</option>
+					</select>
+					</span>
+					<div style="display: flex;">
+						<span class="signup-input"
+							style="width: 100%; margin: 10px 0px 0px 0px"> <input
+							id="signup-phone" type="text" placeholder="전화번호 입력"
+							name="stdtTel"></input>
+						</span>
+					</div>
 				</div>
-			</div>
+
+				<div style="margin-top: 35px;">
+					<!--이메일 수신동의-->
+					<h3>
+						광고성 E-mail 수신동의<span class="star">*</span>
+					</h3>
+					<p style="font-size: 10px; text-align: left;">(문의답변/합격통지 등의 메일은
+						수신동의와 무관하게 받으실 수 있습니다.)</p>
+						<input type="hidden" name="receiveMail" id="receive_mail">
+					<div style="display: flex;">
+						<span> <input id="yes" type="radio" name="isReceiveMail"
+							value="Y" checked="checked"><label for="yes">동의</label>
+							<input id="no" type="radio" name="isReceiveMail" value="N">
+							<label for="no">비동의</label>
+						</span>
+					</div>
+				</div>
+
+				<div>
+					<!--가입하기-->
+					<div class="signup-btn-wrap">
+						<input type="hidden" id="email_code_complete">
+						<button id="signup-btn">가입하기</button>
+					</div>
+				</div>
+			</form>
 		</section>
 
 
 
 	</div>
-	<!--저작권 정보-->
+	<!--Footer-->
 	<div th:replace="~{/include/student_footer :: footer}"
 		style="width: 100%;"></div>
+	<!--Footer-->
+	<script>
+	//인증코드 담아 둘 변수
+	var verificationCode = "";
+	
+	// 현재 년도 가져오기
+	const currentYear = new Date().getFullYear();
+
+	// 년도를 추가할 select 요소 가져오기
+	const selectYear = document.getElementById('signup-birth-yy');
+
+	// 2023부터 1900까지의 년도를 추가
+	for (let year = currentYear; year >= 1900; year--) {
+	    const option = document.createElement('option');
+	    option.value = year;
+	    option.textContent = year;
+	    selectYear.appendChild(option);
+	}
+	
+	//이메일 선택
+	function emailChange(select){
+		var emailInput = document.querySelector("#text_email");
+		if(select.value == 'directly'){
+			emailInput.disabled = false;
+			emailInput.value="";
+			emailInput.focus();
+		}else{
+			emailInput.value= select.value;
+		}
+	}
+	
+	//email 중복확인
+	function confirmEmail(){
+		//빈값 없는지 확인하기
+		const idValue=document.querySelector("#signup-id").value;
+		const domain = document.querySelector("#text_email").value;
+		
+		if(idValue=="" || domain==""){
+			alert("이메일을 모두 입력해주세요.");
+		}else{
+			const email = idValue+'@'+domain;
+			
+			//이메일 중복 유무
+			$.ajax({
+				url:"/join/confirm/"+email,
+				method: "GET",
+				success: function(response){
+					if(response == "fail"){
+						alert("중복된 이메일이 있습니다. 다시 입력해주세요");
+					}else if(response == "success"){
+						//alert 띄우기(사용 o=> sendCode() 사용x=>창 닫고 이메일 값 비우고 focus하기)
+						if (!confirm("사용가능한 이메일입니다. 사용하시겠습니까?")) {
+							// 취소(아니오) 버튼 클릭 시 이벤트
+						} else {
+							// 확인(예) 버튼 클릭 시 이벤트
+							var userEmail = document.querySelector("#user_email");
+							userEmail.value = email;
+							sendCode(email);
+						}
+					}
+				}
+			});
+		}
+	}
+	
+	//메일 인증코드 전송
+	function sendCode(email){
+		//display:none인 div 나타내기
+		var emailElements = document.querySelectorAll(".email_verification");
+		emailElements.forEach((element)=>{
+			element.style.display="flex";
+		});
+		
+		//타이머 관련
+		const remainingMin = document.getElementById("remaining_min");
+		const remainingSec = document.getElementById("remaining_sec");
+		const completeBtn = document.getElementById("complete");
+		
+		let time = 180;
+		
+		  setInterval(function () {
+		    if (time > 0) { // >= 0 으로하면 -1까지 출력된다.
+		      time = time - 1; // 여기서 빼줘야 3분에서 3분 또 출력되지 않고, 바로 2분 59초로 넘어간다.
+		      let min = Math.floor(time / 60);
+		      let sec = String(time % 60).padStart(2, "0");
+		      remainingMin.innerText = min;
+		      remainingSec.innerText = sec;
+		      // time = time - 1
+		    } else {
+		      completeBtn.disabled = true;
+		    }
+		  }, 1000);
+		  
+		//메일로 인증번호 전송
+		$.ajax({
+			url: "/join/send/"+email,
+			method: "POST",
+			success: function(response){
+				verificationCode = response;
+				console.log(verificationCode);
+			}
+		});
+	}
+	
+	//인증코드 확인
+	function verifyCode(){
+		//입력한 인증번호와 verificationCode를 비교
+		console.log(verificationCode);
+		
+		var verifyCodeInputValue = document.querySelector("#signup-verification").value;
+		
+		if(verifyCodeInputValue == verificationCode){
+			//맞으면 alert("인증되었습니다.")띄우고 
+			alert("인증이 완료되었습니다.");
+			
+			//인증완료했다는 표시하기
+			var completeEmailCodeInput = document.querySelector("#email_code_complete");
+			completeEmailCodeInput.value='Y';
+			
+			//인증칸 display:none하기
+			//display:none인 div 나타내기
+			var emailElements = document.querySelectorAll(".email_verification");
+			emailElements.forEach((element)=>{
+				element.style.display="none";
+			});
+			
+			//중복 확인을 인증완료로 바꾸기
+			const duplicateEmailBtn = document.querySelector(".duplicate_email_btn");
+			duplicateEmailBtn.style.display="none";
+			
+			const completeEmailBtn = document.querySelector(".complete_email_btn");
+			completeEmailBtn.style.display="block";
+		} else{
+			//틀리면 다시 입력해주세요.띄우기
+			alert("인증번호가 올바르지 않습니다. 다시 입력해주세요.");
+		}		
+	}
+	
+	//눈 클릭하면 input type변경 이벤트
+	function pwLock(eye){
+		const parentSpan = eye.closest('.signup-input');
+		
+		const pwLock = eye;
+        const pwInput = parentSpan.querySelector('input');
+        
+        // pw-lock의 클래스를 토글합니다.
+        pwLock.classList.toggle('active');
+
+        // input의 타입을 토글합니다.
+        if (pwInput.type === 'password') {
+            pwInput.type = 'text';
+        } else {
+            pwInput.type = 'password';
+        }
+	}
+	
+	//비밀번호 유효성 검사
+	function checkPasswordValidity(){
+            const password = document.getElementById('signup-pw').value;
+            const validityMessage = document.getElementById('validityMessage');
+            
+            // 비밀번호가 영문자, 숫자, 특수문자를 각각 포함하고, 8자 이상 20자 이하인지 확인
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+
+            if (passwordPattern.test(password)) {
+                validityMessage.innerText = '비밀번호가 유효합니다.';
+                validityMessage.style.color = 'green';
+            } else {
+                validityMessage.innerText = '비밀번호가 유효하지 않습니다. 영문자, 숫자, 특수문자를 각각 포함하여 8자 이상 20자 이하여야 합니다.';
+                validityMessage.style.color = 'red';
+            }
+        }
+	
+	//비밀번호 같은지 검사
+	function checkPasswordSame(){
+		const password = document.getElementById('signup-pw').value;
+		const password2 = document.getElementById('signup-pww').value;
+		const validityMessage = document.getElementById('sameMessage');
+		
+		
+		if (password == password2) {
+            validityMessage.innerText = '비밀번호가 일치합니다.';
+            validityMessage.style.color = 'green';
+        } else {
+            validityMessage.innerText = '비밀번호가 일치하지 않습니다.';
+            validityMessage.style.color = 'red';
+        }
+		
+	}
+	
+	//회원가입 전에 실행해야 하는 것들
+	function beforeSubmit(event){
+		//input type="hidden"에 생년월일/성별/직업 넣기
+		
+		//이메일
+		const idValue=document.querySelector("#signup-id").value;
+		const domain = document.querySelector("#text_email").value;
+		const email = idValue+'@'+domain;
+		var userEmail = document.querySelector("#user_email");
+		userEmail.value = email;
+		
+		//생년월일
+		var year = document.querySelector("#signup-birth-yy").value;
+		var month = document.querySelector("#signup-birth-mm").value;
+		var day = document.querySelector("#signup-birth-dd").value;
+		var birthDd = year+'/'+month+"/"+day;
+		var birthDdInput = document.querySelector("#birth_dd");
+		birthDdInput.value = birthDd;
+		
+		//성별
+		var genderCd = document.querySelector("#signup-gender").value;		
+		var genderCdInput = document.querySelector("#gender_cd");
+		genderCdInput.value = genderCd;
+		
+		//직업
+		var jobCd = document.querySelector("#signup-job").value;
+		var jobCdInput = document.querySelector("#job_cd");
+		jobCdInput.value = jobCd;
+		
+		//메일 수신 여부
+		// 라디오 버튼 요소를 가져오기
+		const yesRadio = document.getElementById("yes");
+		const noRadio = document.getElementById("no");
+
+		let selectedValue;
+		if (yesRadio.checked) {
+		    selectedValue = yesRadio.value;
+		} else if (noRadio.checked) {
+		    selectedValue = noRadio.value;
+		}
+		
+		console.log()
+		
+		var receivceMailInput = document.querySelector("#receive_mail");
+		receivceMailInput.value = selectedValue;
+		
+		
+		//필수값들에 다 들어갔는지 확인.
+		const userEmailValue= document.querySelector("#user_email").value;//이메일
+		const userPwdValue = document.querySelector("#signup-pw").value;//비밀번호
+		const userPwd2Value = document.querySelector("#signup-pww").value;//비밀번호 확인
+		const stdtNmValue = document.querySelector("#signup-name").value;//이름
+		const birthDdValue = document.querySelector("#birth_dd").value;//생년월일
+		const genderCdValue = document.querySelector("#gender_cd").value;//성별
+		const jobCdValue = document.querySelector("#job_cd").value;//직업
+		const receiveValue = document.querySelector("#receive_mail").value;//메일수신여부
+		
+		// 필수값들 중에서 하나라도 빈 값이 있는지 확인합니다.
+		if (
+			    userEmailValue === '' ||
+			    userPwdValue === '' ||
+			    userPwd2Value === '' ||
+			    stdtNmValue === '' ||
+			    birthDdValue === '' ||
+			    genderCdValue === '' ||
+			    jobCdValue === '' ||
+			    receiveValue === ''
+			){
+			console.log(event);
+			event.preventDefault();
+			alert("필수값을 모두 입력해주세요.");
+			return false;
+		}else {
+			//이메일 인증 됐는지 확인
+			var isCompleteEmailCode = document.querySelector("#email_code_complete").value;
+			if(isCompleteEmailCode == 'Y'){
+				//비밀번호가 유효성 검사를 통과하고 비밀번호검사도 두개 똑같은지 확인
+				// id가 "validityMessage"인 div 요소 가져오기
+				const validityMessage = document.getElementById("validityMessage");
+				const sameMessage = document.getElementById("sameMessage");
+
+				// div 요소의 텍스트 색상 가져오기
+				const text1 = validityMessage.textContent;
+				const text2 = sameMessage.textContent;
+
+				console.log(text1);
+				console.log(text2);
+				
+				// 텍스트 색상이 "green"인지 확인
+				if ((text1 == "비밀번호가 유효합니다.")&&(text2 == "비밀번호가 일치합니다.")) {
+					//정상가입 가능
+					confirm("회원가입이 완료되었습니다.");
+				} else {
+					event.preventDefault();
+					alert("올바른 비밀번호가 아닙니다.");
+					return false;
+				}
+			}else{
+				event.preventDefault();
+				alert("이메일 인증을 완료해주세요.");
+				return false;
+			}
+		}
+	} 
+	</script>
 </body>
 
 </html>

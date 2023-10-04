@@ -8,4 +8,7 @@ public interface IMainService {
 	ManagerVO getManagerVO(String email);
 	void updateLastLoginDt(String userEmail);
 	StudentVO getStudentVO(String email);
+	int getEmailCnt(String email);
+	void insertStudent(StudentVO student);
+	String getMaxStdtId();
 }

@@ -8,7 +8,7 @@
 <link th:href="@{/css/admin/class_list.css}" rel="stylesheet">
 <link href="/css/datepicker.css" rel="stylesheet" type="text/css"
 	media="all">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//code.jquery.com/jquery.min.js"></script>
 <!-- Air datepicker css -->
 <script src="/js/datepicker.js"></script>
 <!-- Air datepicker js -->
@@ -73,7 +73,7 @@
 				<div class="filter_box">
 					<div class="filter_box_title">상태</div>
 					<div>
-						<select class="search_select_input">
+						<select id="class_status" class="search_select_input">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="classCommonCode: ${classCommonCodeList}"
 								th:value="${classCommonCode.cmcdId}"
@@ -87,9 +87,9 @@
 					<div class="filter_box_title">지원기간</div>
 					<div>
 						<input id="aply_start_dt" class="search_input" type="text"
-							placeholder="연도-월-일" style="width:100px;"> <span> ~ </span> <input
-							id="aply_end_dt" class="search_input" type="text"
-							placeholder="연도-월-일" style="width:100px;">
+							placeholder="연도-월-일" style="width: 100px;"> <span>
+							~ </span> <input id="aply_end_dt" class="search_input" type="text"
+							placeholder="연도-월-일" style="width: 100px;">
 					</div>
 				</div>
 
@@ -98,21 +98,20 @@
 					<div class="filter_box_title">교육기간</div>
 					<div>
 						<input id="class_start_dd" class="search_input" type="text"
-							placeholder="연도-월-일" style="width:100px;"> <span> ~ </span> <input
-							id="class_end_dd" class="search_input" type="text"
-							placeholder="연도-월-일" style="width:100px;">
+							placeholder="연도-월-일" style="width: 100px;"> <span>
+							~ </span> <input id="class_end_dd" class="search_input" type="text"
+							placeholder="연도-월-일" style="width: 100px;">
 					</div>
 				</div>
-				
+
 				<!-- 기업명 -->
 				<div class="filter_box">
 					<div class="filter_box_title">기업</div>
 					<div>
-						<select class="search_select_input">
+						<select id="company" class="search_select_input">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="company: ${companyList}"
-								th:value="${company.cmpyId}"
-								th:text="${company.cmpyNm}"></option>
+								th:value="${company.cmpyId}" th:text="${company.cmpyNm}"></option>
 						</select>
 					</div>
 				</div>
@@ -162,40 +161,49 @@
 				<!-- 컨텐츠 리스트 부분 -->
 				<div class="content_list">
 					<table class="content_list_table" id="class_list_table">
-						<tr class="content_list_th">
-							<th style="width: 2%;"><input style="width:30px;"type="checkbox" id="chkAll"></th>
-							<th style="width: 2%;">순번</th>
-							<th style="width: 5%;">ID</th>
-							<th style="width: 19%;">교육과정명</th>
-							<th style="width: 10%;">기업</th>
-							<th style="width: 5%;">교육상태</th>
-							<th style="width: 15%;">지원기간</th>
-							<th style="width: 10%;">교육기간</th>
-							<th style="width: 5%;">교육시간</th>
-							<th style="width: 17%;">교육장소</th>
-							<th style="width: 5%;">수강가능인원</th>
-							<th style="width: 5%;">업무담당자</th>
-						</tr>
-						<tr id="class_list" th:each="class, iterStat:${classList}">
-							<td class="class_check"><input type="checkbox" name="chk"
-								th:value="${class.clssId}"></td>
-							<td class="class_num" th:text="${iterStat.index + 1}"></td>
-							<td class="class_id"th:text="${class.clssId}"></td>
-							<td><a th:text="${class.clssNm}"
-								th:href="@{/admin/class/view/__${class.clssId}__}"
-								style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a></td>
-							<td th:text="${class.cmpyNm} ? ${class.cmpyNm} : '미정'"></td>
-							<td class="class_status" th:text="${class.cmcdNm}">status</td>
-							<td class="aply_dt" th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
+						<thead>
+							<tr class="content_list_th">
+								<th style="width: 2%;"><input style="width: 30px;"
+									type="checkbox" id="chkAll"></th>
+								<th style="width: 2%;">순번</th>
+								<th style="width: 5%;">ID</th>
+								<th style="width: 19%;">교육과정명</th>
+								<th style="width: 10%;">기업</th>
+								<th style="width: 5%;">교육상태</th>
+								<th style="width: 15%;">지원기간</th>
+								<th style="width: 10%;">교육기간</th>
+								<th style="width: 5%;">교육시간</th>
+								<th style="width: 17%;">교육장소</th>
+								<th style="width: 5%;">수강가능인원</th>
+								<th style="width: 5%;">업무담당자</th>
+							</tr>
+						</thead>
+						<tbody id="class_list_tbody">
+							<tr id="class_list" th:each="class, iterStat:${classList}">
+								<td class="class_check"><input type="checkbox" name="chk"
+									th:value="${class.clssId}"></td>
+								<td class="class_num" th:text="${iterStat.index + 1}"></td>
+								<td class="class_id" th:text="${class.clssId}"></td>
+								<td><a class="class_name" th:text="${class.clssNm}"
+									th:href="@{/admin/class/view/__${class.clssId}__}"></a></td>
+								<td th:text="${class.cmpyNm} ? ${class.cmpyNm} : '-'"></td>
+								<td class="class_status" th:text="${class.cmcdNm}">status</td>
+								<td class="aply_dt"
+									th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
 							${#dates.format(class.aplyEndDt, 'yyyy-MM-dd HH:mm')}|"></td>
-							<td class="class_dt" th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
-							<td class="set_tm" th:text="|${#dates.format(class.setInTm, 'hh:MM')} ~ ${#dates.format(class.setOutTm, 'hh:MM')}|"></td>
-							<td th:text="${class.clssAdr} ? ${class.clssAdr} : '미정'">class address</td>
-							<td class="limit_cnt"><a
-								th:href="@{/admin/class/__${class.clssId}__/applicant}"><span
-									th:text="${class.limitCnt}"></span></a></td>
-							<td class="manager_name" th:text="${class.mngrNm} ? ${class.mngrNm} :'미정'"></td>
-						</tr>
+								<td class="class_dt"
+									th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|"></td>
+								<td class="set_tm"
+									th:text="|${#dates.format(class.setInTm,'HH:mm')} ~ ${#dates.format(class.setOutTm,  'HH:mm')}|"></td>
+								<td th:text="${class.clssAdr} ? ${class.clssAdr} : '-'">class
+									address</td>
+								<td class="limit_cnt"><a
+									th:href="@{/admin/class/__${class.clssId}__/applicant}"><span
+										th:text="${class.limitCnt}"></span></a></td>
+								<td class="manager_name"
+									th:text="${class.mngrNm} ? ${class.mngrNm} :'-'"></td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 				<!-- 컨텐츠 리스트 부분 -->
@@ -233,14 +241,48 @@
 		    });
 		});
 		
+		//날짜 형식
+		function formatTimestamp(timestamp) {
+
+			const date = new Date(timestamp);
+
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			const milliseconds = date.getMilliseconds();
+
+			formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}`;
+
+			return formattedTimestamp;
+		}
+		
+		//시간 형식
+		function formatTm(timestamp){
+			const date = new Date(timestamp);
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			const milliseconds = date.getMilliseconds();
+
+			formattedTimestamp = `${hours}:${minutes}`;
+
+			return formattedTimestamp;
+		}
+		
 		//검색 클릭 이벤트
 		const searchBtn = document.querySelector("#search_btn");
 		searchBtn.addEventListener("click", () => {
 			//교육과정명
-			var className = document.querySelector("#class_name").value;
+			var clssNm = document.querySelector("#class_name").value;
 						
-			//교육과정 상태값 가져오기
-			var status = document.querySelector(".search_select_input").value;
+			//교육과정 상태ID
+			var clssCd = document.querySelector("#class_status").value;
 			
 			//교육과정 지원 시작
 			var aplyStartDt = document.querySelector("#aply_start_dt").value;
@@ -249,97 +291,139 @@
 			var aplyEndDt = document.querySelector("#aply_end_dt").value;
 			
 			//교육과정 시작일
-			var classStartDd = document.querySelector("#class_start_dd").value;
+			var clssStartDd = document.querySelector("#class_start_dd").value;
 			
 			//교육과정 종료일
-			var classEndDd = document.querySelector("#class_end_dd").value;
+			var clssEndDd = document.querySelector("#class_end_dd").value;
 
-			// 변수 중 하나라도 빈 값인 경우
-			if (status === "" || aplyStartDt === "" || aplyEndDt === "" || classStartDd === "" || classEndDd === "") {
-			  alert("모든 필드를 입력해야 합니다.");
-			} else {
-			  // 모든 변수가 빈 값이 아닌 경우 이후의 코드 실행
-			  // 여기에 실행할 코드를 추가합니다.
-			
+			//기업ID
+			var cmpyId = document.querySelector("#company").value;
 			$.ajax({
 				url: '/admin/class/search',
 				async: true,
 				method: 'GET',
 				data: {
-					className: className, 
-					status: status,
+					clssNm: clssNm, 
+					clssCd: clssCd,
 					aplyStartDt: aplyStartDt,
 					aplyEndDt: aplyEndDt,
-					classStartDd: classStartDd,
-					classEndDd: classEndDd},
+					clssStartDd: clssStartDd,
+					clssEndDd: clssEndDd,
+					cmpyId: cmpyId
+				},
 				success: function(response) {
+					var classListTbody = document.querySelector("#class_list_tbody");
+					$("#class_list_tbody").empty();
 					
-					var classListTable = document.querySelector("#class_list_table");
-					//var classListItems = classListTable.querySelectorAll("#class_list");//class_list id를 가진 모든 요소 선택
-					//classListItems.forEach(function(item) {
-					//	  item.remove(); // 각 요소의 classList에서 해당 클래스를 제거
-					//	});
+					//총 개수 update
+					var classListCnt = document.querySelector(".class_list_cnt");
+					classListCnt.textContent = response.length;
 					
-					classListTable.firstElementChild.remove();
-				
-					
-					
-					
-					var classListCode=
-						'<tr class="content_list_th">'+'<th><input type="checkbox" name="chk" id="chkAll"></th>'+
-						'<th>ID</th>'+
-						'<th>프로그램명</th>'+'	<th>지원기간</th>'+
-						'<th>교육기간</th>'+'<th>교육 장소</th>'+'<th>수강가능인원</th>'+'<th>교육상태</th></tr>';
-						for(var i = 0; i < response.length; i++){
-							
-							// response[i].aplyStartDt에서 날짜를 가져와서 Date 객체로 변환
-							var aplyStartDt = response[i].aplyStartDt;
-							var aplyEndDt = response[i].aplyEndDt;
-							
-							var aplystartDate = null;
-							var aplyEndDate= null;
-							
-							if(aplyStartDt != "null"){
-								aplystartDate = new Date(response[i].aplyStartDt);
-								aplyEndDate = new Date(response[i].aplyEndDt);
-								
-								// 원하는 형식에 맞게 날짜와 시간을 문자열로 변환
-								var formattedStartDate = aplystartDate.getFullYear() + '-' +
-								    String(aplystartDate.getMonth() + 1).padStart(2, '0') + '-' +
-								    String(aplystartDate.getDate()).padStart(2, '0') + ' ' +
-								    String(aplystartDate.getHours()).padStart(2, '0') + ':' +
-								    String(aplystartDate.getMinutes()).padStart(2, '0');
-								    
-								var formattedEndDate = aplyEndDate.getFullYear() + '-' +
-								    String(aplyEndDate.getMonth() + 1).padStart(2, '0') + '-' +
-								    String(aplyEndDate.getDate()).padStart(2, '0') + ' ' +
-								    String(aplyEndDate.getHours()).padStart(2, '0') + ':' +
-								    String(aplyEndDate.getMinutes()).padStart(2, '0');
-							}
-													
-		                       classListCode += 
-		                           '<tr id="class_list"><td><input type="checkbox" name="chk" value="'+
-		                              response[i].clssId+'"></td>'+
-		                              '<td>'+response[i].clssId+'</td>'+
-		                              '<td>'+'<a class="content_title" href="/admin/class/view'+response[i].clssId +
-		                                 '">'+response[i].clssNm+'</a></td>' +      
-		                        '<td><span>'+formattedStartDate+'</span>~'+
-		                        '<span>'+formattedEndDate+'</span></td>'+
-		                        '<td><span>'+response[i].clssStartDd+'</span>~'+
-		                        '<span>'+response[i].clssEndDd+'</span></td>'+
-		                        '<td>'+response[i].clssAdr+'</td>'+
-		                        '<td><span>'+'<a href="/admin/class/'+response[i].clssId +'/applicant">'+response[i].limitCnt+'</a></span></td>'+
-		                        '<td>'+response[i].cmcdNm+'</td></tr>';
-		            }
-		           
-		            classListTable.innerHTML=classListCode;
-                    
+					for(var i = 0; i < response.length; i++){
+						var clss = response[i];
+						
+						var tr = document.createElement("tr");
+						tr.id='class_list';
+										
+						//체크박스
+                 		var tdCheck =  document.createElement("td");
+	                    tdCheck.className="class_check";
+	                    var inputCheck = document.createElement("input");
+	                    inputCheck.type="checkbox";
+	                    inputCheck.name="chk";
+	                    inputCheck.value=clss.clssId;
+	                    tdCheck.appendChild(inputCheck);
+	                    tr.appendChild(tdCheck);
+	                    
+	                    //순번
+	                    var tdNum = document.createElement("td");
+	                    tdNum.className =" class_num";
+	          			tdNum.textContent = i+1;
+	          			tr.appendChild(tdNum);
+	                       
+	          			//clssId
+	          			var tdClssId = document.createElement("td");
+	          			tdClssId.className = "class_id";
+	          			tdClssId.textContent = clss.clssId;
+	          			tr.appendChild(tdClssId);
+	          			
+	          			//교육과정명
+	          			var tdClssNm = document.createElement("td");
+	          			var aClssNm = document.createElement("a");
+	          			aClssNm.className="class_name";
+	          			aClssNm.textContent = clss.clssNm;
+	          			aClssNm.href='/admin/class/view/'+clss.clssId;
+	          			tdClssNm.appendChild(aClssNm);
+	          			tr.appendChild(tdClssNm);
+	          			
+	          			//업체명
+	          			var tdCmpyNm = document.createElement("td");
+	          			if(clss.cmpyNm ===''){
+	          				tdCmpyNm.textContent = '-';
+	          			}else {
+	          				tdCmpyNm.textContent = clss.cmpyNm;
+	          			}
+	          			tr.appendChild(tdCmpyNm);
+	          			
+	          			//교육상태
+	          			var tdStatus = document.createElement("td");
+	          			tdStatus.className="class_status";
+	          			tdStatus.textContent = clss.cmcdNm;
+	          			tr.appendChild(tdStatus);
+	          			
+	          			//지원기간
+	          			var tdAplyDt = document.createElement("td");
+	          			tdAplyDt.className ="aply_dt";
+	          			tdAplyDt.textContent = formatTimestamp(clss.aplyStartDt)+' ~ '+formatTimestamp(clss.aplyEndDt);
+	          			tr.appendChild(tdAplyDt);
+	          			
+	          			//교육기간
+	          			var tdClassDd = document.createElement("td");
+	          			tdClassDd.className="class_dt";
+	          			tdClassDd.textContent = clss.clssStartDd+' ~ '+clss.clssEndDd;
+	          			tr.appendChild(tdClassDd);
+	          			
+	          			//교육시간
+	          			var tdSetTm = document.createElement("td");
+	          			tdSetTm.className="set_tm";
+	          			tdSetTm.textContent = formatTm(clss.setInTm)+' ~ '+formatTm(clss.setOutTm);
+	          			tr.appendChild(tdSetTm);
+	          			
+	          			//교육장소
+	          			var tdAdr = document.createElement("td");
+	          			if(clss.clssAdr ===''){
+	          				tdAdr.textContent = '-';
+	          			}else{
+	          				tdAdr.textContent = clss.clssAdr;
+	          			}
+	          			tr.appendChild(tdAdr);
+	          			
+	          			//수강인원
+	          			var tdLimitCnt = document.createElement("td");
+	          			tdLimitCnt.className="limit_cnt";
+	          			var aLimitCnt = document.createElement("a");
+	          			aLimitCnt.href = '/admin/class/'+clss.clssId+'/applicant';
+	          			aLimitCnt.textContent = clss.limitCnt;
+	          			tdLimitCnt.appendChild(aLimitCnt);
+	          			tr.appendChild(tdLimitCnt);
+	          			
+	          			//업무담당자
+	          			var tdMngrNm = document.createElement("td");
+	          			tdMngrNm.className="manager_name";
+	          			if(clss.mngrNm===''){
+	          				tdMngrNm.textContent = '-';
+	          			}else{
+	          				tdMngrNm.textContent = clss.mngrNm;
+	          			}
+	          			tr.appendChild(tdMngrNm);
+
+	                    classListTbody.appendChild(tr);
+	                }
                 },
 				error: function(error){
 					console.log("error: ", error);
 				}
 			});
-			}
 		});
 		
 		//초기화 버튼
@@ -352,8 +436,8 @@
 		        element.value = "";
 		    });
 		    
-		    const inputSelectElement = document.querySelector(".search_select_input");
-		    inputSelectElement.value="all";
+		    const inputSelectElement = document.querySelectorAll(".search_select_input");
+		    inputSelectElement.forEach((select)=> select.value="all");
         }
 		
 		

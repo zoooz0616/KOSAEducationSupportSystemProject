@@ -20,6 +20,7 @@ import com.finalprj.kess.model.LectureVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ProfessorVO;
+import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IAdminRepository;
@@ -588,6 +589,47 @@ public class AdminService implements IAdminService {
 		
 		adminRepository.updateCompany(companyVO);
 	}
+
+	@Override
+	public List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd,
+			String userCd) {
+		return adminRepository.getSearchStudentList(stdtNm, clssId, genderCd, jobCd, userCd);
+	}
+
+	@Override
+	@Transactional
+	public void deleteStudentList(List<String> selectedStudentIds) {
+		adminRepository.deleteLginStudent(selectedStudentIds);
+		adminRepository.deleteStudentList(selectedStudentIds);
+	}
+	
+	@Override
+	public StudentVO getStudent(String stdtId) {
+		return adminRepository.getStudent(stdtId);
+	}
+	
+	@Override
+	public List<ApplyVO> getApplyListByStudent(String stdtId) {
+		return adminRepository.getApplyListByStudent(stdtId);
+	}
+	
+	@Override
+	public List<RegistrationVO> getRegistListByStudent(String stdtId) {
+		return adminRepository.getRegistListByStudent(stdtId);
+	}
+	
+	@Override
+	public List<ClassVO> getSearchClassList(String clssNm, String clssCd, String aplyStartDt, String aplyEndDt,
+			String clssStartDd, String clssEndDd, String cmpyId) {
+		return adminRepository.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd, clssEndDd, cmpyId);
+	}
+	
+	@Override
+	public List<String> getClassSearch(String term) {
+		return adminRepository.getClassSearch(term);
+	}
+	
+	
 	
 	
 	
@@ -600,15 +642,5 @@ public class AdminService implements IAdminService {
 	}
 
 
-	@Override
-	public List<String> getClassSearch(String term) {
-		return adminRepository.getClassSearch(term);
-	}
-
-	@Override
-	public List<ClassVO> getSearchClassVOList(String className, List<String> status, Date aplyStartDt,
-			Date aplyEndDt, Date classStartDd, Date classEndDd) {
-		return adminRepository.getSearchClassVOList(className, status, aplyStartDt,
-				aplyEndDt, classStartDd, classEndDd);
-	}
+	
 }
