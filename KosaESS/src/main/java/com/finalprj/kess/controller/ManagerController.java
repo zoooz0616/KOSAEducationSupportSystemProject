@@ -532,4 +532,32 @@ public class ManagerController {
 		return "OK!";
 		// End : 업데이트 결과 전송
 	}
+
+	@PostMapping("/worklog/update_wlog_code")
+	@ResponseBody
+	public Map<String, Object> updateWlogCd(
+			HttpSession session,
+			@RequestParam (value="wlogList[]") List<String> wlogList,
+			@RequestParam String wlogCd
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		//End : 유저 필터링
+		
+		List<String> result = new ArrayList<String>();
+		
+		//업데이트
+		for (String wlogId : wlogList) {
+			System.out.println(wlogId);
+			managerService.updateWlogCd(wlogId, wlogCd, (String)session.getAttribute("mngrId"));
+			result.add(wlogCd+" : OK");
+		}
+		// End : 업데이트
+		Map<String, Object> response = new HashMap<>();
+		response.put("result", result);
+		return response;
+	}
 }

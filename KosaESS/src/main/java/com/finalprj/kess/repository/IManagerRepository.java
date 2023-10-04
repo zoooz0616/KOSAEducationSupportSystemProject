@@ -70,5 +70,7 @@ public interface IManagerRepository {
 
 	public void updateResnCd(@Param("resnId") String resnId, @Param("resnCd") String resnCd, @Param("mngrId") String mngrId);
 
+	public void updateWlogCd(@Param("wlogId") String wlogId, @Param("wlogCd") String wlogCd, @Param("mngrId") String mngrId);
+
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

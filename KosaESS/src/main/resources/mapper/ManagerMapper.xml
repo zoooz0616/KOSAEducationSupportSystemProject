@@ -229,6 +229,16 @@
 			WHERE resn_id=#{resnId}
 		]]>
 	</update>
+	<update id="updateWlogCd">
+		<![CDATA[
+			UPDATE wlog
+			SET
+				wlog_cd=#{wlogCd}
+				,updt_dt=systimestamp
+				,updter_id=#{mngrId}
+			WHERE wlog_id=#{wlogId}
+		]]>
+	</update>
 	
 	<select id="getTotalTmByClssId">
 		<![CDATA[
@@ -283,9 +293,9 @@
 				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
 			]]>
 		</if>
-		<if test='isDelete eq "false"'>
+		<if test='isDelete eq "false" or isDelete eq null'>
 			<![CDATA[
-				AND w.delete_yn='N' 
+				AND w.delete_yn='N'
 			]]>
 		</if>
 		<if test='resnOnly eq "true"'>

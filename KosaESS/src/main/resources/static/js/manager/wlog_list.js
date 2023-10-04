@@ -115,7 +115,7 @@ function reset(){
 //현재 체크된 목록을 반환
 function getCheckedItems() {
 	const checkedItems = [];
-	checkedItems.push('WLOG');//이거 없으면 "전체" 해제가 작동하지 않음
+	checkedItems.push('RESN');//이거 없으면 "전체" 해제가 작동하지 않음
 	$("input[class=chkWokCd]").each(function () {
 		if ($(this).prop("checked")) {
 			checkedItems.push($(this).val());
@@ -124,10 +124,46 @@ function getCheckedItems() {
 	return checkedItems;
 }
 
+//현재 체크된 wlog 반환
+function getCheckedWlog() {
+	const checkedItems = [];
+	checkedItems.push('WLOG');//이거 없으면 "전체" 해제가 작동하지 않음
+	$("input[class=chk_wlog]").each(function () {
+		if ($(this).prop("checked")) {
+			checkedItems.push($(this).val());
+		}
+	});
+	return checkedItems;
+}
+
+// 출퇴근 기록 리스트 받고, 버튼 값 받아서 상태 업데이트 후 목록 재 출력
+function updateWlogCode(button){
+	console.log("이거 되긴 됨?????");
+	let targetWlogList = getCheckedWlog();
+	let targetWlogCode = button.value;
+	console.log(targetWlogList);
+	console.log(targetWlogCode);
+	// 출석 상태 업데이트를 한다
+	$.ajax({
+	type: 'post',
+	url: '/manager/worklog/update_wlog_code', // 서버의 엔드포인트 URL
+	data: {
+		wlogList: targetWlogList
+		,wlogCd : targetWlogCode
+	},
+	async: false,
+	success: function(response) {
+		console.log(response.result);
+	},error: function(error) {
+		console.log("error: ", error);
+	}
+	})
+	// 목록을 다시 출력한다
+}
+
 // resn 상태 업데이트(인자가 버튼이면 버튼값으로, 인자가 버튼이 아니라면 그 값으로 업데이트)
 function updateResnCode(button){
 	targetResnCode = button;
-	console.log(button.innerText);
 	//console.log(typeof targetResnCode);
 	if(typeof targetResnCode === 'object'){
 		$.ajax({
@@ -264,7 +300,6 @@ function showModal(resnIcon) {
 				let newButton = $('<button onclick="updateResnCode(this)" value = "'+response.resnCdList[i].cmcdId+'" >'+response.resnCdList[i].cmcdNm+'</button>')
 				$('.resn_controller').append(newButton);
 				// */
-				console.log(response.resnCdList[i]);
 				//console.log(response.wlogCdList[i].cmcdNm);
 			}
 			
@@ -352,7 +387,7 @@ function search() {
 				var rowResnCd = $('<td></td>');
 
 				rowChk.html('<input type="checkbox" class="chk_wlog">');
-				rowChk.attr("value",wlogList[i].stdtId);
+				$('.chk_wlog').attr("value",wlogList[i].wlogId);
 				rowNum.text(i+1);//개발자용 옵션
 				//rowNum.text(wlogList[i].wlogId);
 				rowName.text(wlogList[i].stdtNm);
@@ -416,7 +451,10 @@ function search() {
 			
 			//이수상태 변경이 영향을 받지 않도록 검색 조건 저장
 				//히든 셀렉트 박스 값에 classId 값을 hidden에 저장
-			let classId = $('#class_selector').val().match(/clssId=([A-Z0-9]+)/)[1];
+			let classId = null;
+			if($('#class_selector').val()!=null){
+				classId=$('#class_selector').val().match(/clssId=([A-Z0-9]+)/)[1];
+			}
 			$('#class_id_save').val(classId);
 				//히든 start/endDate 상자에 날짜를 저장
 			$('#start_date_save').val($('#startDate').val());
@@ -424,6 +462,8 @@ function search() {
 				//히든 검색어에 검색어 저장
 			$('#keyword_save').val($('#search_keyword').val());
 				//히든 이수상태 체크박스에 이수상태 저장
+			$('.resn_only_save').prop('checked', $('#fileContainedOnly').prop('checked'))
+			$('.contain_delete_save').prop('checked', $('#isDelete').prop('checked'))
 			/*
 			chkcmptList.each(
 				function(i, o){

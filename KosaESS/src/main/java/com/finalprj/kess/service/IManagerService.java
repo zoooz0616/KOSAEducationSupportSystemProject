@@ -62,4 +62,6 @@ public interface IManagerService {
 	public ReasonDTO getResnDetailByResnId(String resnId);
 
 	public void updateResnCd(String resnId, String resnCd, String mngrId);
+
+	public void updateWlogCd(String wlogId, String wlogCd, String mngrId);
 }
