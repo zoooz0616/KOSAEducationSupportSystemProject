@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IManagerRepository;
@@ -120,13 +122,28 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<WorklogDTO> getWlogListByClssIdDate(String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly) {
-		return managerRepository.getWlogListByClssIds(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString) {
+		return managerRepository.getWlogListByClssIds(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
 	}
 
 	@Override
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId) {
 		return managerRepository.getStudentListByOnlyClssId(classId);
+	}
+
+	@Override
+	public ReasonDTO getResnDetailByResnId(String resnId) {
+		return managerRepository.getResnDetailByResnId(resnId);
+	}
+
+	@Override
+	public void updateResnCd(String resnId, String resnCd, String mngrId) {
+		managerRepository.updateResnCd(resnId, resnCd, mngrId);
+	}
+
+	@Override
+	public void updateWlogCd(String wlogId, String wlogCd, String mngrId) {
+		managerRepository.updateWlogCd(wlogId, wlogCd, mngrId);
 	}
 
 //	@Override

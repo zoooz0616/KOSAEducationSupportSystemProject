@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+.look_at_me{
+	display : none;
+	font-size: 1em;
+	font-weight:bold;
+	z-index:10;
+	position: fixed;
+	border-radius: 0.2em;
+	left: 80%;
+	height: 6%;
+	width: 20%;
+	align-items: center;
+	justify-content: center;
+}
+
+.look_at_me .read_this{
+/* 	position : absolute; */
+/* 	top : 50%; */
+/* 	left : 50%; */
+}
