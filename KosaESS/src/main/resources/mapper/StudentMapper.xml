@@ -642,6 +642,7 @@
 	<![CDATA[
 		select 
 			aply_id,
+			clss.clss_id,
 			clss_nm,
 			aply_cd,
 			aply_end_dt,

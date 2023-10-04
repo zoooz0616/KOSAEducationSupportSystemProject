@@ -220,6 +220,15 @@ input::placeholder {
 	text-align: center;
 }
 
+.aplyList, .rgstList{
+	cursor: pointer;
+}
+
+.aplyList:hover, .rgstList:hover {
+	background: white;
+}
+
+
 .inouttm {
 	display: flex;
 	flex-direction: column;

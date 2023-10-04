@@ -1,9 +1,25 @@
 $(document).ready(function() {
+	var countPerPage = 10; // 페이지당 데이터 건수
+	var showPageCnt = 5;
+	let todoData = [];
+
+	// 페이지당 목록 수가 변경될 때
+	$('#pageList').change(function() {
+		countPerPage = parseInt($(this).val());
+		// 페이지당 목록 수 변경에 따라 테이블 업데이트
+		updateAplyTable();
+		updateWlogTable();
+		updateRgstTable();
+		updatePostTable();
+	});
+
 	updateAplyTable();
 	updateWlogTable();
+	updateRgstTable();
+	updatePostTable();
 	function updateAplyTable() {
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/student/mypage/aplyList',
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
@@ -13,10 +29,12 @@ $(document).ready(function() {
 
 				for (var i = 0; i < data.length; i++) {
 					var ApplyDetailDTO = data[i];
+
+					$('.aplyCnt').text('총 ' + data.length + '개');
 					var row = $('<tr class="aplyRow"></tr>');
 
 					row.append('<td><span >' + (i + 1) + '</span></td>');
-					row.append('<td style="word-break: keep-all;">' + ApplyDetailDTO.clssNm + '</td>');
+					row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + ApplyDetailDTO.clssId + '"><span>' + ApplyDetailDTO.clssNm + '</span></a></td>');
 					row.append('<td><span>' + ApplyDetailDTO.aplyStartDd + '<br> ~ ' + ApplyDetailDTO.aplyEndDd + '</span></td>');
 					row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 					row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
@@ -157,9 +175,42 @@ $(document).ready(function() {
 		});
 	});
 
+	function updateRgstTable() {
+		$.ajax({
+			type: 'POST',
+			url: '/student/mypage/rgstList',
+			success: function(data) {
+				// 받은 데이터로 테이블을 업데이트합니다.
+				var tbody = $('.rgstTable tbody');
+				tbody.empty(); // tbody 내용을 비웁니다.
+
+				for (var i = 0; i < data.length; i++) {
+					$('.RgstCnt').text('총 ' + data.length + '개');
+					var RegistrationVO = data[i];
+					var row = $('<tr class="rgstRow"></tr>');
+
+					row.append('<td><span >' + (i + 1) + '</span></td>');
+
+					row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + RegistrationVO.clssId + '"><span>' + RegistrationVO.clssNm + '</span></a></td>');
+					row.append('<td><span>' + RegistrationVO.clssStartDd + '<br> ~ ' + RegistrationVO.clssEndDd + '</span></td>');
+					row.append('<td>' + RegistrationVO.rgstNm + '</td>');
+					row.append('<td>' + RegistrationVO.cmptNm + '</td>');
+					if (RegistrationVO.cmptCd === 'CMP0000002') {
+						row.append('<td class="rgstPrint" style="display: revert;"><a href="/download/file/' + RegistrationVO.fileId + '/' + RegistrationVO.fileSubId + '"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></a></td>');
+					} else {
+						row.append('<td class="rgstPrint" style="display: none;"></td >');
+
+					}
+
+					tbody.append(row);
+				}
+			}
+		});
+	}
+
 	function updateWlogTable() {
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/student/mypage/wlogList',
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
@@ -167,6 +218,7 @@ $(document).ready(function() {
 				tbody.empty(); // tbody 내용을 비웁니다.
 
 				for (var i = 0; i < data.length; i++) {
+					$('.wlogCnt').text('총 ' + data.length + '개');
 					var WorklogVO = data[i];
 					var row = $('<tr class="wlogRow"></tr>');
 					var inTmDd = formatTimestamp(WorklogVO.inTm);
@@ -225,6 +277,7 @@ $(document).ready(function() {
 	}
 
 	updateWlogTable();
+
 	var modal2 = $('.modal2');
 	var wlogTable = $('.wlogTable');
 
@@ -301,6 +354,34 @@ $(document).ready(function() {
 			modal3.hide();
 		});
 	});
+	function updatePostTable() {
+		$.ajax({
+			type: 'POST',
+			url: '/student/mypage/postList',
+			success: function(data) {
+				// 받은 데이터로 테이블을 업데이트합니다.
+				var tbody = $('.postTableBody');
+				tbody.empty(); // tbody 내용을 비웁니다.
+
+				for (var i = 0; i < data.length; i++) {
+					$('.postCnt').text('총 ' + data.length + '개');
+					var PostVO = data[i];
+					console.log(PostVO);
+					var row = $('<tr></tr>');
+					row.append('<td><span >' + (i + 1) + '</span></td>');
+					row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + PostVO.postId + '"><span>' + PostVO.postTitle + '</span></a></td>');
+					row.append('<td>' + PostVO.rgstDd + '</td>');
+					row.append('<td>' + PostVO.cmcdNm + '</td>');
+					if (PostVO.postCd === 'PST0000004') {
+						row.append('<td><input type="button" class="toggleReplyButton" style = "display: revert;" value = "확인하기" onclick = "toggleReply(this)" ></td> ');
+					} else {
+						row.append('<td><input type="button" class="toggleReplyButton" style = "display: revert;"></td >');
+					}
+					tbody.append(row);
+				}
+			}
+		});
+	}
 });
 
 function formatTimestamp(timestamp) {
@@ -339,6 +420,8 @@ $('#passwordInput').on('keyup', function(event) {
 	}
 });
 
+
+
 function toggleReply(button) {
 	var replyContainer = $(button).closest('li').find('.reply-container');
 	var postId = $(button).closest('li').find('td:last-child').text().trim();
@@ -356,11 +439,11 @@ function toggleReply(button) {
 			data: {
 				postId: postId
 			},
-			success: function(response) {
+			success: function(data) {
 				var ul = $('<ul class="reply">');
 
-				for (var i = 0; i < response.length; i++) {
-					var reply = response[i];
+				for (var i = 0; i < data.length; i++) {
+					var reply = data[i];
 					var li = $('<li>');
 					li.append('<div>답변 제목: ' + reply.inquiry.title + '</div>');
 					li.append('<div style="word-break: keep-all;">답변 내용: ' + reply.inquiry.content + '</div>');
@@ -378,3 +461,4 @@ function toggleReply(button) {
 		button.value = "확인하기";
 	}
 }
+

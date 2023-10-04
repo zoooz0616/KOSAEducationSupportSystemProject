@@ -101,28 +101,28 @@ public class StudentController {
 	}
 
 	@GetMapping("/events")
-    @ResponseBody
-    public Map<String, Object> getEvents() {
-        // 이벤트 데이터를 DB에서 가져오는 서비스 메서드 호출
-        List<ClassVO> events =  new ArrayList<ClassVO>();
-        events =  studentService.getAllEvents();
-        List<ClassVO> clss1Events = new ArrayList<>();
-        List<ClassVO> clss2Events = new ArrayList<>();
-        
-        // clssCd 별로 이벤트 분류
-        for (ClassVO event : events) {
-            if ("CLS0000001".equals(event.getClssCd())) {
-                clss1Events.add(event);
-            } else if ("CLS0000002".equals(event.getClssCd())) {
-                clss2Events.add(event);
-            }
-        }
-        
-        Map<String, Object> eventsData = new HashMap<String, Object>();
-        eventsData.put("exp", clss1Events);
-        eventsData.put("Ing",clss2Events);
-        return eventsData;
-    }
+	@ResponseBody
+	public Map<String, Object> getEvents() {
+		// 이벤트 데이터를 DB에서 가져오는 서비스 메서드 호출
+		List<ClassVO> events = new ArrayList<ClassVO>();
+		events = studentService.getAllEvents();
+		List<ClassVO> clss1Events = new ArrayList<>();
+		List<ClassVO> clss2Events = new ArrayList<>();
+
+		// clssCd 별로 이벤트 분류
+		for (ClassVO event : events) {
+			if ("CLS0000001".equals(event.getClssCd())) {
+				clss1Events.add(event);
+			} else if ("CLS0000002".equals(event.getClssCd())) {
+				clss2Events.add(event);
+			}
+		}
+
+		Map<String, Object> eventsData = new HashMap<String, Object>();
+		eventsData.put("exp", clss1Events);
+		eventsData.put("Ing", clss2Events);
+		return eventsData;
+	}
 
 	@GetMapping("/stdtevents")
 	@ResponseBody
@@ -251,7 +251,7 @@ public class StudentController {
 			long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
 
 			// System.out.println("차이 초" + diffSec);
-			 System.out.println("차이 일수" + diffDays);
+			System.out.println("차이 일수" + diffDays);
 			if (diffDays > 1) { // 이전 출석 로그와 2일 이상 차이나는 경우
 				Calendar cal1 = Calendar.getInstance();
 				Calendar cal2 = Calendar.getInstance();
@@ -927,23 +927,7 @@ public class StudentController {
 	 * @throws IOException
 	 */
 	@GetMapping("/mypage")
-	public String mypageMain(HttpSession session, Model model) {
-		String stdtId = (String) session.getAttribute("stdtId");
-		/*
-		 * List<ApplyDetailDTO> applyList = studentService.searchAplyList(stdtId);
-		 * model.addAttribute("applyList", applyList);
-		 */
-		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
-		model.addAttribute("rgstList", rgstList);
-
-		/*
-		 * List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
-		 * model.addAttribute("wlogList", wlogList);
-		 */
-
-		List<PostVO> postList = studentService.searchPostList(stdtId);
-		model.addAttribute("postList", postList);
-
+	public String mypageMain() {
 		return "student/mypage";
 	}
 
@@ -1053,13 +1037,30 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/mypage/wlogList")
+	@PostMapping("/mypage/wlogList")
 	@ResponseBody
 	public List<WorklogVO> searchWlogList(HttpSession session, Model model) {
 		String stdtId = (String) session.getAttribute("stdtId");
 		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
 		model.addAttribute("wlogList", wlogList);
 		return wlogList;
+	}
+
+	// 마이페이지 이수 내역 조회
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@PostMapping("/mypage/rgstList")
+	@ResponseBody
+	public List<RegistrationVO> searchRgstList(HttpSession session, Model model) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
+		model.addAttribute("rgstList", rgstList);
+		return rgstList;
 	}
 
 	// 마이페이지 지원내역 조회
@@ -1070,7 +1071,7 @@ public class StudentController {
 	 * @return :
 	 */
 
-	@GetMapping("/mypage/aplyList")
+	@PostMapping("/mypage/aplyList")
 	@ResponseBody
 	public List<ApplyDetailDTO> searchAplyList(HttpSession session, Model model) {
 		String stdtId = (String) session.getAttribute("stdtId");
@@ -1231,8 +1232,21 @@ public class StudentController {
 		return responseList;
 	}
 
-	@GetMapping("/calendar")
-	public String cal() {
-		return "/student/calendar";
+	// 마이페이지 문의 내역 조회
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@PostMapping("/mypage/postList")
+	@ResponseBody
+	public List<PostVO> searchPostList(HttpSession session, Model model) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<PostVO> postList = studentService.searchPostList(stdtId);
+		model.addAttribute("postList", postList);
+		return postList;
 	}
+
 }
