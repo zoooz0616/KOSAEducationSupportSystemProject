@@ -37,7 +37,7 @@
 		</div>
 		<div class="maincontent">
 			<div class="login con"
-				style="margin-bottom: 4%; padding: 2%; width: 13%;">
+				style="margin-bottom: 4%; padding: 2%; width: 14%;">
 				<div th:if="${session.userEmail==null}">
 					<h2>회원가입후 이용가능</h2>
 				</div>
@@ -48,13 +48,13 @@
 								style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
 						</h2>
 						<div class="my" style="text-align: left;">
-							<div class="box" id=" aplyList">
-								<span>지원내역: </span> <span
+							<div class="box aplyList">
+								<span>지원내역: </span> <span 
 									style="color: #0E5881; font-size: 22px;"
 									th:text="${aplyClassCnt}"></span> <span>건</span></a>
 							</div>
-							<div class="box">
-								<span>출력 가능 이수증: </span> <span
+							<div class="box rgstList">
+								<span>출력 가능 이수증: </span> <span 
 									style="color: #0E5881; font-size: 22px;"
 									th:text="${cmptClassCnt}"></span> <span>건</span>
 							</div>
@@ -68,7 +68,7 @@
 				</div>
 			</div>
 			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; padding: 2%; width: 18%;">
+				style="margin-bottom: 4%; text-align: center; padding: 2%; width: 21%;">
 				<div th:if="${session.userEmail==null}">
 					<h2>로그인</h2>
 					<form th:action="@{/login}" method="post" class="">
@@ -134,8 +134,10 @@
 			<div class="notice con"
 				style="background: #E7EFF3; width: 43%; margin-bottom: 4%;">
 				<h2 style="margin-bottom: 0;">공지사항</h2>
-				<a class="plus" style="display: block; text-align: end;"
-					th:href="@{/student/notice/list}">+</a>
+				<div style="display: block; text-align: end;">
+					<a class="plus" style="display: block; text-align: end;"
+						th:href="@{/student/notice/list}">+</a>
+				</div>
 				<hr>
 				<table>
 					<tr th:each="postVO : ${postList}">
@@ -151,8 +153,9 @@
 			</div>
 			<div class="class con" style="width: 45%; margin-bottom: 4%;">
 				<h2 style="margin-bottom: 0;">접수중인 교육</h2>
-				<a class="plus" style="display: block; text-align: end;"
-					th:href="@{/student/class/list}">+</a>
+				<div style="display: block; text-align: end;">
+					<a class="plus" th:href="@{/student/class/list}">+</a>
+				</div>
 				<hr>
 				<table>
 					<tr th:each="classVO : ${classList}">
@@ -170,15 +173,18 @@
 
 			<div class="news con" style="background: #E7EFF3; width: 43%;">
 				<h2 style="margin-bottom: 0;">협회 뉴스</h2>
-				<a class="plus" style="display: block; text-align: end;"
-					th:href="@{/student}">+</a>
+				<div style="display: block; text-align: end;">
+					<a class="plus" th:href="@{/student/class/list}">+</a>
+				</div>
 				<hr>
 			</div>
 			<div class="youtube con" style="background: #E7EFF3; width: 45%;">
 				<h2 style="margin-bottom: 0;">협회 유튜브</h2>
-				<a class="plus" style="display: block; text-align: end;"
-					th:href="@{https://www.youtube.com/@kosa3223/featured}"
-					target='_blank'>+</a>
+				<div style="display: block; text-align: end;">
+					<a class="plus" style="display: block; text-align: end;"
+						th:href="@{https://www.youtube.com/@kosa3223/featured}"
+						target='_blank'>+</a>
+				</div>
 				<hr>
 			</div>
 		</div>

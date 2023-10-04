@@ -167,5 +167,17 @@ if (daysDiff > 0) {
 }
 
 
+const rgstList = document.querySelector('.rgstList');
+const aplyList = document.querySelector('.aplyList');
 
+rgstList.addEventListener('click', () => {
+	const selectParam = 3; // 이동하려는 페이지에서 원하는 select 매개변수 값을 설정하세요.
+	const newUrl = '/student/mypage?select=' + selectParam;
+	window.location.href = newUrl;
+});
 
+aplyList.addEventListener('click', () => {
+	const selectParam = 2; // 이동하려는 페이지에서 원하는 select 매개변수 값을 설정하세요.
+	const newUrl = '/student/mypage?select=' + selectParam;
+	window.location.href = newUrl;
+});

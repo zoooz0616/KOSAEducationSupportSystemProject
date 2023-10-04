@@ -76,7 +76,10 @@
 					</div>
 				</div>
 				<div class="applyList" style="display: none;">
-					<h3>교육 과정 지원 내역</h3>
+					<div class="listHead">
+						<h3>교육 과정 지원 내역</h3>
+						<p class="aplyCnt"></p>
+					</div>
 					<div>
 						<table class="applyTable">
 							<thead>
@@ -115,7 +118,10 @@
 					</div>
 				</div>
 				<div class="completeList" style="display: none;">
-					<h3>교육 과정 이수 내역</h3>
+					<div class="listHead">
+						<h3>교육 과정 이수 내역</h3>
+						<p class="rgstCnt"></p>
+					</div>
 					<div>
 						<table class="rgstTable">
 							<thead>
@@ -129,10 +135,12 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="rgstRow"
+								<!-- <tr class="rgstRow"
 									th:each="RegistrationVO , rowStat : ${rgstList}">
 									<td><span th:text="${rowStat.index + 1}"></span></td>
-									<td th:text="${RegistrationVO.clssNm}"></td>
+									<td><a
+										th:href="@{/student/class/view/__${RegistrationVO.clssId}__}"><span
+											th:text="${RegistrationVO.clssNm}"></span></a></td>
 									<td
 										th:utext="${RegistrationVO.clssStartDd}+'&lt;br /&gt; ~ '+  ${RegistrationVO.clssEndDd}"></td>
 									<td th:text="${RegistrationVO.rgstNm}"></td>
@@ -142,13 +150,16 @@
 										th:title="${RegistrationVO.fileNm}"> <img
 											style="height: 25px;" th:src="@{/img/file_icon.png}"
 											alt="file  아이콘"></a></td>
-								</tr>
+								</tr> -->
 							</tbody>
 						</table>
 					</div>
 				</div>
 				<div class="workLog" style="display: none;">
-					<h3>출퇴근 관리</h3>
+					<div class="listHead">
+						<h3>출퇴근 관리</h3>
+						<p class="wlogCnt"></p>
+					</div>
 					<div>
 						<table class="wlogTable">
 							<thead>
@@ -180,7 +191,10 @@
 					</div>
 				</div>
 				<div class="inquiryList" style="display: none;">
-					<h3>문의 내역</h3>
+					<div class="listHead">
+						<h3>문의 내역</h3>
+						<p class="postCnt"></p>
+					</div>
 					<table class="postTable">
 						<thead>
 							<tr>
@@ -191,13 +205,10 @@
 								<th>답변확인</th>
 							</tr>
 						</thead>
-					</table>
-					<div>
 						<ul style="margin: 0; list-style: none; padding: 0;">
 							<li class="postRow" th:each="postVO , rowStat : ${postList}">
-								<table class="postTable">
-									<tbody>
-										<tr>
+								<tbody class="postTableBody">
+									<!-- <tr>
 											<td><span th:text="${rowStat.index + 1}"></span></td>
 											<td><a th:text="${postVO.postTitle}"
 												th:href="@{/student/inquiry/view/__${postVO.postId}__}"></a></td>
@@ -207,15 +218,14 @@
 												style="display: none;" value="확인하기"
 												onclick="toggleReply(this)"></td>
 											<td th:text="${postVO.postId}" style="display: none;"></td>
-										</tr>
-									</tbody>
-								</table>
+										</tr> -->
+								</tbody>
 								<div class="reply-container" style="display: none;">
 									<p th:text="${postVO.postContent}"></p>
 								</div>
 							</li>
 						</ul>
-					</div>
+					</table>
 				</div>
 				<div class="modal1" style="display: none;">
 					<div class="modalBody">
@@ -299,30 +309,6 @@
 			</div>
 		</div>
 	</div>
-	<script th:inline="javascript">
-		/* JavaScript에서 Java 모델의 값을 가져와서 처리 */
-		var rgstList = /*[[${rgstList}]]*/[];
-
-		for (var i = 0; i < rgstList.length; i++) {
-			var cmptCd = rgstList[i].cmptCd;
-			var rgstPrintElement = $('.rgstPrint').eq(i);
-
-			if (cmptCd === 'CMP0000002') {
-				rgstPrintElement.css('display', 'revert');
-			}
-		}
-
-		var postList = /*[[${postList}]]*/[];
-
-		for (var i = 0; i < postList.length; i++) {
-			var postCd = postList[i].postCd;
-			var showReplyElement = $('.toggleReplyButton').eq(i);
-
-			if (postCd === 'PST0000004') {
-				showReplyElement.css('display', 'revert');
-			}
-		}
-	</script>
 	<script>
 		$(document).ready(function() {
 			$("#checkPassword").click(function() {
