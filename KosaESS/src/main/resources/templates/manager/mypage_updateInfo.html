@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header_2 :: header}">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+</head>
+<head>
+	<link th:href="@{/css/manager/manager_wlog_list.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
+	<link th:href="@{/css/manager/modal_style.css}" rel="stylesheet" />
 </head>
 <body>
 

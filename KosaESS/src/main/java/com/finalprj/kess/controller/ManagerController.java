@@ -27,11 +27,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
@@ -186,12 +188,12 @@ public class ManagerController {
 		
 		if(classId!=null) {
 //			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜에 교육과정 시작/종료 일자를 대입
-//			if (startDate == null) {
-//				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
-//			}
-//			if (endDate == null) {
-//				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
-//			}
+			if (startDate == null) {
+				startDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssStartDd());
+			}
+			if (endDate == null) {
+				endDate = String.valueOf(managerService.getClassDetailByClssId(classId).getClssEndDd());
+			}
 //			//end
 			model.addAttribute("thisClass", managerService.getClassDetailByClssId(classId));//requestParam에 해당하는 수업 정보 전달
 		}else {
@@ -230,7 +232,7 @@ public class ManagerController {
 				stdt.setCmptRate(100.0 * stdtTmSum/managerService.getClassDetailByClssId(classId).getClssTotalTm());
 			}
 		}
-
+		
 		model.addAttribute("title", "교육생 목록");
 		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
@@ -267,6 +269,7 @@ public class ManagerController {
 			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
+			,@RequestParam(required = false, value = "filterString[]") List<String> filterString
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
@@ -285,10 +288,11 @@ public class ManagerController {
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"", "");
+		
 		if(clssId != null) {
-			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId(mngrId,"", "");
 			List<String> isManagerIdList = new ArrayList<String>();
-			for (ClassVO vo : isManagerChkList) {
+			for (ClassVO vo : classList) {
 				isManagerIdList.add(vo.getClssId());
 			}
 			if(!isManagerIdList.contains(clssId)) {
@@ -297,11 +301,27 @@ public class ManagerController {
 			}
 		}
 		
-		List<WorklogDTO> wlogList = new ArrayList<WorklogDTO>();
-		if(clssId != null) {
-			wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		ClassVO thisClass;
+		
+		if(clssId ==null) {
+			clssId ="";
+			thisClass = new ClassVO();
+		}else {
+			thisClass = managerService.getClassDetailByClssId(clssId);
 		}
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"name","");
+		if(startDate ==null) {
+			startDate ="";
+		}
+		if(endDate ==null) {
+			endDate ="";
+		}
+		if(keyword ==null) {
+			keyword="";
+		}
+		
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
+		
+		model.addAttribute("thisClass",thisClass);
 		model.addAttribute("wlogCnt", wlogList.size());
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
@@ -367,7 +387,7 @@ public class ManagerController {
 	public Map<String, Object> fetchClassList(
 			HttpSession session
 			,@RequestParam(name="searchKeyword", required=false) String searchKeyword
-			,@RequestParam("filterString[]") List<String> filterString
+			,@RequestParam(value = "filterString[]", required=false) List<String> filterString
 			) {
 		String mngrId = (String) session.getAttribute("mngrId");
 		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString, searchKeyword);
@@ -402,10 +422,10 @@ public class ManagerController {
 			,@RequestParam(required = false) String clssId
 			,@RequestParam(required = false) String startDate
 			,@RequestParam(required = false) String endDate
-			,@RequestParam(required = false) String wlogCd
 			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
+			,@RequestParam("filterString[]") List<String> filterString
 			) {
 		
 		//유저 필터링
@@ -416,10 +436,127 @@ public class ManagerController {
 		}
 		//End : 유저 필터링
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(clssId, startDate, endDate, keyword, isDelete, resnOnly);
+		/*
+		//classId != null 일 경우, 자기가 담당한 교육에 대한 요청인지 확인
+		if(clssId != null) {
+			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"),"", "");
+			List<String> isManagerIdList = new ArrayList<String>();
+			for (ClassVO vo : isManagerChkList) {
+				isManagerIdList.add(vo.getClssId());
+			}
+			if(!isManagerIdList.contains(clssId)) {
+				//탈출
+				return null;//<<<이 부분 에러 페이지 이동으로 수정하기
+			}
+		}
+		*/
+		
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate((String)session.getAttribute("mngrId"), clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
+		
+		for (WorklogDTO dto : wlogList) {
+			dto.setStrInTmDd(dto.getInTmAsString());
+			dto.setStrOutTmDd(dto.getOutTmAsString());
+		}
 		
 		Map<String, Object> wlogListResponse = new HashMap<>();
 		wlogListResponse.put("wlogList", wlogList);
 		return wlogListResponse;
+	}
+	@GetMapping("/worklog/getPeriod")
+	@ResponseBody
+	public Map<String, Object> getClassPeriod(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@RequestParam String clssId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		ClassVO targetClass = managerService.getClassDetailByClssId(clssId);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("classDetail", targetClass);
+		return response;
+	}
+	@GetMapping("/worklog/resnContent")
+	@ResponseBody
+	public Map<String, Object> getResnContent(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@RequestParam String resnId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		ReasonDTO thisResn = managerService.getResnDetailByResnId(resnId);
+		thisResn.setStrInTmDd(thisResn.getInTmAsString());
+		thisResn.setStrOutTmDd(thisResn.getOutTmAsString());
+		List<CommonCodeVO> resnCdList = managerService.getCodeNameList("RES");
+		resnCdList.remove(0);
+		Map<String, Object> response = new HashMap<>();
+		response.put("resnContent", thisResn);
+		response.put("resnCdList", resnCdList);
+		return response;
+	}
+	
+	@PostMapping("/worklog/update_resn_code")
+	@ResponseBody
+	public String updateResnCd(
+			HttpSession session,
+			@RequestParam String resnId,
+			@RequestParam String resnCd
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		//업데이트
+		managerService.updateResnCd(resnId, resnCd, (String)session.getAttribute("mngrId"));
+		// End : 업데이트
+		return "OK!";
+		// End : 업데이트 결과 전송
+	}
+
+	@PostMapping("/worklog/update_wlog_code")
+	@ResponseBody
+	public Map<String, Object> updateWlogCd(
+			HttpSession session,
+			@RequestParam (value="wlogList[]") List<String> wlogList,
+			@RequestParam String wlogCd
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		//End : 유저 필터링
+		
+		List<String> result = new ArrayList<String>();
+		
+		//업데이트
+		for (String wlogId : wlogList) {
+			System.out.println(wlogId);
+			managerService.updateWlogCd(wlogId, wlogCd, (String)session.getAttribute("mngrId"));
+			result.add(wlogCd+" : OK");
+		}
+		// End : 업데이트
+		Map<String, Object> response = new HashMap<>();
+		response.put("result", result);
+		return response;
 	}
 }
