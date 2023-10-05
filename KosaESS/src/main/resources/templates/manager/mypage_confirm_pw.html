@@ -27,14 +27,15 @@
 
 	<!-- content wrap-->
 	<div class="content_wrap">
-		<form action = "/mypage/confirm_pw" accept-charset="utf-8" name = "confirm_password" method = "get">
+		<form action = "/manager/mypage/confirm_pw" method = "post" name="password">
 			<table>
 				<tr>
 					<th>현재 비밀번호</th>
 					<td><input type = "password" name = "password"/></td>
 				</tr>
 			</table>
-			<input type="submit" onclick="location.href='/manager/mypage/confirm_pw'">
+			<input type="submit">
+<!-- 			<input type="submit" onclick="location.href='/manager/mypage/confirm_pw'"> -->
 		</form>
 		
 	</div>

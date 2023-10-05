@@ -248,7 +248,7 @@ public class ManagerController {
 		return "manager/student_list";
 	}
 
-	//	개인정보 조회 : 비밀번호 확인
+	//	개인정보 조회 : 비밀번호 확인창(GET)
 	@GetMapping("/mypage")
 	public String getMngrInfo(Model model, HttpSession session) {
 		//유저 필터링
@@ -260,14 +260,22 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		
-		model.addAttribute("title", "비밀번호 확인");
-		
-		return "manager/mypage_confirm_pw";
+		if( session.getAttribute("isConfirmed") == null || !(boolean) session.getAttribute("isConfirmed")) {
+			model.addAttribute("title", "비밀번호 확인");
+			return "manager/mypage_confirm_pw";
+		}else {
+			String mngrId = (String) session.getAttribute("mngrId");
+			ManagerVO thisManager = adminService.getManager(mngrId);
+			model.addAttribute("title", "내 정보 관리");
+			model.addAttribute("thisManager", thisManager);
+			return "redirect:/manager/mypage/manager_info";
+		}
 	}
 	
-	//	개인정보 조회 : 비밀번호 확인
-	@GetMapping("/mypage/confirm_pw")
-	public String confirmPassword(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+	//	개인정보 조회 : 비밀번호 확인 후 리다이렉팅
+	@PostMapping("/mypage/confirm_pw")
+	public String confirmPassword(Model model, HttpSession session
+			, @RequestParam String password) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
 			return "redirect:/login";
@@ -278,15 +286,38 @@ public class ManagerController {
 		}
 		
 		String mngrId = (String) session.getAttribute("mngrId");
-		
 		ManagerVO thisManager = adminService.getManager(mngrId);
-		if(thisManager.getUserPwd()==httpServletRequest.getParameter("password")) {
-			model.addAttribute("title", "내 정보 관리");
-			model.addAttribute("thisManager", thisManager);
-			return "manager/mypage_updateInfo";
+		
+		if(thisManager.getUserPwd().equals(password)) {
+			session.setAttribute("isConfirmed", Boolean.TRUE);
+			return "redirect:/manager/mypage/manager_info";
 		}else {
-			return "manager/mypage_confirm_pw";
+			return "redirect:/manager/mypage";
 		}
+	}
+
+	//	개인정보 조회 : 개인정보 수정 화면
+	@GetMapping("/mypage/manager_info")
+	public String mypageUpdateInfo(Model model, HttpSession session) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//주소를 통한 접근 차단
+		if(!(boolean) session.getAttribute("isConfirmed")) {
+			return "redirect:/manager/mypage";
+		}
+		String mngrId = (String) session.getAttribute("mngrId");
+		ManagerVO thisManager = adminService.getManager(mngrId);
+		
+		model.addAttribute("title", "내 정보 관리");
+		model.addAttribute("thisManager", thisManager);
+		
+		return "manager/mypage_updateInfo";
 	}
 	
 	@GetMapping("/worklog")
@@ -579,13 +610,56 @@ public class ManagerController {
 		
 		//업데이트
 		for (String wlogId : wlogList) {
-			System.out.println(wlogId);
 			managerService.updateWlogCd(wlogId, wlogCd, (String)session.getAttribute("mngrId"));
 			result.add(wlogCd+" : OK");
 		}
 		// End : 업데이트
 		Map<String, Object> response = new HashMap<>();
 		response.put("result", result);
+		return response;
+	}
+	
+	//	개인정보 조회 : 업데이트 후 리다이렉팅
+	@PostMapping("/mypage/update_info")
+	@ResponseBody
+	public Map<String, Object> mypageUpdateInfo(
+			HttpSession session
+			, @RequestParam(required = false) String inputPassword
+			, @RequestParam(required = false) String confirmPassword
+			, @RequestParam(required = false) String inputTel
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		//End : 유저 필터링
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		//주소를 통한 접근 차단
+		if(!(boolean) session.getAttribute("isConfirmed")) {
+			response.put("message","유효하지 않은 접근입니다.");
+			return response;
+		}
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		ManagerVO updateManager = adminService.getManager(mngrId);
+		
+		System.out.println("pw >>> "+inputPassword);
+		System.out.println("pw2 >>> "+confirmPassword);
+		System.out.println("tel >>> "+inputTel);
+		
+		if(inputPassword!=null && !inputPassword.equals("") && inputPassword.equals(confirmPassword)) {
+			updateManager.setUserPwd(inputPassword);
+		}
+		if(inputTel != null) {
+			updateManager.setMngrTel(inputTel);
+		}
+		
+		managerService.updateManagerInfo(updateManager);
+		
+		response.put("thisManager", adminService.getManager(mngrId));
+		response.put("message","변경되었습니다.");
 		return response;
 	}
 }
