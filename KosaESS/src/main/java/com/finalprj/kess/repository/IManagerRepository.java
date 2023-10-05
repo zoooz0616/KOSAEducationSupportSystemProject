@@ -14,6 +14,7 @@ import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
@@ -71,6 +72,10 @@ public interface IManagerRepository {
 	public void updateResnCd(@Param("resnId") String resnId, @Param("resnCd") String resnCd, @Param("mngrId") String mngrId);
 
 	public void updateWlogCd(@Param("wlogId") String wlogId, @Param("wlogCd") String wlogCd, @Param("mngrId") String mngrId);
+
+	public void updateManagerInfo(ManagerVO updateManager);
+
+	public void updateManagerLoginInfo(ManagerVO updateManager);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

@@ -219,6 +219,26 @@
 				AND STDT_ID=#{stdtId}
 		]]>
 	</update>
+	
+	<update id="updateManagerInfo" parameterType="com.finalprj.kess.model.ManagerVO">
+		<![CDATA[
+			UPDATE mngr
+			SET
+				mngr_tel = #{mngrTel}
+			WHERE
+				user_email=#{userEmail}
+		]]>
+	</update>
+	<update id="updateManagerLoginInfo" parameterType="com.finalprj.kess.model.ManagerVO">
+		<![CDATA[
+			UPDATE lgin
+			SET
+				user_pwd=#{userPwd}
+			WHERE
+				user_email=#{userEmail}
+		]]>
+	</update>
+	
 	<update id="updateResnCd">
 		<![CDATA[
 			UPDATE resn
