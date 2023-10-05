@@ -645,10 +645,6 @@ public class ManagerController {
 		String mngrId = (String) session.getAttribute("mngrId");
 		ManagerVO updateManager = adminService.getManager(mngrId);
 		
-		System.out.println("pw >>> "+inputPassword);
-		System.out.println("pw2 >>> "+confirmPassword);
-		System.out.println("tel >>> "+inputTel);
-		
 		if(inputPassword!=null && !inputPassword.equals("") && inputPassword.equals(confirmPassword)) {
 			updateManager.setUserPwd(inputPassword);
 		}
