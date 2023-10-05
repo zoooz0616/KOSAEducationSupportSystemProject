@@ -115,6 +115,13 @@
 								</tr>
 							</tbody>
 						</table>
+						<div class="paging paging1">
+							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
+							<i class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+							<div class="pages pages1"></div>
+							<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+								class="right" id="last_page" th:src="@{/img/last_page}"></i>
+						</div>
 					</div>
 				</div>
 				<div class="completeList" style="display: none;">
@@ -153,6 +160,13 @@
 								</tr> -->
 							</tbody>
 						</table>
+						<div class="paging paging2">
+							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
+							<i class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+							<div class="pages pages2"></div>
+							<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+								class="right" id="last_page" th:src="@{/img/last_page}"></i>
+						</div>
 					</div>
 				</div>
 				<div class="workLog" style="display: none;">
@@ -188,6 +202,13 @@
 								</tr> -->
 							</tbody>
 						</table>
+						<div class="paging paging3">
+							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
+							<i class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+							<div class="pages pages3"></div>
+							<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+								class="right" id="last_page" th:src="@{/img/last_page}"></i>
+						</div>
 					</div>
 				</div>
 				<div class="inquiryList" style="display: none;">
@@ -205,10 +226,11 @@
 								<th>답변확인</th>
 							</tr>
 						</thead>
-						<ul style="margin: 0; list-style: none; padding: 0;">
-							<li class="postRow" th:each="postVO , rowStat : ${postList}">
-								<tbody class="postTableBody">
-									<!-- <tr>
+						<tbody>
+							<ul style="margin: 0; list-style: none; padding: 0;">
+								<li class="postRow" th:each="postVO , rowStat : ${postList}">
+									<div class="body">
+										<tr>
 											<td><span th:text="${rowStat.index + 1}"></span></td>
 											<td><a th:text="${postVO.postTitle}"
 												th:href="@{/student/inquiry/view/__${postVO.postId}__}"></a></td>
@@ -218,14 +240,22 @@
 												style="display: none;" value="확인하기"
 												onclick="toggleReply(this)"></td>
 											<td th:text="${postVO.postId}" style="display: none;"></td>
-										</tr> -->
-								</tbody>
-								<div class="reply-container" style="display: none;">
-									<p th:text="${postVO.postContent}"></p>
-								</div>
-							</li>
-						</ul>
+										</tr>
+									</div>
+									<div class="reply-container" style="display: none;">
+										<p th:text="${postVO.postContent}"></p>
+									</div>
+								</li>
+							</ul>
+						</tbody>
 					</table>
+					<div class="paging paging4">
+						<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i
+							class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+						<div class="pages pages4"></div>
+						<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+							class="right" id="last_page" th:src="@{/img/last_page}"></i>
+					</div>
 				</div>
 				<div class="modal1" style="display: none;">
 					<div class="modalBody">
@@ -383,6 +413,9 @@
 		}
 	</script>
 	<script src="/js/student/sidebar.js"></script>
-	<script src="/js/student/mypage.js"></script>
+	<script src="/js/student/mypage1.js"></script>
+	<script src="/js/student/mypage2.js"></script>
+	<script src="/js/student/mypage3.js"></script>
+	<script src="/js/student/mypage4.js"></script>
 </body>
 </html>

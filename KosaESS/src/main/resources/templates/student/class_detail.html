@@ -129,8 +129,13 @@
 			</div>
 		</div>
 		<div class="viewClass">
+			<h2 style="font-size: 22px; color: #0E5881;">최근에 조회한 교육</h2>
+			<div th:if="${class2 == null}">
+				<div class="noClass">
+					<p>조회 기록이 존재하지 않습니다.</p>
+				</div>
+			</div>
 			<div th:if="${class2 != null or class1 != null}">
-				<h2 style="font-size: 22px; color: #0E5881;">최근에 조회한 교육</h2>
 				<ul style="padding: 0;">
 					<li th:if="${class2 != null}">
 						<div class="veiwClass1">

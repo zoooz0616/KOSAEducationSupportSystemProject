@@ -974,6 +974,18 @@
 	]]>
 
 	</select>
+	
+	<!-- 문의 내역 답변 부분 -->
+	<select id="getContent" parameterType="string"
+		resultType="String">
+	<![CDATA[
+		 select 
+			post_content
+			FROM post
+			WHERE post_id=#{postId}
+	]]>
+	</select>
+	
 
 	<!-- 문의작성하기 -->
 	<insert id="uploadInquiry">

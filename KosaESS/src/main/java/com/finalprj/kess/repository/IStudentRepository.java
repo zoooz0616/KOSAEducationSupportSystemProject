@@ -155,4 +155,6 @@ public interface IStudentRepository {
 
 	List<ClassVO> getStdtAplyEvents(String stdtId);
 
+	String getContent(String postId);
+
 }

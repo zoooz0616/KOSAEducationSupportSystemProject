@@ -352,4 +352,9 @@ public class StudentService implements IStudentService {
 		return studentRepository.getStdtAplyEvents(stdtId);
 	}
 
+	@Override
+	public String getContent(String postId) {
+		return studentRepository.getContent(postId);
+	}
+
 }

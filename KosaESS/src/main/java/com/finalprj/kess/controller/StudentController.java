@@ -1211,6 +1211,7 @@ public class StudentController {
 
 		// postId를 사용하여 답변 정보 가져오기 (studentService.getReply(postId) 호출)
 		List<PostVO> replyList = studentService.getReply(postId);
+		String content = studentService.getContent(postId);
 
 		for (PostVO replyVO : replyList) {
 			Map<String, Object> response = new HashMap<>(); // 각각의 답변 정보를 담을 Map 생성
@@ -1218,14 +1219,14 @@ public class StudentController {
 			String rgstDd = new SimpleDateFormat("yyyy-MM-dd").format(rgstDate);
 
 			Map<String, String> inquiry = new HashMap<>();
+			inquiry.put("Postcontent", content);
 			inquiry.put("id", replyVO.getPostId());
 			inquiry.put("title", replyVO.getPostTitle());
-			inquiry.put("content", replyVO.getPostContent());
+			inquiry.put("replyContent", replyVO.getPostContent());
 			inquiry.put("name", replyVO.getMngrNm());
 			inquiry.put("date", rgstDd);
 
 			response.put("inquiry", inquiry);
-
 			responseList.add(response); // 답변 정보를 리스트에 추가
 		}
 

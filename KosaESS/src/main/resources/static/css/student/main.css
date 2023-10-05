@@ -27,7 +27,7 @@
 	width: 3%;
 	margin-bottom: 1%;
 	border-radius: 10px;
-	background: white;
+	background: #0E5881;
 }
 
 .bannertext {
@@ -264,5 +264,5 @@ input::placeholder {
 }
 
 .banner-button.active {
-	background: #0E5881; /* 활성화된 버튼의 배경색을 변경 */
+	background: white; /* 활성화된 버튼의 배경색을 변경 */
 }

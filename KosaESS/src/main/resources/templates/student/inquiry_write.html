@@ -122,7 +122,7 @@
 
 		$(".updateInquiry").click(function() {
 			// 수정된 데이터 추출
-			var postId = /*[[${inquiryDetail.postId}]]*/'';
+			var postId = /*[[${inquiryDetail?.postId}]]*/'';
 			var updatedTitle = $(".title").val(); // 수정된 제목
 			var updatedContent = $(".postContent").val(); // 수정된 내용
 			var fileInput = $("#fileInput")[0].files; // 선택된 파일

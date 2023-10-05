@@ -148,4 +148,6 @@ public interface IStudentService {
 
 	List<ClassVO> getStdtAplyEvents(String stdtId);
 
+	String getContent(String postId);
+
 }
