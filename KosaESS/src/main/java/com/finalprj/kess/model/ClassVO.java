@@ -46,5 +46,6 @@ public class ClassVO {
 	private String mngrNm;// 업무담당자 이름
 	private String userEmail;//업무담당자 이메일
 	private String fileNm; // 파일 이름
+	private String sSubsidy; // 금액으로 표시된 지원금
 
 }
