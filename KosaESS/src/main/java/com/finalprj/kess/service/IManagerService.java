@@ -12,6 +12,7 @@ import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
@@ -64,4 +65,6 @@ public interface IManagerService {
 	public void updateResnCd(String resnId, String resnCd, String mngrId);
 
 	public void updateWlogCd(String wlogId, String wlogCd, String mngrId);
+
+	public void updateManagerInfo(ManagerVO updateManager);
 }
