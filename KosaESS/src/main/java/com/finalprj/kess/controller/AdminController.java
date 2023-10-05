@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.LectureListDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -604,6 +607,8 @@ public class AdminController {
 
 		// 해당 교육과정 객체 가져오기
 		ClassVO classVO = adminService.getClass(clssId);
+		DecimalFormat formatter = new DecimalFormat("##,###,###");
+		classVO.setSSubsidy(formatter.format(classVO.getClssSubsidy()));
 		model.addAttribute("classVO", classVO);
 
 		// 파일 가져오기
@@ -835,17 +840,11 @@ public class AdminController {
 		String act = "update";
 		model.addAttribute("act", act);
 
-		/*
-		 * 선택한 교육과정 정보 넘기기
-		 */
-
 		// 해당 교육과정 객체 가져오기
 		ClassVO classVO = adminService.getClass(clssId);
+		DecimalFormat formatter = new DecimalFormat("##,###,###");
+		classVO.setSSubsidy(formatter.format(classVO.getClssSubsidy()));
 		model.addAttribute("classVO", classVO);
-
-		System.out.println("=================================");
-		System.out.println("총시간:" + classVO.getClssTotalTm());
-		System.out.println("=================================");
 
 		// 파일 가져오기
 		List<FileVO> fileList = null;
@@ -965,7 +964,7 @@ public class AdminController {
 		classVO.setLimitCnt(classInsertDTO.getLimitCnt());
 
 		// Date-time(String) to Timestamp
-		
+
 		try {
 			String aplyStartDt = classInsertDTO.getAplyStartDt(); // "2023-09-07T12:06"
 			String aplyEndDt = classInsertDTO.getAplyEndDt();
@@ -1314,70 +1313,113 @@ public class AdminController {
 	}
 
 	/**
-	 * 강의 수정
+	 * 강의 일괄 수정
 	 * 
 	 * @author : eunji
-	 * @date : 2023. 9. 19.
-	 * @parameter : lectureId, lectureNm, lectureTm
-	 * @return : String
+	 * @date : 2023. 10. 5.
+	 * @parameter : updatedlectureList
+	 * @return : Map<String, Object>
 	 */
 	@PostMapping("/lecture/update")
 	@ResponseBody
-	public String updateLecture(@RequestParam String lectureId, @RequestParam String lectureNm,
-			@RequestParam int lectureTm) {
-		LectureVO lectureVO = adminService.getLecture(lectureId);
-		lectureVO.setLctrNm(lectureNm);
-		lectureVO.setLctrTm(lectureTm);
+	public Map<String, Object> updateLecture(@RequestBody LectureVO[] updateLectureList) {
+		adminService.updateLecture(updateLectureList);
 
-		adminService.updateLecture(lectureVO);
+		Map<String, Object> data = new HashMap<>();
+		data.put("message", "success");
 
-		return "success";
-
+		return data;
 	}
 
 	/**
-	 * 과목 수정
+	 * 과목 일괄 수정
 	 * 
 	 * @author : eunji
-	 * @date : 2023. 9. 19.
+	 * @date : 2023. 10. 5.
 	 * @parameter : lectureId, lectureNm, lectureTm
 	 * @return : String
 	 */
 	@PostMapping("/lecture/subject/update")
 	@ResponseBody
-	public String updateSubject(@RequestParam String subjectId, @RequestParam String subjectNm) {
-		SubjectVO subjectVO = adminService.getSubjectVO(subjectId);
-		subjectVO.setSbjtNm(subjectNm);
+	public Map<String, Object> updateSubject(@RequestBody SubjectVO[] updateSubjectList) {
+		adminService.updateSubject(updateSubjectList);
 
-		adminService.updateSubject(subjectVO);
+		Map<String, Object> data = new HashMap<>();
+		data.put("message", "success");
 
-		return "success";
-
+		return data;
 	}
-
+	
 	/**
-	 * 강사 수정
+	 * 강사 일괄 수정
 	 * 
 	 * @author : eunji
-	 * @date : 2023. 9. 19.
+	 * @date : 2023. 10. 5
 	 * @parameter : professorId, professorNm, professorTel, professorEmail
 	 * @return : String
 	 */
 	@PostMapping("/lecture/professor/update")
 	@ResponseBody
-	public String updateProfessor(@RequestParam String professorId, @RequestParam String professorNm,
-			@RequestParam String professorTel, @RequestParam String professorEmail) {
-		ProfessorVO professorVO = adminService.getProfessorVO(professorId);
+	public Map<String, Object> updateProfessor(@RequestBody ProfessorVO[] updateProfessorList) {
+		adminService.updateProfessor(updateProfessorList);
 
-		professorVO.setProfNm(professorNm);
-		professorVO.setProfTel(professorTel);
-		professorVO.setProfEmail(professorEmail);
+		Map<String, Object> data = new HashMap<>();
+		data.put("message", "success");
 
-		adminService.updateProfessor(professorVO);
-
-		return "success";
-
+		return data;
 	}
+
+	/**
+	 * 강의 리스트 불러오기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 5.
+	 * @parameter :
+	 * @return : LectureListDTO
+	 */
+	@GetMapping("/lecture/getlecturelist")
+	@ResponseBody
+	public LectureListDTO getLectureList() {
+
+		List<LectureVO> lectureList = adminService.getLectureList();
+		List<SubjectVO> subjectList = adminService.getSubjectList();
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+
+		return new LectureListDTO(lectureList, subjectList, professorList);
+	}
+	
+	/**
+	 * 과목 리스트 불러오기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 5.
+	 * @parameter :
+	 * @return : List<SubjectVO>
+	 */
+	@GetMapping("/lecture/getsubjectlist")
+	@ResponseBody
+	public List<SubjectVO> getSubjectList() {
+		List<SubjectVO> subjectList = adminService.getSubjectList();
+		
+		return subjectList;
+	}
+	
+	/**
+	 * 강사 리스트 불러오기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 5.
+	 * @parameter :
+	 * @return : List<ProfessorVO>
+	 */
+	@GetMapping("/lecture/getprofessorlist")
+	@ResponseBody
+	public List<ProfessorVO> getProfessorList() {
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+
+		return professorList;
+	}
+
 
 	/**
 	 * 강의 선택삭제

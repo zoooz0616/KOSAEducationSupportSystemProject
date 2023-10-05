@@ -923,19 +923,6 @@
 	]]>
 	</update>
 
-	<update id="updateLecture"
-		parameterType="com.finalprj.kess.model.LectureVO">
-	<![CDATA[
-	 update lctr
-	 set
-	 	lctr_nm = #{lctrNm},
-	 	lctr_tm = #{lctrTm},
-	 	updt_dt = systimestamp,
-	 	updter_id = 'MNGR000001'
-	 where lctr_id = #{lctrId}
-	]]>
-	</update>
-
 	<select id="getSubjectVO" parameterType="string"
 		resultType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
@@ -945,18 +932,6 @@
 	]]>
 	</select>
 
-	<update id="updateSubject"
-		parameterType="com.finalprj.kess.model.SubjectVO">
-	<![CDATA[
-	update sbjt
-	set
-		sbjt_nm = #{sbjtNm},
-		updt_dt = systimestamp,
-		updter_id= 'MNGR000001'
-	where sbjt_id = #{sbjtId}
-	]]>
-	</update>
-
 	<select id="getProfessorVO" parameterType="string"
 		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
@@ -965,18 +940,6 @@
 	where prof_id = #{profId}
 	]]>
 	</select>
-
-	<update id="updateProfessor"
-		parameterType="com.finalprj.kess.model.ProfessorVO">
-	<![CDATA[
-	update prof
-	set 
-		prof_nm = #{profNm},
-		prof_tel = #{profTel},
-		prof_email = #{profEmail}
-	where prof_id = #{profId}
-	]]>
-	</update>
 
 	<select id="getMaxCompanyId" resultType="string">
 	<![CDATA[
@@ -1421,13 +1384,50 @@ order by stdt.stdt_nm
 	]]>
 	</select>
 
-
-
-
-
-
-
-
+	
+	<update id="updateLecture"
+		parameterType="java.util.List">
+	<foreach collection="lectureList" item="item" open="DECLARE BEGIN"
+	separator=";" close="; END;">
+	 update lctr
+	 set
+	 	lctr_nm = #{item.lctrNm},
+	 	sbjt_id = #{item.sbjtId},
+	 	prof_id = #{item.profId},
+	 	lctr_tm = #{item.lctrTm},
+	 	updt_dt = SYSTIMESTAMP,
+	 	updter_id = 'MNGR000001'
+	 where lctr_id = #{item.lctrId}
+	</foreach>
+	</update>
+	
+	<update id="updateSubject"
+		parameterType="java.util.List">
+	<foreach collection="updateSubjectList" item="item" open="DECLARE BEGIN"
+	separator=";" close="; END;">
+	 update sbjt
+	 set
+	 	sbjt_nm = #{item.sbjtNm},
+		updt_dt = SYSTIMESTAMP,
+		updter_id= 'MNGR000001'
+	 where sbjt_id = #{item.sbjtId}
+	</foreach>
+	</update>
+	
+	<update id="updateProfessor"
+		parameterType="java.util.List">
+	<foreach collection="updateProfessorList" item="item" open="DECLARE BEGIN"
+	separator=";" close="; END;">
+	 update prof
+	 set
+	 	prof_nm = #{item.profNm},
+	 	prof_tel = #{item.profTel},
+		prof_email = #{item.profEmail},
+		updt_dt = SYSTIMESTAMP,
+		updter_id= 'MNGR000001'
+	 where prof_id = #{item.profId}
+	</foreach>
+	</update>
 
 
 

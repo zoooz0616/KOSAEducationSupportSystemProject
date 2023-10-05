@@ -111,11 +111,8 @@ public interface IAdminRepository {
 	ManagerVO getManager(String mngrId);
 	void updateLgin(ManagerVO managerVO);
 	void updateManager(ManagerVO managerVO);
-	void updateLecture(LectureVO lectureVO);
 	SubjectVO getSubjectVO(String subjectId);
-	void updateSubject(SubjectVO subjectVO);
 	ProfessorVO getProfessorVO(String professorId);
-	void updateProfessor(ProfessorVO professorVO);
 	String getMaxCompanyId();
 	void insertCompanyVO(CompanyVO companyVO);
 	CompanyVO getCompanyVO(String cmpyId);
@@ -150,5 +147,9 @@ public interface IAdminRepository {
 			String clssStartDd, String clssEndDd, String cmpyId);
 	
 	List<String> getClassSearch(String term);
+
+	void updateLecture(LectureVO[] lectureList);
+	void updateSubject(SubjectVO[] updateSubjectList);
+	void updateProfessor(ProfessorVO[] updateProfessorList);
 
 }
