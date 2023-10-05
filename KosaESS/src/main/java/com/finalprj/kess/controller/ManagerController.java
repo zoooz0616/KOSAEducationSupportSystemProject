@@ -60,17 +60,19 @@ public class ManagerController {
 	//	메인 페이지
 	@GetMapping("")
 	public String managerMain(Model model, HttpSession session) {
-		String roleCd = (String) session.getAttribute("roleCd");
-		//		if (roleCd.equals("ROL0000003")) {
-		//			return "redirect:/manager/class";
-		//		} else {
-		//			return "redirect:/login";
-		//		}
-		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
 			return "redirect:/login";
-		} else {
-			return "redirect:/manager/class";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
 		}
+		
+		
+		model.addAttribute("title","대 시 보 드");
+		
+		return "manager/manager_main";
 	}
 
 	//	담당 교육 목록 조회

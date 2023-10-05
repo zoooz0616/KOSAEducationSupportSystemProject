@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header_2 :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/manager/manager_main.css}" rel="stylesheet" />
+<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 얼럴트 -->
+	<div class="look_at_me">
+		<span class="read_this">이봐!</span>
+	</div>
+	<!-- End : 얼럴트 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title_wrap">
+			<span class="title" th:text="${title}"></span> <br>
+		</div>
+		<!-- content wrap-->
+		<div class="content_wrap">엄</div>
+	</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript"></script>
+<script src="/js/manager/alert_box.js"></script>
+<script src="/js/manager/student_list.js"></script>
+</html>
