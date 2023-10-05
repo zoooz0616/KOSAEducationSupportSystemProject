@@ -234,7 +234,7 @@
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
-							강사 총 <span class="cnt" th:text="${#lists.size(professorList)}"></span>
+							강사 총 <span class="cnt professor_cnt" th:text="${#lists.size(professorList)}"></span>
 							명
 						</div>
 						<div class="content_info_button_wrap">
@@ -998,7 +998,7 @@
 			var profId = parentTr.querySelector('.td_professor_check_box .professor_checkbox_item').value;
 			var profNm = parentTr.querySelector('.td_professor_nm .professor_nm').value;
 			var profTel = parentTr.querySelector('.td_professor_tel .professor_tel').value;
-			var profEmail = parentTr.querySelecotr('.td_professor_email .professor_email').value;
+			var profEmail = parentTr.querySelector('.td_professor_email .professor_email').value;
 						
 			//딕셔너리의 키값에 값 넣기
 			professor['profId'] = profId;
@@ -1259,7 +1259,84 @@
 				var professorList = response;
 				
 				//professor cnt 변경
+				var professorCnt = document.querySelector('.professor_cnt');
+				professorCnt.textContent = professorList.length;
 				
+				for(var i=0; i<professorList.length; i++){
+					var professor = professorList[i];
+					
+					var tr = document.createElement('tr');
+					
+					var tdCheck = document.createElement('td');
+					tdCheck.className="td_professor_check_box";
+					var inputCheck = document.createElement('input');
+					inputCheck.type="checkbox";
+					inputCheck.name="professor_select";
+					inputCheck.onclick = function(){
+						professorCheckSelectAll();
+					}
+					inputCheck.className="professor_checkbox_item";
+					inputCheck.value = professor.profId;
+					var inputHidden = document.createElement('input');
+					inputHidden.type="hidden";
+					inputHidden.className ="professor_update_yn";
+					inputHidden.value ='N';
+					tdCheck.appendChild(inputCheck);
+					tdCheck.appendChild(inputHidden);
+					tr.appendChild(tdCheck);
+					
+					var tdNum = document.createElement('td');
+					tdNum.className ='td_professor_num';
+					tdNum.textContent = i+1;
+					tr.appendChild(tdNum);
+					
+					var tdNm = document.createElement('td');
+					tdNm.className = 'td_professor_nm';
+					var spanNm = document.createElement('span');
+					spanNm.className = 'professor_span';
+					spanNm.textContent = professor.profNm;
+					var inputNm = document.createElement('input');
+					inputNm.className ='professor_input professor_nm';
+					inputNm.style.display = 'none';
+					inputNm.style.width = '100px';
+					inputNm.value = professor.profNm;
+					tdNm.appendChild(spanNm);
+					tdNm.appendChild(inputNm);
+					tr.appendChild(tdNm);
+					
+					var tdTel = document.createElement('td');
+					tdTel.className = 'td_professor_tel';
+					var spanTel = document.createElement('span');
+					spanTel.className = 'professor_span';
+					spanTel.textContent = professor.profTel;
+					var inputTel = document.createElement('input');
+					inputTel.className='professor_input professor_tel';
+					inputTel.style.display = 'none';
+					inputTel.style.width = '100px';
+					inputTel.value = professor.profTel;
+					tdTel.appendChild(spanTel);
+					tdTel.appendChild(inputTel);
+					tr.appendChild(tdTel);
+					
+					var tdEmail = document.createElement('td');
+					tdEmail.className = 'td_professor_email';
+					var spanEmail = document.createElement('span');
+					spanEmail.className = 'professor_span';
+					spanEmail.textContent = professor.profEmail;
+					var inputEmail = document.createElement('input');
+					inputEmail.className = 'professor_input professor_email';
+					inputEmail.style.display ='none';
+					inputEmail.style.width = '200px';
+					inputEmail.value = professor.profEmail;
+					tdEmail.appendChild(spanEmail);
+					tdEmail.appendChild(inputEmail);
+					tr.appendChild(tdEmail);
+						
+					professorTbody.appendChild(tr);
+				}
+				
+				//강의 리스트 새로 불러오기
+				getLectureList();
 			}
 		});
 	}
