@@ -499,11 +499,6 @@ public class AdminService implements IAdminService {
 	}
 	
 	@Override
-	public void updateGroupCode(String cmcdId, String cmcdNm) {
-		adminRepository.updateGroupCode(cmcdId, cmcdNm);
-	}
-	
-	@Override
 	public List<CommonCodeVO> getDetailCodeList(String cmcdId) {
 		return adminRepository.getDetailCodeList(cmcdId);
 	}
@@ -527,11 +522,6 @@ public class AdminService implements IAdminService {
 	@Override
 	public void insertDetailCode(CommonCodeVO commonCodeVO) {
 		adminRepository.insertDetailcode(commonCodeVO);
-	}
-	
-	@Override
-	public void updateDetailCode(String cmcdId, String cmcdNm, String useYn, int cmcdOrder) {
-		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn, cmcdOrder);
 	}
 	
 	@Override
@@ -628,6 +618,16 @@ public class AdminService implements IAdminService {
 	public void updateProfessor(ProfessorVO[] updateProfessorList) {
 		adminRepository.updateProfessor(updateProfessorList);
 	}
+
+	@Override
+	public void updateDetailCode(CommonCodeVO[] updateDetailList) {
+		adminRepository.updateDetailCode(updateDetailList);
+	}
+
+	@Override
+	public void updateGroupCode(CommonCodeVO[] updateGroupList) {
+		adminRepository.updateGroupCode(updateGroupList);
+	}
 	
 	
 	
@@ -640,7 +640,4 @@ public class AdminService implements IAdminService {
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();
 	}
-
-
-	
 }

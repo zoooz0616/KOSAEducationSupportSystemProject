@@ -128,13 +128,11 @@ public interface IAdminService {
 	String getMaxGroupCodeId();
 	void insertGroupCode(CommonCodeVO commonCodeVO);
 	void deleteGroupCode(List<String> selectedGroupCodeIds);
-	void updateGroupCode(String cmcdId, String cmcdNm);
 	List<CommonCodeVO> getDetailCodeList(String cmcdId);
 	String getGroupCodeId(String cmcdId);
 	int getDetailCodeNmCnt(String cmcdId, String cmcdNm);
 	String getMaxDetailCodeId(String cmcdId);
 	void insertDetailCode(CommonCodeVO commonCodeVO);
-	void updateDetailCode(String cmcdId, String cmcdNm, String useYn, int cmcdOrder);
 	String getStudentEmailByAplyId(String aplyId);
 	String getClssNmByAplyId(String aplyId);
 	void deleteInquiryReply(String replyId);
@@ -157,4 +155,7 @@ public interface IAdminService {
 	void updateLecture(LectureVO[] lectureList);
 	void updateSubject(SubjectVO[] updateSubjectList);
 	void updateProfessor(ProfessorVO[] updateProfessorList);
+
+	void updateDetailCode(CommonCodeVO[] updateDetailList);
+	void updateGroupCode(CommonCodeVO[] updateGroupList);
 }
