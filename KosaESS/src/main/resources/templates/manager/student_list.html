@@ -41,10 +41,12 @@
 					<table class="search_filter_table" style="width: 100%;">
 						<tr>
 							<td class="search_filter_name">교육과정명</td>
-							<td style="width: 30%;"><select id="classId">
+							<td style="width: 30%;">
+								<select id="classId">
 									<option value="" disabled selected>교육과정명을 선택하세요</option>
 									<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
-							</select></td>
+								</select>
+							</td>
 							<td class="search_filter_name">검색 기간</td>
 							<td style="width: 30%;">
 								<input type="date" id="startDate" min="1980-01-01"> <span> ~ </span> <input type="date" id="endDate" min="1980-01-01">
