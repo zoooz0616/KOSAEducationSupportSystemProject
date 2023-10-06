@@ -7,6 +7,9 @@
 <link th:href="@{/css/student/mypage.css}" rel="stylesheet">
 <link rel="icon" href="/img/icon.png" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet"
+	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <meta charset="UTF-8">
 </head>
 <body>
@@ -21,7 +24,10 @@
 			<div th:replace="~{/include/student_subbar :: subbar}"></div>
 			<div class="maincontent">
 				<div class="personalData">
-					<h3>개인 정보 조회/수정</h3>
+					<div class="listHead" style="height: 55px;">
+						<h3>개인 정보 조회/수정</h3>
+						<p></p>
+					</div>
 					<div class="passwordForm" style="text-align: center;">
 						<h1 style="margin-bottom: 5%;">비밀번호 확인</h1>
 						<input type="password" id="passwordInput" placeholder="비밀번호 입력">
@@ -30,34 +36,52 @@
 					<div id="userInfo" style="display: none;">
 						<table class="infoTable">
 							<tr>
-								<th>이름</th>
+								<th>이름 <span> *</span></th>
 								<td class="infoInput"><input type="text" id="userName"></td>
 							</tr>
 							<tr>
-								<th>이메일</th>
+								<th>이메일<span> *</span></th>
 								<td><div id="userEmail"></div></td>
 							</tr>
 							<tr>
-								<th>성별</th>
-								<td class="infoInput"><select id="userGender">
-										<option value="GND0000001">남</option>
-										<option value="GND0000002">여</option>
+								<th>변경할 비밀번호</th>
+								<td><input type="password" id="userPwd"
+									placeholder="영문자+숫자+특수문자(8자~20자)"
+									oninput="checkPasswordValidity()"> <span id="message"></span></td>
+							</tr>
+							<tr>
+								<th>비밀번호 확인</th>
+								<td><input type="password" id="checkPwd"
+									oninput="checkPasswordSame()"> <span id="sameMessage"></span></td>
+							</tr>
+							<tr>
+								<th>성별 <span> *</span></th>
+								<td class="infoInput"><select name="gender" id="userGender">
+										<option th:each="gender: ${genderList}" class="genderOption"
+											th:value="${gender.cmcdId}" th:text="${gender.cmcdNm}">
 								</select></td>
 							</tr>
 							<tr>
-								<th>생년월일</th>
-								<td class="infoInput"><input type="text" id="userBirth"></td>
+								<th>생년월일 <span> *</span></th>
+								<td class="infoInput"><input type="text" id="userBirth"
+									readonly></td>
 							</tr>
 							<tr>
-								<th>휴대전화</th>
-								<td class="infoInput"><input type="text" id="userTel"></td>
+								<th>휴대전화 <span> *</span></th>
+								<td class="infoInput"><select id="phonePrefix">
+										<option value="010">010</option>
+										<option value="011">011</option>
+										<option value="016">016</option>
+										<!-- 필요한 다른 앞자리 옵션을 추가할 수 있습니다. -->
+								</select> <!-- 나머지 전화번호 입력 --> <input type="text" id="phoneNumber"
+									maxlength="11"></td>
 							</tr>
 							<tr>
-								<th>직업</th>
-								<td class="infoInput"><select id="userJob">
-										<option value="JOB0000001">무직</option>
-										<option value="JOB0000002">학생</option>
-										<option value="JOB0000003">직장인</option>
+								<th>직업<span> *</span></th>
+								<td class="infoInput"><select class="jobSelect" name="job"
+									id="userJob">
+										<option th:each="job : ${jobList}" th:value="${job.cmcdId}"
+											th:text="${job.cmcdNm}" class="jobOption"></option>
 								</select></td>
 							</tr>
 							<tr>
@@ -115,6 +139,13 @@
 								</tr>
 							</tbody>
 						</table>
+						<div class="paging paging1">
+							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
+							<i class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+							<div class="pages pages1"></div>
+							<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+								class="right" id="last_page" th:src="@{/img/last_page}"></i>
+						</div>
 					</div>
 				</div>
 				<div class="completeList" style="display: none;">
@@ -153,6 +184,13 @@
 								</tr> -->
 							</tbody>
 						</table>
+						<div class="paging paging2">
+							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
+							<i class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+							<div class="pages pages2"></div>
+							<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+								class="right" id="last_page" th:src="@{/img/last_page}"></i>
+						</div>
 					</div>
 				</div>
 				<div class="workLog" style="display: none;">
@@ -188,6 +226,13 @@
 								</tr> -->
 							</tbody>
 						</table>
+						<div class="paging paging3">
+							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
+							<i class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+							<div class="pages pages3"></div>
+							<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+								class="right" id="last_page" th:src="@{/img/last_page}"></i>
+						</div>
 					</div>
 				</div>
 				<div class="inquiryList" style="display: none;">
@@ -205,10 +250,11 @@
 								<th>답변확인</th>
 							</tr>
 						</thead>
-						<ul style="margin: 0; list-style: none; padding: 0;">
-							<li class="postRow" th:each="postVO , rowStat : ${postList}">
-								<tbody class="postTableBody">
-									<!-- <tr>
+						<tbody>
+							<ul style="margin: 0; list-style: none; padding: 0;">
+								<li class="postRow" th:each="postVO , rowStat : ${postList}">
+									<div class="body">
+										<tr>
 											<td><span th:text="${rowStat.index + 1}"></span></td>
 											<td><a th:text="${postVO.postTitle}"
 												th:href="@{/student/inquiry/view/__${postVO.postId}__}"></a></td>
@@ -218,14 +264,22 @@
 												style="display: none;" value="확인하기"
 												onclick="toggleReply(this)"></td>
 											<td th:text="${postVO.postId}" style="display: none;"></td>
-										</tr> -->
-								</tbody>
-								<div class="reply-container" style="display: none;">
-									<p th:text="${postVO.postContent}"></p>
-								</div>
-							</li>
-						</ul>
+										</tr>
+									</div>
+									<div class="reply-container" style="display: none;">
+										<p th:text="${postVO.postContent}"></p>
+									</div>
+								</li>
+							</ul>
+						</tbody>
 					</table>
+					<div class="paging paging4">
+						<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i
+							class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+						<div class="pages pages4"></div>
+						<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+							class="right" id="last_page" th:src="@{/img/last_page}"></i>
+					</div>
 				</div>
 				<div class="modal1" style="display: none;">
 					<div class="modalBody">
@@ -235,12 +289,13 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>지원서파일을 여기에 첨부하세요.</p>
-								<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다 ※</p>
+								<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다(1개) ※</p>
 								<div style="width: 80%;">
 									<input class="upload-name1" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
 										for="fileInput1">파일찾기</label> <input type="file" name="file"
-										id="fileInput1" class="fileInput" multiple accept=".pdf">
+										id="fileInput1" class="fileInput" accept=".pdf"
+										onchange="checkCnt1()">
 								</div>
 							</div>
 						</div>
@@ -258,12 +313,13 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
-								<p style="color: red;">※ 한개의 파일만 첨부 가능합니다. ※</p>
+								<p style="color: red;">※ 파일은 3개까지만 첨부 가능합니다. ※</p>
 								<div style="width: 80%;">
 									<input class="upload-name2" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
 										for="fileInput2">파일찾기</label> <input type="file" name="file"
-										id="fileInput2" class="fileInput">
+										id="fileInput2" class="fileInput" multiple
+										onchange="checkCnt2()">
 								</div>
 
 							</div>
@@ -288,12 +344,13 @@
 						<div class="modalContent">
 							<div class="upload-area">
 								<p>사유서파일을 첨부하세요.</p>
-								<p style="color: red;">※ 한개의 파일만 첨부 가능합니다. ※</p>
+								<p style="color: red;">※ 파일은 3개까지만 첨부 가능합니다. ※</p>
 								<div style="width: 80%;">
 									<input class="upload-name3" value="선택된 첨부파일이 없습니다"
 										placeholder="선택된 첨부파일이 없습니다" readonly> <label
 										for="fileInput3">파일찾기</label> <input type="file" name="file"
-										id="fileInput3" class="fileInput">
+										id="fileInput3" class="fileInput" multiple
+										onchange="checkCnt3()">
 								</div>
 							</div>
 							<div>
@@ -310,6 +367,97 @@
 		</div>
 	</div>
 	<script>
+		$("#userBirth").datepicker({
+			dateFormat : "yy-mm-dd", // 날짜 형식 지정
+			changeMonth : true, // 월 선택기 표시
+			changeYear : true, // 연도 선택기 표시
+			maxDate : 0,
+			yearRange : "c-100:c+", // 100년 전부터 현재까지 허용
+		});
+		var phoneNumberInput = $("#phoneNumber");
+
+		// 전화번호 입력 필드의 입력을 모니터링합니다.
+		phoneNumberInput.on("input", function() {
+			// 입력 내용을 가져옵니다.
+			var phoneNumber = phoneNumberInput.val();
+
+			// 숫자가 아닌 문자를 제거합니다.
+			phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+
+			// 15자리 이상 입력 방지
+			if (phoneNumber.length > 15) {
+				phoneNumber = phoneNumber.slice(0, 15);
+			}
+
+			// 입력 필드에 정리된 전화번호를 설정합니다.
+			phoneNumberInput.val(phoneNumber);
+		});
+		$.datepicker.setDefaults({
+			monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월',
+					'9월', '10월', '11월', '12월' ],
+			monthNamesShort : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월',
+					'9월', '10월', '11월', '12월' ],
+			dayNames : [ '일', '월', '화', '수', '목', '금', '토' ],
+			dayNamesShort : [ '일', '월', '화', '수', '목', '금', '토' ],
+			dayNamesMin : [ '일', '월', '화', '수', '목', '금', '토' ],
+			yearSuffix : '년'
+		});
+
+		// 사용자가 선택한 직업 값 설정
+		var userJobValue = $("#userJob").val();
+
+		// 직업 선택 옵션을 설정합니다.
+		var jobSelect = document.getElementById("userJob");
+		var jobOptions = jobSelect.querySelectorAll(".jobOption");
+
+		for (var i = 0; i < jobOptions.length; i++) {
+			var option = jobOptions[i];
+			if (option.value === userJobValue) {
+				option.selected = true;
+			}
+		}
+
+		// 사용자가 선택한 성별 값 설정
+		var userGenderValue = $("#userGender").val();
+
+		// 성별 선택 옵션을 설정합니다.
+		var genderSelect = document.getElementById("userGender");
+		var genderOptions = genderSelect.querySelectorAll(".genderOption");
+
+		for (var j = 0; j < genderOptions.length; j++) {
+			var genderOption = genderOptions[j];
+			if (genderOption.value === userGenderValue) {
+				genderOption.selected = true;
+			}
+		}
+
+		function checkPasswordValidity() {
+			const password = document.getElementById('userPwd').value;
+			const message = document.getElementById('message');
+
+			// 비밀번호가 영문자, 숫자, 특수문자를 각각 포함하고, 8자 이상 20자 이하인지 확인
+			const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+
+			if (passwordPattern.test(password)) {
+				message.innerText = 'O';
+			} else {
+				message.innerText = '영문자, 숫자, 특수문자를 각각 포함하여 8자 이상 20자 이하여야 합니다.';
+			}
+		}
+
+		//비밀번호 같은지 검사
+		function checkPasswordSame() {
+			const password = document.getElementById('userPwd').value;
+			const password2 = document.getElementById('checkPwd').value;
+			const message = document.getElementById('sameMessage');
+
+			if (password == password2) {
+				message.innerText = 'O';
+			} else {
+				message.innerText = '비밀번호가 일치하지 않습니다.';
+			}
+
+		}
 		$(document).ready(function() {
 			$("#checkPassword").click(function() {
 				var password = $("#passwordInput").val(); // 입력란에서 비밀번호를 가져옵니다.
@@ -329,6 +477,7 @@
 						if (data.success) {
 							// 비밀번호가 일치하는 경우
 							displayUserInfo(data.user);
+							console.log(data.user);
 							$("#userInfo").show();
 							$(".passwordForm").hide();
 						} else {
@@ -343,46 +492,174 @@
 			});
 		});
 		// 정보 업데이트 버튼을 클릭할 때 서버로 정보 업데이트 요청을 보냅니다.
-		$("#updateUserInfo").click(function() {
-			var updatedUserInfo = {
-				name : $("#userName").val(),
-				birth : $("#userBirth").val(),
-				gender : $("#userGender").val(),
-				tel : $("#userTel").val(),
-				job : $("#userJob").val(),
-			};
+		$("#updateUserInfo")
+				.click(
+						function() {
+							var updatedUserInfo = {
+								name : $("#userName").val(),
+								birth : $("#userBirth").val(),
+								gender : $("#userGender").val(),
+								tel : $("#phonePrefix").val()
+										+ $("#phoneNumber").val(),
+								pwd : $("#userPwd").val(),
+								job : $("#userJob").val(),
+							};
 
-			// 서버로 정보 업데이트 요청을 보냅니다.
-			$.ajax({
-				type : "POST",
-				url : "/student/updateUserInfo",
-				data : JSON.stringify(updatedUserInfo),
-				contentType : "application/json",
-				success : function(response) {
-					if (response.success) {
-						alert("정보가 업데이트되었습니다.");
-					} else {
-						alert("정보 업데이트에 실패했습니다.");
-					}
-				},
-				error : function(error) {
-					console.error("오류 발생:", error);
-				}
-			});
-		});
+							const password = document.getElementById('userPwd').value;
+							const password2 = document
+									.getElementById('checkPwd').value;
+
+							const validityMessage = document
+									.getElementById("message");
+							const sameMessage = document
+									.getElementById("sameMessage");
+
+							const text1 = validityMessage.textContent;
+							const text2 = sameMessage.textContent;
+							if ($("#userName").val() === ''
+									|| $("#userBirth").val() === ''
+									|| $("#userGender").val() === ''
+									|| $("#phoneNumber").val() === ''
+									|| $("#userJob").val() === '') {
+								alert("필수값을 모두 입력해주세요.");
+								return false;
+							} else {
+								if (((text1 == "O") && (text2 == "O"))
+										|| ((password == "") && (password2 == ""))) {
+									// 서버로 정보 업데이트 요청을 보냅니다.
+									$
+											.ajax({
+												type : "POST",
+												url : "/student/updateUserInfo",
+												data : JSON
+														.stringify(updatedUserInfo),
+												contentType : "application/json",
+												success : function(response) {
+													if (response.success) {
+														alert("정보가 업데이트되었습니다.");
+														const selectParam = 1; // 이동하려는 페이지에서 원하는 select 매개변수 값을 설정하세요.
+														const newUrl = '/student/mypage?select='
+																+ selectParam;
+														window.location.href = newUrl;
+													} else {
+														alert("정보 업데이트에 실패했습니다.");
+													}
+												},
+												error : function(error) {
+													console.error("오류 발생:",
+															error);
+												}
+											});
+								} else {
+									event.preventDefault();
+									alert("올바른 비밀번호가 아닙니다.");
+									return false;
+								}
+							}
+						});
 
 		function displayUserInfo(userInfo) {
 			document.getElementById("userName").value = userInfo.name;
 			document.getElementById("userEmail").textContent = userInfo.email;
 			document.getElementById("userGender").value = userInfo.gender;
 			document.getElementById("userBirth").value = userInfo.birth;
-			document.getElementById("userTel").value = userInfo.tel;
 			document.getElementById("userJob").value = userInfo.job;
 			document.getElementById("rgstDt").textContent = userInfo.rgstDt;
 			document.getElementById("lastLogin").textContent = userInfo.LastLogin;
+
+			var phonePrefixSelect = $("#phonePrefix");
+			var phoneNumberInput = $("#phoneNumber");
+
+			// 사용자 정보에서 전화번호를 가져옵니다.
+			var userTel = userInfo.tel;
+
+			// 사용자 정보에서 전화번호를 앞자리와 나머지 부분으로 분할합니다.
+			var prefix = userTel.substring(0, 3);
+			var remainder = userTel.substring(3);
+
+			// 앞자리를 선택합니다.
+			phonePrefixSelect.val(prefix);
+
+			// 나머지 전화번호를 입력합니다.
+			phoneNumberInput.val(remainder);
+
+		}
+		var button = document.querySelector(".aplyBtn");
+
+		// 클릭 이벤트를 감지합니다.
+		button.addEventListener("click", function(event) {
+			// 버튼이 disabled 상태인 경우에만 알림을 띄웁니다.
+			var x = document.getElementById("fileInput1");
+			var selectedFiles = x.files;
+			if (selectedFiles.length < 1) {
+				alert("지원서 파일을 첨부해주세요.");
+			}
+		});
+		function checkCnt1() {
+			var x = document.getElementById("fileInput1");
+			var selectedFiles = x.files;
+			if (selectedFiles.length < 1) {
+				alert("지원서 파일을 첨부해주세요.");
+				$(".submitBtn").attr("disabled", true);
+
+			} else {
+				var files = $("#fileInput1")[0].files;
+				var fileNames = [];
+
+				for (var i = 0; i < files.length; i++) {
+					fileNames.push(files[i].name);
+				}
+
+				var fileNameString = fileNames.join(', ');
+				$(".upload-name1").val(fileNameString);
+				$(".submitBtn").attr("disabled", false);
+			}
+		}
+		function checkCnt2() {
+			var x = document.getElementById("fileInput2");
+			var selectedFiles = x.files;
+			if (selectedFiles.length > 3) {
+				alert("파일은 최대 3개까지만 첨부 가능합니다.");
+				$(".submitBtn").attr("disabled", true);
+
+			} else {
+				var files = $("#fileInput2")[0].files;
+				var fileNames = [];
+
+				for (var i = 0; i < files.length; i++) {
+					fileNames.push(files[i].name);
+				}
+
+				var fileNameString = fileNames.join(', ');
+				$(".upload-name2").val(fileNameString);
+				$(".submitBtn").attr("disabled", false);
+			}
+		}
+		function checkCnt3() {
+			var x = document.getElementById("fileInput3");
+			var selectedFiles = x.files;
+			if (selectedFiles.length > 3) {
+				alert("파일은 최대 3개까지만 첨부 가능합니다.");
+				$(".submitBtn").attr("disabled", true);
+
+			} else {
+				var files = $("#fileInput3")[0].files;
+				var fileNames = [];
+
+				for (var i = 0; i < files.length; i++) {
+					fileNames.push(files[i].name);
+				}
+
+				var fileNameString = fileNames.join(', ');
+				$(".upload-name3").val(fileNameString);
+				$(".submitBtn").attr("disabled", false);
+			}
 		}
 	</script>
 	<script src="/js/student/sidebar.js"></script>
-	<script src="/js/student/mypage.js"></script>
+	<script src="/js/student/mypage1.js"></script>
+	<script src="/js/student/mypage2.js"></script>
+	<script src="/js/student/mypage3.js"></script>
+	<script src="/js/student/mypage4.js"></script>
 </body>
 </html>

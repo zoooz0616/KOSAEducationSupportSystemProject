@@ -215,6 +215,21 @@ ul {
 	padding: 2% 0;
 }
 
+.noClass {
+	border-style: solid;
+	border-color: #0E5881;
+	padding: 5%;
+	font-size: 17px;
+	margin-top: 16px;
+	
+}
+
+.noClass p {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+}
+
 .viewClass {
 	width: 20%;
 	position: fixed;
@@ -243,8 +258,14 @@ ul {
 }
 
 .viewClass img {
-	width: 80%;
+	height: 50px;
+	width: 220px;
 	margin-bottom: 5%;
+	margin-top: 3%;
+}
+
+.viewClass h2 {
+	margin: 0;
 }
 
 .viewClass span {
