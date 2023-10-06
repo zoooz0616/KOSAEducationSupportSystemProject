@@ -1919,6 +1919,7 @@ public class AdminController {
 	@GetMapping("/commoncode/getgroupcodelist")
 	@ResponseBody
 	public List<CommonCodeVO> getGroupCodeList() {
+		
 		// 그룹코드 리스트 전달
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
 		
