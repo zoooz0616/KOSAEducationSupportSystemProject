@@ -1174,6 +1174,28 @@
 					
 					lectureTbody.appendChild(tr);
 				}
+				
+				//강의 input에 수정 발생시 해당 tr update_yn = Y로 변경
+				var lectureInputs = document.querySelectorAll(".lecture_input");
+				lectureInputs.forEach(function(lectureInput) {
+				    // onchange 이벤트를 추가합니다.
+				    lectureInput.addEventListener("change", function() {
+				    	const parentTr = lectureInput.closest('tr');
+				    	var updateYnInput = parentTr.querySelector(".td_lecture_check_box .lecture_update_yn");
+				    	updateYnInput.value = "Y";
+				    });
+				});
+				//강의 select에 수정 발생시 해당 tr update_yn = Y로 변경
+				var lectureSelects = document.querySelectorAll(".lecture_select");
+				lectureSelects.forEach(function(lectureSelect) {
+				    // onchange 이벤트를 추가합니다.
+				    lectureSelect.addEventListener("change", function() {
+				    	const parentTr = lectureSelect.closest('tr');
+				    	var updateYnInput = parentTr.querySelector(".td_lecture_check_box .lecture_update_yn");
+				    	updateYnInput.value = "Y";
+						console.log(updateYnInput);
+				    });
+				});
 			}
 		});
 	}
@@ -1239,10 +1261,32 @@
 					subjectTbody.appendChild(tr);
 				}
 				
+				//과목 input에 수정 발생시 해당 tr update_yn = Y로 변경하는 이벤트
+				var subjectInputs = document.querySelectorAll(".subject_input");
+				subjectInputs.forEach(function(subjectInput) {
+				    // onchange 이벤트를 추가합니다.
+				    subjectInput.addEventListener("change", function() {
+				    	const parentTr = subjectInput.closest('tr');
+				    	var updateYnInput = parentTr.querySelector(".td_subject_check_box .subject_update_yn");
+				    	updateYnInput.value = "Y";
+				    });
+				});
+				
 				//강의 리스트 새로 불러오기
 				getLectureList();
 				
 				//강의 등록 부분 과목 리스트 새로 불러오기
+				var subjectSelect = document.querySelector('#subject_id_input');
+				$('#subject_id_input').empty();
+								
+				for(var i = 0; i<subjectList.length; i++){
+					var subject = subjectList[i];
+					
+					var optionSubject = document.createElement('option');
+					optionSubject.value = subject.sbjtId;
+					optionSubject.textContent = subject.sbjtNm;
+					subjectSelect.appendChild(optionSubject);
+				}
 			}
 		});
 	}
@@ -1335,8 +1379,32 @@
 					professorTbody.appendChild(tr);
 				}
 				
+				//강사 input에 수정 발생시 해당 tr update_yn = Y로 변경하는 이벤트
+				var professorInputs = document.querySelectorAll(".professor_input");
+				professorInputs.forEach(function(professorInput){
+					// onchange 이벤트를 추가합니다.
+				    professorInput.addEventListener("change", function() {
+				    	const parentTr = professorInput.closest('tr');
+				    	var updateYnInput = parentTr.querySelector(".td_professor_check_box .professor_update_yn");
+				    	updateYnInput.value = "Y";
+				    });
+				});
+				
 				//강의 리스트 새로 불러오기
 				getLectureList();
+				
+				//강의 등록 부분 강의 리스트 새로 불러오기
+				var professorSelect = document.querySelector('#professor_id_input');
+				$('#professor_id_input').empty();
+								
+				for(var i = 0; i<professorList.length; i++){
+					var professor = professorList[i];
+					
+					var optionProfessor = document.createElement('option');
+					optionProfessor.value = professor.profId;
+					optionProfessor.textContent = professor.profNm;
+					professorSelect.appendChild(optionProfessor);
+				}
 			}
 		});
 	}
