@@ -89,7 +89,7 @@ a {
 	display: flex;
 }
 
-.insert div span{
+.insert div > span{
 	color: #0E5881;
     font-weight: bold;
 }
@@ -103,6 +103,7 @@ a {
 }
 
 .content_info_wrap {
+	height: 40px;
 	font-weight: bold;
 	display: flex;
 	align-items: center;
@@ -178,4 +179,17 @@ a {
 	color: #0E5881;
 	font-weight: bold;
 	cursor: pointer;
+}
+
+.red{
+	color: red;
+	vertical-align: middle;
+}
+
+.td_group_check_box, .td_detail_check_box, .td_num, .td_cmcd_id, .td_tpcd_id, .td_order, .td_use_yn {
+	text-align: center;
+}
+
+.detail_cmcd_order {
+	width: 50px;
 }
