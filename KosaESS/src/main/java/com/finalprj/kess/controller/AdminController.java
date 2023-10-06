@@ -1907,6 +1907,26 @@ public class AdminController {
 
 		return "admin/commoncode_list";
 	}
+	
+	/**
+	 * 기준정보 그룹코드 리스트 전달
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 6
+	 * @parameter : model
+	 * @return : String
+	 */
+	@GetMapping("/commoncode/getgroupcodelist")
+	@ResponseBody
+	public List<CommonCodeVO> getGroupCodeList() {
+		
+		// 그룹코드 리스트 전달
+		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
+		
+		return groupCodeList;
+	}
+	
+	
 
 	/**
 	 * 기준정보 그룹코드 생성
@@ -1947,11 +1967,15 @@ public class AdminController {
 	 */
 	@PostMapping("/commoncode/update/groupcode")
 	@ResponseBody
-	public String updateGroupCode(@RequestParam String cmcdId, @RequestParam String cmcdNm) {
-		adminService.updateGroupCode(cmcdId, cmcdNm);
-		return "success";
-	}
+	public Map<String, Object> updateGroupCode(@RequestBody CommonCodeVO[] updateGroupList) {
+		adminService.updateGroupCode(updateGroupList);
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("message", "success");
 
+		return data;
+	}
+	
 	/**
 	 * 기준정보 그룹코드 삭제
 	 * 
@@ -2026,20 +2050,23 @@ public class AdminController {
 	 * 기준정보 상세코드 수정
 	 * 
 	 * @author : eunji
-	 * @date : 2023. 9. 20.
-	 * @parameter : cmcdId, cmcdNm, useYn
-	 * @return : String
+	 * @date : 2023. 10. 6.
+	 * @parameter : updateDetailList
+	 * @return : Map<String, Object>
 	 */
 	@PostMapping("/commoncode/update/detailcode")
 	@ResponseBody
-	public String updateDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm, @RequestParam String useYn,
-			@RequestParam int cmcdOrder) {
-		adminService.updateDetailCode(cmcdId, cmcdNm, useYn, cmcdOrder);
+	public Map<String, Object> updateDetailCode(@RequestBody CommonCodeVO[] updateDetailList) {
+		System.out.println("오키");
+		
+		adminService.updateDetailCode(updateDetailList);
 
-		String groupCodeId = adminService.getGroupCodeId(cmcdId);
-		return groupCodeId;
+		Map<String, Object> data = new HashMap<>();
+		data.put("message", "success");
+
+		return data;
 	}
-
+	
 	/**
 	 * 기준정보 상세코드 삭제
 	 * 
