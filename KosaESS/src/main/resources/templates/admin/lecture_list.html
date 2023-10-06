@@ -37,8 +37,8 @@
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
-							강의 총 <span class="cnt" th:text="${#lists.size(lectureList)}"></span>
-							개
+							강의 총 <span class="lecture_cnt cnt"
+								th:text="${#lists.size(lectureList)}"></span> 개
 						</div>
 						<div class="content_info_button_wrap" style="display: flex;">
 							<button id="lecture_delete_btn">
@@ -56,7 +56,8 @@
 								<img th:src="@{/img/x_white.png}" style="width: 20px;"> <span>수정취소</span>
 							</button>
 
-							<button id="lecture_save_btn" style="display: none;">
+							<button id="lecture_save_btn" onclick="saveLecture()"
+								style="display: none;">
 								<img th:src="@{/img/save_white.png}" style="width: 20px;">
 								<span>저장하기</span>
 							</button>
@@ -94,42 +95,51 @@
 					<!-- 리스트 -->
 					<div class="table_wrap lecture_table">
 						<table>
-							<tr class="content_list_th">
-								<th style="width: 5%;"><input type="checkbox"
-									class="lecture_checkbox_all"></th>
-								<th style="width: 10%;">번호</th>
-								<th style="width: 40%;">강의명</th>
-								<th style="width: 25%;">과목명</th>
-								<th style="width: 10%;">강사명</th>
-								<th style="width: 10%;">이수시간</th>
-							</tr>
-							<tr th:each="lecture, iterStat : ${lectureList}">
-								<td class="td_lecture_check_box"><input type="checkbox"
-									th:value="${lecture.lctrId}" class="lecture_checkbox_item"></td>
-								<td class="td_lecture_num" th:text="${iterStat.index + 1}"></td>
-								<td><span class="lecture_span" th:text="${lecture.lctrNm}"></span>
-									<input style="display: none;" class="lecture_input lecture_nm"
-									type="text" th:value="${lecture.lctrNm}"></td>
-								<td><span class="lecture_span" th:text="${lecture.sbjtNm}"></span>
-									<select class="lecture_select lecture_sbjt"
-									style="display: none;">
-										<option th:each="subject: ${subjectList}"
-											th:value="subject.sbjtId" th:text="${subject.sbjtNm}"
-											th:selected="${subject.sbjtId == lecture.sbjtId}">
-								</select></td>
-								<td class="td_lecture_professor"><span class="lecture_span"
-									th:text="${lecture.profNm}"></span> <select
-									class="lecture_select lecture_prof" style="display: none;">
-										<option th:each="professor: ${professorList}"
-											th:value="professor.profId" th:text="${professor.profNm}"
-											th:selected="${professor.profId == lecture.profId}">
-								</select></td>
-								<td class="td_lecture_tm"><span class="lecture_span"
-									th:text="${lecture.lctrTm}"></span> <input
-									style="display: none; width: 80px;"
-									class="lecture_input lecture_tm" type="number"
-									th:value="${lecture.lctrTm}"></td>
-							</tr>
+							<thead>
+								<tr class="content_list_th">
+									<th style="width: 5%;"><input type="checkbox"
+										name="lecture_select_all" onclick="lectureSelectAll(this)"
+										class="lecture_checkbox_all"></th>
+									<th style="width: 10%;">번호</th>
+									<th style="width: 40%;">강의명</th>
+									<th style="width: 25%;">과목명</th>
+									<th style="width: 10%;">강사명</th>
+									<th style="width: 10%;">이수시간</th>
+								</tr>
+							</thead>
+							<tbody class="lecture_tbody">
+								<tr th:each="lecture, iterStat : ${lectureList}">
+									<td class="td_lecture_check_box"><input type="checkbox"
+										name="lecture_select" onclick="lectureCheckSelectAll()"
+										th:value="${lecture.lctrId}" class="lecture_checkbox_item">
+										<input type="hidden" class="lecture_update_yn" value="N">
+									</td>
+									<td class="td_lecture_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_lecture_nm"><span class="lecture_span"
+										th:text="${lecture.lctrNm}"></span> <input
+										style="display: none;" class="lecture_input lecture_nm"
+										type="text" th:value="${lecture.lctrNm}"></td>
+									<td class="td_lecture_subject"><span class="lecture_span"
+										th:text="${lecture.sbjtNm}"></span> <select
+										class="lecture_select lecture_sbjt" style="display: none;">
+											<option th:each="subject: ${subjectList}"
+												th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}"
+												th:selected="${subject.sbjtId == lecture.sbjtId}">
+									</select></td>
+									<td class="td_lecture_professor"><span
+										class="lecture_span" th:text="${lecture.profNm}"></span> <select
+										class="lecture_select lecture_prof" style="display: none;">
+											<option th:each="professor: ${professorList}"
+												th:value="${professor.profId}" th:text="${professor.profNm}"
+												th:selected="${professor.profId == lecture.profId}">
+									</select></td>
+									<td class="td_lecture_tm"><span class="lecture_span"
+										th:text="${lecture.lctrTm}"></span> <input
+										style="display: none; width: 80px;"
+										class="lecture_input lecture_tm" type="number"
+										th:value="${lecture.lctrTm}"></td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 					<!-- 리스트 -->
@@ -145,8 +155,8 @@
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
-							과목 총 <span class="cnt" th:text="${#lists.size(subjectList)}"></span>
-							개
+							과목 총 <span class="cnt subject_cnt"
+								th:text="${#lists.size(subjectList)}"></span> 개
 						</div>
 						<div class="content_info_button_wrap">
 							<button id="subject_delete_btn">
@@ -157,11 +167,13 @@
 								<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
 							</button>
 
-							<button id="subject_cancel_btn" onclick="cancelSubjectEditMode()" style="display: none;">
+							<button id="subject_cancel_btn" onclick="cancelSubjectEditMode()"
+								style="display: none;">
 								<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
 							</button>
 
-							<button id="subject_save_btn" style="display: none;">
+							<button id="subject_save_btn" onclick="saveSubject()"
+								style="display: none;">
 								<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
 							</button>
 						</div>
@@ -187,21 +199,30 @@
 					<!-- 리스트 -->
 					<div class="table_wrap subject_table">
 						<table>
-							<tr class="content_list_th">
-								<th style="width: 10%;"><input type="checkbox"
-									class="subject_checkbox_all"></th>
-								<th style="width: 10%;">번호</th>
-								<th style="width: 80%;">과목명</th>
-							</tr>
-							<tr th:each="subject, iterStat : ${subjectList}">
-								<td class="td_subject_check_box"><input type="checkbox"
-									class="subject_checkbox_item" th:value="${subject.sbjtId}"></td>
-								<td class="td_subject_num" th:text="${iterStat.index + 1}"></td>
-								<td><span class="subject_span" th:text="${subject.sbjtNm}" ></span>
-									<input style="display: none;" type="text"
-									class="subject_input subject_nm" th:value="${subject.sbjtNm}">
-								</td>
-							</tr>
+							<thead>
+								<tr class="content_list_th">
+									<th style="width: 10%;"><input type="checkbox"
+										name="subject_select_all" onclick="subjectSelectAll(this)"
+										class="subject_checkbox_all"></th>
+									<th style="width: 10%;">번호</th>
+									<th style="width: 80%;">과목명</th>
+								</tr>
+							</thead>
+							<tbody class="subject_tbody">
+								<tr th:each="subject, iterStat : ${subjectList}">
+									<td class="td_subject_check_box"><input type="checkbox"
+										name="subject_select" onclick="subjectCheckSelectAll()"
+										class="subject_checkbox_item" th:value="${subject.sbjtId}">
+										<input type="hidden" class="subject_update_yn" value="N">
+									</td>
+									<td class="td_subject_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_subject_nm"><span class="subject_span"
+										th:text="${subject.sbjtNm}"></span> <input
+										style="display: none;" type="text"
+										class="subject_input subject_nm" th:value="${subject.sbjtNm}">
+									</td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 					<!-- 리스트 -->
@@ -213,7 +234,7 @@
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
-							강사 총 <span class="cnt" th:text="${#lists.size(professorList)}"></span>
+							강사 총 <span class="cnt professor_cnt" th:text="${#lists.size(professorList)}"></span>
 							명
 						</div>
 						<div class="content_info_button_wrap">
@@ -231,7 +252,8 @@
 								<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
 							</button>
 
-							<button id="professor_save_btn" style="display: none;">
+							<button id="professor_save_btn" onclick="saveProfessor()"
+								style="display: none;">
 								<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
 							</button>
 						</div>
@@ -262,34 +284,42 @@
 					<!-- 리스트 -->
 					<div class="table_wrap professor_table">
 						<table>
-							<tr class="content_list_th">
-								<th style="width: 5%;"><input type="checkbox"
-									class="professor_checkbox_all"></th>
-								<th style="width: 10%;">번호</th>
-								<th style="width: 20%;">강사명</th>
-								<th style="width: 30%;">전화번호</th>
-								<th style="width: 35%;">이메일</th>
-							</tr>
-							<tr th:each="professor, iterStat : ${professorList}">
-								<td class="td_professor_check_box"><input type="checkbox"
-									class="professor_checkbox_item" th:value="${professor.profId}"></td>
-								<td class="td_professor_num" th:text="${iterStat.index + 1}"></td>
-								<td class="td_professor_name"><span class="professor_span"
-									th:text="${professor.profNm}"></span> <input
-									class="professor_input professor_nm"
-									style="display: none; width: 100px;"
-									th:value="${professor.profNm}"></td>
-								<td class="td_professor_tel"><span class="professor_span"
-									th:text="${professor.profTel}"></span> <input
-									class="professor_input professor_tel"
-									style="display: none; width: 100px;"
-									th:value="${professor.profTel}"></td>
-								<td><span class="professor_span"
-									th:text="${professor.profEmail}"></span> <input
-									class="professor_input professor_email"
-									style="display: none; width: 200px;"
-									th:value="${professor.profEmail}"></td>
-							</tr>
+							<thead>
+								<tr class="content_list_th">
+									<th style="width: 5%;"><input type="checkbox"
+										name="professor_select_all" onclick="professorSelectAll(this)"
+										class="professor_checkbox_all"></th>
+									<th style="width: 10%;">번호</th>
+									<th style="width: 20%;">강사명</th>
+									<th style="width: 30%;">전화번호</th>
+									<th style="width: 35%;">이메일</th>
+								</tr>
+							</thead>
+							<tbody class="professoe_tbody">
+								<tr th:each="professor, iterStat : ${professorList}">
+									<td class="td_professor_check_box"><input type="checkbox"
+										name="professor_select" onclick="professorCheckSelectAll()"
+										class="professor_checkbox_item" th:value="${professor.profId}">
+										<input type="hidden" class="professor_update_yn" value="N">
+									</td>
+									<td class="td_professor_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_professor_nm"><span class="professor_span"
+										th:text="${professor.profNm}"></span> <input
+										class="professor_input professor_nm"
+										style="display: none; width: 100px;"
+										th:value="${professor.profNm}"></td>
+									<td class="td_professor_tel"><span class="professor_span"
+										th:text="${professor.profTel}"></span> <input
+										class="professor_input professor_tel"
+										style="display: none; width: 100px;"
+										th:value="${professor.profTel}"></td>
+									<td class="td_professor_email"><span class="professor_span"
+										th:text="${professor.profEmail}"></span> <input
+										class="professor_input professor_email"
+										style="display: none; width: 200px;"
+										th:value="${professor.profEmail}"></td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 					<!-- 리스트 -->
@@ -302,6 +332,198 @@
 	</div>
 
 	<script>
+	
+	/*
+	*	체크박스 선택 및 해제 이벤트
+	*/
+	//강의 전체선택
+	function lectureSelectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="lecture_select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//강의 개별 선택
+	function lectureCheckSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="lecture_select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="lecture_select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="lecture_select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+	
+	//과목 전체선택
+	function subjectSelectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="subject_select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//과목 개별 선택
+	function subjectCheckSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="subject_select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="subject_select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="subject_select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+	
+	//강사 전체선택
+	function professorSelectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="professor_select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//강사 개별 선택
+	function professorCheckSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="professor_select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="professor_select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="professor_select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+	
+	/*
+	*	선택삭제 이벤트
+	*/
+	// 강의 선택삭제 버튼 이벤트
+	document
+			.querySelector("#lecture_delete_btn")
+			.addEventListener(
+					"click",
+					function() {
+						var selectedLectureIds = [];
+
+						// 선택된 체크박스를 모두 선택합니다.
+						var selectedCheckboxes = document
+								.querySelectorAll(".lecture_checkbox_item:checked");
+
+						// 선택된 체크박스의 값을 배열에 추가합니다.
+						selectedCheckboxes.forEach(function(checkbox) {
+							selectedLectureIds.push(checkbox.value);
+						});
+
+						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+						$
+								.ajax({
+									url : '/admin/lecture/lecture/deleteall',
+									method : 'POST',
+									data : {
+										selectedLectureIds : selectedLectureIds
+									},
+									success : function(response) {
+										console.log(response);
+										if (response == "success") {
+											alert("선택한 강의가 삭제되었습니다.");
+											window.location.href = "/admin/lecture/list";
+										}
+									}
+								});
+					});
+
+	//과목 선택삭제 버튼 이벤트
+	document
+			.querySelector("#subject_delete_btn")
+			.addEventListener(
+					"click",
+					function() {
+						var selectedSubjectIds = [];
+
+						// 선택된 체크박스를 모두 선택합니다.
+						var selectedCheckboxes = document
+								.querySelectorAll(".subject_checkbox_item:checked");
+
+						// 선택된 체크박스의 값을 배열에 추가합니다.
+						selectedCheckboxes.forEach(function(checkbox) {
+							selectedSubjectIds.push(checkbox.value);
+						});
+
+						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+						$
+								.ajax({
+									url : '/admin/lecture/subject/deleteall',
+									method : 'POST',
+									data : {
+										selectedSubjectIds : selectedSubjectIds
+									},
+									success : function(response) {
+										console.log(response);
+										if (response == "success") {
+											alert("선택한 과목이 삭제되었습니다.");
+											window.location.href = "/admin/lecture/list";
+										}
+									}
+								});
+					});
+
+	//강사 선택삭제 버튼 이벤트
+	document
+			.querySelector("#professor_delete_btn")
+			.addEventListener(
+					"click",
+					function() {
+						var selectedProfessorIds = [];
+
+						// 선택된 체크박스를 모두 선택합니다.
+						var selectedCheckboxes = document
+								.querySelectorAll(".professor_checkbox_item:checked");
+
+						// 선택된 체크박스의 값을 배열에 추가합니다.
+						selectedCheckboxes.forEach(function(checkbox) {
+							selectedProfessorIds.push(checkbox.value);
+						});
+
+						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+						$
+								.ajax({
+									url : '/admin/lecture/professor/deleteall',
+									method : 'POST',
+									data : {
+										selectedProfessorIds : selectedProfessorIds
+									},
+									success : function(response) {
+										console.log(response);
+										if (response == "success") {
+											alert("선택한 강사가 삭제되었습니다.");
+											window.location.href = "/admin/lecture/list";
+										}
+									}
+								});
+					});
+	
+	
+	
+	/*
+	*	등록하기 이벤트
+	*/
 		//과목 등록하기
 		function insertSubject() {
 			//input에 과목명 입력했는지 확인
@@ -373,7 +595,6 @@
 			var lecturNmInput = document.querySelector("#lecture_nm_input").value;
 			var lectureTmInput = document.querySelector("#lecture_tm_input").value;
 
-			console.log("오오옹");
 			if (lecturNmInput === "" || lectureTmInput === "0") {
 				alert("모든 필드를 입력해주세요");
 			} else {
@@ -401,167 +622,10 @@
 			}
 		}
 
-		//강의 전체선택
-		//전체 선택 체크박스를 선택합니다.
-		var lectureCheckboxAll = document
-				.querySelector(".lecture_checkbox_all");
-
-		// 개별 체크박스를 선택합니다.
-		var lectureCheckboxItems = document
-				.querySelectorAll(".lecture_checkbox_item");
-
-		// 전체 선택 체크박스의 변경 이벤트를 처리합니다.
-		lectureCheckboxAll.addEventListener("change", function() {
-			var isChecked = lectureCheckboxAll.checked;
-
-			// 모든 개별 체크박스를 선택/해제합니다.
-			lectureCheckboxItems.forEach(function(checkbox) {
-				checkbox.checked = isChecked;
-			});
-		});
-
-		//과목 전체선택
-		//전체 선택 체크박스를 선택합니다.
-		var subjectCheckboxAll = document
-				.querySelector(".subject_checkbox_all");
-
-		// 개별 체크박스를 선택합니다.
-		var subjectCheckboxItems = document
-				.querySelectorAll(".subject_checkbox_item");
-
-		// 전체 선택 체크박스의 변경 이벤트를 처리합니다.
-		subjectCheckboxAll.addEventListener("change", function() {
-			var isChecked = subjectCheckboxAll.checked;
-
-			// 모든 개별 체크박스를 선택/해제합니다.
-			subjectCheckboxItems.forEach(function(checkbox) {
-				checkbox.checked = isChecked;
-			});
-		});
-
-		//강사 전체선택
-		//전체 선택 체크박스를 선택합니다.
-		var professorCheckboxAll = document
-				.querySelector(".professor_checkbox_all");
-
-		// 개별 체크박스를 선택합니다.
-		var professorCheckboxItems = document
-				.querySelectorAll(".professor_checkbox_item");
-
-		// 전체 선택 체크박스의 변경 이벤트를 처리합니다.
-		professorCheckboxAll.addEventListener("change", function() {
-			var isChecked = professorCheckboxAll.checked;
-
-			// 모든 개별 체크박스를 선택/해제합니다.
-			professorCheckboxItems.forEach(function(checkbox) {
-				checkbox.checked = isChecked;
-			});
-		});
-
-		// 강의 선택삭제 버튼 이벤트
-		document
-				.querySelector("#lecture_delete_btn")
-				.addEventListener(
-						"click",
-						function() {
-							var selectedLectureIds = [];
-
-							// 선택된 체크박스를 모두 선택합니다.
-							var selectedCheckboxes = document
-									.querySelectorAll(".lecture_checkbox_item:checked");
-
-							// 선택된 체크박스의 값을 배열에 추가합니다.
-							selectedCheckboxes.forEach(function(checkbox) {
-								selectedLectureIds.push(checkbox.value);
-							});
-
-							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-							$
-									.ajax({
-										url : '/admin/lecture/lecture/deleteall',
-										method : 'POST',
-										data : {
-											selectedLectureIds : selectedLectureIds
-										},
-										success : function(response) {
-											console.log(response);
-											if (response == "success") {
-												alert("선택한 강의가 삭제되었습니다.");
-												window.location.href = "/admin/lecture/list";
-											}
-										}
-									});
-						});
-
-		//과목 선택삭제 버튼 이벤트
-		document
-				.querySelector("#subject_delete_btn")
-				.addEventListener(
-						"click",
-						function() {
-							var selectedSubjectIds = [];
-
-							// 선택된 체크박스를 모두 선택합니다.
-							var selectedCheckboxes = document
-									.querySelectorAll(".subject_checkbox_item:checked");
-
-							// 선택된 체크박스의 값을 배열에 추가합니다.
-							selectedCheckboxes.forEach(function(checkbox) {
-								selectedSubjectIds.push(checkbox.value);
-							});
-
-							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-							$
-									.ajax({
-										url : '/admin/lecture/subject/deleteall',
-										method : 'POST',
-										data : {
-											selectedSubjectIds : selectedSubjectIds
-										},
-										success : function(response) {
-											console.log(response);
-											if (response == "success") {
-												alert("선택한 과목이 삭제되었습니다.");
-												window.location.href = "/admin/lecture/list";
-											}
-										}
-									});
-						});
-
-		//강사 선택삭제 버튼 이벤트
-		document
-				.querySelector("#professor_delete_btn")
-				.addEventListener(
-						"click",
-						function() {
-							var selectedProfessorIds = [];
-
-							// 선택된 체크박스를 모두 선택합니다.
-							var selectedCheckboxes = document
-									.querySelectorAll(".professor_checkbox_item:checked");
-
-							// 선택된 체크박스의 값을 배열에 추가합니다.
-							selectedCheckboxes.forEach(function(checkbox) {
-								selectedProfessorIds.push(checkbox.value);
-							});
-
-							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-							$
-									.ajax({
-										url : '/admin/lecture/professor/deleteall',
-										method : 'POST',
-										data : {
-											selectedProfessorIds : selectedProfessorIds
-										},
-										success : function(response) {
-											console.log(response);
-											if (response == "success") {
-												alert("선택한 강사가 삭제되었습니다.");
-												window.location.href = "/admin/lecture/list";
-											}
-										}
-									});
-						});
+		/*
+		*	수정하기 접속 및 취소 이벤트
+		*/	
+		
 
 	//강의 수정하기 모드
 	function enterLectureEditMode(){
@@ -720,110 +784,563 @@
     	});
 	}
 	
+	/*
+	*	수정모드에서 input 및 select 값 변경 시
+	*/
+	
+	//강의 input에 수정 발생시 해당 tr update_yn = Y로 변경
+	var lectureInputs = document.querySelectorAll(".lecture_input");
+	lectureInputs.forEach(function(lectureInput) {
+	    // onchange 이벤트를 추가합니다.
+	    lectureInput.addEventListener("change", function() {
+	    	const parentTr = lectureInput.closest('tr');
+	    	var updateYnInput = parentTr.querySelector(".td_lecture_check_box .lecture_update_yn");
+	    	updateYnInput.value = "Y";
+	    });
+	});
+	//강의 select에 수정 발생시 해당 tr update_yn = Y로 변경
+	var lectureSelects = document.querySelectorAll(".lecture_select");
+	lectureSelects.forEach(function(lectureSelect) {
+	    // onchange 이벤트를 추가합니다.
+	    lectureSelect.addEventListener("change", function() {
+	    	const parentTr = lectureSelect.closest('tr');
+	    	var updateYnInput = parentTr.querySelector(".td_lecture_check_box .lecture_update_yn");
+	    	updateYnInput.value = "Y";
+			console.log(updateYnInput);
+	    });
+	});
+	
+	//과목 input에 수정 발생시 해당 tr update_yn = Y로 변경
+	var subjectInputs = document.querySelectorAll(".subject_input");
+	subjectInputs.forEach(function(subjectInput) {
+	    // onchange 이벤트를 추가합니다.
+	    subjectInput.addEventListener("change", function() {
+	    	const parentTr = subjectInput.closest('tr');
+	    	var updateYnInput = parentTr.querySelector(".td_subject_check_box .subject_update_yn");
+	    	updateYnInput.value = "Y";
+	    });
+	});
+	
+	//강사 input에 수정 발생시 해당 tr update_yn = Y로 변경
+	var professorInputs = document.querySelectorAll(".professor_input");
+	professorInputs.forEach(function(professorInput){
+		// onchange 이벤트를 추가합니다.
+	    professorInput.addEventListener("change", function() {
+	    	const parentTr = professorInput.closest('tr');
+	    	var updateYnInput = parentTr.querySelector(".td_professor_check_box .professor_update_yn");
+	    	updateYnInput.value = "Y";
+	    });
+	});
 	
 	
 	
 	
 	
+	/*
+	*	저장하기 이벤트
+	*/
 	
-	
-	
-	
-	
-	
-	
-	
+	//강의 저장하기 버튼 클릭
+	function saveLecture(){
+		//수정된 강의리스트를 담을 배열 선언
+		var updateLectureList = [];
+		
+		//tr .td_lecture_check_box .lecture_update_yn인 input의 값이 Y인 것의 tr들을 가져오기 
+		//한 행씩 딕셔너리 만들어서 배열에 넣기
+		var hiddenInputs = document.querySelectorAll('tr .td_lecture_check_box .lecture_update_yn[value=Y]');
+		hiddenInputs.forEach((input)=>{
+			//수정된 강의객체를 담을 딕셔너리 선언
+			var lecture = {};
+			
+			//updateYn = 'Y'인 인풋의 부모 tr찾기
+			var parentTr = input.closest('tr');
+			console.log(parentTr);
+			
+			//id와 수정가능한 input의 값들 뽑기
+			var lctrId = parentTr.querySelector('.td_lecture_check_box .lecture_checkbox_item').value;
+			var lctrNm = parentTr.querySelector('.td_lecture_nm .lecture_nm').value;
+			var sbjtId = parentTr.querySelector('.td_lecture_subject .lecture_sbjt').value;
+			var profId = parentTr.querySelector('.td_lecture_professor .lecture_prof').value;
+			var lctrTm = parentTr.querySelector('.td_lecture_tm .lecture_tm').value;
+						
+			//딕셔너리의 키값에 값 넣기
+			lecture['lctrId'] = lctrId;
+			lecture['lctrNm'] = lctrNm;
+			lecture['sbjtId'] = sbjtId;
+			lecture['profId'] = profId;
+			lecture['lctrTm'] = lctrTm;
+			
+			//배열에 push하기
+			updateLectureList.push(lecture);
+		});
+		
+		//객체 배열을 json문자열로 직렬화 하기
+		var jsonData = JSON.stringify(updateLectureList);
+		
+		//비동기로 배열 전달하기
+		fetch('/admin/lecture/update', {
+    		method: 'POST',
+    		headers: {
+        		'Content-Type': 'application/json',
+    		},
+    		body: jsonData,
+		})
+		.then(response =>response.json())
+		.then(data => {
+			console.log(data);
+			if (data.message === "success") {
+		        alert("강의가 수정되었습니다.");
+		        //강의 리스트 다시 불러오기
+		        getLectureList();
+		        
+		        const deleteBtn = document.querySelector('#lecture_delete_btn');//강의 선택삭제 버튼
+		        const updateBtn = document.querySelector('#lecture_update_btn');//강의 수정하기 버튼
+		        const cancelBtn = document.querySelector('#lecture_cancel_btn');//강의 수정취소 버튼
+		        const saveBtn = document.querySelector('#lecture_save_btn');//강의 저장하기 버튼
 
+		        //버튼 display 수정
+		        deleteBtn.style.display = 'flex';
+		        updateBtn.style.display = 'flex';
+		        cancelBtn.style.display = 'none';
+		        saveBtn.style.display = 'none';
+		    } else {
+		    	alert("실패했습니다. 다시 시도해주세요.");
+		    }
+		})
+		.catch(error => {
+    		// 오류 처리
+		});
+		
+	}
+	
+	
+	//과목 저장하기 버튼 클릭
+	function saveSubject(){
+		//수정된 강의리스트를 담을 배열 선언
+		var updateSubjectList = [];
+		
+		//tr .td_lecture_check_box .lecture_update_yn인 input의 값이 Y인 것의 tr들을 가져오기 
+		//한 행씩 딕셔너리 만들어서 배열에 넣기
+		var hiddenInputs = document.querySelectorAll('tr .td_subject_check_box .subject_update_yn[value=Y]');
+		hiddenInputs.forEach((input)=>{
+			//수정된 강의객체를 담을 딕셔너리 선언
+			var subject = {};
+			
+			//updateYn = 'Y'인 인풋의 부모 tr찾기
+			var parentTr = input.closest('tr');
+			
+			//id와 수정가능한 input의 값들 뽑기
+			var sbjtId = parentTr.querySelector('.td_subject_check_box .subject_checkbox_item').value;
+			var sbjtNm = parentTr.querySelector('.td_subject_nm .subject_nm').value;
+						
+			//딕셔너리의 키값에 값 넣기
+			subject['sbjtId'] = sbjtId;
+			subject['sbjtNm'] = sbjtNm;
+			
+			//배열에 push하기
+			updateSubjectList.push(subject);
+		});
+		
+		//객체 배열을 json문자열로 직렬화 하기
+		var jsonData = JSON.stringify(updateSubjectList);
+		
+		//비동기로 배열 전달하기
+		fetch('/admin/lecture/subject/update', {
+    		method: 'POST',
+    		headers: {
+        		'Content-Type': 'application/json',
+    		},
+    		body: jsonData,
+		})
+		.then(response =>response.json())
+		.then(data => {
+			console.log(data);
+			if (data.message === "success") {
+		        alert("과목이 수정되었습니다.");
+		        //과목 리스트 다시 불러오기
+		        getSubjectList();
+		        
+		        const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
+		        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
+		        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
+		        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
 
-		//과목 수정
-		function updateSubject(button) {
-			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
-			var row = button.closest('tr');
+		        //버튼 display 수정
+		        deleteBtn.style.display = 'flex';
+		        updateBtn.style.display = 'flex';
+		        cancelBtn.style.display = 'none';
+		        saveBtn.style.display = 'none';
+		    } else {
+		    	alert("실패했습니다. 다시 시도해주세요.");
+		    }
+		})
+		.catch(error => {
+    		// 오류 처리
+		});
+		
+	}
+	
+	//강사 저장하기 버튼 클릭
+	function saveProfessor(){
+		//수정된 강의리스트를 담을 배열 선언
+		var updateProfessorList = [];
+		
+		//한 행씩 딕셔너리 만들어서 배열에 넣기
+		var hiddenInputs = document.querySelectorAll('tr .td_professor_check_box .professor_update_yn[value=Y]');
+		hiddenInputs.forEach((input)=>{
+			//수정된 강사객체를 담을 딕셔너리 선언
+			var professor = {};
+			
+			//updateYn = 'Y'인 인풋의 부모 tr찾기
+			var parentTr = input.closest('tr');
+			
+			//id와 수정가능한 input의 값들 뽑기
+			var profId = parentTr.querySelector('.td_professor_check_box .professor_checkbox_item').value;
+			var profNm = parentTr.querySelector('.td_professor_nm .professor_nm').value;
+			var profTel = parentTr.querySelector('.td_professor_tel .professor_tel').value;
+			var profEmail = parentTr.querySelector('.td_professor_email .professor_email').value;
+						
+			//딕셔너리의 키값에 값 넣기
+			professor['profId'] = profId;
+			professor['profNm'] = profNm;
+			professor['profTel'] = profTel;
+			professor['profEmail'] = profEmail;
+			
+			//배열에 push하기
+			updateProfessorList.push(professor);
+		});
+		
+		//객체 배열을 json문자열로 직렬화 하기
+		var jsonData = JSON.stringify(updateProfessorList);
+		
+		//비동기로 배열 전달하기
+		fetch('/admin/lecture/professor/update', {
+    		method: 'POST',
+    		headers: {
+        		'Content-Type': 'application/json',
+    		},
+    		body: jsonData,
+		})
+		.then(response =>response.json())
+		.then(data => {
+			console.log(data);
+			if (data.message === "success") {
+		        alert("강사가 수정되었습니다.");
+		        //강사 리스트 다시 불러오기
+		        getProfessorList();
+		        
+		        const deleteBtn = document.querySelector('#professor_delete_btn');//강사 선택삭제 버튼
+		        const updateBtn = document.querySelector('#professor_update_btn');//강사 수정하기 버튼
+		        const cancelBtn = document.querySelector('#professor_cancel_btn');//강사 수정취소 버튼
+		        const saveBtn = document.querySelector('#professor_save_btn');//강사 저장하기 버튼
 
-			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
-			var spans = row.querySelectorAll('.subject_span')
-			spans.forEach(function(span) {
-				span.style.display = 'none';
-			});
-
-			var inputs = row.querySelectorAll('.subject_input')
-			inputs.forEach(function(input) {
-				input.style.display = 'inline-block';
-			});
-		}
-
-		//과목 저장
-		function saveSubject(button) {
-			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
-			var row = button.closest('tr');
-
-			//id값, nm, tm값 가져와서 비동기처리
-			var subjectId = row.querySelector(".subject_checkbox_item").value;
-			var subjectNm = row.querySelector(".subject_nm").value;
-
-			$.ajax({
-				url : '/admin/lecture/subject/update',
-				method : 'POST',
-				data : {
-					subjectId : subjectId,
-					subjectNm : subjectNm
-				},
-				success : function(response) {
-					console.log(response);
-					if (response == "success") {
-						alert("수정되었습니다.");
-						window.location.href = "/admin/lecture/list";
+		        //버튼 display 수정
+		        deleteBtn.style.display = 'flex';
+		        updateBtn.style.display = 'flex';
+		        cancelBtn.style.display = 'none';
+		        saveBtn.style.display = 'none';
+		    } else {
+		    	alert("실패했습니다. 다시 시도해주세요.");
+		    }
+		})
+		.catch(error => {
+    		// 오류 처리
+		});
+		
+	}
+	
+	/*
+	*리스트 새로 불러오기
+	*/
+	
+	//강의 리스트 새로 불러오기
+	function getLectureList(){
+		const lectureTbody = document.querySelector('.lecture_tbody');
+		$('.lecture_tbody').empty();
+		
+		$.ajax({
+			url: '/admin/lecture/getlecturelist',
+			method : 'GET',
+			success: function(response){
+				var lectureList = response.lectureList;
+				var subjectList = response.subjectList;
+				var professorList = response.professorList;
+				
+				
+				var lectureCnt = document.querySelector('.lecture_cnt');
+				lectureCnt.textContent = lectureList.length;
+				
+				for(var i=0; i<lectureList.length; i++){
+					const lecture = lectureList[i];
+					
+					//tr생성
+					var tr = document.createElement('tr');
+					
+					var tdCheck = document.createElement('td');
+					tdCheck.className = "td_lecture_check_box";
+					var inputCheck = document.createElement('input');
+					inputCheck.type="checkbox";
+					inputCheck.name = "lecture_select";
+					inputCheck.onclick = function(){
+						lectureCheckSelectAll();
 					}
-				}
-			});
-		}
-
-		//강사 수정
-		function updateProfessor(button) {
-			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
-			var row = button.closest('tr');
-
-			// 텍스트로 표시되는 요소를 보이지 않도록 숨깁니다.
-			var spans = row.querySelectorAll('.professor_span')
-			spans.forEach(function(span) {
-				span.style.display = 'none';
-			});
-
-			var inputs = row.querySelectorAll('.professor_input')
-			inputs.forEach(function(input) {
-				input.style.display = 'inline-block';
-			});
-		}
-
-		//강사 저장
-		function saveProfessor(button) {
-			// 현재 행을 찾기 위해 수정 버튼의 부모 행(tr)을 가져옵니다.
-			var row = button.closest('tr');
-
-			//id값, nm, tm값 가져와서 비동기처리
-			var professorId = row.querySelector(".professor_checkbox_item").value;
-			var professorNm = row.querySelector(".professor_nm").value;
-			var professorTel = row.querySelector(".professor_tel").value;
-			var professorEmail = row.querySelector(".professor_email").value;
-
-			$.ajax({
-				url : '/admin/lecture/professor/update',
-				method : 'POST',
-				data : {
-					professorId : professorId,
-					professorNm : professorNm,
-					professorTel : professorTel,
-					professorEmail : professorEmail
-				},
-				success : function(response) {
-					console.log(response);
-					if (response == "success") {
-						alert("수정되었습니다.");
-						window.location.href = "/admin/lecture/list";
+					inputCheck.value = lecture.lctrId;
+					inputCheck.className = "lecture_checkbox_item";
+					var inputHidden = document.createElement('input');
+					inputHidden.type="hidden";
+					inputHidden.className = "lecture_update_yn";
+					inputHidden.value="N";
+					tdCheck.appendChild(inputCheck);
+					tdCheck.appendChild(inputHidden);
+					tr.appendChild(tdCheck);
+					
+					var tdNum = document.createElement('td');
+					tdNum.className = "td_lecture_num";
+					tdNum.textContent = i+1;
+					tr.appendChild(tdNum);
+					
+					var tdLectureNm = document.createElement('td');
+					tdLectureNm.className = "td_lecture_nm";
+					var spanLectureNm = document.createElement('span');
+					spanLectureNm.className = "lecture_span";
+					spanLectureNm.textContent = lecture.lctrNm;
+					var inputLectureNm = document.createElement('input');
+					inputLectureNm.className = "lecture_input lecture_nm";
+					inputLectureNm.style.display = 'none';
+					inputLectureNm.type="text";
+					inputLectureNm.value = lecture.lctrNm;
+					tdLectureNm.appendChild(spanLectureNm);
+					tdLectureNm.appendChild(inputLectureNm);
+					tr.appendChild(tdLectureNm);
+					
+					var tdSubject = document.createElement('td');
+					tdSubject.className="td_lecture_subject";
+					var spanSubject= document.createElement('span');
+					spanSubject.className ="lecture_span";
+					spanSubject.textContent = lecture.sbjtNm;
+					var selectSubject = document.createElement('select');
+					selectSubject.className = "lecture_select lecture_sbjt";
+					selectSubject.style.display='none';
+					for(var j=0; j<subjectList.length; j++){
+						var subject = subjectList[j];
+						
+						var optionSubject = document.createElement('option');
+						optionSubject.value = subject.sbjtId;
+						optionSubject.textContent = subject.sbjtNm;
+						
+						selectSubject.appendChild(optionSubject);
 					}
+					selectSubject.value=lecture.sbjtId;
+					tdSubject.appendChild(spanSubject);
+					tdSubject.appendChild(selectSubject);
+					tr.appendChild(tdSubject);
+					
+					var tdProfessor = document.createElement('td');
+					tdProfessor.className ="td_lecture_professor";
+					var spanProfessor = document.createElement('span');
+					spanProfessor.className = "lecture_span";
+					spanProfessor.textContent = lecture.profNm;
+					var selectProfessor = document.createElement('select');
+					selectProfessor.className = "lecture_select lecture_prof";
+					selectProfessor.style.display = 'none';
+					for(var k=0; k<professorList.length; k++){
+						var professor = professorList[k];
+						
+						var optionProfessor = document.createElement('option');
+						optionProfessor.value = professor.profId;
+						optionProfessor.textContent = professor.profNm;
+						
+						selectProfessor.appendChild(optionProfessor);
+					}
+					selectProfessor.value = lecture.profId;
+					tdProfessor.appendChild(spanProfessor);
+					tdProfessor.appendChild(selectProfessor);
+					tr.appendChild(tdProfessor);
+					
+					var tdTm = document.createElement('td');
+					tdTm.className = "td_lecture_tm";
+					var spanTm = document.createElement('span');
+					spanTm.className = "lecture_span";
+					spanTm.textContent = lecture.lctrTm;
+					var inputTm = document.createElement('input');
+					inputTm.style.display = 'none';
+					inputTm.style.width = '80px';
+					inputTm.className='lecture_input lecture_tm';
+					inputTm.type="number";
+					inputTm.value = lecture.lctrTm;
+					tdTm.appendChild(spanTm);
+					tdTm.appendChild(inputTm);
+					tr.appendChild(tdTm);
+					
+					lectureTbody.appendChild(tr);
 				}
-			});
-		}
+			}
+		});
+	}
+	
+	
+	//과목리스트 새로 불러오기
+	function getSubjectList(){
+		const subjectTbody = document.querySelector('.subject_tbody');
+		$('.subject_tbody').empty();
+		
+		$.ajax({
+			url: '/admin/lecture/getsubjectlist',
+			method : 'GET',
+			success: function(response){
+				var subjectList = response;
+				
+				//subject cnt 변경
+				var subjectCnt = document.querySelector('.subject_cnt');
+				subjectCnt.textContent = subjectList.length;
+				
+				for(var i=0; i<subjectList.length; i++){
+					var subject = subjectList[i];
+					
+					var tr = document.createElement('tr');
+					
+					var tdCheck = document.createElement('td');
+					tdCheck.className="td_subject_check_box";
+					var inputCheck = document.createElement('input');
+					inputCheck.type="checkbox";
+					inputCheck.name="subject_select";
+					inputCheck.onclick = function(){
+						subjectCheckSelectAll();
+					}
+					inputCheck.className = "subject_checkbox_item";
+					inputCheck.value=subject.sbjtId;
+					var inputHidden = document.createElement('input');
+					inputHidden.type="hidden";
+					inputHidden.className="subject_update_yn";
+					inputHidden.value="N";
+					tdCheck.appendChild(inputCheck);
+					tdCheck.appendChild(inputHidden);
+					tr.appendChild(tdCheck);
+					
+					var tdNum = document.createElement('td');
+					tdNum.className="td_subject_num";
+					tdNum.textContent = i+1;
+					tr.appendChild(tdNum);
+					
+					var tdSubjectNm = document.createElement('td');
+					tdSubjectNm.className = "td_subject_nm";
+					var spanSubjectNm = document.createElement('span');
+					spanSubjectNm.className ="subject_span";
+					spanSubjectNm.textContent = subject.sbjtNm;
+					var inputSubjectNm = document.createElement('input');
+					inputSubjectNm.style.display ='none';
+					inputSubjectNm.type="text";
+					inputSubjectNm.className="subject_input subject_nm";
+					inputSubjectNm.value=subject.sbjtNm;
+					tdSubjectNm.appendChild(spanSubjectNm);
+					tdSubjectNm.appendChild(inputSubjectNm);	
+					tr.appendChild(tdSubjectNm);
+				
+					subjectTbody.appendChild(tr);
+				}
+				
+				//강의 리스트 새로 불러오기
+				getLectureList();
+				
+				//강의 등록 부분 과목 리스트 새로 불러오기
+			}
+		});
+	}
+	
+	//강사 리스트 새로 불러오기
+	function getProfessorList(){
+		const professorTbody = document.querySelector('.professoe_tbody');
+		$('.professoe_tbody').empty();
+		
+		$.ajax({
+			url: '/admin/lecture/getprofessorlist',
+			method : 'GET',
+			success: function(response){
+				var professorList = response;
+				
+				//professor cnt 변경
+				var professorCnt = document.querySelector('.professor_cnt');
+				professorCnt.textContent = professorList.length;
+				
+				for(var i=0; i<professorList.length; i++){
+					var professor = professorList[i];
+					
+					var tr = document.createElement('tr');
+					
+					var tdCheck = document.createElement('td');
+					tdCheck.className="td_professor_check_box";
+					var inputCheck = document.createElement('input');
+					inputCheck.type="checkbox";
+					inputCheck.name="professor_select";
+					inputCheck.onclick = function(){
+						professorCheckSelectAll();
+					}
+					inputCheck.className="professor_checkbox_item";
+					inputCheck.value = professor.profId;
+					var inputHidden = document.createElement('input');
+					inputHidden.type="hidden";
+					inputHidden.className ="professor_update_yn";
+					inputHidden.value ='N';
+					tdCheck.appendChild(inputCheck);
+					tdCheck.appendChild(inputHidden);
+					tr.appendChild(tdCheck);
+					
+					var tdNum = document.createElement('td');
+					tdNum.className ='td_professor_num';
+					tdNum.textContent = i+1;
+					tr.appendChild(tdNum);
+					
+					var tdNm = document.createElement('td');
+					tdNm.className = 'td_professor_nm';
+					var spanNm = document.createElement('span');
+					spanNm.className = 'professor_span';
+					spanNm.textContent = professor.profNm;
+					var inputNm = document.createElement('input');
+					inputNm.className ='professor_input professor_nm';
+					inputNm.style.display = 'none';
+					inputNm.style.width = '100px';
+					inputNm.value = professor.profNm;
+					tdNm.appendChild(spanNm);
+					tdNm.appendChild(inputNm);
+					tr.appendChild(tdNm);
+					
+					var tdTel = document.createElement('td');
+					tdTel.className = 'td_professor_tel';
+					var spanTel = document.createElement('span');
+					spanTel.className = 'professor_span';
+					spanTel.textContent = professor.profTel;
+					var inputTel = document.createElement('input');
+					inputTel.className='professor_input professor_tel';
+					inputTel.style.display = 'none';
+					inputTel.style.width = '100px';
+					inputTel.value = professor.profTel;
+					tdTel.appendChild(spanTel);
+					tdTel.appendChild(inputTel);
+					tr.appendChild(tdTel);
+					
+					var tdEmail = document.createElement('td');
+					tdEmail.className = 'td_professor_email';
+					var spanEmail = document.createElement('span');
+					spanEmail.className = 'professor_span';
+					spanEmail.textContent = professor.profEmail;
+					var inputEmail = document.createElement('input');
+					inputEmail.className = 'professor_input professor_email';
+					inputEmail.style.display ='none';
+					inputEmail.style.width = '200px';
+					inputEmail.value = professor.profEmail;
+					tdEmail.appendChild(spanEmail);
+					tdEmail.appendChild(inputEmail);
+					tr.appendChild(tdEmail);
+						
+					professorTbody.appendChild(tr);
+				}
+				
+				//강의 리스트 새로 불러오기
+				getLectureList();
+			}
+		});
+	}
+	
 	</script>
 </body>
 </html>

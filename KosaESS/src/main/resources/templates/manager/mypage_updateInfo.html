@@ -4,11 +4,58 @@
 <meta charset="UTF-8">
 </head>
 <head>
-	<link th:href="@{/css/manager/manager_wlog_list.css}" rel="stylesheet" />
-	<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
-	<link th:href="@{/css/manager/modal_style.css}" rel="stylesheet" />
+<link th:href="@{/css/manager/manager_mypage.css}" rel="stylesheet" />
+<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
 </head>
 <body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
+	<!-- End 서브바 -->
 
+	<!-- 얼럴트 -->
+	<div class="look_at_me">
+		<span class="read_this">이봐!</span>
+	</div>
+	<!-- End : 얼럴트 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title_wrap">
+			<span class="title" th:text="${title}"></span>
+		</div>
+
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<table>
+				<tr>
+					<th>이름</th>
+					<td th:text="${thisManager.mngrNm}" class="text_name"></td>
+				</tr>
+				<tr>
+					<th>이메일</th>
+					<td th:text="${thisManager.userEmail}" class="text_email"></td>
+				</tr>
+				<tr>
+					<th>비밀번호</th>
+					<td><input type="password" class="input_password" name="inputPassword"></td>
+				</tr>
+				<tr>
+					<th>비밀번호 확인</th>
+					<td><input type="password" class="input_password_confirm" name="confirmPassword"></td>
+				</tr>
+				<tr>
+					<th>전화번호</th>
+					<td><input th:value="${thisManager.mngrTel}" class="input_tel" name="inputTel"></td>
+				</tr>
+			</table>
+			<input type="button" onclick="updateInfo()" value="저장">
+		</div>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="/js/manager/alert_box.js"></script>
+	<script src="/js/manager/mypage.js"></script>
 </body>
 </html>

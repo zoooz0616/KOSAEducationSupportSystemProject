@@ -12,6 +12,7 @@ import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
@@ -144,6 +145,12 @@ public class ManagerService implements IManagerService {
 	@Override
 	public void updateWlogCd(String wlogId, String wlogCd, String mngrId) {
 		managerRepository.updateWlogCd(wlogId, wlogCd, mngrId);
+	}
+
+	@Override
+	public void updateManagerInfo(ManagerVO updateManager) {
+		managerRepository.updateManagerInfo(updateManager);
+		managerRepository.updateManagerLoginInfo(updateManager);
 	}
 
 //	@Override
