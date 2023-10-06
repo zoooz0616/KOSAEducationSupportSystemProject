@@ -179,8 +179,12 @@ $(document).ready(function() {
 
 			var resnText = $('.resnText1').val();
 			var formData = new FormData();
-			var file = document.querySelector("#fileInput2").files[0];
-			formData.append("file", file);
+			var files = document.querySelector("#fileInput2").files; // 파일 리스트를 가져옵니다.
+
+			for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
+				var file = files[i]; // 각 파일을 가져옵니다.
+				formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
+			}
 			formData.append("resnText", resnText)
 			console.log(resnText);
 			console.log(formData);
@@ -216,8 +220,12 @@ $(document).ready(function() {
 		modal3.on('click', '.submitBtn', function() {
 			var resnText = $('.resnText2').val();
 			var formData = new FormData();
-			var file = document.querySelector("#fileInput3").files[0];
-			formData.append("file", file);
+			var files = document.querySelector("#fileInput3").files; // 파일 리스트를 가져옵니다.
+
+			for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
+				var file = files[i]; // 각 파일을 가져옵니다.
+				formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
+			}
 			formData.append("resnText", resnText)
 			console.log(resnText);
 			console.log(formData);

@@ -31,8 +31,26 @@ input {
 	width: 30%;
 }
 
+.infoTable select {
+	padding: 8px;
+	font-size: 16px;
+	border: inset;
+	color: #0E5881;
+	border-radius: 5px;
+}
+
+.infoTable span {
+	color: red;
+	font-weight: bold;
+	font-size: 14px;
+}
+
 input::placeholder {
 	color: #0E5881;
+}
+
+#userPwd::placeholder {
+	color: gray;
 }
 
 .resnText1, .resnText2 {
@@ -199,14 +217,18 @@ table td {
 }
 
 .infoTable th {
-	width: 10%;
+	width: 9%;
 	border-right: 2px solid #CFDEE6;
+	text-align: left;
+	padding-left: 3%;
+	height: 45px;
 }
 
 .infoTable td {
 	text-align: left;
 	width: 40%;
 	margin-left: 2%;
+	padding-left: 2%;
 }
 
 .infoTable tr {

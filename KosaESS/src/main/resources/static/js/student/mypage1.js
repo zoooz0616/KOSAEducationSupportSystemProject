@@ -190,10 +190,9 @@ $(document).ready(function() {
 			success: function(response) {
 				if (response == true) {
 					alert("수강이 확정되었습니다.");
-					updateAplyTable();
+					location.href = location.href;
 				} else {
 					alert("진행중인 수업이 존재합니다. \n 한 개이상의 교육을 수강할 수 없습니다.");
-					updateAplyTable();// 성공한 후 테이블 업데이트
 				}
 			}
 		});
@@ -269,24 +268,6 @@ function formatTimestamp(timestamp) {
 	return formattedTimestamp;
 }
 
-$("#fileInput1").on('change', function() {
-	var fileName = $("#fileInput1").val();
-	$(".upload-name1").val(fileName);
-});
 
-$("#fileInput2").on('change', function() {
-	var fileName = $("#fileInput2").val();
-	$(".upload-name2").val(fileName);
-});
 
-$("#fileInput3").on('change', function() {
-	var fileName = $("#fileInput3").val();
-	$(".upload-name3").val(fileName);
-});
-
-$('#passwordInput').on('keyup', function(event) {
-	if (event.key === "Enter") {
-		$('#checkPassword').trigger('click');
-	}
-});
 
