@@ -11,6 +11,7 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
@@ -97,7 +98,7 @@ public interface IStudentRepository {
 
 	void updateResnFile(String resnId, FileVO fileVO);
 
-	void updateResndt(String resnId, String stdtId, String resnText);
+	void updateResndt(String resnId, String stdtId, String resnText, String maxFileId);
 
 	StudentVO getstdtInfo(String stdtId);
 
@@ -154,5 +155,15 @@ public interface IStudentRepository {
 	List<ClassVO> getStdtRgstEvents(String stdtId);
 
 	List<ClassVO> getStdtAplyEvents(String stdtId);
+
+	String getContent(String postId);
+
+	List<CommonCodeVO> getCommonCodeList(String string);
+
+	void updateInfo(StudentVO userInfo);
+
+	void updatePwd(String pwd, String userEmail);
+
+	void updatePostFile(FileVO fileVO, String postId);
 
 }

@@ -41,10 +41,10 @@ let totalLctrTm = 0;
 
 // 각 lctrTm 값을 가져와서 totalLctrTm에 더합니다.
 document.querySelectorAll('.lctrTm').forEach(function(element) {
-    const lctrTmValue = parseInt(element.textContent);
-    if (!isNaN(lctrTmValue)) {
-        totalLctrTm += lctrTmValue;
-    }
+	const lctrTmValue = parseInt(element.textContent);
+	if (!isNaN(lctrTmValue)) {
+		totalLctrTm += lctrTmValue;
+	}
 });
 
 // 총 이수 시간을 결과를 담고 있는 요소에 설정합니다.
@@ -63,7 +63,15 @@ topBtn.addEventListener('click', () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-$("#fileInput").on('change',function(){
-  var fileName = $("#fileInput").val();
-  $(".upload-name").val(fileName);
+$("#fileInput").on('change', function() {
+	var files = $("#fileInput")[0].files;
+	var fileNames = [];
+
+	for (var i = 0; i < files.length; i++) {
+		fileNames.push(files[i].name);
+	}
+
+	var fileNameString = fileNames.join(', ');
+	$(".upload-name").val(fileNameString);
 });
+

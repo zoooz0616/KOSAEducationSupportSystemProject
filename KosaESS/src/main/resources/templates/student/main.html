@@ -36,85 +36,114 @@
 			<button class="banner-button button-right"></button>
 		</div>
 		<div class="maincontent">
-			<div class="login con"
-				style="margin-bottom: 4%; padding: 2%; width: 14%;">
-				<div th:if="${session.userEmail==null}">
-					<h2>회원가입후 이용가능</h2>
-				</div>
-				<div th:if="${session.userEmail!=null}" style="text-align: left;">
-					<div style="width: 100%;">
-						<h2 style="margin-bottom: 2%; padding: 5% 0;">
-							<span th:text="${session.stdtNm}"
-								style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
-						</h2>
-						<div class="my" style="text-align: left;">
-							<div class="box aplyList">
-								<span>지원내역: </span> <span 
-									style="color: #0E5881; font-size: 22px;"
-									th:text="${aplyClassCnt}"></span> <span>건</span></a>
+			<div
+				style="width: 47%; display: flex; flex-wrap: wrap; justify-content: space-between;">
+				<div class="login con"
+					style="margin-bottom: 8%; padding: 3%; width: 35%;">
+					<div th:if="${session.userEmail==null}">
+						<h2>회원가입후 이용가능</h2>
+					</div>
+					<div th:if="${session.userEmail!=null}" style="text-align: left;">
+						<div style="width: 100%;">
+							<h2 style="margin-bottom: 2%; padding: 5% 0;">
+								<span th:text="${session.stdtNm}"
+									style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
+							</h2>
+							<div class="my" style="text-align: left;">
+								<div class="box aplyList">
+									<span>지원내역: </span> <span
+										style="color: #0E5881; font-size: 22px;"
+										th:text="${aplyClassCnt}"></span> <span>건</span></a>
+								</div>
+								<div class="box rgstList">
+									<span>출력 가능 이수증: </span> <span
+										style="color: #0E5881; font-size: 22px;"
+										th:text="${cmptClassCnt}"></span> <span>건</span>
+								</div>
 							</div>
-							<div class="box rgstList">
-								<span>출력 가능 이수증: </span> <span 
-									style="color: #0E5881; font-size: 22px;"
-									th:text="${cmptClassCnt}"></span> <span>건</span>
-							</div>
-						</div>
 
-						<div class="lastlog">
-							<h4>마지막 로그인 일시</h4>
-							<h4 id="lastLog"></h4>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="login con"
-				style="margin-bottom: 4%; text-align: center; padding: 2%; width: 21%;">
-				<div th:if="${session.userEmail==null}">
-					<h2>로그인</h2>
-					<form th:action="@{/login}" method="post" class="">
-						<div class="" style="display: flex; flex-direction: column;">
-							<label for="email"></label> <input type="text" name="email"
-								id="id" class="" placeholder="아이디(이메일)"> <label
-								for="pwd"></label> <input type="password" name="pwd" id="pwd"
-								class=" " placeholder="비밀번호">
-						</div>
-						<div class="submit" style="width: 100%;">
-							<input type="submit" class="loginBtn" th:value="로그인">
-						</div>
-					</form>
-				</div>
-				<div th:if="${session.userEmail!=null}">
-					<div th:if="${ingClassVO == null}">
-						<h3>수강중인 교육이 없습니다.</h3>
-						<div
-							style="align-items: center; justify-content: center; display: flex;">
-							<a th:href="@{/student/class/list}"><img
-								style="height: 70px;" th:src="@{/img/hat_navy.png}">
-								<h3>교육지원하러 가기</h3> </a>
-						</div>
-					</div>
-					<div th:if="${ingClassVO != null}">
-						<div class="inouttm">
-							<p id="dDay"></p>
-							<h3 th:text="${ingClassVO.clssNm}" style="margin: 0 0 2% 0;"></h3>
-							<div class="viewinout">
-								<div>
-									<label for="intm"></label> <input type="text"
-										placeholder="출근시간" name="intm" id="intm" class="checktm"
-										readonly>
-								</div>
-								<div>
-									<label for="outtm"></label> <input placeholder="퇴근시간"
-										type="text" name="outtm" id="outtm" class="checktm" readonly>
-								</div>
+							<div class="lastlog">
+								<h4>마지막 로그인 일시</h4>
+								<h4 id="lastLog"></h4>
 							</div>
 						</div>
-						<div class="submit"
-							style="margin: auto; display: grid; align-items: center;">
-							<!-- 토글 버튼 -->
-							<input class="wlogBtn" type="button" onclick="toggleInOut()">
+					</div>
+				</div>
+				<div class="login con"
+					style="margin-bottom: 8%; text-align: center; padding: 5%; width: 40%;">
+					<div th:if="${session.userEmail==null}">
+						<h2>로그인</h2>
+						<form th:action="@{/login}" method="post" class="">
+							<div class="" style="display: flex; flex-direction: column;">
+								<label for="email"></label> <input type="text" name="email"
+									id="id" class="" placeholder="아이디(이메일)"> <label
+									for="pwd"></label> <input type="password" name="pwd" id="pwd"
+									class=" " placeholder="비밀번호">
+							</div>
+							<div class="submit" style="width: 100%; margin-top: 10px;">
+								<input type="submit" class="loginBtn" th:value="로그인">
+							</div>
+						</form>
+						<div
+							style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 5px;">
+							<a style="cursor: pointer;">아이디/비밀번호 찾기</a> <a
+								th:href="@{/student/join}">회원가입</a>
 						</div>
 					</div>
+					<div th:if="${session.userEmail!=null}">
+						<div th:if="${ingClassVO == null}">
+							<h3>수강중인 교육이 없습니다.</h3>
+							<div
+								style="align-items: center; justify-content: center; display: flex;">
+								<a th:href="@{/student/class/list}"><img
+									style="height: 70px;" th:src="@{/img/hat_navy.png}">
+									<h3>교육지원하러 가기</h3> </a>
+							</div>
+						</div>
+						<div th:if="${ingClassVO != null}">
+							<div class="inouttm">
+								<p id="dDay"></p>
+								<h3 th:text="${ingClassVO.clssNm}"
+									style="margin: 0 0 2% 0; height: 55px; display: flex; justify-content: center; align-items: center;"></h3>
+								<div class="viewinout">
+									<div>
+										<label for="intm"></label> <input type="text"
+											placeholder="출근시간" name="intm" id="intm" class="checktm"
+											readonly>
+									</div>
+									<div>
+										<label for="outtm"></label> <input placeholder="퇴근시간"
+											type="text" name="outtm" id="outtm" class="checktm" readonly>
+									</div>
+								</div>
+							</div>
+							<div class="submit"
+								style="margin: auto; display: grid; align-items: center;">
+								<!-- 토글 버튼 -->
+								<input class="wlogBtn" type="button" onclick="toggleInOut()">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="notice con"
+					style="background: #E7EFF3; width: 100%; margin-bottom: 8%; padding: 4%;">
+					<h2 style="margin-bottom: 0;">공지사항</h2>
+					<div style="display: block; text-align: end;">
+						<a class="plus" style="display: block; text-align: end;"
+							th:href="@{/student/notice/list}">+</a>
+					</div>
+					<hr>
+					<table>
+						<tr th:each="postVO : ${postList}">
+							<td style="width: 75%;"><a
+								th:href="@{/student/notice/view/__${postVO.postId}__}"
+								th:text="${postVO.postTitle}"></a></td>
+							<td style="width: 25%; text-align: right;"><span
+								th:if="${postVO.rgstDd == null}">미정</span> <span
+								th:if="${postVO.rgstDd != null}" th:text="${postVO.rgstDd}"></span>
+							</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 			<div class=" con" style="width: 45%; margin-bottom: 4%;">
@@ -131,27 +160,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="notice con"
-				style="background: #E7EFF3; width: 43%; margin-bottom: 4%;">
-				<h2 style="margin-bottom: 0;">공지사항</h2>
-				<div style="display: block; text-align: end;">
-					<a class="plus" style="display: block; text-align: end;"
-						th:href="@{/student/notice/list}">+</a>
-				</div>
-				<hr>
-				<table>
-					<tr th:each="postVO : ${postList}">
-						<td style="width: 75%;"><a
-							th:href="@{/student/notice/view/__${postVO.postId}__}"
-							th:text="${postVO.postTitle}"></a></td>
-						<td style="width: 25%; text-align: right;"><span
-							th:if="${postVO.rgstDd == null}">미정</span> <span
-							th:if="${postVO.rgstDd != null}" th:text="${postVO.rgstDd}"></span>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="class con" style="width: 45%; margin-bottom: 4%;">
+
+			<!-- <div class="class con" style="width: 45%; margin-bottom: 4%;">
 				<h2 style="margin-bottom: 0;">접수중인 교육</h2>
 				<div style="display: block; text-align: end;">
 					<a class="plus" th:href="@{/student/class/list}">+</a>
@@ -169,7 +179,7 @@
 						</td>
 					</tr>
 				</table>
-			</div>
+			</div> -->
 
 			<div class="news con" style="background: #E7EFF3; width: 43%;">
 				<h2 style="margin-bottom: 0;">협회 뉴스</h2>
