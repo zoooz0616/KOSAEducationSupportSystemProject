@@ -631,7 +631,8 @@ public class ManagerController {
 			HttpSession session
 			, @RequestParam(required = false) String inputPassword
 			, @RequestParam(required = false) String confirmPassword
-			, @RequestParam(required = false) String inputTel
+			, @RequestParam String inputTel
+			, @RequestParam String inputName
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
@@ -653,8 +654,13 @@ public class ManagerController {
 		if(inputPassword!=null && !inputPassword.equals("") && inputPassword.equals(confirmPassword)) {
 			updateManager.setUserPwd(inputPassword);
 		}
-		if(inputTel != null) {
+		
+		if(inputTel != null && !inputTel.equals("") ) {
 			updateManager.setMngrTel(inputTel);
+		}
+		
+		if(inputName != null && !inputName.equals("") ) {
+			updateManager.setMngrNm(inputName);
 		}
 		
 		managerService.updateManagerInfo(updateManager);

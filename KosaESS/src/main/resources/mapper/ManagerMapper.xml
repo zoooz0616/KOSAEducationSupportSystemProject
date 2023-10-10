@@ -225,6 +225,7 @@
 			UPDATE mngr
 			SET
 				mngr_tel = #{mngrTel}
+				,mngr_Nm = #{mngrNm}
 			WHERE
 				user_email=#{userEmail}
 		]]>

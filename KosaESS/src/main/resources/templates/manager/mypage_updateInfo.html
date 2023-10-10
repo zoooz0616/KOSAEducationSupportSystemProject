@@ -29,8 +29,9 @@
 		<div class="content_wrap">
 			<table>
 				<tr>
-					<th>이름</th>
-					<td th:text="${thisManager.mngrNm}" class="text_name">
+					<th>이름<span class="star">*</span></th>
+					<td>
+						<input type="text" class="text_name" name="inputPassword" placeholder="이름 입력" th:value="${thisManager.mngrNm}">
 					</td>
 				</tr>
 				<tr>
@@ -39,7 +40,9 @@
 				</tr>
 				<tr>
 					<th>비밀번호</th>
-					<td><input type="password" class="input_password" name="inputPassword" placeholder="새 비밀번호 입력"></td>
+					<td>
+						<input type="password" class="input_password" name="inputPassword" placeholder="새 비밀번호 입력">
+					</td>
 				</tr>
 				<tr>
 					<th>비밀번호 확인</th>
@@ -47,7 +50,7 @@
 				</tr>
 				<tr>
 					<th>전화번호<span class="star">*</span></th>
-					<td><input th:value="${thisManager.mngrTel}" class="input_tel" name="inputTel"></td>
+					<td><input th:value="${thisManager.mngrTel}" class="input_tel" name="inputTel" placeholder="전화번호 입력"></td>
 				</tr>
 			</table>
 			<input type="button" onclick="updateInfo()" value="저장" class="update_btn">
