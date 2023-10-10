@@ -82,7 +82,7 @@ public class ManagerController {
 	public String getClassList(Model model, HttpSession session) {
 		String roleCd = (String) session.getAttribute("roleCd");
 		if (roleCd != null && roleCd.equals("ROL0000003")) {
-			model.addAttribute("title", "교육 과정 목록");
+			model.addAttribute("title", "교육과정 관리");
 //			List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"),"id","desc");
 			List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"),"name","");
 			// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
@@ -241,7 +241,7 @@ public class ManagerController {
 			}
 		}
 		
-		model.addAttribute("title", "교육생 목록");
+		model.addAttribute("title", "교육생 관리");
 		model.addAttribute("classCodeNameList", classCodeNameList);//교육과정 상태 넘김
 		model.addAttribute("stdtCodeNameList", stdtCodeNameList);//학생 등록 상태 넘김
 		model.addAttribute("cmptCodeNameList", cmptCodeNameList);//이수 여부 관련 상태 넘김
@@ -346,7 +346,7 @@ public class ManagerController {
 		//End : 유저 필터링
 		
 		String mngrId = (String) session.getAttribute("mngrId");
-		String title = "출퇴근 기록";
+		String title = "출퇴근 관리";
 
 		//------------------------------------------------------------------------------------
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");

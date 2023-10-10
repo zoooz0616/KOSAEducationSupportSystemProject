@@ -16,7 +16,7 @@
 		]]>
 		<choose>
 			<when test='sortBy.equalsIgnoreCase("name")'>
-				ORDER BY clss_nm
+				ORDER BY clss_id
 			</when>
 			<otherwise>
 				ORDER BY clss_id
