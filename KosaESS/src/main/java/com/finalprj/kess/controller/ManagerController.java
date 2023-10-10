@@ -60,17 +60,21 @@ public class ManagerController {
 	//	메인 페이지
 	@GetMapping("")
 	public String managerMain(Model model, HttpSession session) {
-		String roleCd = (String) session.getAttribute("roleCd");
-		//		if (roleCd.equals("ROL0000003")) {
-		//			return "redirect:/manager/class";
-		//		} else {
-		//			return "redirect:/login";
-		//		}
-		if (roleCd == null || !roleCd.equals("ROL0000003")) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
 			return "redirect:/login";
-		} else {
-			return "redirect:/manager/class";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
 		}
+		
+		List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), "name", "");
+		
+		model.addAttribute("title","메인");
+		model.addAttribute("classList",classList);
+		
+		return "manager/manager_main";
 	}
 
 	//	담당 교육 목록 조회
@@ -348,7 +352,7 @@ public class ManagerController {
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"", "");
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "name", "");
 		
 		if(clssId != null) {
 			List<String> isManagerIdList = new ArrayList<String>();
@@ -592,6 +596,7 @@ public class ManagerController {
 		// End : 업데이트 결과 전송
 	}
 
+	//출퇴근 기록의 출석 상태 변경
 	@PostMapping("/worklog/update_wlog_code")
 	@ResponseBody
 	public Map<String, Object> updateWlogCd(
@@ -656,6 +661,27 @@ public class ManagerController {
 		
 		response.put("thisManager", adminService.getManager(mngrId));
 		response.put("message","변경되었습니다.");
+		return response;
+	}
+	
+	//출퇴근 기록의 출석 상태 코드 반환
+	@GetMapping("/main/wlog_cd")
+	@ResponseBody
+	public Map<String, Object> getWlogCd(
+			HttpSession session
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		//End : 유저 필터링
+		
+		List<CommonCodeVO> wlogCdList= managerService.getCodeNameList("WOK");
+		
+		// End : 업데이트
+		Map<String, Object> response = new HashMap<>();
+		response.put("wlogCdList", wlogCdList);
 		return response;
 	}
 }

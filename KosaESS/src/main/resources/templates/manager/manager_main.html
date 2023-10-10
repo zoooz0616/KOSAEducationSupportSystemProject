@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header_2 :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/manager/manager_main.css}" rel="stylesheet" />
+<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
+<link th:href="@{/css/manager/modal_style.css}" rel="stylesheet" />
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title_wrap">
+			<span class="title" th:text="${title}"></span> <br>
+		</div>
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<div class="area_test" style="width:30%">
+				<div>
+					<div style="display: flex;">
+						<select style="width:80%">
+							<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class.clssId}" />
+						</select>
+						<div style="display: flex; justify-content: center; width: 20%" >
+							<input type="button" style="width: 70%" value="검색">
+						</div>
+					</div>
+					<!-- 파이 차트 -->
+					<canvas class="area_test" id="myChart" style="width: auto;height: auto;"></canvas>
+				</div>
+				<div class="area_test">
+					최근 올라온 사유서 목록
+					<table style="width:100%">
+						<tr class="area_test" >
+							<th></th>
+							<th>이름</th>
+							<th>신청 날짜</th>
+						</tr>
+						<tr class="area_test">
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="area_test" style="width:70%">
+				최근 찍힌 출퇴근 기록
+				<table style="width:100%">
+					<tr class="area_test">
+						<th>이름</th>
+						<th>교육과정 이름(업데이트 시간 순 정렬)</th>
+						<th>출퇴</th>
+						<th>출근 시간</th>
+						<th>퇴근 시간</th>
+						<th>상태</th>
+					</tr>
+					<tr class="area_test" th:each="wlog:${wlogList}">
+						<td th:text="${}">이름</td>
+						<td th:text="${}">교육과정 이름</td>
+						<td th:text="${}">출퇴</td>
+						<td th:text="${}">출근 시간</td>
+						<td th:text="${}">퇴근 시간</td>
+						<td th:text="${}">상태</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+<!-- 사유서 조회 모달 -->
+<div class="resn_modal_wrap">
+	<div class="resn_modal">
+		<div class="wlog_info">
+			<table>
+				<tr>
+					<th>이름</th>
+						<td id="modal_name">이름</td>
+					<th>이메일</th>
+						<td id="modal_email">이메일</td>
+					<th>사유서 처리 상태</th>
+						<td id="modal_prcs_name">사유서 처리 상태</td>
+				</tr>
+				<tr>
+					<th>출근</th>
+						<td id="modal_in_time">출근</td>
+					<th>퇴근</th>
+						<td id="modal_out_time">퇴근</td>
+					<th>출석 상태</th>
+						<td id="modal_wlog_cd">출석 상태</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="resn_content">
+			<div class="resn_file_list_wrap">
+				<table class="resn_file_list">
+					<tr>
+						<th>파일 목록</th>
+						<td>파일 링크</td>
+					</tr>
+				</table>
+			</div>
+			<div class="resn_text">
+				사유서 내용
+			</div>
+		</div>
+		
+		<div class="resn_controller">
+			<input type="button" value="버튼 영역">
+		</div>
+	</div>
+</div>
+<!-- End : 사유서 조회 모달 -->
+	
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="/js/manager/alert_box.js"></script>
+<script src="/js/manager/manager_main.js"></script>
+<script src="/js/manager/manager_main_chart.js"></script>
+</html>

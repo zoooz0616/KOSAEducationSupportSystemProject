@@ -30,7 +30,8 @@
 			<table>
 				<tr>
 					<th>이름</th>
-					<td th:text="${thisManager.mngrNm}" class="text_name"></td>
+					<td th:text="${thisManager.mngrNm}" class="text_name">
+					</td>
 				</tr>
 				<tr>
 					<th>이메일</th>
@@ -49,7 +50,7 @@
 					<td><input th:value="${thisManager.mngrTel}" class="input_tel" name="inputTel"></td>
 				</tr>
 			</table>
-			<input type="button" onclick="updateInfo()" value="저장">
+			<input type="button" onclick="updateInfo()" value="저장" class="update_btn">
 		</div>
 	</div>
 
