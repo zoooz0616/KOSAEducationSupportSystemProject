@@ -118,11 +118,8 @@ public interface IAdminService {
 	void deleteManagerList(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);
 	void updateManager(ManagerVO managerVO);
-	void updateLecture(LectureVO lectureVO);
 	SubjectVO getSubjectVO(String subjectId);
-	void updateSubject(SubjectVO subjectVO);
 	ProfessorVO getProfessorVO(String professorId);
-	void updateProfessor(ProfessorVO professorVO);
 	String getMaxCompanyId();
 	void insertCompanyVO(FileVO fileVO, CompanyVO companyVO);
 	CompanyVO getCompanyVO(String cmpyId);
@@ -131,13 +128,11 @@ public interface IAdminService {
 	String getMaxGroupCodeId();
 	void insertGroupCode(CommonCodeVO commonCodeVO);
 	void deleteGroupCode(List<String> selectedGroupCodeIds);
-	void updateGroupCode(String cmcdId, String cmcdNm);
 	List<CommonCodeVO> getDetailCodeList(String cmcdId);
 	String getGroupCodeId(String cmcdId);
 	int getDetailCodeNmCnt(String cmcdId, String cmcdNm);
 	String getMaxDetailCodeId(String cmcdId);
 	void insertDetailCode(CommonCodeVO commonCodeVO);
-	void updateDetailCode(String cmcdId, String cmcdNm, String useYn, int cmcdOrder);
 	String getStudentEmailByAplyId(String aplyId);
 	String getClssNmByAplyId(String aplyId);
 	void deleteInquiryReply(String replyId);
@@ -156,4 +151,11 @@ public interface IAdminService {
 			String clssStartDd, String clssEndDd, String cmpyId);
 	
 	List<String> getClassSearch(String term);
+
+	void updateLecture(LectureVO[] lectureList);
+	void updateSubject(SubjectVO[] updateSubjectList);
+	void updateProfessor(ProfessorVO[] updateProfessorList);
+
+	void updateDetailCode(CommonCodeVO[] updateDetailList);
+	void updateGroupCode(CommonCodeVO[] updateGroupList);
 }

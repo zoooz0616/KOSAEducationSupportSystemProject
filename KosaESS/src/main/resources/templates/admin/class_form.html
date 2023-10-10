@@ -40,7 +40,8 @@
 
 			<!-- 컨텐츠 내용 부분 -->
 			<form th:action="@{/admin/class/__${act}__}" method="post"
-				enctype="multipart/form-data">
+				onsubmit="insertClass(event)" enctype="multipart/form-data"
+				autocomplete=off>
 				<input id="clssId" type="hidden" th:value="${classVO.clssId}">
 				<div class="class_form_content">
 
@@ -49,53 +50,71 @@
 						<input type="hidden" name="clssId" th:value="${classVO.clssId}">
 
 						<div class="col">
-							<div class="col_title">교육과정명<span th:if="${act=='insert' or act=='update'}"
-							class="star">*</span></div>
+							<div class="col_title">
+								교육과정명<span th:if="${act=='insert' or act=='update'}"
+									class="star">*</span>
+							</div>
 							<div class="col_content">
 								<input style="width: 100%;" th:if="${act}=='insert'"
-									type="text" th:name="clssNm" required> <input
-									style="width: 100%;" th:if="${act}=='update'" type="text"
-									th:name="clssNm" th:value="${classVO.clssNm}" required>
-								<span style="width: 300px;" th:if="${act}=='select'"
+									class="essential_input" type="text" th:name="clssNm" required>
+								<input style="width: 100%;" th:if="${act}=='update'"
+									class="essential_input" type="text" th:name="clssNm"
+									th:value="${classVO.clssNm}" required> <span
+									style="width: 300px;" th:if="${act}=='select'"
 									th:text="${classVO.clssNm}"></span>
 							</div>
 
 						</div>
 
 						<div class="col">
-							<div class="col_title">지원 기간<span th:if="${act=='insert' or act=='update'}"
-							class="star">*</span></div>
+							<div class="col_title">
+								지원 기간<span th:if="${act=='insert' or act=='update'}"
+									class="star">*</span>
+							</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" type="datetime-local" style="width:40%;"
-									th:name="aplyStartDt" th:value="null"> 
-								<input
-									th:if="${act}=='update'" type="datetime-local" style="width:40%;"
-									th:name="aplyStartDt" th:value="${classVO.aplyStartDt}">
-								<span th:if="${act}=='select'"
+								<input th:if="${act}=='insert'"
+									class="essential_input aply_start_dt" type="datetime-local"
+									style="width: 40%;" th:name="aplyStartDt" th:value="null"
+									required> <input th:if="${act}=='update'"
+									class="essential_input aply_start_dt" type="datetime-local"
+									style="width: 40%;" th:name="aplyStartDt"
+									th:value="${classVO.aplyStartDt}" required> <span
+									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.aplyStartDt, 'yyyy-MM-dd HH:mm')}"></span>
-								~ <input th:if="${act}=='insert'" type="datetime-local" style="width:40%;"
-									th:name="aplyEndDt" th:value="null"> <input
-									th:if="${act}=='update'" type="datetime-local" style="width:40%;"
-									th:name="aplyEndDt" th:value="${classVO.aplyEndDt}"> <span
+								~ <input th:if="${act}=='insert'"
+									class="essential_input aply_end_dt" type="datetime-local"
+									style="width: 40%;" th:name="aplyEndDt" th:value="null"
+									required> <input th:if="${act}=='update'"
+									class="essential_input aply_end_dt" type="datetime-local"
+									style="width: 40%;" th:name="aplyEndDt"
+									th:value="${classVO.aplyEndDt}" required> <span
 									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.aplyEndDt, 'yyyy-MM-dd HH:mm')}"></span>
 							</div>
 						</div>
 
 						<div class="col">
-							<div class="col_title">교육 기간<span th:if="${act=='insert' or act=='update'}"
-							class="star">*</span></div>
+							<div class="col_title">
+								교육 기간<span th:if="${act=='insert' or act=='update'}"
+									class="star">*</span>
+							</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" id="datepicker1" type="text" style="width:40%;"
-									th:name="clssStartDd" th:value="null" placeholder="연도-월-일">
-								<input th:if="${act}=='update'" id="datepicker1" type="text" style="width:40%;"
-									th:name="clssStartDd" th:value="${classVO.clssStartDd}">
-								<span th:if="${act}=='select'" th:text="${classVO.clssStartDd}"></span>
-
-								~ <input th:if="${act}=='insert'" id="datepicker2" type="text" style="width:40%;"
-									th:name="clssEndDd" th:value="null" placeholder="연도-월-일">
-								<input th:if="${act}=='update'" id="datepicker2" type="text" style="width:40%;"
-									th:name="clssEndDd" th:value="${classVO.clssEndDd}"> <span
+								<input th:if="${act}=='insert'"
+									class="essential_input clss_start_dd" id="datepicker1"
+									type="text" style="width: 40%;" th:name="clssStartDd"
+									th:value="null" placeholder="연도-월-일" required> <input
+									th:if="${act}=='update'" class="essential_input clss_start_dd"
+									id="datepicker1" type="text" style="width: 40%;"
+									th:name="clssStartDd" th:value="${classVO.clssStartDd}"
+									required> <span th:if="${act}=='select'"
+									th:text="${classVO.clssStartDd}"></span> ~ <input
+									th:if="${act}=='insert'" class="essential_input"
+									id="datepicker2" type="text" style="width: 40%;"
+									th:name="clssEndDd" th:value="null" placeholder="연도-월-일"
+									required> <input th:if="${act}=='update'"
+									class="essential_input" id="datepicker2" type="text"
+									style="width: 40%;" th:name="clssEndDd"
+									th:value="${classVO.clssEndDd}" required> <span
 									th:if="${act}=='select'" th:text="${classVO.clssEndDd}"></span>
 
 							</div>
@@ -106,21 +125,27 @@
 					<!-- 두번째 줄 -->
 					<div class="row">
 						<div class="col">
-							<div class="col_title">교육 시간<span th:if="${act=='insert' or act=='update'}"
-							class="star">*</span></div>
+							<div class="col_title">
+								교육 시간<span th:if="${act=='insert' or act=='update'}"
+									class="star">*</span>
+							</div>
 							<div class="col_content">
-								<input th:if="${act}=='insert'" type="time" th:name="setInTm"
-									th:value="null"> <input th:if="${act}=='update'"
+								<input th:if="${act}=='insert'" class="essential_input"
+									type="time" th:name="setInTm" th:value="null" required>
+								<input th:if="${act}=='update'" class="essential_input"
 									type="time" th:name="setInTm"
-									th:value="${#dates.format(classVO.setInTm, 'HH:mm:ss')}">
-								<span style="width: 300px;" th:if="${act}=='select'"
+									th:value="${#dates.format(classVO.setInTm, 'HH:mm:ss')}"
+									required> <span style="width: 300px;"
+									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.setInTm, 'HH:mm')}"></span> ~
 
-								<input th:if="${act}=='insert'" type="time" th:name="setOutTm"
-									th:value="null"> <input th:if="${act}=='update'"
+								<input th:if="${act}=='insert'" class="essential_input"
+									type="time" th:name="setOutTm" th:value="null" required>
+								<input th:if="${act}=='update'" class="essential_input"
 									type="time" th:name="setOutTm"
-									th:value="${#dates.format(classVO.setOutTm, 'HH:mm:ss')}">
-								<span style="width: 300px;" th:if="${act}=='select'"
+									th:value="${#dates.format(classVO.setOutTm, 'HH:mm:ss')}"
+									required> <span style="width: 300px;"
+									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.setOutTm, 'HH:mm')}"></span>
 							</div>
 						</div>
@@ -132,13 +157,16 @@
 									th:name="clssAdr"> <input style="width: 100%;"
 									th:if="${act}=='update'" type="text" th:name="clssAdr"
 									th:value="${classVO.clssAdr}"> <span
-									th:if="${act}=='select'" th:text="${classVO.clssAdr} ? ${classVO.clssAdr} : '미정'"></span>
+									th:if="${act}=='select'"
+									th:text="${classVO.clssAdr} ? ${classVO.clssAdr} : '미정'"></span>
 							</div>
 						</div>
 
 						<div class="col">
-							<div class="col_title">교육 상태<span th:if="${act=='insert' or act=='update'}"
-							class="star">*</span></div>
+							<div class="col_title">
+								교육 상태<span th:if="${act=='insert' or act=='update'}"
+									class="star">*</span>
+							</div>
 							<div class="col_content">
 								<select th:if="${act}=='insert'" th:name="clssCd">
 									<option th:each="classCommonCode: ${classCommonCodeList}"
@@ -170,8 +198,8 @@
 									<option th:each="company: ${companyList}"
 										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"
 										th:selected="${company.cmpyId == classVO.cmpyId}"></option>
-								</select> 
-									<span th:if="${act}=='select'" th:text="${classVO.cmpyNm} ? ${classVO.cmpyNm} : '미정'"></span>
+								</select> <span th:if="${act}=='select'"
+									th:text="${classVO.cmpyNm} ? ${classVO.cmpyNm} : '미정'"></span>
 							</div>
 						</div>
 
@@ -181,7 +209,8 @@
 								<input th:if="${act}=='insert'" type="number" th:name="limitCnt"
 									th:value="0"> <input th:if="${act}=='update'"
 									type="number" th:name="limitCnt" th:value="${classVO.limitCnt}">
-								<span th:if="${act}=='select'" th:text="${classVO.limitCnt}"></span>
+								<a th:href="@{/admin/class/__${classVO.clssId}__/applicant}"><span
+									th:if="${act}=='select'" th:text="${classVO.limitCnt}"></span></a>
 							</div>
 
 						</div>
@@ -192,36 +221,56 @@
 								<select th:if="${act}=='insert'" th:name="mngrId">
 									<option value="">미정</option>
 									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}" th:text="|${manager.mngrNm}(${manager.userEmail})|"></option>
+										th:value="${manager.mngrId}"
+										th:text="|${manager.mngrNm}(${manager.userEmail})|"></option>
 								</select> <select th:if="${act}=='update'" th:name="mngrId">
 									<option value="">미정</option>
 									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}" th:text="|${manager.mngrNm}(${manager.userEmail})|"
+										th:value="${manager.mngrId}"
+										th:text="|${manager.mngrNm}(${manager.userEmail})|"
 										th:selected="${manager.mngrId == classVO.mngrId}"></option>
-								</select> <span th:if="${act}=='select'" th:text="${classVO.mngrNm} ? ${classVO.mngrNm} : '미정' "></span>
+								</select> <span th:if="${act}=='select'"
+									th:text="${classVO.mngrNm} ? ${classVO.mngrNm} : '미정' "></span>
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="row2">
-						<div class="col2">
+						<div class="col2" style="width: 66%;">
 							<div class="col_title">교육 개요</div>
 							<div class="col_content" style="width: 90%;">
 								<div>
-									<input th:if="${act}=='insert'" type="text" style="width: 100%;"
-										th:name="clssContent">
-									<input th:if="${act}=='update'" type="text" style="width: 100%;"
+									<input th:if="${act}=='insert'" type="text"
+										style="width: 100%;" th:name="clssContent"> <input
+										th:if="${act}=='update'" type="text" style="width: 100%;"
 										th:name="clssContent" th:value="${classVO.clssContent}">
 									<span th:if="${act}=='select'" th:text="${classVO.clssContent}"></span>
 								</div>
 							</div>
-						</div>	
+						</div>
+						<div class="col2" style="width: 34%;">
+							<div class="col_title">지원금</div>
+							<div class="col_content">
+								<div>
+									<input th:if="${act}=='insert'" class="subsidy" type="text"
+										style="width: 100%;" th:name="clssSubsidy"
+										placeholder="최대 99,999,999원" maxlength="10"> <input
+										th:if="${act}=='update'" class="subsidy" type="text"
+										style="width: 100%;" th:name="clssSubsidy"
+										th:value="${classVO.sSubsidy}" maxlength="10"> <span
+										class="span_subsidy" th:if="${act}=='select'"
+										th:text="${classVO.sSubsidy}"></span>
+								</div>
+							</div>
+						</div>
 					</div>
-					
+
 					<div class="row3">
 						<div class="col3">
-							<div class="col_title">강의 내용<span th:if="${act=='insert' or act=='update'}"
-							class="star">*</span></div>
+							<div class="col_title">
+								강의 내용<span th:if="${act=='insert' or act=='update'}"
+									class="star">*</span>
+							</div>
 							<div class="col_content" style="width: 90%;">
 								<div th:if="${act=='insert' or act=='update'}"
 									class="content_info_btn_wrap">
@@ -244,10 +293,12 @@
 											<th><div>과목명</div></th>
 											<th><div>강사이름</div></th>
 										</tr>
-										<tr th:if="${act}=='insert'" class="lecture_row">
-											<td class="td_check"><input type="checkbox">
-											<input class="lecture_time" type="hidden" value="0"></td>
-											<td><select id="lecture_select"
+										<tr
+											th:if="${act=='insert' or (act=='update' and #lists.size(curriculumDetailList)==0)}"
+											class="lecture_row">
+											<td class="td_check"><input type="checkbox"> <input
+												class="lecture_time" type="hidden" value="0"></td>
+											<td><select id="lecture_select" class="essential_input"
 												onchange="lectureSelect(this.value)" name="lctrId">
 													<option value="">=== 강의를 선택하세요. ===</option>
 													<option th:each="lecture: ${lectureList}"
@@ -255,14 +306,15 @@
 														th:text="${lecture.lctrNm}+' ('+${lecture.lctrTm}+')'"></option>
 											</select></td>
 											<td><input id="subject_name" name="" type="text"
-												value="subjectName" disabled></td>
+												value="" disabled></td>
 											<td><input id="professor_name" name="" type="text"
-												value="professorName" disabled></td>
+												value="" disabled></td>
 										</tr>
 
 										<tr th:if="${act}=='update'" class="lecture_row"
 											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td class="td_check"><input type="checkbox"><input class="lecture_time" type="hidden"
+											<td class="td_check"><input type="checkbox"><input
+												class="lecture_time" type="hidden"
 												th:value="${curriculumDetail.lctrTm}"></td>
 											<td><select id="lecture_select"
 												onchange="lectureSelect(this.value)" name="lctrId">
@@ -280,7 +332,8 @@
 
 										<tr th:if="${act}=='select'" class="lecture_row"
 											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td class="td_check"><input type="checkbox" disabled><input class="lecture_time" type="hidden" value="0"></td>
+											<td class="td_check"><input type="checkbox" disabled><input
+												class="lecture_time" type="hidden" value="0"></td>
 											<td><span
 												th:text="${curriculumDetail.lctrNm}+' ('+${curriculumDetail.lctrTm}+')'"></span></td>
 											<td><span th:text="${curriculumDetail.sbjtNm}"></span></td>
@@ -308,7 +361,7 @@
 						<div class="col3">
 							<div class="col_title">첨부 파일</div>
 							<div class="col_content">
-								<div th:if="${act=='insert' or act=='update'}">
+								<div th:if="${act=='insert' or (act=='update' and #lists.size(fileList)==0)}">
 									<div class="file_list">
 										<div class="file_wrap">
 											<div class="file_input">
@@ -357,10 +410,12 @@
 								</div>
 								<div th:if="${act}=='select'" class="file_detail" id="file_drag">
 									<div th:if="${fileList ==null}">첨부파일 없음</div>
-									<div th:each="file: ${fileList}" style="display: flex;align-items: center;">
-										<img style="width: 15px; height:15px; margin-right: 5px;" th:src="@{/img/file.png}">
+									<div th:each="file: ${fileList}"
+										style="display: flex; align-items: center;">
+										<img style="width: 15px; height: 15px; margin-right: 5px;"
+											th:src="@{/img/file.png}">
 										<div>
-											<a style="text-decoration-line: none; color: #0E5881;"
+											<a
 												th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
 												th:text="${file.fileNm}"></a>
 										</div>
@@ -373,10 +428,12 @@
 							<div class="col_title">기타</div>
 							<div class="col_content" style="width: 90%; height: 100%;">
 								<div style="width: 100%; height: 100%;">
-									<input th:if="${act}=='insert'" type="text" th:name="clssEtc" style="width: 100%; height: 100%;">
-									<input th:if="${act}=='update'" type="text" th:name="clssEtc" style="width: 100%; height: 100%;"
-										th:value="${classVO.clssEtc}">
-									<span th:if="${act}=='select'" th:text="${classVO.clssEtc}"></span>
+									<input th:if="${act}=='insert'" type="text" th:name="clssEtc"
+										style="width: 100%; height: 100%;"> <input
+										th:if="${act}=='update'" type="text" th:name="clssEtc"
+										style="width: 100%; height: 100%;"
+										th:value="${classVO.clssEtc}"> <span
+										th:if="${act}=='select'" th:text="${classVO.clssEtc}"></span>
 								</div>
 							</div>
 						</div>
@@ -393,11 +450,10 @@
 				<div th:if="${act}=='select'"
 					style="display: flex; justify-content: center;">
 					<div class="delete_btn" onclick="deleteClass()">삭제</div>
-					<div class="submit_btn">
-						<a style="color: #fff; text-decoration-line: none;"
-							th:href="@{/admin/class/update/__${classVO.clssId}__}">수정</a>
-					</div>
-					<div class="submit_btn"><a style="color: #fff; text-decoration-line: none;" th:href="@{/admin/class/list}">목록</a></div>
+					<div class="submit_btn"
+						th:onclick="'location.href=\'' + @{/admin/class/update/__${classVO.clssId}__} + '\''">수정</div>
+					<div class="submit_btn"
+						th:onclick="'location.href=\'' + @{/admin/class/list} + '\''">목록</div>
 				</div>
 			</form>
 		</div>
@@ -405,17 +461,26 @@
 	</div>
 	<!-- Content Wrap -->
 	<script>
+		aplyEndDt = '';
 		classTotalTm = 0; //교육과정 총 이수시간
+		
+		//지원시작날짜 설정 시 지원마감날짜 min추가
+		$('.aply_start_dt').on("change", function() {
+		      $('.aply_end_dt').prop("min",$('.aply_start_dt').val());
+		});
+		
+		//지원마감날짜 설정 시 교육시작날짜에 min 추가
+   		$('.aply_end_dt').on("change", function() {
+   			console.log("변경");
+   			console.log($('.aply_end_dt').val());
+   			aplyEndDt = new Date($('.aply_end_dt').val().split('T')[0]);
+   			console.log(aplyEndDt);
+   			datePickerSet($("#datepicker1"), $("#datepicker2"), true);
+   		});
 
-		/*
-		 * 달력 생성기
-		 * @param sDate 파라미터만 넣으면 1개짜리 달력 생성
-		 * @example   datePickerSet($("#datepicker"));
-		 * @param sDate, 
-		 * @param eDate 2개 넣으면 연결달력 생성되어 서로의 날짜를 넘어가지 않음
-		 * @example   datePickerSet($("#datepicker1"), $("#datepicker2"));
-		 */
+		//달력생성기
 		datePickerSet($("#datepicker1"), $("#datepicker2"), true); //다중은 시작하는 달력 먼저, 끝달력 2번째
+		
 		function datePickerSet(sDate, eDate, flag) {
 
 			//시작 ~ 종료 2개 짜리 달력 datepicker	
@@ -439,6 +504,7 @@
 					});
 				}
 				sDate.datepicker({
+					minDate: new Date(aplyEndDt), // 최소 날짜 설정
 					language : 'ko',
 					autoClose : true,
 					onSelect : function() {
@@ -452,6 +518,7 @@
 						minDate : new Date(sDay.replace(/-/g, "/"))
 					});
 				}
+								
 				eDate.datepicker({
 					language : 'ko',
 					autoClose : true,
@@ -460,19 +527,7 @@
 					}
 				});
 
-				//한개짜리 달력 datepicker
-			} else if (!isValidStr(sDate)) {
-				var sDay = sDate.val();
-				if (flag && !isValidStr(sDay)) { //처음 입력 날짜 설정, update...			
-					var sdp = sDate.datepicker().data("datepicker");
-					sdp.selectDate(new Date(sDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
-				}
-
-				sDate.datepicker({
-					language : 'ko',
-					autoClose : true
-				});
-			}
+			} 
 
 			function isValidStr(str) {
 				if (str == null || str == undefined || str == "")
@@ -481,7 +536,20 @@
 					return false;
 			}
 		}
-
+		
+		//금액 입력 시 , 추가
+		const input = document.querySelector('.subsidy');
+		input.addEventListener('keyup', function(e) {
+  			let value = e.target.value;
+  			value = Number(value.replaceAll(',', ''));
+  			if(isNaN(value)) {
+    			input.value = 0;
+  			}else {
+    			const formatValue = value.toLocaleString('ko-KR');
+    			input.value = formatValue;
+  			}
+		});
+		
 		/*
 		 * 추가하기 버튼 클릭시
 		 * 강의 한 줄 더 추가
@@ -490,6 +558,7 @@
 
 		var lectureCnt = 0;
 		function addLecture() {
+			console.log(lectureCnt)
 			if (lectureCnt < 4) {
 				$.ajax({
 					url : "/admin/class/insert/getlecturelist", // 컨트롤러 엔드포인트
@@ -506,7 +575,14 @@
 		
 						// 첫 번째 셀 (checkbox) 추가
 						var checkboxCell = document.createElement('td');
-						checkboxCell.innerHTML = '<input type="checkbox">';
+						var inputCheck = document.createElement('input');
+						inputCheck.type="checkbox";
+						var inputHidden = document.createElement('input');
+						inputHidden.className ="lecture_time";
+						inputHidden.type="hidden";
+						inputHidden.value="0"
+						checkboxCell.appendChild(inputCheck);
+						checkboxCell.appendChild(inputHidden);
 						newRow.appendChild(checkboxCell);
 		
 						// 두 번째 셀 (강의 선택) 추가
@@ -542,11 +618,6 @@
 								.createElement('td');
 						professorCell.innerHTML = '<input name="" type="text" value="professorName" disabled>';
 						newRow.appendChild(professorCell);
-		
-						// 다섯 번째 셀 (hidden lctrTm 갖는 input) 추가
-						var lctrTmCell = document.createElement('td');
-						lctrTmCell.innerHTML = '<input name="" class="lecture_tm" type="hidden" value="0" disabled>';
-						newRow.appendChild(lctrTmCell);
 		
 						select.onchange = function() {
 							var selectedLectureId = this.value;
@@ -591,7 +662,6 @@
 									fifthInputElement.value = lctrTm;
 
 									//한 row안에 input hidden 애들만 가져와서 더하기
-									classTotalTm = 0;
 									var lctrTmInputList = document.querySelectorAll('.lecture_row input[type="hidden"]');
 									var clssTotalTm = 0; // 초기값 설정
 
@@ -607,6 +677,7 @@
 									$(".class_total_tm").text(clssTotalTm);
 									//clss_total_tm값 변경하면서 input의 value값 변경
 									$("#clss_total_tm").val(clssTotalTm);
+									classTotalTm = clssTotalTm;
 								},
 								error : function() {
 									// 오류 처리 로직을 추가할 수 있습니다.
@@ -627,6 +698,9 @@
 				}
 			});
 				lectureCnt = lectureCnt + 1;
+			}else{
+				console.log(lectureCnt);
+				alert("강의는 최대 5개까지만 가능합니다.");
 			}
 		}
 
@@ -669,7 +743,7 @@
 
 							//시간계산					
 							//한 row안에 input hidden 애들만 가져와서 더하기
-							classTotalTm = 0;
+							
 							var lctrTmInputList = document
 									.querySelectorAll('.lecture_row input[type="hidden"]');
 							var clssTotalTm = 0; // 초기값 설정
@@ -684,6 +758,8 @@
 							$(".class_total_tm").text(clssTotalTm);
 							//clss_total_tm값 변경하면서 input의 value값 변경
 							$("#clss_total_tm").val(clssTotalTm);
+							
+							classTotalTm = clssTotalTm;
 						},
 						error : function() {
 							// 오류 처리 로직을 추가할 수 있습니다.
@@ -716,7 +792,6 @@
 			});
 
 			//한 row안에 input hidden 애들만 가져와서 더하기
-			classTotalTm = 0;
 			var lctrTmInputList = document
 					.querySelectorAll('.lecture_row input[type="hidden"]');
 			var clssTotalTm = 0; // 초기값 설정
@@ -793,7 +868,7 @@
 	            inputs.forEach(input => input.value = '')
 	            return false;
 	        }
-	        element.parentElement.style.display = 'none';
+	        element.parentElement.remove();
 	    }
 	    
 	    //파일 수정
@@ -825,6 +900,19 @@
 				error : {
 				}
 	    	});
+	    }
+	    
+	    //제출 전 확인
+	    function insertClass(){
+	    	if(classTotalTm === 0){
+	    		//필수 값 입력 못함
+	    		event.preventDefault();
+	    		alert("강의를 최소 1개 선택해주세요.");
+		    	return false;
+	    	}else{
+	    		alert("새로운 강의가 등록되었습니다.")
+				return true;	    		
+	    	}
 	    }
 	</script>
 </body>

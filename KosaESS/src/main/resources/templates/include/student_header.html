@@ -36,7 +36,7 @@
 						<li><a th:href="@{/student/class/list}">교육과정지원</a></li>
 						<li><a th:href="@{/student/notice/list}">공지사항</a></li>
 						<li><a th:href="@{/student/inquiry/list}">문의사항</a></li>
-						<li><a class="mypage" th:href="@{/student/mypage}">마이페이지</a></li>
+						<li><a class="mypage gomypage" >마이페이지</a></li>
 						<li><a class="mypage" th:href="@{/logout}"
 							style="display: flex; align-items: center; width: 100%;">로그아웃
 								<img th:src="@{/img/out.png}"
@@ -48,4 +48,13 @@
 		</div>
 	</header>
 </div>
+<script>
+const gomypage = document.querySelector('.gomypage');
+
+gomypage.addEventListener('click', () => {
+	const selectParam = 1; // 이동하려는 페이지에서 원하는 select 매개변수 값을 설정하세요.
+	const newUrl = '/student/mypage?select=' + selectParam;
+	window.location.href = newUrl;
+});
+</script>
 </html>

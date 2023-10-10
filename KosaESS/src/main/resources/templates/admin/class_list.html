@@ -8,7 +8,7 @@
 <link th:href="@{/css/admin/class_list.css}" rel="stylesheet">
 <link href="/css/datepicker.css" rel="stylesheet" type="text/css"
 	media="all">
-<script src="//code.jquery.com/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Air datepicker css -->
 <script src="/js/datepicker.js"></script>
 <!-- Air datepicker js -->
@@ -16,6 +16,7 @@
 <!-- 달력 한글 추가를 위해 커스텀 -->
 <script>
 		$(document).ready(function(){
+			//교육과정명 검색
 			$('#class_name').on('input', function() {
                 var searchTerm = $(this).val();
                 if (searchTerm.length >= 1) {
@@ -163,8 +164,8 @@
 					<table class="content_list_table" id="class_list_table">
 						<thead>
 							<tr class="content_list_th">
-								<th style="width: 2%;"><input style="width: 30px;"
-									type="checkbox" id="chkAll"></th>
+								<th style="width: 2%;"><input style="width: 30px;" onclick="selectAll(this)"
+									type="checkbox" id="chkAll" name="select_all"></th>
 								<th style="width: 2%;">순번</th>
 								<th style="width: 5%;">ID</th>
 								<th style="width: 19%;">교육과정명</th>
@@ -180,7 +181,7 @@
 						</thead>
 						<tbody id="class_list_tbody">
 							<tr id="class_list" th:each="class, iterStat:${classList}">
-								<td class="class_check"><input type="checkbox" name="chk"
+								<td class="class_check"><input type="checkbox" name="select" onclick="checkSelectAll()"
 									th:value="${class.clssId}"></td>
 								<td class="class_num" th:text="${iterStat.index + 1}"></td>
 								<td class="class_id" th:text="${class.clssId}"></td>
@@ -213,17 +214,30 @@
 	</div>
 
 	<script>
-		//전체 선택
-		document.addEventListener("DOMContentLoaded", function () {
-			const chkAll = document.getElementById("chkAll");
-			const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]');
-
-			chkAll.addEventListener("change", function () {
-				checkboxes.forEach(function (checkbox) {
-					checkbox.checked = chkAll.checked;
-				});
-			});
+	//전체선택
+	function selectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
 		});
+	}
+	
+	//개별 선택
+	function checkSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
 		
 		//form submit버튼 클릭시 선택한 값이 있는지 확인
 		document.addEventListener("DOMContentLoaded", function () {
@@ -231,12 +245,14 @@
 
 		    form.addEventListener("submit", function (event) {
 		    	//checked되어 있는 input들 선택
-		        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="chk"]:checked');
+		        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="select"]:checked');
 		        
 		    	//만약 아무것도 선택되어있지 않다면
 		        if (checkboxes.length === 0) {
-		            alert("선택되지 않았습니다.");
+		            alert("삭제할 강의를 선택해주세요.");
 		            event.preventDefault();//submit취소
+		        }else{
+		        	alert("선택한 강의가 삭제되었습니다.");
 		        }
 		    });
 		});
@@ -330,8 +346,11 @@
 	                    tdCheck.className="class_check";
 	                    var inputCheck = document.createElement("input");
 	                    inputCheck.type="checkbox";
-	                    inputCheck.name="chk";
+	                    inputCheck.name="select";
 	                    inputCheck.value=clss.clssId;
+	                    inputCheck.onclick=function(){
+	                    	checkSelectAll();
+	                    }
 	                    tdCheck.appendChild(inputCheck);
 	                    tr.appendChild(tdCheck);
 	                    
@@ -417,6 +436,7 @@
 	          			}
 	          			tr.appendChild(tdMngrNm);
 
+	          			console.log(tr);
 	                    classListTbody.appendChild(tr);
 	                }
                 },
@@ -456,12 +476,10 @@
 		 var classStartDateInput = $("#class_start_dd");
 		 var classEndDateInput = $("#class_end_dd");
 		 
-		 
-		 
-		 
 		 // datepicker 설정
 		 datePickerSet(aplyStartDateInput, aplyEndDateInput, true);
 		 datePickerSet(classStartDateInput, classEndDateInput, true);
+		 datePickerSet(aplyEndDateInput, classStartDateInput, true);
 
 		function datePickerSet(sDate, eDate, flag) {
 

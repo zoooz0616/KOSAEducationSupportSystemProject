@@ -29,7 +29,8 @@
 	<select id="getFile" parameterType="string"
 		resultType="com.finalprj.kess.model.FileVO">
 		<![CDATA[
-			SELECT *
+			SELECT 
+			*
 			FROM flup 
 			WHERE file_id = #{fileId} and file_sub_id = #{fileSubId}
 		]]>

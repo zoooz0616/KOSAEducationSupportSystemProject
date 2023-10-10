@@ -5,12 +5,9 @@
 	opacity: 1;
 }
 
-.fc-daygrid-day {
-	height: 80px;
-}
 
 .fc-daygrid-event {
-	   border-radius: 0;
+	   border-radius: 8px;
 }
 
 .fc .fc-toolbar-title {
@@ -30,6 +27,7 @@
 .fc .fc-timeGridWeek-button{
 	display:none;
 }
+
 .fc-col-header-cell-cushion{
 	cursor: default;
 	text-decoration: none;
@@ -41,7 +39,10 @@
 	   overflow: hidden !important;
 }
 .fc .fc-button {
-	border-radius: 0 !important;
+	border-radius:8px ;
+}
+.fc .fc-dayGridMonth-button{
+	border-radius:8px !important;
 }
 .fc .fc-button .fc-icon {
     font-size: 16px;
@@ -56,4 +57,5 @@
     --fc-button-active-border-color: #0E5881;
 	--fc-event-bg-color: #6E9BB3; 
 	--fc-event-border-color:  #6E9BB3;
+	--fc-border-color: #c0c0c0;
 }

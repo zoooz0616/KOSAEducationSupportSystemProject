@@ -7,8 +7,18 @@
 	width: 100%;
 }
 
+.listHead {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.listHead  p {
+	font-weight: 500;
+}
+
 h3 {
-	margin-top: 0;
+	margin: 0;
 	font-size: 20px;
 }
 
@@ -21,8 +31,26 @@ input {
 	width: 30%;
 }
 
+.infoTable select {
+	padding: 8px;
+	font-size: 16px;
+	border: inset;
+	color: #0E5881;
+	border-radius: 5px;
+}
+
+.infoTable span {
+	color: red;
+	font-weight: bold;
+	font-size: 14px;
+}
+
 input::placeholder {
 	color: #0E5881;
+}
+
+#userPwd::placeholder {
+	color: gray;
 }
 
 .resnText1, .resnText2 {
@@ -189,14 +217,17 @@ table td {
 }
 
 .infoTable th {
-	width: 10%;
+	width: 9%;
 	border-right: 2px solid #CFDEE6;
+	text-align: left;
+	padding-left: 3%;
+	height: 45px;
 }
 
 .infoTable td {
 	text-align: left;
 	margin-left: 2%;
-	width: 40%;
+	padding-left: 2%;
 }
 
 .infoTable tr {
@@ -388,15 +419,53 @@ td button {
 	list-style: none;
 	border: #0E5881;
 	border-style: solid;
-	background: #E7EFF3;
+	background: #F3F6F8;
 	padding: 0;
+	text-align: left;
+	padding: 1%;
+	border-top: 0;
 }
 
 .reply li {
 	padding: 1%;
-	border-bottom: 1px solid #0E5881;
+}
+
+.reply li:not(:first-child) {
+	border-top: 1px solid black;
 }
 
 .reply span {
 	padding-left: 2%;
+}
+
+.paging {
+	width: 90%;
+	margin: auto;
+	margin-top: 1%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.paging i {
+	font-size: 15px;
+	border: black;
+}
+
+.pages span {
+	margin: 5px 10px;
+	font-size: 22px;
+	border: black;
+	padding: 5px 12px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.pages {
+	align-items: center;
+	display: flex;
+}
+
+.paging .active {
+	background: #E7EFF3;
 }

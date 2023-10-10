@@ -11,6 +11,7 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
+import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.PostVO;
@@ -210,8 +211,8 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public void updateResndt(String resnId, String stdtId, String resnText) {
-		studentRepository.updateResndt(resnId, stdtId, resnText);
+	public void updateResndt(String resnId, String stdtId, String resnText, String maxFileId) {
+		studentRepository.updateResndt(resnId, stdtId, resnText, maxFileId);
 	}
 
 	@Override
@@ -330,13 +331,7 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public void updatePostVO(List<FileVO> fileList, PostVO postVO) {
-		if (fileList != null) {
-			for (FileVO fileVO : fileList) {
-				uploadFileRepository.uploadFile(fileVO);
-			}
-		}
-
+	public void updatePostVO(PostVO postVO) {
 		studentRepository.updatePostVO(postVO);
 	}
 
@@ -350,6 +345,26 @@ public class StudentService implements IStudentService {
 	
 	public List<ClassVO> getStdtAplyEvents(String stdtId) {
 		return studentRepository.getStdtAplyEvents(stdtId);
+	}
+
+	@Override
+	public String getContent(String postId) {
+		return studentRepository.getContent(postId);
+	}
+
+	@Override
+	public List<CommonCodeVO> getCommonCodeList(String string) {
+		return studentRepository.getCommonCodeList(string);
+	}
+
+	@Override
+	public void updateInfo(StudentVO userInfo) {
+		studentRepository.updateInfo(userInfo);
+	}
+
+	@Override
+	public void updatePwd(String pwd, String userEmail) {
+		studentRepository.updatePwd(pwd, userEmail);
 	}
 
 }

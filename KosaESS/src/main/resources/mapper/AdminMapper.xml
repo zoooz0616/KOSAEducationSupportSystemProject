@@ -227,7 +227,8 @@
 			clss_total_tm, 
 			file_id, 
 			clss_etc, 
-			rgster_id)
+			rgster_id,
+			clss_subsidy)
 		values(
 			#{clssId}, 
 			#{mngrId},
@@ -246,7 +247,8 @@
 			#{clssTotalTm},
 			#{fileId},
 			#{clssEtc}, 
-			#{rgsterId})		
+			#{rgsterId},
+			#{clssSubsidy})		
 	]]>
 	</insert>
 
@@ -337,7 +339,8 @@
 			clss_total_tm = #{clssTotalTm},
 			clss_etc = #{clssEtc},
 			updt_dt = systimestamp,
-			updter_id = #{updterId}
+			updter_id = #{updterId},
+			clss_subsidy = #{clssSubsidy}
 		where clss_id=#{clssId}
 	]]>
 	</update>
@@ -920,19 +923,6 @@
 	]]>
 	</update>
 
-	<update id="updateLecture"
-		parameterType="com.finalprj.kess.model.LectureVO">
-	<![CDATA[
-	 update lctr
-	 set
-	 	lctr_nm = #{lctrNm},
-	 	lctr_tm = #{lctrTm},
-	 	updt_dt = systimestamp,
-	 	updter_id = 'MNGR000001'
-	 where lctr_id = #{lctrId}
-	]]>
-	</update>
-
 	<select id="getSubjectVO" parameterType="string"
 		resultType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
@@ -942,18 +932,6 @@
 	]]>
 	</select>
 
-	<update id="updateSubject"
-		parameterType="com.finalprj.kess.model.SubjectVO">
-	<![CDATA[
-	update sbjt
-	set
-		sbjt_nm = #{sbjtNm},
-		updt_dt = systimestamp,
-		updter_id= 'MNGR000001'
-	where sbjt_id = #{sbjtId}
-	]]>
-	</update>
-
 	<select id="getProfessorVO" parameterType="string"
 		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
@@ -962,18 +940,6 @@
 	where prof_id = #{profId}
 	]]>
 	</select>
-
-	<update id="updateProfessor"
-		parameterType="com.finalprj.kess.model.ProfessorVO">
-	<![CDATA[
-	update prof
-	set 
-		prof_nm = #{profNm},
-		prof_tel = #{profTel},
-		prof_email = #{profEmail}
-	where prof_id = #{profId}
-	]]>
-	</update>
 
 	<select id="getMaxCompanyId" resultType="string">
 	<![CDATA[
@@ -1074,17 +1040,6 @@
 		</foreach>
 	</update>
 
-	<update id="updateGroupCode" parameterType="string">
-	<![CDATA[
-		update cmcd
-		set 
-			cmcd_nm = #{cmcdNm},
-			updt_dt = SYSTIMESTAMP,
-			updter_id = 'MNGR000001'
-		where cmcd_id = #{cmcdId}
-	]]>
-	</update>
-
 	<select id="getDetailCodeList" parameterType="string"
 		resultType="com.finalprj.kess.model.CommonCodeVO">
 	<![CDATA[
@@ -1140,20 +1095,6 @@
 		'MNGR000001')
 	]]>
 	</insert>
-
-
-	<update id="updateDetailCode" parameterType="hashmap">
-	<![CDATA[
-	update cmcd
-	set
-		cmcd_nm = #{cmcdNm},
-		use_yn = #{useYn},
-		cmcd_order = #{cmcdOrder}
-		updt_dt = systimestamp,
-		updter_id ='MNGR000001'
-	where cmcd_id = #{cmcdId}
-	]]>
-	</update>
 
 	<select id="getStudentEmailByAplyId" parameterType="string"
 		resultType="string">
@@ -1253,21 +1194,26 @@ order by stdt.stdt_nm
 		stdt.updt_dt,
 		stdt.updter_id,
 
-		u.cmcd_nm as "userNm",
+		u.cmcd_nm as
+		"userNm",
 		g.cmcd_nm as "genderNm",
 		j.cmcd_nm as "jobNm",
 		lgin.last_login_dt
 		from stdt
-		left join lgin on lgin.user_email = stdt.user_email
+		left join lgin on lgin.user_email =
+		stdt.user_email
 		left join
 		cmcd u on u.cmcd_id = lgin.user_cd
-		left join cmcd g on g.cmcd_id =
+		left join
+		cmcd g on g.cmcd_id =
 		stdt.gender_cd
-		left join cmcd j on j.cmcd_id = stdt.job_cd
+		left join cmcd j on j.cmcd_id =
+		stdt.job_cd
 		left join
 		rgst on rgst.stdt_id = stdt.stdt_id
 
-		where stdt.stdt_nm like '%'||#{stdtNm}||'%'
+		where
+		stdt.stdt_nm like '%'||#{stdtNm}||'%'
 		<if test="clssId != 'all'">
 			AND rgst.clss_id = #{clssId}
 		</if>
@@ -1300,7 +1246,8 @@ order by stdt.stdt_nm
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update stdt
 			set
-			updt_dt = SYSTIMESTAMP,
+			updt_dt =
+			SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
 			where stdt_id=#{item}
 		</foreach>
@@ -1419,14 +1366,74 @@ order by stdt.stdt_nm
 	</select>
 
 
+	<update id="updateLecture" parameterType="java.util.List">
+		<foreach collection="lectureList" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update lctr
+			set
+			lctr_nm = #{item.lctrNm},
+			sbjt_id = #{item.sbjtId},
+			prof_id = #{item.profId},
+			lctr_tm = #{item.lctrTm},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where lctr_id = #{item.lctrId}
+		</foreach>
+	</update>
 
+	<update id="updateSubject" parameterType="java.util.List">
+		<foreach collection="updateSubjectList" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update sbjt
+			set
+			sbjt_nm = #{item.sbjtNm},
+			updt_dt = SYSTIMESTAMP,
+			updter_id= 'MNGR000001'
+			where sbjt_id = #{item.sbjtId}
+		</foreach>
+	</update>
 
+	<update id="updateProfessor" parameterType="java.util.List">
+		<foreach collection="updateProfessorList" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update prof
+			set
+			prof_nm = #{item.profNm},
+			prof_tel = #{item.profTel},
+			prof_email = #{item.profEmail},
+			updt_dt = SYSTIMESTAMP,
+			updter_id= 'MNGR000001'
+			where prof_id = #{item.profId}
+		</foreach>
+	</update>
 
+	<update id="updateDetailCode" parameterType="java.util.List">
+		<foreach collection="updateDetailList" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update cmcd
+			set
+			cmcd_nm = #{item.cmcdNm},
+			cmcd_order = #{item.cmcdOrder},
+			use_yn = #{item.useYn},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where cmcd_id = #{item.cmcdId}
+		</foreach>
+	</update>
 
-
-
-
-
+	<update id="updateGroupCode" parameterType="java.util.List">
+		<foreach collection="updateGroupList" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update cmcd
+			set
+			tpcd_id = #{item.tpcdId},
+			cmcd_nm = #{item.cmcdNm},
+			use_yn = #{item.useYn},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where cmcd_id = #{item.cmcdId}
+		</foreach>
+	</update>
 
 
 

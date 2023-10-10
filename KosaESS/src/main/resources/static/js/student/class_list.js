@@ -259,10 +259,6 @@ $(document).ready(function() {
 				modal.style.display = 'none';
 			});
 
-			$("#fileInput").on('change', function() {
-				var fileName = $("#fileInput").val();
-				$(".upload-name").val(fileName);
-			});
 		} else if ($('.grid-view').hasClass('active')) {
 			// 그리드 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
 			classTable = $('.grid-style tbody');
@@ -294,22 +290,6 @@ $(document).ready(function() {
 				} else {
 					row.append('<td><span>지원: </span><span>' + classVO.aplyStartDd + '~' + classVO.aplyEndDd + '</span></td>');
 				}
-				/*if (classVO.clssStartDd == null) {
-					row.append('<td><span>교육기간:  미정  </span></td>');
-				} else {
-					row.append('<td><span>교육기간: </span><span>' + classVO.clssStartDd + ' ~ ' + classVO.clssEndDd + '</span></td>');
-				}
-				if (classVO.clssAdr == null) {
-					if (classVO.limitCnt != 0)
-						row.append('<td><span>장소: 미정  /  정원: ' + classVO.limitCnt + '</span></td>');
-					else
-						row.append('<td><span>장소: 미정  /  정원: 미정  </span></td>');
-				} else {
-					if (classVO.limitCnt != 0)
-						row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: ' + classVO.limitCnt + '</span></td>');
-					else
-						row.append('<td><span>장소: ' + classVO.clssAdr + '  /  정원: 미정  </span></td>');
-				}*/
 				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
 				row.append($('<td>').append(applyBtn));
 

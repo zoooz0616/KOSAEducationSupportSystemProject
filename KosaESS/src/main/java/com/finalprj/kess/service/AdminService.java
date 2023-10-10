@@ -442,11 +442,6 @@ public class AdminService implements IAdminService {
 		adminRepository.updateLgin(managerVO);
 		adminRepository.updateManager(managerVO);
 	}
-
-	@Override
-	public void updateLecture(LectureVO lectureVO) {
-		adminRepository.updateLecture(lectureVO);	
-	}
 	
 	@Override
 	public SubjectVO getSubjectVO(String subjectId) {
@@ -454,20 +449,10 @@ public class AdminService implements IAdminService {
 	}
 	
 	@Override
-	public void updateSubject(SubjectVO subjectVO) {
-		adminRepository.updateSubject(subjectVO);
-	}
-	
-	@Override
 	public ProfessorVO getProfessorVO(String professorId) {
 		return adminRepository.getProfessorVO(professorId);
 	}
 	
-	@Override
-	public void updateProfessor(ProfessorVO professorVO) {
-		adminRepository.updateProfessor(professorVO);
-	}
-
 	@Override
 	public String getMaxCompanyId() {
 		return adminRepository.getMaxCompanyId();
@@ -514,11 +499,6 @@ public class AdminService implements IAdminService {
 	}
 	
 	@Override
-	public void updateGroupCode(String cmcdId, String cmcdNm) {
-		adminRepository.updateGroupCode(cmcdId, cmcdNm);
-	}
-	
-	@Override
 	public List<CommonCodeVO> getDetailCodeList(String cmcdId) {
 		return adminRepository.getDetailCodeList(cmcdId);
 	}
@@ -542,11 +522,6 @@ public class AdminService implements IAdminService {
 	@Override
 	public void insertDetailCode(CommonCodeVO commonCodeVO) {
 		adminRepository.insertDetailcode(commonCodeVO);
-	}
-	
-	@Override
-	public void updateDetailCode(String cmcdId, String cmcdNm, String useYn, int cmcdOrder) {
-		adminRepository.updateDetailCode(cmcdId, cmcdNm, useYn, cmcdOrder);
 	}
 	
 	@Override
@@ -629,6 +604,31 @@ public class AdminService implements IAdminService {
 		return adminRepository.getClassSearch(term);
 	}
 	
+	@Override
+	public void updateLecture(LectureVO[] lectureList) {
+		adminRepository.updateLecture(lectureList);
+	}
+	
+	@Override
+	public void updateSubject(SubjectVO[] updateSubjectList) {
+		adminRepository.updateSubject(updateSubjectList);
+	}
+	
+	@Override
+	public void updateProfessor(ProfessorVO[] updateProfessorList) {
+		adminRepository.updateProfessor(updateProfessorList);
+	}
+
+	@Override
+	public void updateDetailCode(CommonCodeVO[] updateDetailList) {
+		adminRepository.updateDetailCode(updateDetailList);
+	}
+
+	@Override
+	public void updateGroupCode(CommonCodeVO[] updateGroupList) {
+		adminRepository.updateGroupCode(updateGroupList);
+	}
+	
 	
 	
 	
@@ -640,7 +640,4 @@ public class AdminService implements IAdminService {
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();
 	}
-
-
-	
 }

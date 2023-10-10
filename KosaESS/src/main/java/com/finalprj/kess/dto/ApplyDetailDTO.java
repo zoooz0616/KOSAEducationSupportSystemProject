@@ -9,6 +9,7 @@ import lombok.Data;
 public class ApplyDetailDTO {
 	private String aplyId;
 	private String stdtId;
+	private String userEmail;
 	private String stdtNm;
 	private String aplyCd;
 	private String cmcdNm;
@@ -18,6 +19,7 @@ public class ApplyDetailDTO {
 	private Timestamp rgstDt;
 	private Date rgstDd;
 	private Date updtDd;
+	private String clssId;
 
 	private String clssNm;
 	private Date aplyStartDd;// 지원시작일시 (날짜)

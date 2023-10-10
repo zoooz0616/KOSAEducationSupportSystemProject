@@ -125,6 +125,7 @@
 	display: flex;
 	margin: 2px;
 	padding: 5px;
+	cursor: pointer;
 }
 
 .content_list {
