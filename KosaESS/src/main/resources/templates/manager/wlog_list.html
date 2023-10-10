@@ -34,7 +34,6 @@
 			<input id="keyword_save" type="text">
 			<input type="checkbox" class="chk_wok_save" th:value="${wlogCd.cmcdId}" th:name="${wlogCd.cmcdId}" th:each="wlogCd:${wlogCdList}" checked="checked">
 			<input type="checkbox" class="resn_only_save">
-			<input type="checkbox" class="contain_delete_save">
 		</div>
 	</div>
 
@@ -42,49 +41,47 @@
 	<div class="content_wrap">
 		<div class="search_filter_wrap">
 			<!-- 검색 필터 테이블 -->
-			<div class="search_filter_table_wrap">
-				<table class="search_filter_table">
-					<tr class="search_filter_table_row">
-						<td class="search_filter_name">교육과정명</td>
-						<td class="search_filter_input">
-							<select id="class_selector">
-								<option value="" disabled selected>교육과정명을 선택하세요</option>
-								<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
-							</select>
-						</td>
-						<td class="search_filter_name">기간</td>
-						<td class="search_filter_input">
-							<input type="date" id="startDate" min="1980-01-01"><span> ~ </span><input type="date" id="endDate" min="1980-01-01">
-							<br>
-							<span>이번 달</span>
-							<input type="radio" name="default_period" id="this_month" value="thisMonth">
-							<span>이번 주</span>
-							<input type="radio" name="default_period" id="this_week" value="thisWeek">
-							<span>시작~종료</span>
-							<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
-						</td>
-					</tr>
-					<tr class="search_filter_table_row">
-						<td class="search_filter_name">교육생 이름</td>
-						<td class="search_filter_input">
-							<input type="text" id="search_keyword">
-						</td>
-						<td class="search_filter_name">출석 상태<br>기록 상태</td>
-						<td class="search_filter_input">
-							<span>전체</span>
-							<input type="checkbox" id="chkAll" checked="checked">
-							<span th:each="wlogCd:${wlogCdList}">
-								<span th:text="${wlogCd.cmcdNm}"></span>
-								<input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}" checked="checked">
-							</span>
-							<br>
-							<span>사유서 포함 된 기록만 보기</span><input type="checkbox" id="fileContainedOnly">
-							<span>삭제 된 기록 보기</span><input type="checkbox" id="isDelete">
-						</td>
-					</tr>
-				</table>
+			<div class="search_filter_table">
+				<div class="search_filter_name">교육과정명</div>
+				<div class="search_filter_input">
+					<select id="class_selector">
+						<option value="" disabled selected>교육과정명을 선택하세요</option>
+						<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
+					</select>
+				</div>
+				<div class="search_filter_name">기간</div>
+				<div class="search_filter_input_date">
+					<div class="input_date">
+						<input type="date" id="startDate" min="1980-01-01"><span> ~ </span><input type="date" id="endDate" min="1980-01-01">
+					</div>
+					<div class="input_date_radio">
+						<span>이번 달</span>
+						<input type="radio" name="default_period" id="this_month" value="thisMonth">
+						<span>이번 주</span>
+						<input type="radio" name="default_period" id="this_week" value="thisWeek">
+						<span>시작~종료</span>
+						<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
+					</div>
+				</div>
+				<div class="search_filter_name">교육생 이름</div>
+				<div class="search_filter_input">
+					<input type="text" id="search_keyword">
+				</div>
+				<div class="search_filter_name">출석 상태</div>
+				<div class="search_filter_input">
+					<span>전체</span>
+					<input type="checkbox" id="chkAll" checked="checked">
+					<div th:each="wlogCd:${wlogCdList}">
+						<span th:text="${wlogCd.cmcdNm}"></span>
+						<input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}" checked="checked">
+					</div>
+				</div>
+				<div class="search_filter_name">기록 상태</div>
+				<div class="search_filter_input">
+					<span>사유서 포함 된 기록만 보기</span>
+					<input type="checkbox" id="fileContainedOnly">
+				</div>
 			</div>
-
 			<!-- 검색 버튼 -->
 			<div class="search_btn_wrap">
 				<input type="button" id="search_reset_btn" value="초기화" onclick="reset()">
@@ -92,17 +89,22 @@
 			</div>
 			<!-- End : 검색 버튼 -->
 		</div>
+
 		<!-- End : 검색 필터 테이블-->
 		
 		<!-- 테이블 조작 -->
 		<div class="table_controller" id="tableController">
-			<span>
-				<span th:text="${wlogCnt}" id="wlogCnt"></span>
-				<span class="wlog_count_unit">건</span>
-			</span>
-			<span th:each="wlogCd:${wlogCdList}" class="wlog_controller">
-				<button onclick="updateWlogCode(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
-			</span>
+			<div>
+				<span>
+					<span th:text="${wlogCnt}" id="wlogCnt"></span>
+					<span class="wlog_count_unit">건</span>
+				</span>
+			</div>
+			<div class="wlog_update_buttons">
+				<div th:each="wlogCd:${wlogCdList}" class="wlog_controller">
+					<button onclick="updateWlogCode(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
+				</div>
+			</div>
 		</div>
 		<!-- End : 테이블 조작 -->
 		
@@ -126,18 +128,17 @@
 			
 			<tbody id="wlog_list_tbody">
 				<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
-					<td> <input type="checkbox" class="chk_wlog" th:value="${wlog.wlogId}"> </td>
-					<td class="row_number" th:text="${wlogStat.count}">번호</td>
-<!-- 					<td class="row_number" th:text="${wlog.wlogId}">번호</td> -->
-					<td class="row_name" th:text="${wlog.stdtNm}">이름</td>
-					<td class="row_email" th:text="${wlog.userEmail}">이메일</td>
-					<td class="row_intime" th:text="${wlog.inTm!=null?#dates.format(wlog.inTm,'yyyy-MM-dd HH:mm:ss'):'-'}">출근 기록</td>
-					<td class="row_outtime" th:text="${wlog.outTm!=null?#dates.format(wlog.outTm,'yyyy-MM-dd HH:mm:ss'):'-'}">퇴근 기록</td>
-					<td class="row_totaltime" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
-					<td class="row_wlogcode" th:text="${wlog.wlogCd}">출석 상태</td>
-					<td class="row_isdelete" th:text="${wlog.deleteYn}">삭제 여부</td>
-					<td class="file_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal(this)" th:value="${wlog.resnId}" src="/img/file.png"></td>
-					<td class="row_resncode" th:text="${wlog.prcsCd}">처리 상태</td>
+					<td class="fixed_length_cell"> <input type="checkbox" class="chk_wlog" th:value="${wlog.wlogId}"> </td>
+					<td class="number_cell" th:text="${wlogStat.count}">번호</td>
+					<td class="fixed_length_cell" th:text="${wlog.stdtNm}">이름</td>
+					<td class="variable_length_cell" th:text="${wlog.userEmail}">이메일</td>
+					<td class="fixed_length_cell" th:text="${wlog.inTm!=null?#dates.format(wlog.inTm,'yyyy-MM-dd HH:mm:ss'):'-'}">출근 기록</td>
+					<td class="fixed_length_cell" th:text="${wlog.outTm!=null?#dates.format(wlog.outTm,'yyyy-MM-dd HH:mm:ss'):'-'}">퇴근 기록</td>
+					<td class="number_cell" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
+					<td class="fixed_length_cell" th:text="${wlog.wlogCd}">출석 상태</td>
+					<td class="fixed_length_cell" th:text="${wlog.deleteYn}">삭제 여부</td>
+					<td class="fixed_length_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal(this)" th:value="${wlog.resnId}" src="/img/file.png"></td>
+					<td class="fixed_length_cell" th:text="${wlog.prcsCd}">처리 상태</td>
 				</tr>
 			</tbody>
 		</table>
@@ -170,12 +171,9 @@
 		
 		<div class="resn_content">
 			<div class="resn_file_list_wrap">
-				<table class="resn_file_list">
-					<tr>
-						<th>파일 목록</th>
-						<td>파일 링크</td>
-					</tr>
-				</table>
+				<ul class="resn_file_list">
+					<li class="resn_file_link">
+				</ul>
 			</div>
 			<div class="resn_text">
 				사유서 내용

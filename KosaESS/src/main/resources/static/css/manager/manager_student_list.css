@@ -10,14 +10,6 @@ button:hover{
 	cursor: pointer;
 }
 
-/*
-input[type="checkbox"]:hover{
-	cursor:pointer;
-}
-*/
-
-/*-------------------------------------------------------*/
-
 /* 공통 사항*/
 .home-section {
 	position: relative;
@@ -35,82 +27,68 @@ input[type="checkbox"]:hover{
 	width: calc(100% - 250px);
 }
 
-.home-section .title_wrap{
-/* 	margin-top: 40px; */
-/* 	margin-left: 40px; */
-}
-
 .home-section .title {
-	display: inline-block;
+	font-size: 1.7em;
 	color: #333333;
-	font-size: 30px;
 	font-weight: bold;
 	margin : 40px;
+	display: inline-block;
 }
 
 .content_wrap {
-	width: 95%;
 	margin-left: 40px;
+	width: calc(100% - 80px);
 }
 /* End : 공통 사항*/
 
 /* filter_table */
 .search_filter_wrap {
-	padding: 5px;
-	width: 100%;
-	background: #ffffff;
-	border-radius: 3px;
-	box-shadow: 1px 1px 3px lightgray;
-}
-
-.search_filter_wrap .search_filter_table_wrap {
-	width: 98%;
-	margin: auto;
-}
-
-.search_filter_table {
 	width: 100%;
 	border-collapse: collapse;
-}
-
-.search_filter_table .search_filter_name{
-	font-weight: bold;
-	width: 10%;
-}
-
-.search_filter_table tr td {
-	width: 100%;
-	font-size: 15px;
-	border: none;
 	text-align: center;
+	background: #E7EFF3;
+	color: #0E5881;
+	padding: 5px;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+/* 	margin: auto; */
 }
 
-.search_filter_table tr td input {
+.search_filter_name{
+	font-weight: bold;
+	font-size:1.1em;
+	margin: 20px; 
+}
+
+.search_filter_table input {
 	color: gray;
 	padding: 5px;
 }
 
-.search_filter_table tr td input:focus {
+.search_filter_table input:focus {
 	border-color: #0E5881;
-	border-radius: 3px;
+	border-radius: 0.3em;
 }
 
 .search_filter_btn_wrap {
 	text-align: center;
 }
 
-.search_filter_btn_wrap .search_filter_btn {
-	width: 60px;
-	background-color: #0E5881;
-	margin: 10px 0 10px 0;
+.search_filter_btn_wrap button {
+	background: #0E5881;
 	color: white;
+	border: none;
+	border-radius: 0.3em;
 	font-weight: bold;
-	font-size: 20px;
-}
-
-/* End : filter_table */
-.search_filter_table td #classId{
-	width: 80%;
+	width : 5em;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
 }
 
 #stdt_list_table_thead th{
@@ -118,7 +96,7 @@ input[type="checkbox"]:hover{
 }
 
 .search_filter_table .input_keyword{
-	width: 80%;
+	width: 15em;
 	height: 1.8em;
 }
 
@@ -133,4 +111,95 @@ input[type="checkbox"]:hover{
 #stdt_list_table_tbody .number_cell{
 	text-align: right;
 	padding-right: 1em;
+}
+
+.star {
+	color: red;
+	vertical-align: middle;
+}
+
+#stdt_list_table{
+	border-collapse: collapse;
+}
+
+#stdt_list_table th{
+	border : 1px solid #CFDEE6;
+	border-top: 2px solid #0E5881;
+	color: #0E5881;
+}
+
+#stdt_list_table td{
+	padding : 0.2em;
+	border: 1px solid #CFDEE6;
+}
+
+.table_controller {
+	display :flex;
+	margin : 0.5em;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.table_controller div{
+	display: flex;
+	align-items: center;
+}
+
+.result_count {
+	width: 50%;
+}
+
+.stdt_count_unit{
+	margin-left: 1em;
+}
+
+.cmpt_button{
+	display: flex;
+	margin-left: auto;
+}
+.cmpt_button button{
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+/* 	width: 150px; */
+	width : 5em;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+
+.search_filter_table{
+	display: flex;
+}
+
+.search_filter_input_wrap{
+	display:flex;
+	align-items: center;
+}
+
+.search_filter_input_wrap span{
+	margin-left: 0.6em; 
+	margin-right: 0.3em;
+}
+
+.search_filter_input{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+.search_filter_input_date{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.search_filter_input_radio{
+	display:flex;
+	align-items: center;
+	justify-content: center;
 }

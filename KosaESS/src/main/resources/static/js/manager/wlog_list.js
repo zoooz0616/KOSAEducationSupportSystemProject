@@ -429,7 +429,7 @@ function search() {
 				var rowResn = $('<td></td>');
 				var rowResnCd = $('<td></td>');
 
-				rowChk.html('<input type="checkbox" class="chk_wlog" value='+wlogList[i].wlogId+'>');
+				rowChk.html('<input type="checkbox" value='+wlogList[i].wlogId+'>');
 				rowNum.text(i+1);
 				//rowNum.text(wlogList[i].wlogId);//개발자용 옵션
 				rowName.text(wlogList[i].stdtNm);
@@ -462,17 +462,17 @@ function search() {
 				
 				rowResnCd.text(wlogList[i].prcsCd);
 				
-				//rowChk.attr("class","chk_wlog");
-				rowNum.attr("class","row_number");
-				rowName.attr("class","row_name");
-				rowEmail.attr("class","row_email");
-				rowInTime.attr("class","row_intime");
-				rowOutTime.attr("class","row_outtime");
-				rowTotalTime.attr("class","row_totaltile");
-				rowWlogCd.attr("class","row_wlogcode");
-				rowIsDelete.attr("class","row_isdelete");
-				rowResn.attr("class","file_cell");
-				rowResnCd.attr("class","row_resncode");
+				rowChk.attr("class","fixed_length_cell");
+				rowNum.attr("class","number_cell");
+				rowName.attr("class","fixed_length_cell");
+				rowEmail.attr("class","variable_length_cell");
+				rowInTime.attr("class","fixed_length_cell");
+				rowOutTime.attr("class","fixed_length_cell");
+				rowTotalTime.attr("class","number_cell");
+				rowWlogCd.attr("class","fixed_length_cell");
+				rowIsDelete.attr("class","fixed_length_cell");
+				rowResn.attr("class","fixed_length_cell");
+				rowResnCd.attr("class","fixed_length_cell");
 				
 				newRow.append(rowChk);
 				newRow.append(rowNum);
@@ -485,6 +485,7 @@ function search() {
 				newRow.append(rowIsDelete);
 				newRow.append(rowResn);
 				newRow.append(rowResnCd);
+
 				
 				//3) tbody에 붙인다
 				wlogListTable.append(newRow);
@@ -575,7 +576,7 @@ function reload() {
 				var rowResn = $('<td></td>');
 				var rowResnCd = $('<td></td>');
 
-				rowChk.html('<input type="checkbox" class="chk_wlog" value='+wlogList[i].wlogId+'>');
+				rowChk.html('<input type="checkbox" value='+wlogList[i].wlogId+'>');
 				//$('.chk_wlog').attr("value",wlogList[i].wlogId);
 				rowNum.text(i+1);
 				rowName.text(wlogList[i].stdtNm);
@@ -608,17 +609,17 @@ function reload() {
 				
 				rowResnCd.text(wlogList[i].prcsCd);
 				
-				//rowChk.attr("class","chk_wlog");
-				rowNum.attr("class","row_number");
-				rowName.attr("class","row_name");
-				rowEmail.attr("class","row_email");
-				rowInTime.attr("class","row_intime");
-				rowOutTime.attr("class","row_outtime");
-				rowTotalTime.attr("class","row_totaltile");
-				rowWlogCd.attr("class","row_wlogcode");
-				rowIsDelete.attr("class","row_isdelete");
-				rowResn.attr("class","file_cell");
-				rowResnCd.attr("class","row_resncode");
+				rowChk.attr("class","fixed_length_cell");
+				rowNum.attr("class","number_cell");
+				rowName.attr("class","fixed_length_cell");
+				rowEmail.attr("class","variable_length_cell");
+				rowInTime.attr("class","fixed_length_cell");
+				rowOutTime.attr("class","fixed_length_cell");
+				rowTotalTime.attr("class","number_cell");
+				rowWlogCd.attr("class","fixed_length_cell");
+				rowIsDelete.attr("class","fixed_length_cell");
+				rowResn.attr("class","fixed_length_cell");
+				rowResnCd.attr("class","fixed_length_cell");
 				
 				newRow.append(rowChk);
 				newRow.append(rowNum);
