@@ -1,5 +1,26 @@
 @charset "UTF-8";
 
+input[type="button"]:hover{
+	cursor: pointer;
+}
+button:hover{
+	cursor: pointer;
+}
+button{
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+/* 	width: 150px; */
+	width : 90%;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+
 .home-section {
 	position: relative;
 	background: #fff;
@@ -12,79 +33,140 @@
 }
 
 .home-section .title {
-	display: inline-block;
+	font-size: 1.7em;
 	color: #333333;
-	font-size: 30px;
 	font-weight: bold;
 	margin: 40px;
+	display: inline-block;
 }
 
-.home-section .content_wrap {
-	margin: 0 auto;
-	width: 95%;
+.content_wrap {
+	margin-left: 40px;
+	width: calc(100% - 80px);
 }
 
-/* 여기까지는 공통 */
-.search_filter_wrap {
-	padding: 5px;
-/* 	width: fit-content; */
-	background: #ffffff;
-	border-radius: 3px;
-	box-shadow: 1px 1px 3px lightgray;
-}
-
-.search_filter_wrap .search_filter_table_wrap {
-	width: 98%;
-	display : flex;
-	margin: auto;
-	justify-content: center;
-}
-
-.search_filter_table{
-	width: 100%;
-}
-
-.search_filter_name{
-	width: 10%;
-}
-
-.search_filter_input{
-	width: 40%;
-}
-
-.search_btn_wrap{
-	justify-content: center;
+.search_btn_wrap {
+	text-align: center;
 	display: flex;
 }
 
-.search_btn_wrap input{
-	width: 60px;
-	background-color: #0E5881;
-/* 	margin: 10px 0 10px 0; */
-	margin : 0.1em;
+.search_btn_wrap input {
+	background: #0E5881;
 	color: white;
+	border: none;
+	border-radius: 0.3em;
 	font-weight: bold;
-	font-size: 20px;
-	border : none;
-}
-
-.search_filter_table td{
+	width : 4em;
+	margin-left : 0.3em;
+	margin: 10px;
 	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+.search_filter_wrap {
+/* 	display: flex; */
+/* 	justify-content: space-between; */
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	background: #E7EFF3;
+	color: #0E5881;
+	padding: 5px;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
-#wlog_list_table{
+.search_filter_table {
+	width: 100%;
+	display: flex;
+/* 	justify-content: space-between; */
+}
+
+/*========================================================================================*/
+.search_filter_name {
+	display:flex;
+	align-items:center;
+	font-weight: bold;
+	font-size:1.1em;
+	margin: 20px; 
+}
+.search_filter_input_date {
+	display:flex;
+	align-items:center;
+	flex-direction:column;
+	justify-content:center;
+}
+.search_filter_input {
+	display:flex;
+	align-items:center;
+}
+
+.search_filter_input input {
+	margin-left : 0.3em;
+	margin-right : 0.6em;
+	color: gray;
+}
+
+.input_date{
+	display: flex;
+}
+.input_date_radio{
+	display: inline-block;
+}
+.search_filter_table input:focus {
+	border-color: #0E5881;
+/* 	border-radius: 0.3em; */
+}
+
+/*========================================================================================*/
+.table_controller{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.table_controller .wlog_update_buttons{
+	display: flex;
+}
+/*========================================================================================*/
+
+#wlog_list_table {
+	border-collapse: collapse;
 	width: 100%;
 }
 
-#wlog_list_table td{
-	text-align: center;
-	padding: 0 5px;
+#wlog_list_table th {
+	border : 1px solid #CFDEE6;
+	border-top: 2px solid #0E5881;
+	color: #0E5881;
+	background-color:#E7EFF3;
+}
+#wlog_list_table td {
+/* 	text-align: center; */
+	padding: 0.2em 1em;
+	border : 1px solid #CFDEE6;
 }
 
+.variable_length_cell {
+	text-align: left;
+}
+.fixed_length_cell {
+	text-align: center;
+}
+.number_cell {
+	text-align: right;
+}
 /* .wlog_list_tbody_row .file_cell .resn_icon { */
 /* 	width: 15px; */
 /* 	height: 15px; */
 /* } */
+
 .resn_icon {
 	width: 15px;
 	height: 15px;
@@ -94,7 +176,7 @@
 	cursor: pointer;
 }
 
-.wlog_list_tbody_row .file_cell_active:hover{
+.wlog_list_tbody_row .file_cell_active:hover {
 	cursor: pointer;
 }
 

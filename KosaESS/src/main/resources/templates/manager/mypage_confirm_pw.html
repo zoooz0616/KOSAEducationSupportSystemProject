@@ -27,17 +27,10 @@
 
 	<!-- content wrap-->
 	<div class="content_wrap">
-		<form action = "/manager/mypage/confirm_pw" method = "post" name="password">
-			<table>
-				<tr>
-					<th>현재 비밀번호</th>
-					<td><input type = "password" name = "password"/></td>
-				</tr>
-			</table>
-			<input type="submit">
-<!-- 			<input type="submit" onclick="location.href='/manager/mypage/confirm_pw'"> -->
+		<form action = "/manager/mypage/confirm_pw" method = "post" name="password" class="confirm_form">
+			<input type ="password" name="password" placeholder="현재 비밀번호 입력"/>
+			<input type="submit" value="비밀번호 확인">
 		</form>
-		
 	</div>
 </div>
 

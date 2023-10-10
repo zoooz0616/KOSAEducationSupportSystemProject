@@ -28,28 +28,26 @@
 			<!-- 검색 필터 부분 -->
 			<div class="search_filter_wrap">
 				<div class="search_filter_inner_wrap">
-					<div id="search_by_name_wrap">
-						<span>
-							<label class="search_condition_name" th:text="이름"></label>
+					<div class="search_filter_contents_wrap">
+						<div id="search_by_name_wrap">
+							<label class="search_condition_name">이름</label>
 							<input type="text" id="search_by_name">
-						</span>
-					</div>
-					<div id="search_by_status_wrap">
-						<span>
+						</div>
+						<div id="search_by_status_wrap">
 							<label class="search_condition_name">교육과정 상태</label>
-						</span>
-						<ul class="search_filter_list">
-							<li>
-								<span class="chk_all_span">
-									<label th:text="전체" class="chk_all_label"></label>
-									<input type="checkbox" checked="checked" id="chkAll">
-								</span>
-							</li>
-							<li th:each="classCodeName:${classCodeNameList}">
-								<label th:text="${classCodeName.cmcdNm}"></label>
-								<input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
-							</li>
-						</ul>
+							<ul class="search_filter_list">
+								<li>
+									<span class="chk_all_span">
+										<label th:text="전체" class="chk_all_label"></label>
+										<input type="checkbox" checked="checked" id="chkAll">
+									</span>
+								</li>
+								<li th:each="classCodeName:${classCodeNameList}">
+									<label th:text="${classCodeName.cmcdNm}"></label>
+									<input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
+								</li>
+							</ul>
+						</div>
 					</div>
 					<div class="search_btn_wrap">
 						<input type="button" id="search_reset_btn" value="초기화" onclick="reset()">

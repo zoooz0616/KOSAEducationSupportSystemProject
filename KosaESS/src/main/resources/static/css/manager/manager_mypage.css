@@ -12,11 +12,11 @@
 }
 
 .home-section .title {
-	display: inline-block;
+	font-size: 1.7em;
 	color: #333333;
-	font-size: 30px;
 	font-weight: bold;
-	margin: 40px;
+	margin : 40px;
+	display: inline-block;
 }
 
 .home-section .content_wrap {
@@ -24,24 +24,89 @@
 	width: 95%;
 }
 
-/* 여기까지는 공통 */
-.search_filter_wrap {
-	padding: 5px;
-/* 	width: fit-content; */
-	background: #ffffff;
-	border-radius: 3px;
-	box-shadow: 1px 1px 3px lightgray;
+.confirm_form input[type="password"] {
+	padding: 10px;
+	border-style: 1px;
+	font-size: 1.3em;
+	font-weight: bold;
+	border-radius: 5px;
+	width: 40%;
 }
 
-input[type=button]{
-	width: 60px;
+.confirm_form input::placeholder {
+	color: #0E5881;
+}
+
+.confirm_form input[type="submit"]{
+	border-radius: 5px;
+	width: 7em;
 	background-color: #0E5881;
-	margin : 0.1em;
+	margin-left : 0.3em;
 	color: white;
 	font-weight: bold;
-	font-size: 20px;
+	font-size: 1.3em;
 	border : none;
 }
-input[type=button]:hover{
+
+.confirm_form input[type="submit"]:hover{
 	cursor: pointer;
+}
+
+.confirm_form form{
+	display: flex;
+}
+
+table {
+	border: 1px solid #CFDEE6;
+	border-collapse: collapse;
+	text-align: center;
+	line-height: 1.5;
+	width:50%;
+}
+
+table tr {
+	border-bottom: 1.5px solid #E7EFF3;
+}
+
+table th {
+	border-right: 2px solid #CFDEE6;
+	width: 10em;
+	color: #0E5881;
+	background: #E7EFF3;
+	border-bottom: 1px solid #E7EFF3;
+	font-size: 1.1em;
+}
+
+table td {
+	padding: 10px;
+	font-size: 1.1em;
+	vertical-align: center;
+	border-bottom: 1px solid #CFDEE6;
+	text-align: left;
+	margin-left: 2%;
+}
+
+table input{
+/* padding: 10px; */
+/* border: inset; */
+	color: #0E5881;
+/* border-radius: 5px; */
+	padding: 10px;
+	border-style: 1px;
+	font-size: 1.1em;
+	font-weight: bold;
+	border-radius: 5px;
+	width: 70%;
+}
+
+.update_btn{
+	padding: 10px;
+	border: 0;
+	font-size: 1.3em;
+	font-weight: bold;
+	border-radius: 5px;
+	background-color: #0E5881;
+	color: white;
+	margin :1em;
+	width: 5em;
 }

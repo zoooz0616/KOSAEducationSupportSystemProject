@@ -352,7 +352,7 @@ public class ManagerController {
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId,"", "");
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "name", "");
 		
 		if(clssId != null) {
 			List<String> isManagerIdList = new ArrayList<String>();
