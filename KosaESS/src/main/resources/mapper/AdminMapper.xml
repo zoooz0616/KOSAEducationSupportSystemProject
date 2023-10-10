@@ -1426,7 +1426,6 @@ order by stdt.stdt_nm
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update cmcd
 			set
-			tpcd_id = #{item.tpcdId},
 			cmcd_nm = #{item.cmcdNm},
 			use_yn = #{item.useYn},
 			updt_dt = SYSTIMESTAMP,

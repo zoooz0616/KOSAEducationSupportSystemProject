@@ -102,8 +102,8 @@
 									<td class="td_cmcd_id"><div onclick="detailCodeList(this)"
 											class="group_code_id" th:text="${groupCode.cmcdId}"></div></td>
 									<td class="td_tpcd_id">
-										<div class="group_div" th:text="${groupCode.tpcdId}"></div> <input
-										class="group_input group_tpcd_id" type="text"
+										<div th:text="${groupCode.tpcdId}"></div> <input
+										class="group_tpcd_id" type="text"
 										th:value="${groupCode.tpcdId}" style="display: none;">
 									</td>
 									<td class="td_cmcd_nm">
@@ -894,13 +894,11 @@
 			
 			//id와 수정가능한 input의 값들 뽑기
 			var cmcdId = parentTr.querySelector('.td_group_check_box .group_checkbox_item').value;
-			var tpcdId = parentTr.querySelector('.td_tpcd_id .group_tpcd_id').value;
 			var cmcdNm = parentTr.querySelector('.td_cmcd_nm .group_cmcd_nm').value;
 			var useYn = parentTr.querySelector('.td_use_yn .group_use_yn').value;
 			
 			//딕셔너리의 키값에 값 넣기
 			groupCode['cmcdId'] = cmcdId;
-			groupCode['tpcdId'] = tpcdId;
 			groupCode['cmcdNm'] = cmcdNm;
 			groupCode['useYn'] = useYn;
 						
@@ -971,6 +969,9 @@
 			updateDetailList.push(detailCode);
 		});
 			
+		if(updateDetailList.length === 0){
+			alert("수정 사항이 없습니다.");
+		}else{
 			//객체 배열을 json문자열로 직렬화 하기
 			var jsonData = JSON.stringify(updateDetailList);
 			
@@ -1000,6 +1001,8 @@
 			.catch(error => {
 	    		// 오류 처리
 			});
+		}
+			
 	}
 	
 	</script>
