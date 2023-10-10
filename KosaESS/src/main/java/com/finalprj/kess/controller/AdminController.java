@@ -1954,7 +1954,6 @@ public class AdminController {
 		} else {
 			return "fail";
 		}
-
 	}
 
 	/**
