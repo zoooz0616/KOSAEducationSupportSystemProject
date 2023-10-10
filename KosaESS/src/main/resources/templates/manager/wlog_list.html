@@ -34,7 +34,6 @@
 			<input id="keyword_save" type="text">
 			<input type="checkbox" class="chk_wok_save" th:value="${wlogCd.cmcdId}" th:name="${wlogCd.cmcdId}" th:each="wlogCd:${wlogCdList}" checked="checked">
 			<input type="checkbox" class="resn_only_save">
-			<input type="checkbox" class="contain_delete_save">
 		</div>
 	</div>
 
@@ -81,8 +80,6 @@
 				<div class="search_filter_input">
 					<span>사유서 포함 된 기록만 보기</span>
 					<input type="checkbox" id="fileContainedOnly">
-					<span>삭제 된 기록 보기</span>
-					<input type="checkbox" id="isDelete">
 				</div>
 			</div>
 			<!-- 검색 버튼 -->
