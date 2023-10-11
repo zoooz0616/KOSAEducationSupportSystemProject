@@ -89,8 +89,10 @@ $(document).ready(function() {
 			row.append('<td>' + outTmDd + '</td>');
 			if (WorklogVO.wlogNm == '정상') {
 				row.append('<td>' + WorklogVO.wlogNm + '</td>');
-			} else {
-				row.append('<td style="color: red;">' + WorklogVO.wlogNm + '</td>');
+			} else if (WorklogVO.wlogNm == ('지각' || '조퇴')){
+				row.append('<td style="color:blue;">' + WorklogVO.wlogNm + '</td>');
+			}else {
+				row.append('<td style="color:red;">' + WorklogVO.wlogNm + '</td>');
 			}
 			row.append('<td><button class="submitResn" >제출</button><button class="updateResn">수정</button></td>');
 			row.append('<td class="resnStstus">' + WorklogVO.resnNm + '</td>');

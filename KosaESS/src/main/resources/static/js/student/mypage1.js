@@ -86,7 +86,13 @@ $(document).ready(function() {
 			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 			row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
 			row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
-			row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
+			if(ApplyDetailDTO.cmcdNm === ('지원취소' ||'수강포기')){
+				row.append('<td style="color:red;">' + ApplyDetailDTO.cmcdNm + '</td>');
+			}else if(ApplyDetailDTO.cmcdNm === ('합격')){
+				row.append('<td style="color:blue;">' + ApplyDetailDTO.cmcdNm + '</td>');
+			}else{
+				row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
+			}
 			row.append('<td><button class="update">수정</button><button class="apply">수강</button><button class="cancel">지원취소</button><button class="drop">수강포기</button></td>');
 			row.append('<td style="display:none;"><span>' + ApplyDetailDTO.aplyId + '</span></td>')
 

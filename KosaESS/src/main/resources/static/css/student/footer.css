@@ -21,7 +21,7 @@ footer {
 
 .footerBody li img {
 	height: 30px;
-	padding: 2% 0;
+	padding: 5px 0;
 }
 
 .footerBody a {
@@ -51,6 +51,9 @@ button {
 	display: flex;
 	align-items: center;
 }
+.footerBody .contact img{
+	width:28px;
+}
 
 .emailJoin {
 	display: flex;
@@ -59,7 +62,7 @@ button {
 }
 
 .footerBody span {
-	padding-left: 5%;
+	padding-left: 20px;
 	font-size: 14px;
 }
 

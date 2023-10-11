@@ -85,7 +85,13 @@ $(document).ready(function() {
 			row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + RegistrationVO.clssId + '"><span>' + RegistrationVO.clssNm + '</span></a></td>');
 			row.append('<td><span>' + RegistrationVO.clssStartDd + '<br> ~ ' + RegistrationVO.clssEndDd + '</span></td>');
 			row.append('<td>' + RegistrationVO.rgstNm + '</td>');
-			row.append('<td>' + RegistrationVO.cmptNm + '</td>');
+			if (RegistrationVO.cmptNm === '미이수') {
+				row.append('<td style="color:blue;">' + RegistrationVO.cmptNm + '</td>');
+			} else if (RegistrationVO.cmptNm === '중도포기') {
+				row.append('<td style="color:red;">' + RegistrationVO.cmptNm + '</td>');
+			} else {
+				row.append('<td>' + RegistrationVO.cmptNm + '</td>');
+			}
 			if (RegistrationVO.cmptCd === 'CMP0000002') {
 				row.append('<td class="rgstPrint" style="display: revert;"><a href="/download/file/' + RegistrationVO.fileId + '/' + RegistrationVO.fileSubId + '"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></a></td>');
 			} else {

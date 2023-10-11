@@ -367,6 +367,11 @@
 		</div>
 	</div>
 	<script>
+		$('#passwordInput').on('keyup', function(event) {
+			if (event.key === "Enter") {
+				$('#checkPassword').trigger('click');
+			}
+		});
 		$("#userBirth").datepicker({
 			dateFormat : "yy-mm-dd", // 날짜 형식 지정
 			changeMonth : true, // 월 선택기 표시
@@ -584,6 +589,28 @@
 			phoneNumberInput.val(remainder);
 
 		}
+		$("#quit").click(function() {
+			var result = confirm("탈퇴하시겠습니까?");
+
+			if (result) {
+				$.ajax({
+					type : "POST",
+					url : "/student/quit",
+					success : function(response) {
+						if (response = 'true')
+							alert("탈퇴되었습니다.");
+						if (result) {
+							$.ajax({
+								type : "GET",
+								url : "/logout"
+							});
+							window.location.href = '/student'
+						}
+					}
+				});
+			}
+		});
+
 		var button = document.querySelector(".aplyBtn");
 
 		// 클릭 이벤트를 감지합니다.

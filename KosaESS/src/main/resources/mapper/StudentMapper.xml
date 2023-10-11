@@ -25,7 +25,7 @@
 		select *
 		from stdt
 		join lgin on lgin.user_email = stdt.user_email
-		where stdt.user_email=#{email}
+		where stdt.user_email=#{email} and (user_cd ='USR0000001' || user_cd ='USR0000002')
 		]]>
 	</select>
 
@@ -79,11 +79,11 @@
 	</update>
 
 	<!-- 교육생 탈퇴 -->
-	<delete id="deleteStudent"
-		parameterType="com.finalprj.kess.model.StudentVO">
+	<delete id="quit">
 		<![CDATA[
-		DELETE FROM stdt
-		WHERE stdt_id=#{stdtId} AND stdt_pwd=#{stdtPwd}
+		UPDATE lgin
+		SET user_cd ='USR0000003'
+		WHERE user_email=#{stdtEmail}
 		]]>
 	</delete>
 

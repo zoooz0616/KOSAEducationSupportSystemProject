@@ -82,7 +82,11 @@ $(document).ready(function() {
 			row.append('<td><span>' + (i + startIdx + 1) + '</span></td>');
 			row.append('<td style="word-break: keep-all;"><a href="/student/inquiry/view/' + PostVO.postId + '"><span>' + PostVO.postTitle + '</span></a></td>');
 			row.append('<td>' + PostVO.rgstDd + '</td>');
-			row.append('<td>' + PostVO.cmcdNm + '</td>');
+			if (PostVO.cmcdNm === '답변완료') {
+				row.append('<td style="color:blue;">' + PostVO.cmcdNm + '</td>');
+			}else {
+				row.append('<td>' + PostVO.cmcdNm + '</td>');
+			}
 
 			var replyTd = $('<td></td>');
 			if (PostVO.postCd === 'PST0000004') {
