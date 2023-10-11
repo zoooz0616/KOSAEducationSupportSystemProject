@@ -1,0 +1,205 @@
+@charset "UTF-8";
+/* class="" */
+
+/*-------------------------------------------------------*/
+select option[value=""][disabled] {
+	display: none;
+}
+
+button:hover{
+	cursor: pointer;
+}
+
+/* 공통 사항*/
+.home-section {
+	position: relative;
+	background: #fff;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+	height: auto;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section .title {
+	font-size: 1.7em;
+	color: #333333;
+	font-weight: bold;
+	margin : 40px;
+	display: inline-block;
+}
+
+.content_wrap {
+	margin-left: 40px;
+	width: calc(100% - 80px);
+}
+/* End : 공통 사항*/
+
+/* filter_table */
+.search_filter_wrap {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	background: #E7EFF3;
+	color: #0E5881;
+	padding: 5px;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+/* 	margin: auto; */
+}
+
+.search_filter_name{
+	font-weight: bold;
+	font-size:1.1em;
+	margin: 20px; 
+}
+
+.search_filter_table input {
+	color: gray;
+	padding: 5px;
+}
+
+.search_filter_table input:focus {
+	border-color: #0E5881;
+	border-radius: 0.3em;
+}
+
+.search_filter_btn_wrap {
+	text-align: center;
+}
+
+.search_filter_btn_wrap button {
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	width : 5em;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+
+#stdt_list_table_thead th{
+	background-color:#E7EFF3;
+}
+
+.search_filter_table .input_keyword{
+	width: 15em;
+	height: 1.8em;
+}
+
+#stdt_list_table{
+	width : 100%;
+}
+
+.fixed_length_cell{
+	text-align: center;
+}
+
+.number_cell{
+	text-align: right;
+	padding-right: 1em;
+}
+
+.star {
+	color: red;
+	vertical-align: middle;
+}
+
+#stdt_list_table{
+	border-collapse: collapse;
+}
+
+#stdt_list_table th{
+	border : 1px solid #CFDEE6;
+	border-top: 2px solid #0E5881;
+	color: #0E5881;
+}
+
+#stdt_list_table td{
+	padding : 0.2em;
+	border: 1px solid #CFDEE6;
+}
+
+.table_controller {
+	display :flex;
+	margin : 0.5em;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.table_controller div{
+	display: flex;
+	align-items: center;
+}
+
+.result_count {
+	width: 50%;
+}
+
+.stdt_count_unit{
+	margin-left: 1em;
+}
+
+.cmpt_button{
+	display: flex;
+	margin-left: auto;
+}
+.cmpt_button button{
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+/* 	width: 150px; */
+	width : 5em;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+
+.search_filter_table{
+	display: flex;
+}
+
+.search_filter_input_wrap{
+	display:flex;
+	align-items: center;
+}
+
+.search_filter_input_wrap span{
+	margin-left: 0.6em; 
+	margin-right: 0.3em;
+}
+
+.search_filter_input{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+.search_filter_input_date{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.search_filter_input_radio{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}

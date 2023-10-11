@@ -412,17 +412,25 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		//End : 유저 필터링
+		//파라미터가 null이면 ""으로 변환
+		if(clssId==null) {clssId="";}
+		if(startDate==null) {startDate="";}
+		if(endDate==null) {endDate="";}
+		if(keyword==null) {keyword="";}
 		
 		String mngrId = (String) session.getAttribute("mngrId");
-		String title = "출퇴근 관리";
+		String title = "지원금 관리";
 		
 		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
 		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 		model.addAttribute("title", title);
 		model.addAttribute("subsidyList", subsidyList);
+		model.addAttribute("resultCount", subsidyList.size());
 		model.addAttribute("classList", classList);
 		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
 		
 		return "manager/subsidy_view";
 	}

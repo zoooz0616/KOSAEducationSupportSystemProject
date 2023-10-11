@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class SubsidyVO {
+	private String monyId;// 지원금id
 	private String clssId;// 교육과정id
 	private String stdtId;// 교육생id
 	

@@ -78,7 +78,7 @@ public interface IManagerRepository {
 
 	public void updateManagerLoginInfo(ManagerVO updateManager);
 
-	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("starDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString);
+	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

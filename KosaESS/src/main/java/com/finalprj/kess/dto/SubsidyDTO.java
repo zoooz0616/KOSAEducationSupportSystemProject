@@ -7,10 +7,14 @@ import lombok.Data;
 
 @Data
 public class SubsidyDTO {
+	private int rowNum;// 순번
+	private String monyId;// 지원금id
 	private String clssId;// 교육과정id
 	private String clssNm;// 교육과정 이름
+	private String clssSubsidy;// 교육과정 지원금
 	private String stdtId;// 교육생id
 	private String stdtNm;// 교육생 이름
+	private String userEmail;// 교육생 이름
 	
 	private String monyCd;// 지급 상태
 	private String monyNm;// 지급 상태 이름
