@@ -64,25 +64,33 @@
 		<div class="insert_manager" style="padding: 5px;">
 			<div class="input_wrap" style="display: flex;">
 				<div class="filter_box">
-					<div class="filter_box_title">이름<span class="red">*</span></div>
+					<div class="filter_box_title">
+						이름<span class="red">*</span>
+					</div>
 					<div>
 						<input class="input_manager_name" type="text" placeholder="이름">
 					</div>
 				</div>
 				<div class="filter_box">
-					<div class="filter_box_title">이메일<span class="red">*</span></div>
+					<div class="filter_box_title">
+						이메일<span class="red">*</span>
+					</div>
 					<div>
 						<input class="input_manager_email" type="text" placeholder="이메일">
 					</div>
 				</div>
 				<div class="filter_box">
-					<div class="filter_box_title">비밀번호<span class="red">*</span></div>
+					<div class="filter_box_title">
+						비밀번호<span class="red">*</span>
+					</div>
 					<div>
 						<input class="input_manager_pwd" type="text" placeholder="비밀번호">
 					</div>
 				</div>
 				<div class="filter_box">
-					<div class="filter_box_title">전화번호<span class="red">*</span></div>
+					<div class="filter_box_title">
+						전화번호<span class="red">*</span>
+					</div>
 					<div>
 						<input class="input_manager_tel" type="text" placeholder="전화번호">
 					</div>
@@ -105,11 +113,16 @@
 			<!-- 컨텐츠 개수와 버튼 wrap -->
 			<div class="content_info_wrap">
 				<div class="content_info">
-					<span>업무담당자 총 <span class="manager_list_cnt"
+					<span>총 <span class="manager_list_cnt"
 						th:text="${#lists.size(managerList)}"></span> 명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
+					<!-- 엑셀 다운로드 버튼 -->
+					<button type="button" id="excel_btn">
+						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+					</button>
+				
 					<!-- 선택삭제 버튼 -->
 					<button id="delete_btn">
 						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
@@ -123,7 +136,8 @@
 				<table class="content_list_table" id="class_list_table">
 					<thead>
 						<tr class="content_list_th">
-							<th style="width: 5%;"><input type="checkbox" id="chkAll" name="select_all" onclick="selectAll(this)"></th>
+							<th style="width: 5%;"><input type="checkbox" id="chkAll"
+								name="select_all" onclick="selectAll(this)"></th>
 							<th style="width: 5%;">번호</th>
 							<th style="width: 10%;">업무담당자 이름</th>
 							<th style="width: 20%;">전화번호</th>
@@ -136,7 +150,8 @@
 					<tbody>
 						<tr th:each="manager, iterStat: ${managerList}">
 							<td class="input_check_td"><input class="input_check"
-								type="checkbox" name="select" onclick="checkSelectAll()"  th:value="${manager.mngrId}"></td>
+								type="checkbox" name="select" onclick="checkSelectAll()"
+								th:value="${manager.mngrId}"></td>
 							<td class="manager_num" th:text="${iterStat.index + 1}"></td>
 							<td class="manager_name">
 								<div class="update_div" th:text="${manager.mngrNm}"></div> <input
@@ -413,6 +428,14 @@
 								var divStatus = document.createElement("div");
 								divStatus.className = "update_div mngr_status";
 								divStatus.textContent = manager.cmcdNm;
+								if(manager.cmcdNm == '휴면'){
+									divStatus.classList.add('blue');
+								}else if(manager.cmcdNm == '탈퇴'){
+									divStatus.classList.add('red');
+								}
+								
+								
+								
 								var selectStatus = document
 										.createElement("select");
 								selectStatus.className = "update_input mngr_status_input";
@@ -587,6 +610,16 @@
 			row.querySelector(".save_btn").style.display = "none";
 			row.querySelector(".cancel_btn").style.display = "none";
 		}
+	
+		//계정 상태에 따라 다른 색상
+		var statusNms = document.querySelectorAll('.mngr_status');
+	statusNms.forEach((statusNm) => {
+  	if (statusNm.textContent === '휴면') {
+  		statusNm.classList.add('blue');
+  	}else if(statusNm.textContent === '탈퇴'){
+  		statusNm.classList.add('red');
+  	}
+	});
 	</script>
 </body>
 </html>
