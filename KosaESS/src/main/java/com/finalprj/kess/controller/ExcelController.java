@@ -114,5 +114,6 @@ public class ExcelController {
 	    // 엑셀 출력
 	    wb.write(response.getOutputStream());
 	    wb.close();
+	    
 	}
 }
