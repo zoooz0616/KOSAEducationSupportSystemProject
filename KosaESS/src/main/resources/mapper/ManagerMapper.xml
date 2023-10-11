@@ -404,4 +404,41 @@
 		]]>
 	</select>
 	
+	<select id="getSubsidyList" resultType="com.finalprj.kess.dto.SubsidyDTO">
+		<![CDATA[
+			SELECT *
+			FROM mony m 
+				JOIN stdt s ON m.stdt_id=s.stdt_id 
+			WHERE clss_id in (SELECT clss_id FROM clss WHERE mngr_id = #{mngrId})
+		]]>
+		<if test='clssId!=""'>
+			<![CDATA[
+				AND clss_id = #{clssId}
+			]]>
+		</if>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND subsidy_Dd >= to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='endDate!=""'>
+			<![CDATA[
+				AND subsidy_Dd <= to_date(#{endDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='keyword!=""'>
+			<![CDATA[
+				AND m.stdt_id in (SELECT stdt_id FROM stdt WHERE ((s.stdt_nm like '%'||#{keyword}||'%' ) OR (s.user_email like '%'||#{keyword}||'%')))
+			]]>
+		</if>
+		<if test='filterString!=""'>
+			AND mony_cd IN
+			<foreach collection="filterString" item="item" open="(" separator="," close=")">
+				<![CDATA[
+					 #{item}
+				]]>
+			</foreach>
+		</if>
+	</select>
+	
 </mapper>

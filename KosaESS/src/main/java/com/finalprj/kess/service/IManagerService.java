@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -15,6 +16,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 
 public interface IManagerService {
@@ -67,4 +69,6 @@ public interface IManagerService {
 	public void updateWlogCd(String wlogId, String wlogCd, String mngrId);
 
 	public void updateManagerInfo(ManagerVO updateManager);
+
+	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString);
 }

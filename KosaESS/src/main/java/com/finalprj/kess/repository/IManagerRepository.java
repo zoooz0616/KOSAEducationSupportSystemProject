@@ -17,6 +17,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.WorklogVO;
 
 @Mapper
@@ -76,6 +77,8 @@ public interface IManagerRepository {
 	public void updateManagerInfo(ManagerVO updateManager);
 
 	public void updateManagerLoginInfo(ManagerVO updateManager);
+
+	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("starDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString);
 
 //	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -15,6 +16,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IManagerRepository;
 
@@ -151,6 +153,11 @@ public class ManagerService implements IManagerService {
 	public void updateManagerInfo(ManagerVO updateManager) {
 		managerRepository.updateManagerInfo(updateManager);
 		managerRepository.updateManagerLoginInfo(updateManager);
+	}
+
+	@Override
+	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString) {
+		return managerRepository.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 	}
 
 //	@Override

@@ -29,12 +29,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
@@ -392,8 +394,15 @@ public class ManagerController {
 		model.addAttribute("title", title);
 		return "manager/wlog_list";
 	}
+	
 	@GetMapping("/subsidy")
-	public String getMoneyList(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+	public String getMoneyList(Model model, HttpSession session, HttpServletRequest httpServletRequest
+			,@RequestParam(required = false) String clssId
+			,@RequestParam(required = false) String startDate
+			,@RequestParam(required = false) String endDate
+			,@RequestParam(required = false) String keyword
+			,@RequestParam(required = false, value = "filterString[]") List<String> filterString
+			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
 			return "redirect:/login";
@@ -407,7 +416,13 @@ public class ManagerController {
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "출퇴근 관리";
 		
+		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
+		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
 		model.addAttribute("title", title);
+		model.addAttribute("subsidyList", subsidyList);
+		model.addAttribute("classList", classList);
+		model.addAttribute("monyCodeNameList", monyCodeNameList);
 		
 		return "manager/subsidy_view";
 	}
