@@ -392,7 +392,25 @@ public class ManagerController {
 		model.addAttribute("title", title);
 		return "manager/wlog_list";
 	}
-	
+	@GetMapping("/subsidy")
+	public String getMoneyList(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//End : 유저 필터링
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		String title = "출퇴근 관리";
+		
+		model.addAttribute("title", title);
+		
+		return "manager/subsidy_view";
+	}
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
 	@ResponseBody
@@ -690,4 +708,12 @@ public class ManagerController {
 		response.put("wlogCdList", wlogCdList);
 		return response;
 	}
+	
+	/*		
+		,@RequestParam(required = false) String clssId
+		,@RequestParam(required = false) String startDate
+		,@RequestParam(required = false) String endDate
+		,@RequestParam(required = false) String keyword
+		,@RequestParam(required = false, value = "filterString[]") List<String> filterString
+	*/
 }
