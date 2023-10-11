@@ -114,14 +114,19 @@
 				<!-- 컨텐츠 개수와 버튼 wrap -->
 				<div class="content_info_wrap">
 					<div class="content_info">
-						<span>지원자 총 <span class="applicant_list_cnt"
+						<span>총 <span class="applicant_list_cnt"
 							th:text="${#lists.size(applyDetailList)}">aplyListCnt</span> 명
 						</span>
 					</div>
 					<div class="content_info_btn_wrap">
-						<!-- 선택삭제 버튼 -->
-						<input type="submit" name="action" value="합격">
-						<!-- 등록하기 버튼 -->
+						<!-- 엑셀 다운로드 버튼 -->
+						<button type="button" id="excel_btn">
+							<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+						</button>
+					
+						<!-- 합격 버튼 -->
+						<input type="submit" name="action" value="합  격">
+						<!-- 불합격 버튼 -->
 						<input type="submit" name="action" value="불합격">
 					</div>
 				</div>

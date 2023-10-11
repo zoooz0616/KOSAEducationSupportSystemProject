@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<!-- Content Top -->
-		
+
 		<!-- Content Middle-->
 		<div class="content_middle">
 			<!-- Search Filter wrap -->
@@ -35,7 +35,8 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육생 이름</div>
 					<div>
-						<input class="search_stdt_nm_input" type="text" id="search_input" value="">
+						<input class="search_stdt_nm_input" type="text" id="search_input"
+							value="">
 					</div>
 				</div>
 
@@ -45,13 +46,12 @@
 					<div>
 						<select class="search_clss_nm_select">
 							<option value="all" th:text="전체">전체</option>
-							<option th:each="class: ${classList}"
-								th:value="${class.clssId}"
+							<option th:each="class: ${classList}" th:value="${class.clssId}"
 								th:text="|${class.clssNm}(${class.clssId})|"></option>
 						</select>
 					</div>
 				</div>
-				
+
 				<!-- 성별 -->
 				<div class="filter_box">
 					<div class="filter_box_title">성별</div>
@@ -59,25 +59,23 @@
 						<select class="search_gender_select">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="gender: ${genderList}"
-								th:value="${gender.cmcdId}"
-								th:text="${gender.cmcdNm}"></option>
+								th:value="${gender.cmcdId}" th:text="${gender.cmcdNm}"></option>
 						</select>
 					</div>
 				</div>
-				
+
 				<!-- 직업 -->
 				<div class="filter_box">
 					<div class="filter_box_title">직업</div>
 					<div>
 						<select class="search_job_select">
 							<option value="all" th:text="전체">전체</option>
-							<option th:each="job: ${jobList}"
-								th:value="${job.cmcdId}"
+							<option th:each="job: ${jobList}" th:value="${job.cmcdId}"
 								th:text="${job.cmcdNm}"></option>
 						</select>
 					</div>
 				</div>
-				
+
 				<!-- 계정상태 -->
 				<div class="filter_box">
 					<div class="filter_box_title">계정상태</div>
@@ -85,8 +83,7 @@
 						<select class="search_status_select">
 							<option value="all" th:text="전체">전체</option>
 							<option th:each="status: ${statusList}"
-								th:value="${status.cmcdId}"
-								th:text="${status.cmcdNm}"></option>
+								th:value="${status.cmcdId}" th:text="${status.cmcdNm}"></option>
 						</select>
 					</div>
 				</div>
@@ -105,17 +102,22 @@
 			<!-- Search Button wrap -->
 		</div>
 		<!-- Content Middle-->
-		
+
 		<!-- Content Bottom-->
 		<div class="content_bottom">
 			<!-- 컨텐츠 개수와 버튼 wrap -->
 			<div class="content_info_wrap">
 				<div class="content_info">
-					<span>교육생 총 <span class="student_list_cnt"
+					<span>총 <span class="student_list_cnt"
 						th:text="${#lists.size(studentList)}"></span> 명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
+					<!-- 엑셀 다운로드 버튼 -->
+					<button type="button" id="excel_btn" onclick="location.href='/excelDown.do' ">
+						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+					</button>
+
 					<!-- 선택삭제 버튼 -->
 					<button type="button" id="delete_btn" onclick="deleteStudents()">
 						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
@@ -148,16 +150,18 @@
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${student.stdtId}"></td>
 							<td class="student_num" th:text="${iterStat.index + 1}"></td>
-							<td class="student_name">
-								<a th:href="@{/admin/student/view/__${student.stdtId}__}" th:text="${student.stdtNm}"></a>
-							</td>
+							<td class="student_name"><a
+								th:href="@{/admin/student/view/__${student.stdtId}__}"
+								th:text="${student.stdtNm}"></a></td>
 							<td class="student_email" th:text="${student.userEmail}"></td>
 							<td class="student_gender" th:text="${student.genderNm}"></td>
-							<td class="student_birthday" th:text="${#dates.format(student.birthDd, 'yyyy-MM-dd')}"></td>
+							<td class="student_birthday"
+								th:text="${#dates.format(student.birthDd, 'yyyy-MM-dd')}"></td>
 							<td class="student_tel" th:text="${student.stdtTel}"></td>
 							<td class="student_job" th:text="${student.jobNm}"></td>
 							<td class="student_status" th:text="${student.userNm}"></td>
-							<td class="last_login_dt" th:text="${#dates.format(student.lastLoginDt, 'yyyy-MM-dd hh:mm:ss')}"></td>
+							<td class="last_login_dt"
+								th:text="${#dates.format(student.lastLoginDt, 'yyyy-MM-dd hh:mm:ss')}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -166,7 +170,7 @@
 		</div>
 		<!-- Content Bottom-->
 	</div>
-	
+
 	<script>
 	//전체선택
 	function selectAll(selectAll){
@@ -280,6 +284,11 @@
 			var tdStatus = document.createElement("td");
 			tdStatus.className = "student_status";
 			tdStatus.textContent = student.userNm;
+			if(student.userNm == '휴면'){
+				tdStatus.classList.add('blue');	
+			}else if(student.userNm == '탈퇴'){
+				tdStatus.classList.add('red');
+			}
 			trStudent.appendChild(tdStatus);
 			
 			var tdLastLoginDt = document.createElement("td");
@@ -366,7 +375,15 @@
 		//tbody 비우고 리스트 비우기
 	}
 	
-	
+	//상태값마다 다른 색상
+	var statusNms = document.querySelectorAll('.student_status');
+	statusNms.forEach((statusNm) => {
+  	if (statusNm.textContent === '휴면') {
+  		statusNm.classList.add('blue');
+  	}else if(statusNm.textContent === '탈퇴'){
+  		statusNm.classList.add('red');
+  	}
+	});
 	
 	</script>
 </body>

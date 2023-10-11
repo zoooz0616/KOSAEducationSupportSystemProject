@@ -27,8 +27,8 @@
 			<li><a class="icon_img"
 				th:href="@{/__${session.role}__/inquiry/list}"> <i
 					class='bx bx-chat'><img th:src="@{/img/inquiry_white.png}"></i>
-					<span class="links_name">문의 관리</span>
-			</a> <span class="tooltip">문의 관리</span></li>
+					<span class="links_name">문의사항 관리</span>
+			</a> <span class="tooltip">문의사항 관리</span></li>
 			<li><a class="icon_img"
 				th:href="@{/__${session.role}__/manager/list}"> <i
 					class='bx bx-pie-chart-alt-2'><img
@@ -56,6 +56,11 @@
 					class='bx bx-heart'><img th:src="@{/img/student_white.png}"></i>
 					<span class="links_name">교육생 관리</span>
 			</a> <span class="tooltip">교육생 관리</span></li>
+			
+			<li><a th:href="@{/__${session.role}__/money/list}"> <i 
+					class='bx bx-heart'><img th:src="@{/img/money_icon_white.png}"></i> 
+					<span class="links_name">지원금 관리</span> 
+			</a> <span class="tooltip">지원금 관리</span></li>
 			<li><a class="icon_img"
 				th:href="@{/__${session.role}__/commoncode/list}"> <i
 					class='bx bx-folder'><img th:src="@{/img/commoncode_white.png}"></i>
