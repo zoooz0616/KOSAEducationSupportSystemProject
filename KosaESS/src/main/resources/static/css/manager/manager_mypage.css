@@ -34,18 +34,28 @@
 }
 
 .confirm_form input::placeholder {
-	color: #0E5881;
+	color: #B5B6BA;
+/* 	color: rgb(255, 255, 255); */
 }
 
-.confirm_form input[type="submit"]{
-	border-radius: 5px;
-	width: 7em;
-	background-color: #0E5881;
-	margin-left : 0.3em;
-	color: white;
-	font-weight: bold;
+input[type="submit"]{
+/* 	border-radius: 5px; */
+/* 	width: 7em; */
+/* 	background-color: #0E5881; */
+/* 	margin-left : 0.3em; */
+/* 	color: white; */
+/* 	font-weight: bold; */
+/* 	font-size: 1.3em; */
+/* 	border : none; */
+	padding: 10px;
+	border: 0;
 	font-size: 1.3em;
-	border : none;
+	font-weight: bold;
+	border-radius: 5px;
+	background-color: #0E5881;
+	color: white;
+	margin :1em;
+/* 	width: 5em; */
 }
 
 .confirm_form input[type="submit"]:hover{
@@ -90,7 +100,6 @@ table input{
 /* padding: 10px; */
 /* border: inset; */
 	color: #0E5881;
-/* border-radius: 5px; */
 	padding: 10px;
 	border-style: 1px;
 	font-size: 1.1em;
@@ -109,4 +118,13 @@ table input{
 	color: white;
 	margin :1em;
 	width: 5em;
+}
+
+.star {
+	color: red;
+	vertical-align: middle;
+}
+
+table input::placeholder {
+	color: #B5B6BA;
 }
