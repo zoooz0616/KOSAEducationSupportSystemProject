@@ -125,6 +125,7 @@
 	margin: 2px;
 	padding: 5px;
 	cursor: pointer;
+	align-items: center;
 }
 
 .content_list {
@@ -184,4 +185,18 @@
 
 .notice_check, .mngr_nm, .notice_num, .notice_file, .rgst_dd, .notice_hit, .notice_status {
 	text-align: center;
+}
+
+.blue{
+	color: blue;
+}
+
+#excel_btn {
+	border: 2px solid green;
+	background: white;
+	color: green;
+}
+
+#excel_btn > img{
+	margin-right: 5px;
 }

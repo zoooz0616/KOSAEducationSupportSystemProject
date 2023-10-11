@@ -172,3 +172,21 @@
 .student_list_cnt {
 	color: #0E5881;
 }
+
+.red{
+	color: red;
+}
+
+.blue{
+	color: blue;
+}
+
+#excel_btn {
+	border: 2px solid green;
+	background: white;
+	color: green;
+}
+
+#excel_btn > img{
+	margin-right: 5px;
+}

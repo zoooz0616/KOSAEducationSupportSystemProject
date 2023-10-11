@@ -126,6 +126,7 @@
 	margin: 2px;
 	padding: 5px;
 	cursor: pointer;
+	align-items: center;
 }
 
 .content_list {
@@ -187,4 +188,22 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.red {
+	color: red;
+}
+
+.blue {
+	color: blue;
+}
+
+#excel_btn {
+	border: 2px solid green;
+	background: white;
+	color: green;
+}
+
+#excel_btn>img {
+	margin-right: 5px;
 }

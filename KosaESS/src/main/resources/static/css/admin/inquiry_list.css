@@ -184,3 +184,17 @@
 .inquiry_check, .rgster_nm, .rgst_dd, .inquiry_num, .inquiry_file, .inquiry_hit, .inquiry_status {
 	text-align: center;
 }
+
+.blue{
+	color: blue;
+}
+
+#excel_btn {
+	border: 2px solid green;
+	background: white;
+	color: green;
+}
+
+#excel_btn > img{
+	margin-right: 5px;
+}

@@ -78,11 +78,16 @@
 			<!-- 컨텐츠 개수와 버튼 wrap -->
 			<div class="content_info_wrap">
 				<div class="content_info">
-					<span>게시물 총 <span class="inquiry_list_cnt"
+					<span>총 <span class="inquiry_list_cnt"
 						th:text="${#lists.size(inquiryList)}"></span> 건
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
+					<!-- 엑셀 다운로드 버튼 -->
+					<button type="button" id="excel_btn">
+						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+					</button>
+				
 					<!-- 선택삭제 버튼 -->
 					<button type="button" id="delete_btn">
 						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
@@ -345,6 +350,10 @@
 									var tdStatus = document.createElement("td");
 									tdStatus.className ="inquiry_status";
 									tdStatus.textContent = inquiry.cmcdNm;
+									
+									if(inquiry.cmcdNm =='답변대기'){
+										tdStatus.classList.add('blue');
+									}
 									tr.appendChild(tdStatus);
 
 									tbody.appendChild(tr);
@@ -371,6 +380,14 @@
 
 			return formattedTimestamp;
 		}
+		
+	//상태값마다 다른 색상
+	var statusNms = document.querySelectorAll('.inquiry_status');
+	statusNms.forEach((statusNm) => {
+  	if (statusNm.textContent === '답변대기') {
+  		statusNm.classList.add('blue');
+  	}
+	});
 	</script>
 </body>
 </html>
