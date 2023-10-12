@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -45,6 +46,7 @@ import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -933,13 +935,21 @@ public class StudentController {
 	 * @throws IOException
 	 */
 	@GetMapping("/mypage")
-	public String mypageMain(Model model) {
+	public String mypageMain(Model model, HttpSession session) {
+		String stdtId = (String) session.getAttribute("stdtId");
+
 		List<CommonCodeVO> genderList = studentService.getCommonCodeList("GRP0000006");
 		model.addAttribute("genderList", genderList);
 
 		// 직업 리스트
 		List<CommonCodeVO> jobList = studentService.getCommonCodeList("GRP0000007");
 		model.addAttribute("jobList", jobList);
+
+		List<WorklogVO> wlogList = studentService.getWlogList(stdtId);
+		model.addAttribute("wlogList", wlogList);
+
+		List<SubsidyVO> sbsdList = studentService.getSbsdList(stdtId);
+		model.addAttribute("sbsdList", sbsdList);
 		return "student/mypage";
 	}
 
@@ -1064,9 +1074,10 @@ public class StudentController {
 
 	@PostMapping("/mypage/wlogList")
 	@ResponseBody
-	public List<WorklogVO> searchWlogList(HttpSession session, Model model) {
+	public List<WorklogVO> searchWlogList(HttpSession session, Model model,
+			@RequestParam("selectedClssNm") String selectedClssNm) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId, selectedClssNm);
 		model.addAttribute("wlogList", wlogList);
 		return wlogList;
 	}
@@ -1300,6 +1311,24 @@ public class StudentController {
 		List<PostVO> postList = studentService.searchPostList(stdtId);
 		model.addAttribute("postList", postList);
 		return postList;
+	}
+
+	// 마이페이지 문의 내역 조회
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@PostMapping("/mypage/sbsdList")
+	@ResponseBody
+	public List<SubsidyDTO> searchSbsdList(HttpSession session, Model model) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<SubsidyDTO> sbsdList = studentService.searchSbsdList(stdtId);
+		model.addAttribute("sbsdList", sbsdList);
+		System.out.println(sbsdList);
+		return sbsdList;
 	}
 
 	/*

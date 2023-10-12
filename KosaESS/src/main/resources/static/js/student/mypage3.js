@@ -4,11 +4,19 @@ $(document).ready(function() {
 	let todoData3 = [];
 
 	updateWlogTable();
+	var selectedValue = '';
+
+	$('#wlogClssNm').change(function() {
+		selectedValue = $(this).val();
+
+		updateWlogTable();
+	});
 
 	function updateWlogTable() {
 		$.ajax({
 			type: 'POST',
 			url: '/student/mypage/wlogList',
+			data: { selectedClssNm: selectedValue },
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
 				todoData3 = data;
@@ -90,9 +98,9 @@ $(document).ready(function() {
 			row.append('<td>' + outTmDd + '</td>');
 			if (WorklogVO.wlogNm == '정상') {
 				row.append('<td>' + WorklogVO.wlogNm + '</td>');
-			} else if (WorklogVO.wlogNm === '지각' || WorklogVO.wlogNm ===  '조퇴'){
+			} else if (WorklogVO.wlogNm === '지각' || WorklogVO.wlogNm === '조퇴') {
 				row.append('<td style="color:blue;">' + WorklogVO.wlogNm + '</td>');
-			}else {
+			} else {
 				row.append('<td style="color:red;">' + WorklogVO.wlogNm + '</td>');
 			}
 			row.append('<td><button class="submitResn" >제출</button><button class="updateResn">수정</button></td>');
@@ -254,3 +262,4 @@ $(document).ready(function() {
 		});
 	});
 });
+
