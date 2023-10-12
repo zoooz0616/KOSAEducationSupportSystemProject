@@ -138,24 +138,6 @@
 		]]>
 	</select>
 
-	<select id="getCountLateArriveByStdtId" resultType="int">
-		<![CDATA[
-			SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000002' AND stdt_id=#{stdtId} AND delete_yn='N'
-		]]>
-	</select>
-	
-	<select id="getCountEalryLeaveByStdtId" resultType="int">
-		<![CDATA[
-			SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000003' AND stdt_id=#{stdtId} AND delete_yn='N'
-		]]>
-	</select>
-	
-	<select id="getCountAbsentByStdtId" resultType="int">
-		<![CDATA[
-			SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000004' AND stdt_id=#{stdtId} AND delete_yn='N'
-		]]>
-	</select>
-	
 	<select id="getCountByClssIdWlogCdStdtId" resultType="int">
 		<![CDATA[
 			SELECT
@@ -165,10 +147,18 @@
 				clss_id=#{clssId}
 				AND wlog_cd=#{wlogCd}
 				AND stdt_id=#{stdtId}
-				AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
-				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
 				AND delete_yn = 'N'
 		]]>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
+			]]>
+		</if>
 	</select>
 	
 	<select id="getLatestClassIdByMngrId" resultType="string">
@@ -463,5 +453,8 @@
 		</if>
 		</if>
 	</select>
-	
+	<insert id="insertSubsidy">
+			<![CDATA[
+			]]>
+	</insert>
 </mapper>

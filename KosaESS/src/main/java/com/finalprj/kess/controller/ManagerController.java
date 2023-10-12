@@ -425,6 +425,15 @@ public class ManagerController {
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
 		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		
+		for (SubsidyDTO dto : subsidyList) {
+			dto.setWlog("");
+			for (CommonCodeVO cmcd : wlogCodeNameList) {
+				dto.appendWlog(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(clssId, cmcd.getCmcdId(), dto.getStdtId(), startDate, endDate)));
+				dto.appendWlog(",");
+			}
+		}
+		
 		model.addAttribute("title", title);
 		model.addAttribute("subsidyList", subsidyList);
 		model.addAttribute("resultCount", subsidyList.size());
@@ -433,6 +442,33 @@ public class ManagerController {
 		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
 		
 		return "manager/subsidy_view";
+	}
+	
+	@GetMapping("/subsidy_insert")
+	public String insertSubsidy(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//End : 유저 필터링
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		String title = "지원금 관리";
+		
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
+		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		
+		model.addAttribute("title", title);
+		model.addAttribute("classList", classList);
+		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
+		
+		return "manager/subsidy_insert";
 	}
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")

@@ -76,21 +76,6 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public int getCountLateArriveByStdtId(String stdtId) {
-		return managerRepository.getCountLateArriveByStdtId(stdtId);
-	}
-
-	@Override
-	public int getCountEalryLeaveByStdtId(String stdtId) {
-		return managerRepository.getCountEalryLeaveByStdtId(stdtId);
-	}
-
-	@Override
-	public int getCountAbsentByStdtId(String stdtId) {
-		return managerRepository.getCountAbsentByStdtId(stdtId);
-	}
-
-	@Override
 	public int getCountByClssIdWlogCdStdtId(String clssId, String wlogCd, String stdtId, String startDate, String endDate) {
 		return managerRepository.getCountByClssIdWlogCdStdtId(clssId, wlogCd, stdtId, startDate, endDate);
 	}

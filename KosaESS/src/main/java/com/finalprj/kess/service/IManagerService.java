@@ -40,12 +40,6 @@ public interface IManagerService {
 
 	public FileVO getFileInfoByIds(String fileId, int fileSubId);
 
-	public int getCountLateArriveByStdtId(String stdtId);
-
-	public int getCountEalryLeaveByStdtId(String stdtId);
-
-	public int getCountAbsentByStdtId(String stdtId);
-
 	public int getCountByClssIdWlogCdStdtId (String clssId, String wlogCd, String stdtId, String startDate, String endDate);
 
 	public String getLatestClassIdByMngrId(String mngrId);

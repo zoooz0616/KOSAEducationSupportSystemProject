@@ -154,17 +154,16 @@ button:hover{
 	margin-left: 1em;
 }
 
-.cmpt_button{
+.mony_button{
 	display: flex;
 	margin-left: auto;
 }
-.cmpt_button button{
+.mony_button button{
 	background: #0E5881;
 	color: white;
 	border: none;
 	border-radius: 0.3em;
 	font-weight: bold;
-/* 	width: 150px; */
 	width : 5em;
 	margin-left : 0.3em;
 	margin: 10px;

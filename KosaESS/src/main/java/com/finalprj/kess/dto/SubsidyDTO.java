@@ -14,7 +14,8 @@ public class SubsidyDTO {
 	private String clssSubsidy;// 교육과정 지원금
 	private String stdtId;// 교육생id
 	private String stdtNm;// 교육생 이름
-	private String userEmail;// 교육생 이름
+	private String userEmail;// 교육생 이메일
+	private String wlog;// 교육생 이메일
 	
 	private String monyCd;// 지급 상태
 	private String monyNm;// 지급 상태 이름
@@ -28,4 +29,8 @@ public class SubsidyDTO {
 	private String rgsterId;// 등록자id
 	private Timestamp updtDt;// 수정일시
 	private String updterId;// 수정자id
+	
+	public void appendWlog(String wlog) {
+		this.wlog = this.wlog.concat(wlog);
+	}
 }

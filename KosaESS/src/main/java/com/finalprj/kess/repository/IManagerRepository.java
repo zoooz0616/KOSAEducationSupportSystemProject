@@ -17,6 +17,7 @@ import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.WorklogVO;
 
@@ -45,12 +46,6 @@ public interface IManagerRepository {
 
 	public FileVO getFileInfoByIds(@Param("fileId") String fileId, @Param("fileSubId") int fileSubId);
 
-	public int getCountLateArriveByStdtId(String stdtId);
-
-	public int getCountAbsentByStdtId(String stdtId);
-
-	public int getCountEalryLeaveByStdtId(String stdtId);
-	
 	public int getCountByClssIdWlogCdStdtId (@Param("clssId") String clssId, @Param("wlogCd") String wlogCd, @Param("stdtId") String stdtId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
 	public String getLatestClassIdByMngrId(String mngrId);
@@ -80,5 +75,5 @@ public interface IManagerRepository {
 
 	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString);
 
-//	public List<StudentInfoDTO> getStudentListBySearch(@Param("clssId") String classId,@Param("startDate") String startDate,@Param("endDate") String endDate);
+	public void insertSubsidy(SubsidyVO subsidyVO);
 }

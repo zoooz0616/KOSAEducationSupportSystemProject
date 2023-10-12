@@ -46,12 +46,26 @@
 						</select>
 					</div>
 					<div class="search_filter_name">
-						검색 기간(변경해야됨)
+						검색 기간
 					</div>
-					<div class="search_filter_input_date_wrap">
-						<div class="search_filter_input_date">
-							<input type="date" id="startDate" min="1980-01-01"> <span> ~ </span> <input type="date" id="endDate" min="1980-01-01">
-						</div>
+					<div class="search_filter_input">
+						<select id="start_date_y">
+							<option value="" disabled selected>연</option>
+							<option th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}" th:text="${yNum}" th:value="${yNum}" />
+						</select>
+						<select id="start_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}" th:text="${monthNum}" th:value="${monthNum}" />
+						</select>
+						<span>&nbsp;~&nbsp;</span>
+						<select id="end_date_y">
+							<option value="" disabled selected>연</option>
+							<option th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}" th:text="${yNum}" th:value="${yNum}" />
+						</select>
+						<select id="end_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}" th:text="${monthNum}" th:value="${monthNum}" />
+						</select>
 					</div>
 					<div class="search_filter_name">검색어</div>
 					<div class="search_filter_input">
@@ -81,12 +95,14 @@
 
 			<!-- 테이블 조작 -->
 			<div class="table_controller" id="tableController">
-				<div>
+				<div class="result_count">
+					<span>총&nbsp;</span>
 					<span th:text="${resultCount}" id="result_count"></span>
-					<span class="stdt_count_unit">명</span>
+					<span>&nbsp;명</span>
 				</div>
 				<div class="mony_button">
 					<button th:each="monyCodeName:${monyCodeNameList}" onclick="cmptUpdate(this)" th:value="${monyCodeName.cmcdId}" th:text="${monyCodeName.cmcdNm}" class="mony_btn"></button>
+					<button onclick="location.href='/manager/subsidy_insert'" class="mony_btn">등록하기</button>
 				</div>
 			</div>
 			<!-- End : 테이블 조작 -->
@@ -103,7 +119,8 @@
 						<th>출석일수</th>
 						<th>교육일수</th>
 						<th>출석률<br>(%)</th>
-						<th>지원금</th>
+						<th>지원금<br>(&#8361;)</th>
+						<th>지급기준일</th>
 						<th>지급일</th>
 						<th>지급상태</th>
 					</tr>
@@ -117,11 +134,12 @@
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
 <!-- 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td> -->
-						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}">?</td>
+						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
 						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
-						<td class="number_cell" th:text="${subsidy.wlogCnt / subsidy.maxWlogCnt * 100.0}">출석률</td>
-						<td class="number_cell" th:text="${subsidy.clssSubsidy}">지원금</td>
+						<td class="number_cell" th:text="${#numbers.formatDecimal(__${subsidy.wlogCnt}__ * 100.0 / __${subsidy.maxWlogCnt}__, 1, 1)}">출석률</td>
+						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
+						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.monyNm}" th:value="${subsidy.monyCd}">지급상태</td>
 					</tr>
