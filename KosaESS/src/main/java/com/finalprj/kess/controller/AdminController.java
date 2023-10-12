@@ -54,6 +54,7 @@ import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IMailService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IUploadFileService;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -1150,6 +1151,52 @@ public class AdminController {
 
 		return classList;
 	}
+	
+	/**
+	 * 교육과정 생성시 강의정보
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 27.
+	 * @parameter : lectureId
+	 * @return : Map<String, Object>
+	 */
+	@PostMapping("/class/insert/lectureselect")
+	@ResponseBody
+	public Map<String, Object> fetchLectureSelect(@RequestParam("lectureId") String lectureId) {
+		SubjectVO subjectVO = adminService.getSubject(lectureId);
+		ProfessorVO professorVO = adminService.getProfessor(lectureId);
+		LectureVO lectureVO = adminService.getLecture(lectureId);
+
+		Map<String, Object> response = new HashMap<>();
+		// subjectName과 professorName을 설정합니다.
+		response.put("subject", subjectVO);
+		response.put("professor", professorVO);
+		response.put("lecture", lectureVO);
+
+		return response;
+	}
+
+	/**
+	 * 교육과정 생성시 강의목록
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 27.
+	 * @parameter : 
+	 * @return : Map<String, Object>
+	 */
+	@PostMapping("/class/insert/getlecturelist")
+	@ResponseBody
+	public Map<String, Object> fetchLectureSelect() {
+		// 강의 리스트
+		List<LectureVO> lectureList = adminService.getLectureList();
+
+		Map<String, Object> response = new HashMap<>();
+		// lectureList담기
+		response.put("lectureList", lectureList);
+
+		return response;
+	}
+	
 
 	/**
 	 * 교육과정 지원자 목록조회
@@ -2097,32 +2144,18 @@ public class AdminController {
 		}
 	}
 
-	@PostMapping("/class/insert/lectureselect")
-	@ResponseBody
-	public Map<String, Object> fetchLectureSelect(@RequestParam("lectureId") String lectureId) {
-		SubjectVO subjectVO = adminService.getSubject(lectureId);
-		ProfessorVO professorVO = adminService.getProfessor(lectureId);
-		LectureVO lectureVO = adminService.getLecture(lectureId);
-
-		Map<String, Object> response = new HashMap<>();
-		// subjectName과 professorName을 설정합니다.
-		response.put("subject", subjectVO);
-		response.put("professor", professorVO);
-		response.put("lecture", lectureVO);
-
-		return response;
+	/**
+	 * 지원금 목록조회
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 12.
+	 * @parameter : selectedDetailCodeIds
+	 * @return : String
+	 */
+	@GetMapping("/subsidy/list")
+	public String selectSubsidyList(HttpSession session, Model model) {
+		
+		return "admin/subsidy_list";
 	}
-
-	@PostMapping("/class/insert/getlecturelist")
-	@ResponseBody
-	public Map<String, Object> fetchLectureSelect() {
-		// 강의 리스트
-		List<LectureVO> lectureList = adminService.getLectureList();
-
-		Map<String, Object> response = new HashMap<>();
-		// lectureList담기
-		response.put("lectureList", lectureList);
-
-		return response;
-	}
+	
 }

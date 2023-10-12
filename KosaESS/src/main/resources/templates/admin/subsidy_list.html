@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/subsidy_list.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<!-- 서브바-->
+	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
+	<!-- 서브바 -->
+	
+	<!-- Content Wrap -->
+	<div class="home-section">
+
+		<!-- Content Top -->
+		<div class="content_top">
+			<!-- Title -->
+			<div class="title">지원금 관리</div>
+			<!-- Route -->
+			<div class="route">
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/subsidy/list}">지원금 관리</a>
+			</div>
+		</div>
+		<!-- Content Top -->
+		
+		<!-- Content Middle-->
+		<div class="content_middle">
+		</div>
+		<!-- Content Middle-->
+		
+		
+		<!-- Content Bottom-->
+		<div class="content_bottom">
+		</div>
+		<!-- Content Bottom-->
+		
+	</div>
+	<!-- Content Wrap -->
+</body>
+</html>
