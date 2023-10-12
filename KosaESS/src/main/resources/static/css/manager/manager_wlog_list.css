@@ -3,9 +3,11 @@
 input[type="button"]:hover{
 	cursor: pointer;
 }
+
 button:hover{
 	cursor: pointer;
 }
+
 button{
 	background: #0E5881;
 	color: white;
@@ -19,6 +21,24 @@ button{
 	text-align: center;
 	font-size: 1.1em;
 	height: 2em;
+}
+
+.delete_btn{
+	background: #6E9BB3;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+/* 	width: 150px; */
+	width : 90%;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+.delete_btn img{
+	width:1em;
 }
 
 .home-section {

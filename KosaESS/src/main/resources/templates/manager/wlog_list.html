@@ -63,9 +63,9 @@
 						<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
 					</div>
 				</div>
-				<div class="search_filter_name">교육생 이름</div>
+				<div class="search_filter_name">검색어</div>
 				<div class="search_filter_input">
-					<input type="text" id="search_keyword">
+					<input type="text" id="search_keyword" placeholder="이름 또는 이메일">
 				</div>
 				<div class="search_filter_name">출석 상태</div>
 				<div class="search_filter_input">
@@ -102,10 +102,12 @@
 				<div th:each="wlogCd:${wlogCdList}" class="wlog_controller">
 					<button onclick="updateWlogCode(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
 				</div>
+				<div class="wlog_controller">
+					<button onclick="deleteWlogCode()" class="delete_btn"><img src="/img/minus_white.png">선택 삭제</button>
+				</div>
 			</div>
 		</div>
 		<!-- End : 테이블 조작 -->
-		
 		
 		<!-- table 시작 -->
 		<table id="wlog_list_table">
@@ -115,6 +117,7 @@
 					<th>번호</th>
 					<th>이름</th>
 					<th>이메일</th>
+					<th>교육과정</th>
 					<th>출근</th>
 					<th>퇴근</th>
 					<th>출석 인정 시간<br>(h)</th>
@@ -127,9 +130,10 @@
 			<tbody id="wlog_list_tbody">
 				<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
 					<td class="fixed_length_cell"> <input type="checkbox" class="chk_wlog" th:value="${wlog.wlogId}"> </td>
-					<td class="number_cell" th:text="${wlogStat.count}">번호</td>
+					<td class="fixed_length_cell" th:text="${wlogStat.count}">번호</td>
 					<td class="fixed_length_cell" th:text="${wlog.stdtNm}">이름</td>
 					<td class="variable_length_cell" th:text="${wlog.userEmail}">이메일</td>
+					<td class="variable_length_cell" th:text="${wlog.clssNm}">교육과정</td>
 					<td class="fixed_length_cell" th:text="${wlog.inTm!=null?#dates.format(wlog.inTm,'yyyy-MM-dd HH:mm:ss'):'-'}">출근 기록</td>
 					<td class="fixed_length_cell" th:text="${wlog.outTm!=null?#dates.format(wlog.outTm,'yyyy-MM-dd HH:mm:ss'):'-'}">퇴근 기록</td>
 					<td class="number_cell" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
