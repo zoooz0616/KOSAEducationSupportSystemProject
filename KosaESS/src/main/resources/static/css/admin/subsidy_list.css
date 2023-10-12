@@ -1,0 +1,43 @@
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .content_top {
+	display: flex;
+	justify-content: space-between;
+	margin: 40px;
+}
+
+.home-section .content_top .title {
+	font-size: 20px;
+	color: #333333;
+	font-weight: bold;
+}
+
+.home-section .content_top .route a {
+	color: #0E5881;
+	text-decoration-line: none;
+	font-weight: bold;
+}
+
+.home-section .content_middle {
+	margin: 40px;
+	display: flex;
+	justify-content: space-between;
+	border-top: 2px solid #0E5881;
+	border-bottom: 1px solid #0E5881;
+	padding: 5px;
+	background: #E7EFF3;
+}

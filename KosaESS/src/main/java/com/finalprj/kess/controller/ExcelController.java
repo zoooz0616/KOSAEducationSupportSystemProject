@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.PostVO;
@@ -520,6 +521,106 @@ public class ExcelController {
 
 		// 엑셀 파일이름
 		String fileName = "KOSA_교육생_리스트.xls";
+		String outputFileName = new String(fileName.getBytes("KSC5601"), "8859_1");
+
+		// 컨텐츠 타입과 파일명 지정
+		response.setContentType("ms-vnd/excel");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + outputFileName + "\"");
+
+		// 엑셀 출력
+		wb.write(response.getOutputStream());
+		wb.close();
+	}
+	
+	@RequestMapping("/manager/worklog")
+	public void excelDownManagerWorklog(HttpSession session, HttpServletResponse response) throws Exception {
+
+		// 출퇴근 목록조회
+		@SuppressWarnings("unchecked")
+		List<WorklogDTO> list = (List<WorklogDTO>) session.getAttribute("searchWorklogList");
+
+		// 워크북 생성
+		Workbook wb = new HSSFWorkbook();
+		Sheet sheet = wb.createSheet("출퇴근");
+		Row row = null;
+		Cell cell = null;
+		int rowNo = 0;
+
+		// 테이블 헤더용 스타일
+		CellStyle headStyle = wb.createCellStyle();
+
+		// 가는 경계선을 가집니다.
+		headStyle.setBorderTop(BorderStyle.THIN);
+		headStyle.setBorderBottom(BorderStyle.THIN);
+		headStyle.setBorderLeft(BorderStyle.THIN);
+		headStyle.setBorderRight(BorderStyle.THIN);
+
+		// 배경색은 하늘색입니다.
+		headStyle.setFillForegroundColor(HSSFColorPredefined.LIGHT_CORNFLOWER_BLUE.getIndex());
+		headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		// 데이터는 가운데 정렬합니다.
+		headStyle.setAlignment(HorizontalAlignment.CENTER);
+
+		// 데이터용 경계 스타일 테두리만 지정
+		CellStyle bodyStyle = wb.createCellStyle();
+		bodyStyle.setBorderTop(BorderStyle.THIN);
+		bodyStyle.setBorderBottom(BorderStyle.THIN);
+		bodyStyle.setBorderLeft(BorderStyle.THIN);
+		bodyStyle.setBorderRight(BorderStyle.THIN);
+
+		// 헤더 생성
+		row = sheet.createRow(rowNo++);
+		cell = row.createCell(0);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("이름");
+		cell = row.createCell(1);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("이메일");
+		cell = row.createCell(2);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("출근일시");
+		cell = row.createCell(3);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("퇴근일시");
+		cell = row.createCell(4);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("출석 인정 시간");
+		cell = row.createCell(5);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("출석 상태");
+		cell = row.createCell(6);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("사유서 처리 상태");
+
+		// 데이터 부분 생성
+		for (WorklogDTO vo : list) {
+			row = sheet.createRow(rowNo++);
+			cell = row.createCell(0);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getStdtNm());
+			cell = row.createCell(1);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getUserEmail());
+			cell = row.createCell(2);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getInTm());
+			cell = row.createCell(3);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getOutTm());
+			cell = row.createCell(4);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getWlogTotalTm());
+			cell = row.createCell(5);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getWlogNm());
+			cell = row.createCell(6);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getResnNm());
+		}
+
+		// 엑셀 파일이름
+		String fileName = "KOSA_교육생_출퇴근_리스트.xls";
 		String outputFileName = new String(fileName.getBytes("KSC5601"), "8859_1");
 
 		// 컨텐츠 타입과 파일명 지정
