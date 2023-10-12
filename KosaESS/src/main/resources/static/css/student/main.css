@@ -160,7 +160,7 @@ table td {
 }
 
 input::placeholder {
-	color: #0E5881;
+	color: #B5B6BA;
 }
 
 .loginBtn {
@@ -214,20 +214,21 @@ input::placeholder {
 	color: #0E5881;
 	text-decoration: none;
 	font-weight: bold;
+	width: fit-content;
+	margin-left: 97%;
 }
 
 .my {
 	text-align: center;
 }
 
-.aplyList, .rgstList{
+.aplyList, .rgstList {
 	cursor: pointer;
 }
 
 .aplyList:hover, .rgstList:hover {
 	background: white;
 }
-
 
 .inouttm {
 	display: flex;

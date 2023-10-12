@@ -25,7 +25,7 @@
 		select *
 		from stdt
 		join lgin on lgin.user_email = stdt.user_email
-		where stdt.user_email=#{email}
+		where stdt.user_email=#{email} and (user_cd ='USR0000001' || user_cd ='USR0000002')
 		]]>
 	</select>
 
@@ -79,11 +79,11 @@
 	</update>
 
 	<!-- 교육생 탈퇴 -->
-	<delete id="deleteStudent"
-		parameterType="com.finalprj.kess.model.StudentVO">
+	<delete id="quit">
 		<![CDATA[
-		DELETE FROM stdt
-		WHERE stdt_id=#{stdtId} AND stdt_pwd=#{stdtPwd}
+		UPDATE lgin
+		SET user_cd ='USR0000003'
+		WHERE user_email=#{stdtEmail}
 		]]>
 	</delete>
 
@@ -233,7 +233,9 @@
 		SELECT
 		    file_id,
 		    file_sub_id,
-		    file_nm
+		    file_nm,
+		    file_type,
+		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fType"
 		FROM flup
 		WHERE file_id = (
 		    SELECT file_id
@@ -338,7 +340,9 @@
 		SELECT
 		    file_id,
 		    file_sub_id,
-		    file_nm
+		    file_nm,
+		    file_type,
+		    SUBSTR(file_type, 1, INSTR(file_type, '/') - 1) as "fType"
 		FROM flup
 		WHERE file_id = (
 		    SELECT file_id
@@ -1029,6 +1033,24 @@
 			updter_id = #{updterId},
 			file_id = #{fileId}
 		where post_id=#{postId}
+	]]>
+	</update>
+	
+	<!-- 멤버 확인 유무 -->
+	<select id="checkMember" resultType="string">
+	<![CDATA[
+		select stdt_id
+		from stdt
+		WHERE user_email=#{email}
+	]]>
+	</select>
+	
+	<update id="updateSubcript"
+		parameterType="string">
+	<![CDATA[
+		update stdt
+		set  RECEIVE_MAIL='Y'
+		where stdt_id=#{stdtId}
 	]]>
 	</update>
 

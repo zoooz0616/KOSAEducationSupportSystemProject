@@ -12,7 +12,7 @@ $(document).ready(function() {
 			success: function(data) {
 
 				todoData4 = data;
-				$('.postCnt').text('총 ' + todoData4.length + '건');
+				$('.postCnt').text(todoData4.length);
 				setTable(1);
 				setPaging(1);
 			}
@@ -71,6 +71,7 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage4;
 		const endIdx = startIdx + countPerPage4;
 		const filteredData = todoData4.slice(startIdx, endIdx);
+		const num = $('.postCnt').text();
 		// 받은 데이터로 테이블을 업데이트합니다.
 		var tbody = $('.postTable tbody');
 		tbody.empty(); // tbody 내용을 비웁니다.
@@ -79,10 +80,14 @@ $(document).ready(function() {
 			var PostVO = filteredData[i];
 
 			var row = $('<tr class="postRow"></tr>');
-			row.append('<td><span>' + (i + startIdx + 1) + '</span></td>');
+			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
 			row.append('<td style="word-break: keep-all;"><a href="/student/inquiry/view/' + PostVO.postId + '"><span>' + PostVO.postTitle + '</span></a></td>');
 			row.append('<td>' + PostVO.rgstDd + '</td>');
-			row.append('<td>' + PostVO.cmcdNm + '</td>');
+			if (PostVO.cmcdNm === '답변완료') {
+				row.append('<td style="color:blue;">' + PostVO.cmcdNm + '</td>');
+			} else {
+				row.append('<td>' + PostVO.cmcdNm + '</td>');
+			}
 
 			var replyTd = $('<td></td>');
 			if (PostVO.postCd === 'PST0000004') {
@@ -159,15 +164,19 @@ function toggleReply(button) {
 					var reply = data[i];
 					var li = $('<li class="reply">');
 					if (i == 0) {
-						li.append('<div>문의 내용: <pre>' + reply.inquiry.Postcontent + '</pre></div><br>');
-						li.append('<div>답변 제목: ' + reply.inquiry.title + '</div>');
-						li.append('<div style="word-break: keep-all;">답변 내용: ' + reply.inquiry.replyContent + '</div>');
-						li.append('<div style="display:flex; justify-content: flex-end;"><span>답변 날짜: ' + reply.inquiry.date + '</span><span>답변자: ' + reply.inquiry.name + '</span></div>');
+						li.append('<div class="replyTop1">내용</div>')
+						li.append('<div><pre>' + reply.inquiry.Postcontent + '</pre></div>');
+						li.append('<div class="replyTop2">답변</div>')
+						li.append('<div><img style="height: 50px;" src="/img/manager_navy.png">' + reply.inquiry.name + '</div>');
+						li.append('<div style="padding-left:5%;">' + reply.inquiry.title + '</div>');
+						li.append('<div style="word-break: keep-all; padding-left:5%;">' + reply.inquiry.replyContent + '</div>');
+						li.append('<div style="color: lightslategray; padding-left:5%;">' + reply.inquiry.date + '</div>');
 					} else {
 						li.append('<div style="display:none;"></div>');
-						li.append('<div>답변 제목: ' + reply.inquiry.title + '</div>');
-						li.append('<div style="word-break: keep-all;">답변 내용: ' + reply.inquiry.replyContent + '</div>');
-						li.append('<div style="display:flex; justify-content: flex-end;"><span>답변 날짜: ' + reply.inquiry.date + '</span><span>답변자: ' + reply.inquiry.name + '</span></div>');
+						li.append('<div><img style="height: 50px;" src="/img/manager_navy.png">' + reply.inquiry.name + '</div>');
+						li.append('<div style="padding-left:5%;">' + reply.inquiry.title + '</div>');
+						li.append('<div style="word-break: keep-all; padding-left:5%;">' + reply.inquiry.replyContent + '</div>');
+						li.append('<div style="color: lightslategray; padding-left:5%;">' + reply.inquiry.date + '</div>');
 					}
 					ul.append(li);
 				}

@@ -20,61 +20,62 @@
 				<table>
 					<tr>
 						<th>교육명</th>
-						<td colspan="5" th:text="${classDetail.clssNm}"></td>
+						<td colspan="5" th:text="${classDetail.clssNm}" style="text-align:left;"></td>
 						<th>교육 상태</th>
-						<td style="width: 11%;" th:text="${classDetail.cmcdNm}"></td>
+						<td th:if="${classDetail.cmcdNm} == '접수중'" style="width: 15%; color:red;" th:text="${classDetail.cmcdNm}" )></td>
+						<td th:if="${classDetail.cmcdNm} != '접수중'" style="width: 15%;" th:text="${classDetail.cmcdNm}" )></td>
 					</tr>
 					<tr>
 						<th>지원 기간</th>
-						<td colspan="2"><span
-							th:if="${classDetail.aplyStartDd == null}">미정</span> <span
+						<td colspan="2" style="text-align:left;"><span
+							th:if="${classDetail.aplyStartDd == null}" style="color:lightslategray;">미정</span> <span
 							th:if="${classDetail.aplyStartDd != null}"
 							th:text="${classDetail.aplyStartDd} + ' ~ ' +${classDetail.aplyEndDd}"></span></td>
 
 						<th>교육 기간</th>
-						<td colspan="2"><span
-							th:if="${classDetail.clssStartDd == null}">미정</span> <span
+						<td colspan="2" style="text-align:left;"><span
+							th:if="${classDetail.clssStartDd == null}" style="color:lightslategray;">미정</span> <span
 							th:if="${classDetail.clssStartDd!= null}"
 							th:text="${classDetail.clssStartDd} + ' ~ ' +${classDetail.clssEndDd}"></span></td>
 						<th>업무담당자</th>
-						<td><span th:if="${classDetail.mngrNm == null}">미정</span><span
+						<td><span th:if="${classDetail.mngrNm == null}" style="color:lightslategray;">미정</span><span
 							th:if="${classDetail.mngrNm!= null}"
 							th:text="${classDetail.mngrNm}"></span></td>
 					</tr>
 					<tr>
 
 						<th>회사</th>
-						<td colspan="3"><span th:if="${classDetail.cmpyNm == null}">미정</span><span
+						<td colspan="3" style="text-align:left;"><span th:if="${classDetail.cmpyNm == null}" style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.cmpyNm!= null}"
 							th:text="${classDetail.cmpyNm}"></span></td>
 						<th>교육 장소</th>
-						<td colspan="3"><span th:if="${classDetail.clssAdr == null}">미정</span><span
+						<td colspan="3" style="text-align:left;"><span th:if="${classDetail.clssAdr == null}" style="color:lightslategray;">미정</span><span
 							th:if="${classDetail.clssAdr!= null}"
 							th:text="${classDetail.clssAdr}"></span></td>
 
 					</tr>
 					<tr>
 						<th>총 이수 시간</th>
-						<td><span th:if="${classDetail.clssTotalTm == null}">미정</span><span
+						<td><span th:if="${classDetail.clssTotalTm == null}" style="color:lightslategray;">미정</span><span
 							th:if="${classDetail.clssTotalTm!= null}"
 							th:text="${classDetail.clssTotalTm}+ '시간'"></span></td>
 						<th>시작 시간</th>
-						<td><span th:if="${classDetail.setInTime == null}">미정</span><span
+						<td><span th:if="${classDetail.setInTime == null}" style="color:lightslategray;">미정</span><span
 							th:if="${classDetail.setInTime!= null}"
 							th:text="${classDetail.setInTime}+ '시'"></span></td>
 						<th>종료 시간</th>
-						<td><span th:if="${classDetail.setOutTime == null}">미정</span><span
+						<td><span th:if="${classDetail.setOutTime == null}" style="color:lightslategray;">미정</span><span
 							th:if="${classDetail.setOutTime!= null}"
 							th:text="${classDetail.setOutTime}+ '시'"></span></td>
 						<th>수강 정원</th>
-						<td><span th:if="${classDetail.limitCnt == null}">미정</span><span
+						<td><span th:if="${classDetail.limitCnt == null}" style="color:lightslategray;">미정</span><span
 							th:if="${classDetail.limitCnt!= null}"
 							th:text="${classDetail.limitCnt}+ '명'"></span></td>
 					</tr>
 					<tr>
 						<th>관련 파일</th>
 						<td colspan="7"><ul
-								style="margin: 0; text-align: left; padding-left: 3%;">
+								style="margin: 0; text-align: left;">
 								<li th:each="FileVO : ${classFileList}"><a
 									style="display: flex;" th:if="${FileVO.fType == 'application'}"
 									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"

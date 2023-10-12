@@ -40,7 +40,7 @@
 								<td class="infoInput"><input type="text" id="userName"></td>
 							</tr>
 							<tr>
-								<th>이메일<span> *</span></th>
+								<th>이메일</th>
 								<td><div id="userEmail"></div></td>
 							</tr>
 							<tr>
@@ -102,7 +102,7 @@
 				<div class="applyList" style="display: none;">
 					<div class="listHead">
 						<h3>교육 과정 지원 내역</h3>
-						<p class="aplyCnt"></p>
+						<p>총 <span class="aplyCnt"></span>건</p>
 					</div>
 					<div>
 						<table class="applyTable">
@@ -151,7 +151,7 @@
 				<div class="completeList" style="display: none;">
 					<div class="listHead">
 						<h3>교육 과정 이수 내역</h3>
-						<p class="rgstCnt"></p>
+						<p>총 <span class="rgstCnt"></span>건</p>
 					</div>
 					<div>
 						<table class="rgstTable">
@@ -196,7 +196,7 @@
 				<div class="workLog" style="display: none;">
 					<div class="listHead">
 						<h3>출퇴근 관리</h3>
-						<p class="wlogCnt"></p>
+						<p>총 <span class="wlogCnt"></span>건</p>
 					</div>
 					<div>
 						<table class="wlogTable">
@@ -238,7 +238,7 @@
 				<div class="inquiryList" style="display: none;">
 					<div class="listHead">
 						<h3>문의 내역</h3>
-						<p class="postCnt"></p>
+						<p>총 <span class="postCnt"></span>건</p>
 					</div>
 					<table class="postTable">
 						<thead>
@@ -271,6 +271,32 @@
 									</div>
 								</li>
 							</ul>
+						</tbody>
+					</table>
+					<div class="paging paging4">
+						<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i
+							class="left" id="prev_page" th:src="@{/img/prev_page}"></i>
+						<div class="pages pages4"></div>
+						<i class="right" id="next_page" th:src="@{/img/next_page}"></i> <i
+							class="right" id="last_page" th:src="@{/img/last_page}"></i>
+					</div>
+				</div>
+				<div class="moneyList" style="display: none;">
+					<div class="listHead">
+						<h3>지원금 수령 내역</h3>
+						<p>총 <span class="moneyCnt"></span>건</p>
+					</div>
+					<table class="moneyTable">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>교육과정명</th>
+								<th>수령날짜</th>
+								<th>수령금액</th>
+							</tr>
+						</thead>
+						<tbody>
+							
 						</tbody>
 					</table>
 					<div class="paging paging4">
@@ -367,6 +393,11 @@
 		</div>
 	</div>
 	<script>
+		$('#passwordInput').on('keyup', function(event) {
+			if (event.key === "Enter") {
+				$('#checkPassword').trigger('click');
+			}
+		});
 		$("#userBirth").datepicker({
 			dateFormat : "yy-mm-dd", // 날짜 형식 지정
 			changeMonth : true, // 월 선택기 표시
@@ -584,6 +615,28 @@
 			phoneNumberInput.val(remainder);
 
 		}
+		$("#quit").click(function() {
+			var result = confirm("탈퇴하시겠습니까?");
+
+			if (result) {
+				$.ajax({
+					type : "POST",
+					url : "/student/quit",
+					success : function(response) {
+						if (response = 'true')
+							alert("탈퇴되었습니다.");
+						if (result) {
+							$.ajax({
+								type : "GET",
+								url : "/logout"
+							});
+							window.location.href = '/student'
+						}
+					}
+				});
+			}
+		});
+
 		var button = document.querySelector(".aplyBtn");
 
 		// 클릭 이벤트를 감지합니다.
@@ -661,5 +714,6 @@
 	<script src="/js/student/mypage2.js"></script>
 	<script src="/js/student/mypage3.js"></script>
 	<script src="/js/student/mypage4.js"></script>
+	<script src="/js/student/mypage5.js"></script>
 </body>
 </html>

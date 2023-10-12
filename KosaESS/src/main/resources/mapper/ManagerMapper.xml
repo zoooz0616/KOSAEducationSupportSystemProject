@@ -138,24 +138,6 @@
 		]]>
 	</select>
 
-	<select id="getCountLateArriveByStdtId" resultType="int">
-		<![CDATA[
-			SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000002' AND stdt_id=#{stdtId} AND delete_yn='N'
-		]]>
-	</select>
-	
-	<select id="getCountEalryLeaveByStdtId" resultType="int">
-		<![CDATA[
-			SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000003' AND stdt_id=#{stdtId} AND delete_yn='N'
-		]]>
-	</select>
-	
-	<select id="getCountAbsentByStdtId" resultType="int">
-		<![CDATA[
-			SELECT count(wlog_id) FROM wlog WHERE wlog_cd = 'WOK0000004' AND stdt_id=#{stdtId} AND delete_yn='N'
-		]]>
-	</select>
-	
 	<select id="getCountByClssIdWlogCdStdtId" resultType="int">
 		<![CDATA[
 			SELECT
@@ -165,10 +147,18 @@
 				clss_id=#{clssId}
 				AND wlog_cd=#{wlogCd}
 				AND stdt_id=#{stdtId}
-				AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
-				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
 				AND delete_yn = 'N'
 		]]>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND in_tm > to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD') + 1
+			]]>
+		</if>
 	</select>
 	
 	<select id="getLatestClassIdByMngrId" resultType="string">
@@ -404,4 +394,67 @@
 		]]>
 	</select>
 	
+	<select id="getSubsidyList" resultType="com.finalprj.kess.dto.SubsidyDTO">
+		<![CDATA[
+			SELECT 
+				rowNum
+				,m.mony_id
+				,m.clss_id
+				,clss_nm
+				,clss_subsidy
+				,m.stdt_id
+				,stdt_nm
+				,user_email
+				,mony_cd
+				,c1.cmcd_nm as mony_nm
+				,paid_dd
+				,payment
+				,subsidy_dd
+				,max_wlog_cnt
+				,wlog_cnt
+				,m.rgst_dt
+				,m.rgster_id
+				,m.updt_dt
+				,m.updter_id
+			FROM mony m 
+				JOIN stdt s ON m.stdt_id=s.stdt_id 
+				JOIN clss c ON m.clss_id=c.clss_id
+				JOIN cmcd c1 ON m.mony_cd=c1.cmcd_id
+			WHERE m.clss_id in (SELECT clss_id FROM clss WHERE mngr_id = #{mngrId})
+		]]>
+		<if test='clssId!=""'>
+			<![CDATA[
+				AND m.clss_id = #{clssId}
+			]]>
+		</if>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND subsidy_Dd >= to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='endDate!=""'>
+			<![CDATA[
+				AND subsidy_Dd <= to_date(#{endDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='keyword!=""'>
+			<![CDATA[
+				AND m.stdt_id in (SELECT stdt_id FROM stdt WHERE ((stdt_nm like '%'||#{keyword}||'%' ) OR (user_email like '%'||#{keyword}||'%')))
+			]]>
+		</if>
+		<if test='filterString!=""'>
+		<if test='filterString!=null'>
+			AND mony_cd IN
+			<foreach collection="filterString" item="item" open="(" separator="," close=")">
+				<![CDATA[
+					 #{item}
+				]]>
+			</foreach>
+		</if>
+		</if>
+	</select>
+	<insert id="insertSubsidy">
+			<![CDATA[
+			]]>
+	</insert>
 </mapper>

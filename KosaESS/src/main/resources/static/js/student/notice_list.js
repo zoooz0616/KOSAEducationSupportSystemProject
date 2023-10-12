@@ -93,7 +93,7 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage;
 		const endIdx = startIdx + countPerPage;
 		const filteredData = todoData.slice(startIdx, endIdx);
-
+		const num = $('.totalRowCount').text();
 
 		const noticeTable = $('.notice-table tbody');
 		noticeTable.empty();
@@ -101,7 +101,7 @@ $(document).ready(function() {
 		for (let i = 0; i < filteredData.length; i++) {
 			const postVO = filteredData[i];
 			const row = $('<tr class="noticeRow"></tr>');
-			row.append('<td><span>' + (i + startIdx + 1) + '</span></td>');
+			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
 			row.append('<td><a><span class="goNoticeDetail" style="font-size: 17px;">' + postVO.postTitle + '</span></a></td>');
 			row.append('<td><span>' + postVO.rgstDd + '</span></td>');
 			row.append('<td><span>' + postVO.postHit + '</span></td>');

@@ -11,7 +11,7 @@ $(document).ready(function() {
 			success: function(data) {
 
 				todoData1 = data;
-				$('.aplyCnt').text('총 ' + todoData1.length + '건');
+				$('.aplyCnt').text(todoData1.length);
 				setTable(1);
 				setPaging(1);
 			}
@@ -70,6 +70,7 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage1;
 		const endIdx = startIdx + countPerPage1;
 		const filteredData = todoData1.slice(startIdx, endIdx);
+		const num = $('.aplyCnt').text();
 		// 받은 데이터로 테이블을 업데이트합니다.
 		const time = Date.now();
 		var tbody = $('.applyTable tbody');
@@ -80,13 +81,19 @@ $(document).ready(function() {
 
 			var row = $('<tr class="aplyRow"></tr>');
 
-			row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
+			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 			row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + ApplyDetailDTO.clssId + '"><span>' + ApplyDetailDTO.clssNm + '</span></a></td>');
 			row.append('<td><span>' + ApplyDetailDTO.aplyStartDd + '<br> ~ ' + ApplyDetailDTO.aplyEndDd + '</span></td>');
 			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 			row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
 			row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
-			row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
+			if(ApplyDetailDTO.cmcdNm === '지원취소' || ApplyDetailDTO.cmcdNm === '수강포기'){
+				row.append('<td style="color:red;">' + ApplyDetailDTO.cmcdNm + '</td>');
+			}else if(ApplyDetailDTO.cmcdNm === ('합격')){
+				row.append('<td style="color:blue;">' + ApplyDetailDTO.cmcdNm + '</td>');
+			}else{
+				row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
+			}
 			row.append('<td><button class="update">수정</button><button class="apply">수강</button><button class="cancel">지원취소</button><button class="drop">수강포기</button></td>');
 			row.append('<td style="display:none;"><span>' + ApplyDetailDTO.aplyId + '</span></td>')
 
