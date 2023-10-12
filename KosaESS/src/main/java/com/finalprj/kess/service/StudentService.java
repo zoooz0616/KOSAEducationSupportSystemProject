@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -18,6 +19,7 @@ import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
 import com.finalprj.kess.repository.IUploadFileRepository;
@@ -401,6 +403,16 @@ public class StudentService implements IStudentService {
 	@Override
 	public List<WorklogVO> getWlogList(String stdtId) {
 		return studentRepository.getWlogList(stdtId);
+	}
+
+	@Override
+	public List<SubsidyVO> getSbsdList(String stdtId) {
+		return studentRepository.getSbsdList(stdtId);
+	}
+
+	@Override
+	public List<SubsidyDTO> searchSbsdList(String stdtId) {
+		return studentRepository.searchSbsdList(stdtId);
 	}
 
 }

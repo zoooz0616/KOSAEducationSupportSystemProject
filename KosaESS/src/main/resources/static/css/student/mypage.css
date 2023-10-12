@@ -394,26 +394,28 @@ td button {
 	width: 13%;
 }
 
-.postTable th:nth-child(1) {
+.sbsdTable td:nth-child(1) {
 	width: 7%;
 }
 
-.postTable th:nth-child(2) {
+.sbsdTable td:nth-child(2) {
 	width: 52%;
+	text-align: left;
 	font-weight: bold;
 }
 
-.postTable th:nth-child(3) {
+.sbsdTable td:nth-child(3) {
 	width: 15%;
 }
 
-.postTable th:nth-child(4) {
+.sbsdTable td:nth-child(4) {
 	width: 13%;
 }
 
-.postTable th:nth-child(5) {
+.sbsdTable td:nth-child(5) {
 	width: 13%;
 }
+
 
 .replyTop1, .replyTop2 {
 	text-align: center;

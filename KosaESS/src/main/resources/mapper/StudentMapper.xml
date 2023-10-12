@@ -979,6 +979,28 @@
 			WHERE post_id=#{postId}
 	]]>
 	</select>
+	
+	<!-- 지원금 내역 조회 -->
+	<select id="searchSbsdList" parameterType="string"
+		resultType="com.finalprj.kess.dto.SubsidyDTO">
+	<![CDATA[
+		 select 
+			mony_id,
+			(select clss_nm from clss where clss.clss_id = mony.clss_id) as "clssNm",
+            (select cmcd_nm from cmcd where cmcd.cmcd_id = mony.mony_cd) as "monyNm",
+            paid_dd,
+            payment,
+            subsidy_dd,
+            max_wlog_cnt,
+            wlog_cnt,
+			rgst_dt as "rgstDd"
+			FROM mony
+			WHERE stdt_id=#{stdtId} and (mony_cd ='MNY0000002' or mony_cd ='MNY0000003')
+			ORDER BY rgst_dt DESC
+	]]>
+	</select>
+	
+	
 
 
 	<!-- 문의작성하기 -->
@@ -1059,6 +1081,14 @@
 		select clss_nm 
 		from clss
 		WHERE clss_id in (select clss_id from wlog where stdt_id = #{stdtId})
+	]]>
+	</select>
+	
+	<select id="getSbsdList" resultType="com.finalprj.kess.dto.SubsidyDTO">
+	<![CDATA[
+		select clss_nm 
+		from clss
+		WHERE clss_id in (select clss_id from mony where stdt_id = #{stdtId})
 	]]>
 	</select>
 	

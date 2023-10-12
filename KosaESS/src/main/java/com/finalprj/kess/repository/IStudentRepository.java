@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -19,6 +20,7 @@ import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 
 @Mapper
@@ -173,5 +175,9 @@ public interface IStudentRepository {
 	void updateSubcript(String memberYN);
 
 	List<WorklogVO> getWlogList(String stdtId);
+
+	List<SubsidyVO> getSbsdList(String stdtId);
+
+	List<SubsidyDTO> searchSbsdList(String stdtId);
 
 }

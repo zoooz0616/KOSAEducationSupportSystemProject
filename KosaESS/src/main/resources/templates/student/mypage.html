@@ -296,20 +296,28 @@
 							class="right" id="last_page" th:src="@{/img/last_page}"></i>
 					</div>
 				</div>
-				<div class="moneyList" style="display: none;">
+				<div class="sbsdList" style="display: none;">
 					<div class="listHead">
 						<h3>지원금 수령 내역</h3>
 						<p>
-							총 <span class="moneyCnt"></span>건
+							총 <span class="sbsdCnt"></span>건
 						</p>
 					</div>
-					<table class="moneyTable">
+					<div>
+						<select name="sbsdNm" id="sbsdClssNm">
+							<option value="">전체</option>
+							<option th:each="sbsd: ${sbsdList}" class="sbsdOption"
+								th:value="${sbsd.clssNm}" th:text="${sbsd.clssNm}">
+						</select>
+					</div>
+					<table class="sbsdTable">
 						<thead>
 							<tr>
 								<th>번호</th>
 								<th>교육과정명</th>
 								<th>수령날짜</th>
 								<th>수령금액</th>
+								<th>수령상태</th>
 							</tr>
 						</thead>
 						<tbody>
