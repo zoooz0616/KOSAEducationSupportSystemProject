@@ -139,22 +139,26 @@
 				<!-- 컨텐츠 개수와 버튼 wrap -->
 				<div class="content_info_wrap">
 					<div class="content_info">
-						<span>교육과정 총 <span class="class_list_cnt"
+						<span>총 <span class="class_list_cnt"
 							th:text="${#lists.size(classList)}">classListCnt</span> 개
 						</span>
 					</div>
 					<div class="content_info_btn_wrap">
+						<!-- 엑셀 다운로드 버튼 -->
+						<button type="button" id="excel_btn" onclick="location.href='/excel/admin/class' ">
+							<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+						</button>
+
 						<!-- 선택삭제 버튼 -->
 						<button type="submit">
 							<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
 						</button>
 
 						<!-- 등록하기 버튼 -->
-						<a th:href="@{/admin/class/insert}" style="text-decoration: none;">
-							<button type="button">
-								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
-							</button>
-						</a>
+						<button type="button"
+							onclick="location.href='/admin/class/insert' ">
+							<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+						</button>
 					</div>
 				</div>
 				<!-- 컨텐츠 개수와 버튼 wrap -->
@@ -164,8 +168,9 @@
 					<table class="content_list_table" id="class_list_table">
 						<thead>
 							<tr class="content_list_th">
-								<th style="width: 2%;"><input style="width: 30px;" onclick="selectAll(this)"
-									type="checkbox" id="chkAll" name="select_all"></th>
+								<th style="width: 2%;"><input style="width: 30px;"
+									onclick="selectAll(this)" type="checkbox" id="chkAll"
+									name="select_all"></th>
 								<th style="width: 2%;">순번</th>
 								<th style="width: 5%;">ID</th>
 								<th style="width: 19%;">교육과정명</th>
@@ -181,7 +186,8 @@
 						</thead>
 						<tbody id="class_list_tbody">
 							<tr id="class_list" th:each="class, iterStat:${classList}">
-								<td class="class_check"><input type="checkbox" name="select" onclick="checkSelectAll()"
+								<td class="class_check"><input type="checkbox"
+									name="select" onclick="checkSelectAll()"
 									th:value="${class.clssId}"></td>
 								<td class="class_num" th:text="${iterStat.index + 1}"></td>
 								<td class="class_id" th:text="${class.clssId}"></td>
@@ -388,6 +394,12 @@
 	          			var tdStatus = document.createElement("td");
 	          			tdStatus.className="class_status";
 	          			tdStatus.textContent = clss.cmcdNm;
+	          			if(clss.cmcdNm == '접수중' || clss.cmcdNm == '교육중'){
+	          				tdStatus.classList.add('blue');	
+	          			}else if(clss.cmcdNm == '접수마감' || clss.cmcdNm == '교육완료'){
+	          				tdStatus.classList.add('red');
+	          			}
+	          			
 	          			tr.appendChild(tdStatus);
 	          			
 	          			//지원기간
@@ -546,6 +558,16 @@
 					return false;
 			}
 		}
+		
+		//상태에 따라 다른 색상
+		var statusNms = document.querySelectorAll('.class_status');
+		statusNms.forEach((statusNm) => {
+	  	if (statusNm.textContent === '접수중' || statusNm.textContent === '교육중') {
+	  		statusNm.classList.add('blue');
+	  	}else if(statusNm.textContent === '접수마감' || statusNm.textContent === '교육완료'){
+	  		statusNm.classList.add('red');
+	  	}
+		});
 	</script>
 </body>
 </html>
