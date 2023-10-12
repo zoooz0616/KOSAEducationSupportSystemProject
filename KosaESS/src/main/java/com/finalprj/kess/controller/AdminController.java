@@ -174,6 +174,8 @@ public class AdminController {
 		// 공지사항 리스트 전달
 		List<PostVO> noticeList = adminService.getNoticeList();
 		model.addAttribute("noticeList", noticeList);
+		session.setAttribute("searchNoticeList", noticeList);
+		
 		return "admin/notice_list";
 	}
 
@@ -422,14 +424,15 @@ public class AdminController {
 	 */
 	@PostMapping("/notice/search")
 	@ResponseBody
-	public Map<String, Object> noticeSearch(@RequestParam String searchInputCategory, @RequestParam String searchInput,
+	public Map<String, Object> noticeSearch(HttpSession session, @RequestParam String searchInputCategory, @RequestParam String searchInput,
 			@RequestParam("postStatusList[]") List<String> postStatusList) {
 
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 공지사항 리스트 전달
 		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
-
+		session.setAttribute("searchNoticeList", noticeList);
+		
 		response.put("noticeList", noticeList);
 		return response;
 	}
@@ -451,6 +454,8 @@ public class AdminController {
 		// 문의사항 리스트 전달
 		List<PostVO> inquiryList = adminService.getInquiryList();
 		model.addAttribute("inquiryList", inquiryList);
+		session.setAttribute("searchInquiryList", inquiryList);
+		
 		return "admin/inquiry_list";
 	}
 
@@ -533,9 +538,6 @@ public class AdminController {
 	@PostMapping("/inquiry/reply/delete/{replyId}")
 	@ResponseBody
 	public String inquiryReplyDelete(@PathVariable String replyId) {
-		System.out.println("++++++++++++++++");
-		System.out.println(replyId);
-
 		// 답변 deleteYn='Y'로 업데이트
 		adminService.deleteInquiryReply(replyId);
 		return "success";
@@ -551,14 +553,15 @@ public class AdminController {
 	 */
 	@PostMapping("/inquiry/search")
 	@ResponseBody
-	public Map<String, Object> inquirySearch(@RequestParam String searchInputCategory, @RequestParam String searchInput,
+	public Map<String, Object> inquirySearch(HttpSession session, @RequestParam String searchInputCategory, @RequestParam String searchInput,
 			@RequestParam("postStatusList[]") List<String> postStatusList) {
 
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 문의사항 리스트 전달
 		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
-
+		session.setAttribute("searchInquiryList", inquiryList);
+		
 		response.put("inquiryList", inquiryList);
 		return response;
 	}
@@ -576,6 +579,8 @@ public class AdminController {
 		// 교육과정 리스트 객체 생성
 		List<ClassVO> classList = adminService.getClassList();
 		model.addAttribute("classList", classList);
+		// 엑셀다운로드를 위해 저장해놓기
+		session.setAttribute("searchClassList", classList);
 
 		// 교육상태 리스트
 		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
@@ -1119,7 +1124,7 @@ public class AdminController {
 	 */
 	@GetMapping("/class/search")
 	@ResponseBody
-	public List<ClassVO> classSearch(@RequestParam(name = "clssNm", required = false) String clssNm,
+	public List<ClassVO> classSearch(HttpSession session, @RequestParam(name = "clssNm", required = false) String clssNm,
 			@RequestParam(name = "clssCd", required = false) String clssCd,
 			@RequestParam(name = "aplyStartDt", required = false) String aplyStartDt,
 			@RequestParam(name = "aplyEndDt", required = false) String aplyEndDt,
@@ -1138,10 +1143,12 @@ public class AdminController {
 		System.out.println("##########################");
 
 		// 검색 결과통해서 교육과정 리스트 객체 생성
-		List<ClassVO> classVOList = adminService.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd,
+		List<ClassVO> classList = adminService.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd,
 				clssEndDd, cmpyId);
+		// 엑셀다운로드를 위해 저장해놓기
+		session.setAttribute("searchClassList", classList);
 
-		return classVOList;
+		return classList;
 	}
 
 	/**
@@ -1349,7 +1356,7 @@ public class AdminController {
 
 		return data;
 	}
-	
+
 	/**
 	 * 강사 일괄 수정
 	 * 
@@ -1387,7 +1394,7 @@ public class AdminController {
 
 		return new LectureListDTO(lectureList, subjectList, professorList);
 	}
-	
+
 	/**
 	 * 과목 리스트 불러오기
 	 * 
@@ -1400,10 +1407,10 @@ public class AdminController {
 	@ResponseBody
 	public List<SubjectVO> getSubjectList() {
 		List<SubjectVO> subjectList = adminService.getSubjectList();
-		
+
 		return subjectList;
 	}
-	
+
 	/**
 	 * 강사 리스트 불러오기
 	 * 
@@ -1419,7 +1426,6 @@ public class AdminController {
 
 		return professorList;
 	}
-
 
 	/**
 	 * 강의 선택삭제
@@ -1647,6 +1653,7 @@ public class AdminController {
 		// 업무담당자 리스트
 		List<ManagerVO> managerList = adminService.getManagerList();
 		model.addAttribute("managerList", managerList);
+		session.setAttribute("searchManagerList", managerList);
 
 		// 계정 기준정보 리스트
 		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
@@ -1709,9 +1716,10 @@ public class AdminController {
 	 */
 	@PostMapping("/manager/search")
 	@ResponseBody
-	public Map<String, Object> managerSearch(@RequestParam String searchInputCategory,
+	public Map<String, Object> managerSearch(HttpSession session, @RequestParam String searchInputCategory,
 			@RequestParam String searchInput) {
 		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput);
+		session.setAttribute("searchManagerList", managerList);
 
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("managerList", managerList);
@@ -1763,11 +1771,12 @@ public class AdminController {
 	 * @return : String
 	 */
 	@RequestMapping("/student/list")
-	public String studentList(Model model) {
+	public String studentList(HttpSession session, Model model) {
 		// 교육생 리스트
 		List<StudentVO> studentList = adminService.getStudentList();
 		model.addAttribute("studentList", studentList);
-
+		session.setAttribute("searchStudentList", studentList);
+		
 		// 검색부분
 
 		// 교육과정 리스트
@@ -1863,12 +1872,12 @@ public class AdminController {
 	 */
 	@GetMapping("/student/search")
 	@ResponseBody
-	public List<StudentVO> searchStudent(@RequestParam(name = "stdtNm", required = false) String stdtNm,
+	public List<StudentVO> searchStudent(HttpSession session, @RequestParam(name = "stdtNm", required = false) String stdtNm,
 			@RequestParam String clssId, @RequestParam String genderCd, @RequestParam String jobCd,
 			@RequestParam String userCd) {
 
 		List<StudentVO> studentList = adminService.getSearchStudentList(stdtNm, clssId, genderCd, jobCd, userCd);
-		;
+		session.setAttribute("searchStudentList", studentList);
 
 		return studentList;
 	}
@@ -1907,7 +1916,7 @@ public class AdminController {
 
 		return "admin/commoncode_list";
 	}
-	
+
 	/**
 	 * 기준정보 그룹코드 리스트 전달
 	 * 
@@ -1919,14 +1928,12 @@ public class AdminController {
 	@GetMapping("/commoncode/getgroupcodelist")
 	@ResponseBody
 	public List<CommonCodeVO> getGroupCodeList() {
-		
+
 		// 그룹코드 리스트 전달
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
-		
+
 		return groupCodeList;
 	}
-	
-	
 
 	/**
 	 * 기준정보 그룹코드 생성
@@ -1968,13 +1975,13 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> updateGroupCode(@RequestBody CommonCodeVO[] updateGroupList) {
 		adminService.updateGroupCode(updateGroupList);
-		
+
 		Map<String, Object> data = new HashMap<>();
 		data.put("message", "success");
 
 		return data;
 	}
-	
+
 	/**
 	 * 기준정보 그룹코드 삭제
 	 * 
@@ -2057,7 +2064,7 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> updateDetailCode(@RequestBody CommonCodeVO[] updateDetailList) {
 		System.out.println("오키");
-		
+
 		adminService.updateDetailCode(updateDetailList);
 
 		Map<String, Object> data = new HashMap<>();
@@ -2065,7 +2072,7 @@ public class AdminController {
 
 		return data;
 	}
-	
+
 	/**
 	 * 기준정보 상세코드 삭제
 	 * 

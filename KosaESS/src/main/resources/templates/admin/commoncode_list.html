@@ -98,7 +98,7 @@
 										onclick="groupCheckSelectAll()" class="group_chk group_checkbox_item"
 										name="group_select" th:value="${groupCode.cmcdId}"> <input
 										type="hidden" class="group_update_yn" value="N"></td>
-									<td class="td_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_num" th:text="${#lists.size(groupCodeList)-iterStat.index}"></td>
 									<td class="td_cmcd_id"><div onclick="detailCodeList(this)"
 											class="group_code_id" th:text="${groupCode.cmcdId}"></div></td>
 									<td class="td_tpcd_id">
@@ -470,7 +470,7 @@
 	        			//번호
 	        			var tdNum = document.createElement('td');
 	        			tdNum.className="td_num";
-	        			tdNum.textContent = i+1;
+	        			tdNum.textContent = groupCodeList.length - i;
 	        			tr.appendChild(tdNum);
 	        			
 	        			//공통코드ID
@@ -628,7 +628,7 @@
 
 									var tdNum = document.createElement("td");
 									tdNum.className="td_num";
-									tdNum.innerHTML = i + 1;
+									tdNum.innerHTML = detailCodeList.length - i;
 
 									var td2 = document.createElement("td");
 									td2.className = 'td_cmcd_id';

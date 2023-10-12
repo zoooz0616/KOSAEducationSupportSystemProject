@@ -83,7 +83,7 @@
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
-					<button type="button" id="excel_btn">
+					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/notice'">
 						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 					</button>
 
@@ -127,7 +127,7 @@
 							<td class="notice_check"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${notice.postId}"></td>
-							<td class="notice_num" th:text="${iterStat.index + 1}"></td>
+							<td class="notice_num" th:text="${#lists.size(noticeList)-iterStat.index}"></td>
 							<td><a class="notice_title"
 								th:href="@{/admin/notice/view/__${notice.postId}__}"
 								th:text="${notice.postTitle}"></a></td>
@@ -302,7 +302,7 @@
 							//num
 							var tdNum = document.createElement("td");
 							tdNum.className = "notice_num";
-							tdNum.textContent = i + 1;
+							tdNum.textContent = noticeList.length - i;
 							tr.appendChild(tdNum);
 
 							//postTitle

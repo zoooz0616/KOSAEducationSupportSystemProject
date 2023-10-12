@@ -84,7 +84,7 @@
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
-					<button type="button" id="excel_btn">
+					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/inquiry'">
 						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 					</button>
 				
@@ -118,7 +118,7 @@
 							<td class="inquiry_check"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${inquiry.postId}"></td>
-							<td class="inquiry_num" th:text="${iterStat.index + 1}"></td>
+							<td class="inquiry_num" th:text="${#lists.size(inquiryList)-iterStat.index}"></td>
 							<td><a class="inquiry_title"
 								th:href="@{/admin/inquiry/view/__${inquiry.postId}__}"
 								th:text="${inquiry.postTitle}"></a></td>
@@ -297,7 +297,7 @@
 									//num
 									var tdNum = document.createElement("td");
 									tdNum.className = "inquiry_num";
-									tdNum.textContent = i + 1;
+									tdNum.textContent = inquiryList.length - i;
 									tr.appendChild(tdNum);
 
 									//inquiryTitle

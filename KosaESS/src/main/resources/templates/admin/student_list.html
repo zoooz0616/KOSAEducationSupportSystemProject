@@ -114,7 +114,7 @@
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
-					<button type="button" id="excel_btn" onclick="location.href='/excelDown.do' ">
+					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/student'">
 						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 					</button>
 
@@ -149,7 +149,7 @@
 							<td class="student_check"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${student.stdtId}"></td>
-							<td class="student_num" th:text="${iterStat.index + 1}"></td>
+							<td class="student_num" th:text="${#lists.size(studentList)-iterStat.index}"></td>
 							<td class="student_name"><a
 								th:href="@{/admin/student/view/__${student.stdtId}__}"
 								th:text="${student.stdtNm}"></a></td>
@@ -245,7 +245,7 @@
 			
 			var tdNum = document.createElement("td");
 			tdNum.className = "student_num";
-			tdNum.textContent = i+1;
+			tdNum.textContent = studentList.length-i;
 			trStudent.appendChild(tdNum);
 			
 			var tdName = document.createElement("td");
