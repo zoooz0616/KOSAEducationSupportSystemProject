@@ -90,7 +90,7 @@
 								<tr th:each="company, iterStat: ${companyList}">
 									<td class="td_checkbox"><input type="checkbox"
 										class="check_box" name="select" onclick="checkSelectAll()" th:value="${company.cmpyId}"></td>
-									<td class="td_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_num" th:text="${#lists.size(companyList)-iterStat.index}"></td>
 									<td><span class="cmpy_nm" th:text="${company.cmpyNm}"
 										onclick="companyDetail(this)"></span></td>
 									<td th:text="${company.cmpyTel}"></td>
@@ -318,7 +318,7 @@
 				
 				var tdNum = document.createElement("td");
 				tdNum.className = "td_num";
-				tdNum.textContent = i+1;
+				tdNum.textContent = companyList - i;
 				
 				trCompany.appendChild(tdNum);
 				

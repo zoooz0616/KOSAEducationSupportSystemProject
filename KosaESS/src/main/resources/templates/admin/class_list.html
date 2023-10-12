@@ -145,7 +145,8 @@
 					</div>
 					<div class="content_info_btn_wrap">
 						<!-- 엑셀 다운로드 버튼 -->
-						<button type="button" id="excel_btn" onclick="location.href='/excel/admin/class' ">
+						<button type="button" id="excel_btn" 
+							onclick="location.href='/excel/admin/class'">						
 							<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 						</button>
 
@@ -189,7 +190,7 @@
 								<td class="class_check"><input type="checkbox"
 									name="select" onclick="checkSelectAll()"
 									th:value="${class.clssId}"></td>
-								<td class="class_num" th:text="${iterStat.index + 1}"></td>
+								<td class="class_num" th:text="${#lists.size(classList) - iterStat.index}"></td>
 								<td class="class_id" th:text="${class.clssId}"></td>
 								<td><a class="class_name" th:text="${class.clssNm}"
 									th:href="@{/admin/class/view/__${class.clssId}__}"></a></td>
@@ -341,6 +342,9 @@
 					var classListCnt = document.querySelector(".class_list_cnt");
 					classListCnt.textContent = response.length;
 					
+					//리스트 초기화
+					excelClassList = response;
+					
 					for(var i = 0; i < response.length; i++){
 						var clss = response[i];
 						
@@ -363,7 +367,7 @@
 	                    //순번
 	                    var tdNum = document.createElement("td");
 	                    tdNum.className =" class_num";
-	          			tdNum.textContent = i+1;
+	          			tdNum.textContent = response.length-i;
 	          			tr.appendChild(tdNum);
 	                       
 	          			//clssId

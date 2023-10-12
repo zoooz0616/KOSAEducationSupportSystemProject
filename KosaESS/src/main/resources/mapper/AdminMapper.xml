@@ -593,6 +593,7 @@
 		SELECT 
 		    post_id,
 		    post_title,
+		    post_content,
 		    post_cd,
 		    post_hit,
 		    file_id,
@@ -728,6 +729,7 @@
 	SELECT 
 		    post_id,
 		    post_title,
+		    post_content,
 		    post_cd,
 		    post_hit,
 		    file_id,

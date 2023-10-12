@@ -119,7 +119,7 @@
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
-					<button type="button" id="excel_btn">
+					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/manager'">
 						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 					</button>
 				
@@ -152,7 +152,7 @@
 							<td class="input_check_td"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${manager.mngrId}"></td>
-							<td class="manager_num" th:text="${iterStat.index + 1}"></td>
+							<td class="manager_num" th:text="${#lists.size(managerList) - iterStat.index}"></td>
 							<td class="manager_name">
 								<div class="update_div" th:text="${manager.mngrNm}"></div> <input
 								type="text" class="update_input mngr_nm_input"
@@ -381,7 +381,7 @@
 								//Num
 								var tdNum = document.createElement("td");
 								tdNum.className ="manager_num";
-								tdNum.innerText = i+1;
+								tdNum.innerText = managerList.length - i;
 								tr.appendChild(tdNum);
 
 								//mngrNm
