@@ -7,7 +7,7 @@ table {
 th, td {
 	border: 1px solid #9FBCCD;
 	border-collapse: collapse;
-	padding: 1.5% 0;
+	padding: 2% 0;
 }
 
 /* thead tr {
@@ -15,6 +15,8 @@ th, td {
 } */
 table td {
 	font-weight: bold;
+	padding: 2% 3%;
+	word-break: keep-all;
 }
 
 table th {
@@ -221,7 +223,6 @@ ul {
 	padding: 5%;
 	font-size: 17px;
 	margin-top: 16px;
-	
 }
 
 .noClass p {
@@ -266,6 +267,10 @@ ul {
 
 .viewClass h2 {
 	margin: 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	padding: 1% 5%;
 }
 
 .viewClass span {

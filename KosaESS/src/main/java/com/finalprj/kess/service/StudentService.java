@@ -21,6 +21,7 @@ import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
 import com.finalprj.kess.repository.IUploadFileRepository;
+import com.itextpdf.text.Document;
 
 @Service
 public class StudentService implements IStudentService {
@@ -342,7 +343,7 @@ public class StudentService implements IStudentService {
 	public List<ClassVO> getStdtRgstEvents(String stdtId) {
 		return studentRepository.getStdtRgstEvents(stdtId);
 	}
-	
+
 	public List<ClassVO> getStdtAplyEvents(String stdtId) {
 		return studentRepository.getStdtAplyEvents(stdtId);
 	}
@@ -366,5 +367,35 @@ public class StudentService implements IStudentService {
 	public void updatePwd(String pwd, String userEmail) {
 		studentRepository.updatePwd(pwd, userEmail);
 	}
+
+	@Override
+	public void quit(String stdtEmail) {
+		studentRepository.quit(stdtEmail);
+	}
+
+	@Override
+	public String checkMember(String email) {
+		return studentRepository.checkMember(email);
+	}
+
+	@Override
+	public void updateSubcript(String memberYN) {
+		studentRepository.updateSubcript(memberYN);
+	}
+	/*
+	 * public class CertificateService {
+	 * 
+	 * public byte[] generatePdfCertificate(CertificateModel model) throws
+	 * DocumentException, IOException { Document document = new Document();
+	 * ByteArrayOutputStream os = new ByteArrayOutputStream();
+	 * PdfWriter.getInstance(document, os);
+	 * 
+	 * document.open(); document.add(new Paragraph("인증서",
+	 * FontFactory.getFont(FontFactory.HELVETICA_BOLD, 24))); document.add(new
+	 * Paragraph("이름: " + model.getName())); document.add(new Paragraph("날짜: " +
+	 * model.getDate())); document.close();
+	 * 
+	 * return os.toByteArray(); } }
+	 */
 
 }

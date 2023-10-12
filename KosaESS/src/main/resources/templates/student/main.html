@@ -49,7 +49,7 @@
 								<span th:text="${session.stdtNm}"
 									style="color: #0E5881; font-size: 22px;"></span>님 환영합니다!
 							</h2>
-							<div class="my" style="text-align: left;">
+							<div class="my" style="text-align: center;">
 								<div class="box aplyList">
 									<span>지원내역: </span> <span
 										style="color: #0E5881; font-size: 22px;"
@@ -62,7 +62,7 @@
 								</div>
 							</div>
 
-							<div class="lastlog">
+							<div class="lastlog" style="text-align: center;">
 								<h4>마지막 로그인 일시</h4>
 								<h4 id="lastLog"></h4>
 							</div>
@@ -153,7 +153,7 @@
 					<div style="width: 100%;">
 						<div class="content">
 							<div id="calendar-container"
-								style="background: white; width: 600px;">
+								style="background: white; width: 700px;">
 								<div id="calendar"></div>
 							</div>
 						</div>
@@ -231,6 +231,36 @@
 		lastLogDd = formatTimestamp(lastLogTime);
 
 		document.getElementById("lastLog").textContent = lastLogDd;
+
+		function subscribe() {
+			var email = document.getElementById("email").value;
+
+			$.ajax({
+				type : 'POST',
+				url : '/student/checkSubscription', // 서버에서 이메일을 확인하는 엔드포인트를 사용
+				data : {
+					email : email
+				},
+				success : function(response) {
+					if (response === "member") {
+						alert("구독이 되었습니다.\n 이제 매달 협회의 소식을 메일을 통해 받으실 수 있습니다.");
+						window.location.href = '/student';
+					} else if (response === "non-member") {
+						var result = confirm("회원이 아닙니다. 회원가입을 진행하시겠습니까?");
+						if (result) {
+							window.location.href = '/student/join';
+						} else {
+							window.location.href = '/student';
+						}
+					} else {
+						alert("오류 발생");
+					}
+				},
+				error : function() {
+					alert("오류가 발생했습니다.");
+				}
+			});
+		}
 	</script>
 	<script th:if="${session.userEmail == null}"
 		src="/js/student/calendar.js"></script>

@@ -92,7 +92,7 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage;
 		const endIdx = startIdx + countPerPage;
 		const filteredData = todoData.slice(startIdx, endIdx);
-
+		const num = $('.totalRowCount').text();
 
 		const inquiryTable = $('.inquiry-table tbody');
 		inquiryTable.empty();
@@ -100,7 +100,7 @@ $(document).ready(function() {
 		for (var i = 0; i < filteredData.length; i++) {
 			var postVO = filteredData[i];
 			var row = $('<tr class="inquiryRow"></tr>');
-			row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
+			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 			row.append('<td><a><span class="goInquiryDetail" style="font-size: 17px;">' + postVO.postTitle + '</span></a></td>');
 			if (postVO.mngrNm == null) {
 				row.append('<td><span>' + postVO.stdtNm + '</span></td>')
@@ -109,7 +109,10 @@ $(document).ready(function() {
 			}
 			row.append('<td><span>' + postVO.rgstDd + '</span></td>')
 			row.append('<td><span>' + postVO.postHit + '</span></td>')
-			row.append('<td><span>' + postVO.cmcdNm + '</span></td>')
+			if (postVO.cmcdNm === '답변완료')
+				row.append('<td style="color:blue;"><span>' + postVO.cmcdNm + '</span></td>')
+			else
+				row.append('<td><span>' + postVO.cmcdNm + '</span></td>')
 			row.append('<td style="display: none;"><span>' + postVO.postId + '</span></td>')
 			inquiryTable.append(row);
 		}

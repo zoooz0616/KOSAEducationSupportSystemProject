@@ -166,4 +166,10 @@ public interface IStudentRepository {
 
 	void updatePostFile(FileVO fileVO, String postId);
 
+	void quit(String stdtEmail);
+
+	String checkMember(String email);
+
+	void updateSubcript(String memberYN);
+
 }

@@ -157,4 +157,10 @@ public interface IStudentService {
 
 	void updatePwd(String pwd, String userEmail);
 
+	void quit(String stdtEmail);
+
+	String checkMember(String email);
+
+	void updateSubcript(String memberYN);
+
 }

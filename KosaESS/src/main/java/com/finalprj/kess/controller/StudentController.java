@@ -48,6 +48,7 @@ import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
+import com.itextpdf.text.DocumentException;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -159,8 +160,7 @@ public class StudentController {
 		LocalDate newInLD = LocalDate.now();
 		Date newInTmDd = new Date(newInTm.getTime()); // 출근시간
 		Date newInLDD = java.sql.Date.valueOf(newInLD);
-		
-		
+
 		String newInTime = sdf.format(newInTm); //
 
 		// System.out.println("수업 시작시간TM" + newInTm);
@@ -438,6 +438,17 @@ public class StudentController {
 		return OutWlogVO;
 	}
 
+	@PostMapping("/checkSubscription")
+	@ResponseBody
+	public String checkSubscription(@RequestParam String email) {
+		String memberYN = studentService.checkMember(email);
+		if (memberYN != null) {
+			studentService.updateSubcript(memberYN);
+			return "member"; // 이미 회원인 경우
+		} else {
+			return "non-member"; // 회원이 아닌 경우
+		}
+	}
 	// 공지사항 리스트확인
 
 	/**
@@ -932,6 +943,17 @@ public class StudentController {
 		return "student/mypage";
 	}
 
+	@PostMapping("/quit")
+	@ResponseBody
+	public String quit(HttpSession session) {
+		String response;
+		String stdtEmail = (String) session.getAttribute("userEmail");
+
+		studentService.quit(stdtEmail);
+		response = "true";
+		return response;
+	}
+
 	// 마이페이지 개인정보 조회
 	/**
 	 * @author : dabin
@@ -1165,7 +1187,7 @@ public class StudentController {
 
 		// 업로드하기
 		String maxFileId = uploadFileService.getMaxFileId();
-		
+
 		if (files[0] != null && !files[0].isEmpty()) {
 			int subFileId = 1;
 			try {
@@ -1208,7 +1230,7 @@ public class StudentController {
 		String stdtId = (String) session.getAttribute("stdtId");
 
 		String maxFileId = uploadFileService.getMaxFileId();
-		
+
 		if (files[0] != null && !files[0].isEmpty()) {
 			int subFileId = 1;
 			try {
@@ -1280,4 +1302,13 @@ public class StudentController {
 		return postList;
 	}
 
+	/*
+	 * @PostMapping("/generate-pdf") public ResponseEntity<?>
+	 * generatePdfCertificate(@RequestBody CertificateModel model) throws
+	 * IOException, DocumentException { byte[] bytes =
+	 * studentService.generatePdfCertificate(model); return
+	 * ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+	 * .header(HttpHeaders.CONTENT_DISPOSITION,
+	 * "attachment; filename=certificate.pdf").body(bytes); }
+	 */
 }

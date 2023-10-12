@@ -37,7 +37,7 @@
 						<li><a th:href="@{/student/notice/list}">공지사항</a></li>
 						<li><a th:href="@{/student/inquiry/list}">문의사항</a></li>
 						<li><a class="mypage gomypage" >마이페이지</a></li>
-						<li><a class="mypage" th:href="@{/logout}"
+						<li><a class="mypage" onclick="logout()"
 							style="display: flex; align-items: center; width: 100%;">로그아웃
 								<img th:src="@{/img/out.png}"
 								style="height: 30px; margin-left: 5%;">
@@ -56,5 +56,13 @@ gomypage.addEventListener('click', () => {
 	const newUrl = '/student/mypage?select=' + selectParam;
 	window.location.href = newUrl;
 });
+
+function logout() {
+    if (!confirm("로그아웃 하시겠습니까?")) {
+    	//원래 화면으로
+    } else {
+    	location.replace("/logout");
+    }
+}
 </script>
 </html>

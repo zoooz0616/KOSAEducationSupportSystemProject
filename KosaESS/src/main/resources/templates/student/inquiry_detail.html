@@ -20,30 +20,54 @@
 				<table>
 					<tr>
 						<th>문의사항 제목</th>
-						<td colspan="3" style="text-align: left;"><span
-							style="margin-left: 20px;" th:text="${inquiryDetail.postTitle}"></span></td>
-						<th>답변상태</th>
-						<td><span th:text="${inquiryDetail.cmcdNm}"></span></td>
-					</tr>
-					<tr>
+						<td style="text-align: left;"><span
+							th:text="${inquiryDetail.postTitle}"></span></td>
 						<th>게시일자</th>
-						<td style="width: 20%;"><span
+						<td style="width: 10%; padding: 4px 0;"><span
 							th:text="${inquiryDetail.rgstDd}"></span></td>
 						<th>조회수</th>
-						<td style="width: 15%;"><span
+						<td style="width: 10%;"><span
 							th:text="${inquiryDetail.postHit}"></span></td>
+
+					</tr>
+					<tr>
+						<td colspan="2" style="border: none;">
+						<th>답변상태</th>
+						<td><span th:if="${inquiryDetail.cmcdNm} == '답변완료'"
+							th:text="${inquiryDetail.cmcdNm}" style="color: blue;"></span> <span
+							th:if="${inquiryDetail.cmcdNm} != '답변완료'"
+							th:text="${inquiryDetail.cmcdNm}"></span></td>
 						<th>글 작성자</th>
 						<td><span th:if="${inquiryDetail.stdtNm == null}"
 							th:text="${inquiryDetail.mngrNm}"></span> <span
 							th:if="${inquiryDetail.mngrNm == null}"
 							th:text="${inquiryDetail.stdtNm}"></span></td>
+
 					</tr>
 					<tr>
+
+					</tr>
+				</table>
+				<div style="width: 95%; padding-bottom: 5%;">
+					<div style="text-align: left; padding-left: 3%;">
+						<pre>
+							<h4 th:utext="${inquiryDetail.postContent}"></h4>
+					</pre>
+						<ul style="text-align: left;">
+							<li th:each="FileVO : ${inquiryFileList}"><a
+								th:if="${FileVO.fType == 'image'}"> <img style="width: 45%;"
+									th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
+							</a></li>
+						</ul>
+					</div>
+
+				</div>
+				<table>
+					<tr>
 						<th>관련 파일</th>
-						<td colspan="7"><ul
-								style="margin: 0; text-align: left; padding-left: 3%;">
+						<td colspan="7"><ul style="margin: 0; text-align: left;">
 								<li th:each="FileVO : ${inquiryFileList}"><a
-									style="display: flex;"
+									style="display: flex;" th:if="${FileVO.fType == 'application'}"
 									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
 									th:title="${FileVO.fileNm}"> <img style="height: 20px;"
 										th:src="@{/img/file_icon.png}" alt="file  아이콘"> <span
@@ -52,13 +76,6 @@
 							</ul></td>
 					</tr>
 				</table>
-				<div style="width: 80%;">
-					<div>
-						<pre>
-							<h4 th:utext="${inquiryDetail.postContent}"></h4>
-					</pre>
-					</div>
-				</div>
 				<div class="rgstBtn" th:if="${inquiryDetail.rgsterId} == ${stdtId}">
 					<button class="update" style="margin-right: 2%;">수정하기</button>
 					<button class="delete">삭제하기</button>
@@ -66,28 +83,35 @@
 			</div>
 			<div
 				th:if="${replyDetail != null and not #lists.isEmpty(replyDetail)}"
-				class="content" style="padding: 0 2%;">
-				<ul style="width: 100%;">
+				class="content replyTable" style="padding: 0 2%;">
+				<table>
+					<tr>
+						<th>답변</th>
+					</tr>
+				</table>
+				<ul style="width: 95%; margin: 0;">
 					<li th:each="postVO : ${replyDetail}">
-						<table style="margin: 1% auto;" class="reply">
+						<table class="reply" style="width: 100%;">
 							<tr>
-								<th>답변 제목</th>
+								<td style="display: flex; align-items: center;"><img
+									style="height: 50px;" th:src="@{/img/manager_navy.png}"><span
+									style="padding-left: 1.5%; font-size: 18px;"
+									th:if="${postVO.stdtNm == null}" th:text="${postVO.mngrNm}"></span>
+									<span th:if="${postVO.mngrNm == null}"
+									th:text="${postVO.stdtNm}"></span></td>
+
+							</tr>
+							<tr>
 								<td colspan="3"><span th:text="${postVO.postTitle}"></span></td>
 							</tr>
 							<tr>
-								<th>답변 내용</th>
 								<td colspan="3"><pre>
 										<span th:utext="${postVO.postContent}"></span>
 								</pre></td>
 							</tr>
 							<tr>
-								<th>답변자</th>
-								<td style="width: 40%;"><span
-									th:if="${postVO.stdtNm == null}" th:text="${postVO.mngrNm}"></span>
-									<span th:if="${postVO.mngrNm == null}"
-									th:text="${postVO.stdtNm}"></span></td>
-								<th>답변 일자</th>
-								<td><span th:text="${postVO.rgstDd}"></span></td>
+								<td><span style="color: lightslategray;"
+									th:text="${postVO.rgstDd}"></span></td>
 							</tr>
 						</table>
 					</li>

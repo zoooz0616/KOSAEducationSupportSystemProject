@@ -1,18 +1,18 @@
 $(document).ready(function() {
-	var countPerPage2 = 5; // 페이지당 데이터 건수
+	var countPerPage5 = 5; // 페이지당 데이터 건수
 	var showPageCnt = 5;
-	let todoData2 = [];
+	let todoData5 = [];
 
-	updateRgstTable();
+	updateMoneyTable();
 
-	function updateRgstTable() {
+	function updateMoneyTable() {
 		$.ajax({
 			type: 'POST',
-			url: '/student/mypage/rgstList',
+			url: '/student/mypage/moneyList',
 			success: function(data) {
 
-				todoData2 = data;
-				$('.rgstCnt').text(todoData2.length);
+				todoData5 = data;
+				$('.moneyCnt').text(todoDat5.length);
 				setTable(1);
 				setPaging(1);
 			}
@@ -20,7 +20,7 @@ $(document).ready(function() {
 	}
 
 	// 페이지 번호 클릭 이벤트 핸들러
-	$(document).on('click', '.pages2>span', function() {
+	$(document).on('click', '.pages5>span', function() {
 		if (!$(this).hasClass('active')) {
 			$(this).parent().find('span.active').removeClass('active');
 			$(this).addClass('active');
@@ -28,8 +28,8 @@ $(document).ready(function() {
 			setTable(Number($(this).text()));
 		}
 	});
-	$(document).on('click', '.paging2>i', function() {
-		const totalPage = Math.floor(todoData2.length / countPerPage2) + (todoData2.length % countPerPage2 == 0 ? 0 : 1);
+	$(document).on('click', '.paging5>i', function() {
+		const totalPage = Math.floor(todoData5.length / countPerPage5) + (todoData5.length % countPerPage5 == 0 ? 0 : 1);
 		const id = $(this).attr('id');
 		//console.log(id);
 
@@ -38,7 +38,7 @@ $(document).ready(function() {
 			setPaging(1);
 		} else if (id == 'prev_page') {
 			let arrPages = [];
-			$('.pages2>span').each(function(idx, item) {
+			$('.pages5>span').each(function(idx, item) {
 				arrPages.push(Number($(this).text()));
 			});
 
@@ -47,7 +47,7 @@ $(document).ready(function() {
 			setPaging(prevPage);
 		} else if (id == 'next_page') {
 			let arrPages = [];
-			$('.pages2>span').each(function(idx, item) {
+			$('.pages5>span').each(function(idx, item) {
 				arrPages.push(Number($(this).text()));
 			});
 
@@ -68,46 +68,47 @@ $(document).ready(function() {
 
 	// 데이터를 테이블로 출력하는 함수
 	function setTable(pageNum) {
-		const startIdx = (pageNum - 1) * countPerPage2;
-		const endIdx = startIdx + countPerPage2;
-		const filteredData = todoData2.slice(startIdx, endIdx);
-		const num = $('.rgstCnt').text();
+		const startIdx = (pageNum - 1) * countPerPage5;
+		const endIdx = startIdx + countPerPage5;
+		const filteredData = todoData5.slice(startIdx, endIdx);
+		const num = $('.totalRowCount').text();
 		// 받은 데이터로 테이블을 업데이트합니다.
-		var tbody = $('.rgstTable tbody');
+		var tbody = $('.moneyTable tbody');
 		tbody.empty(); // tbody 내용을 비웁니다.
 
-		for (var i = 0; i < filteredData.length; i++) {
-			$('.RgstCnt').text('총 ' + filteredData.length + '개');
-			var RegistrationVO = filteredData[i];
-			var row = $('<tr class="rgstRow"></tr>');
+		/*for (var i = 0; i < filteredData.length; i++) {
+			var moneyVO = filteredData[i];
 
-			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
-
-			row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + RegistrationVO.clssId + '"><span>' + RegistrationVO.clssNm + '</span></a></td>');
-			row.append('<td><span>' + RegistrationVO.clssStartDd + '<br> ~ ' + RegistrationVO.clssEndDd + '</span></td>');
-			row.append('<td>' + RegistrationVO.rgstNm + '</td>');
-			if (RegistrationVO.cmptNm === '미이수') {
-				row.append('<td style="color:blue;">' + RegistrationVO.cmptNm + '</td>');
-			} else if (RegistrationVO.cmptNm === '중도포기') {
-				row.append('<td style="color:red;">' + RegistrationVO.cmptNm + '</td>');
-			} else {
-				row.append('<td>' + RegistrationVO.cmptNm + '</td>');
-			}
-			if (RegistrationVO.cmptCd === 'CMP0000002') {
-				row.append('<td class="rgstPrint" style="display: revert;"><a href="/download/file/' + RegistrationVO.fileId + '/' + RegistrationVO.fileSubId + '"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></a></td>');
-			} else {
-				row.append('<td class="rgstPrint" style="display: none;"></td >');
-
+			var row = $('<tr class="postRow"></tr>');
+			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
+			row.append('<td style="word-break: keep-all;"><a href="/student/inquiry/view/' + PostVO.postId + '"><span>' + PostVO.postTitle + '</span></a></td>');
+			row.append('<td>' + PostVO.rgstDd + '</td>');
+			if (PostVO.cmcdNm === '답변완료') {
+				row.append('<td style="color:blue;">' + PostVO.cmcdNm + '</td>');
+			}else {
+				row.append('<td>' + PostVO.cmcdNm + '</td>');
 			}
 
+			var replyTd = $('<td></td>');
+			if (PostVO.postCd === 'PST0000004') {
+				replyTd.append('<input type="button" class="toggleReplyButton" value="확인하기" onclick = "toggleReply(this)">');
+			} else {
+				replyTd.append('<input type="button" class="toggleReplyButton" style="display: none;">');
+			}
+			row.append(replyTd);
+			row.append('<td style="display: none;">' + PostVO.postId + '</td>');
 			tbody.append(row);
-		}
+
+			// 답변 컨테이너를 추가합니다.
+			var replyContainer = $('<tr class="reply-container" style="display: none;"><td>' + PostVO.postContent + '</td></tr>');
+			tbody.append(replyContainer);
+		}*/
 	}
 
 	// 페이징 정보를 설정하는 함수
 	function setPaging(pageNum) {
 		const currentPage = pageNum;
-		const totalPage = Math.floor(todoData2.length / countPerPage2) + (todoData2.length % countPerPage2 == 0 ? 0 : 1);
+		const totalPage = Math.floor(todoData5.length / countPerPage5) + (todoData5.length % countPerPage5 == 0 ? 0 : 1);
 
 		showAllIcon();
 
@@ -128,7 +129,7 @@ $(document).ready(function() {
 		for (const end = start + showPageCnt; start < end && start <= totalPage; start++) {
 			sPagesHtml += '<span class="' + (start == currentPage ? 'active' : '') + '">' + start + '</span>';
 		}
-		$('.pages2').html(sPagesHtml);
+		$('.pages5').html(sPagesHtml);
 	}
 
 	// 페이지 아이콘을 모두 표시하는 함수
@@ -139,4 +140,3 @@ $(document).ready(function() {
 		$('#last_page').show();
 	}
 });
-

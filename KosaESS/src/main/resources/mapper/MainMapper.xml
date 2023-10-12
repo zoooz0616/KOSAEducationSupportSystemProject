@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.finalprj.kess.repository.IMainRepository">
-	<select id="getRole" parameterType="string">
+	<select id="getRole" parameterType="string" resultType="com.finalprj.kess.model.LoginVO">
 	<![CDATA[
 	select
-		role_cd
+		*
 	from lgin
-	where user_email=#{email} and user_pwd=#{pwd}
+	where user_email=#{email}
+	]]>
+	</select>
+	
+	<select id="getMember" parameterType="string" resultType="string">
+	<![CDATA[
+	select
+		count(user_email)
+	from lgin
+	where user_email=#{email} and (user_cd ='USR0000001' or user_cd ='USR0000002')
 	]]>
 	</select>
 	

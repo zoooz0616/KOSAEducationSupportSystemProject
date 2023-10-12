@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.repository.IMainRepository;
@@ -14,7 +15,7 @@ public class MainService implements IMainService{
 	IMainRepository mainRepository;
 
 	@Override
-	public String getRole(String email, String pwd) {
+	public LoginVO getRole(String email, String pwd) {
 		return mainRepository.getRole(email, pwd);
 	}
 
@@ -48,5 +49,10 @@ public class MainService implements IMainService{
 	@Override
 	public String getMaxStdtId() {
 		return mainRepository.getMaxStdtId();
+	}
+
+	@Override
+	public String getMember(String email) {
+		return mainRepository.getMember(email);
 	}
 }

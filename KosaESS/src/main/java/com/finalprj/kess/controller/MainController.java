@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
+import com.finalprj.kess.model.LoginVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.service.IAdminService;
@@ -68,67 +69,82 @@ public class MainController {
 			} else if (roleCd.equals("ROL0000003")) {
 				return "redirect:/manager";
 			} else {
-				return "redirect:/student";//추후 수정 요망
+				return "redirect:/login_error";// 추후 수정 요망
 			}
 		}
 	}
 
 	/**
 	 * @author : eunji
+	 * @return
 	 * @date : 2023. 9. 4.
 	 * @parameter : session, request
 	 * @return : string
 	 */
 	@PostMapping("/login")
 	public String login(HttpSession session, HttpServletRequest request) {
-		//form에서 이메일, 비밀번호 가져옴
+		// form에서 이메일, 비밀번호 가져옴
 		String email = request.getParameter("email");
 		String pwd = request.getParameter("pwd");
 
-		//login 테이블에 회원이 있는지 확인하기
-		String role = mainService.getRole(email, pwd);
-		if (role.equals("ROL0000001")) {
-			//학생
-			StudentVO studentVO = mainService.getStudentVO(email);
-			session.setAttribute("stdtId", studentVO.getStdtId());
-			session.setAttribute("userEmail", studentVO.getUserEmail());
-			session.setAttribute("userPwd", studentVO.getUserPwd());
-			session.setAttribute("stdtNm", studentVO.getStdtNm());
-			session.setAttribute("roleCd", studentVO.getRoleCd());
-			session.setAttribute("lastLoginDt", studentVO.getLastLoginDt());
+		// login 테이블에 회원이 있는지 확인하기
+		String memberYN = mainService.getMember(email);
+		if (memberYN.equals("1")) {
+			LoginVO role = mainService.getRole(email, pwd);
+			System.out.println(role);
+			String roleCd = role.getRoleCd();
+			System.out.println(roleCd);
 
-			mainService.updateLastLoginDt(studentVO.getUserEmail());
+			if (roleCd.equals("ROL0000001")) {
+				// 학생
+				StudentVO studentVO = mainService.getStudentVO(email);
+				session.setAttribute("stdtId", studentVO.getStdtId());
+				session.setAttribute("userEmail", studentVO.getUserEmail());
+				session.setAttribute("userPwd", studentVO.getUserPwd());
+				session.setAttribute("stdtNm", studentVO.getStdtNm());
+				session.setAttribute("roleCd", studentVO.getRoleCd());
+				session.setAttribute("lastLoginDt", studentVO.getLastLoginDt());
 
-			return "redirect:/student";
-		} else if (role.equals("ROL0000002")) {
-			//관리자
-			ManagerVO managerVO = mainService.getManagerVO(email);
-			session.setAttribute("mngrId", managerVO.getMngrId());
-			session.setAttribute("userEmail", managerVO.getUserEmail());
-			session.setAttribute("userPwd", managerVO.getUserPwd());
-			session.setAttribute("mngrNm", managerVO.getMngrNm());
-			session.setAttribute("roleCd", managerVO.getRoleCd());
-			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
+				mainService.updateLastLoginDt(studentVO.getUserEmail());
 
-			session.setAttribute("role", "admin");
+				return "redirect:/student";
+			} else if (roleCd.equals("ROL0000002")) {
+				// 관리자
+				ManagerVO managerVO = mainService.getManagerVO(email);
+				session.setAttribute("mngrId", managerVO.getMngrId());
+				session.setAttribute("userEmail", managerVO.getUserEmail());
+				session.setAttribute("userPwd", managerVO.getUserPwd());
+				session.setAttribute("mngrNm", managerVO.getMngrNm());
+				session.setAttribute("roleCd", managerVO.getRoleCd());
+				session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
 
-			mainService.updateLastLoginDt(managerVO.getUserEmail());
+				session.setAttribute("role", "admin");
 
-			return "redirect:/admin";
-		} else if (role.equals("ROL0000003")) {
-			//업무담당자
-			ManagerVO managerVO = mainService.getManagerVO(email);
-			session.setAttribute("mngrId", managerVO.getMngrId());
-			session.setAttribute("userEmail", managerVO.getUserEmail());
-			session.setAttribute("mngrNm", managerVO.getMngrNm());
-			session.setAttribute("roleCd", managerVO.getRoleCd());
-			session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
-			session.setAttribute("role", "manager");
-			mainService.updateLastLoginDt(managerVO.getUserEmail());
-			return "redirect:/manager";
+				mainService.updateLastLoginDt(managerVO.getUserEmail());
+
+				return "redirect:/admin";
+			} else if (roleCd.equals("ROL0000003")) {
+				// 업무담당자
+				ManagerVO managerVO = mainService.getManagerVO(email);
+				session.setAttribute("mngrId", managerVO.getMngrId());
+				session.setAttribute("userEmail", managerVO.getUserEmail());
+				session.setAttribute("mngrNm", managerVO.getMngrNm());
+				session.setAttribute("roleCd", managerVO.getRoleCd());
+				session.setAttribute("lastLoginDt", managerVO.getLastLoginDt());
+				session.setAttribute("role", "manager");
+				mainService.updateLastLoginDt(managerVO.getUserEmail());
+				return "redirect:/manager";
+			} else {
+				return "redirect:/login_error";
+			}
 		} else {
-			return "redirect:/login";
+			return "redirect:/login_error";
 		}
+	}
+	
+	@GetMapping("/login_error")
+	public String loginError() {
+		return "login_error";
 	}
 
 	// 로그이웃
@@ -143,7 +159,6 @@ public class MainController {
 		session.invalidate(); // 로그아웃
 		return "redirect:/student";
 	}
-
 
 	// 파일다운로드
 	/**
@@ -173,7 +188,6 @@ public class MainController {
 		}
 	}
 
-
 	// 회원가입 화면
 	/**
 	 * @author : eunji
@@ -183,16 +197,16 @@ public class MainController {
 	 */
 	@GetMapping("/student/join")
 	public String join(Model model) {
-		//성별 리스트
+		// 성별 리스트
 		List<CommonCodeVO> genderList = adminService.getCommonCodeList("GRP0000006");
 		model.addAttribute("genderList", genderList);
 
-		//직업 리스트
+		// 직업 리스트
 		List<CommonCodeVO> jobList = adminService.getCommonCodeList("GRP0000007");
 		model.addAttribute("jobList", jobList);
 		return "signup";
 	}
-	
+
 	// 회원가입
 	/**
 	 * @author : eunji
@@ -205,10 +219,9 @@ public class MainController {
 		String maxStdtId = mainService.getMaxStdtId();
 		student.setStdtId(maxStdtId);
 		mainService.insertStudent(student);
-		
+
 		return "redirect:/student";
 	}
-
 
 	// 이메일 중복확인
 	/**
@@ -221,14 +234,13 @@ public class MainController {
 	@ResponseBody
 	public String confirmEmail(@PathVariable String email) {
 		int emailCnt = mainService.getEmailCnt(email);
-		if(emailCnt == 0) {
+		if (emailCnt == 0) {
 			return "success";
-		}else {
+		} else {
 			return "fail";
 		}
 	}
 
-	
 	// 이메일 인증코드 발송
 	/**
 	 * @author : eunji
@@ -239,7 +251,7 @@ public class MainController {
 	@PostMapping("/join/send/{email}")
 	@ResponseBody
 	public String sendEmail(@PathVariable String email) throws Exception {
-		//랜덤코드 생성
+		// 랜덤코드 생성
 		String code = "";
 		// Random 객체 생성
 		Random random = new Random();
@@ -255,8 +267,8 @@ public class MainController {
 
 		// 생성된 랜덤 코드 출력
 		code = randomCode.toString();
-		//인증번호 전송
-		mailService.sendCode(email,code);
+		// 인증번호 전송
+		mailService.sendCode(email, code);
 
 		return code;
 	}
