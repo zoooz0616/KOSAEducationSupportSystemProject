@@ -114,7 +114,7 @@
 										th:value="${lecture.lctrId}" class="lecture_checkbox_item">
 										<input type="hidden" class="lecture_update_yn" value="N">
 									</td>
-									<td class="td_lecture_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_lecture_num" th:text="${#lists.size(lectureList)-iterStat.index}"></td>
 									<td class="td_lecture_nm"><span class="lecture_span"
 										th:text="${lecture.lctrNm}"></span> <input
 										style="display: none;" class="lecture_input lecture_nm"
@@ -215,7 +215,7 @@
 										class="subject_checkbox_item" th:value="${subject.sbjtId}">
 										<input type="hidden" class="subject_update_yn" value="N">
 									</td>
-									<td class="td_subject_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_subject_num" th:text="${#lists.size(subjectList)-iterStat.index}"></td>
 									<td class="td_subject_nm"><span class="subject_span"
 										th:text="${subject.sbjtNm}"></span> <input
 										style="display: none;" type="text"
@@ -302,7 +302,7 @@
 										class="professor_checkbox_item" th:value="${professor.profId}">
 										<input type="hidden" class="professor_update_yn" value="N">
 									</td>
-									<td class="td_professor_num" th:text="${iterStat.index + 1}"></td>
+									<td class="td_professor_num" th:text="${#lists.size(professorList)-iterStat.index}"></td>
 									<td class="td_professor_nm"><span class="professor_span"
 										th:text="${professor.profNm}"></span> <input
 										class="professor_input professor_nm"
