@@ -34,7 +34,6 @@ public class ExcelController {
 		@SuppressWarnings("unchecked")
 		List<ClassVO> list = (List<ClassVO>) session.getAttribute("searchClassList");
 
-		System.out.println(list);
 
 		// 워크북 생성
 		Workbook wb = new HSSFWorkbook();
@@ -148,7 +147,6 @@ public class ExcelController {
 		@SuppressWarnings("unchecked")
 		List<PostVO> list = (List<PostVO>) session.getAttribute("searchNoticeList");
 
-		System.out.println(list);
 
 		// 워크북 생성
 		Workbook wb = new HSSFWorkbook();
@@ -244,7 +242,6 @@ public class ExcelController {
 		@SuppressWarnings("unchecked")
 		List<PostVO> list = (List<PostVO>) session.getAttribute("searchInquiryList");
 
-		System.out.println(list);
 
 		// 워크북 생성
 		Workbook wb = new HSSFWorkbook();
@@ -347,8 +344,6 @@ public class ExcelController {
 		@SuppressWarnings("unchecked")
 		List<ManagerVO> list = (List<ManagerVO>) session.getAttribute("searchManagerList");
 
-		System.out.println(list);
-
 		// 워크북 생성
 		Workbook wb = new HSSFWorkbook();
 		Sheet sheet = wb.createSheet("업무담당자");
@@ -436,8 +431,6 @@ public class ExcelController {
 		// 업무담당자 목록조회
 		@SuppressWarnings("unchecked")
 		List<StudentVO> list = (List<StudentVO>) session.getAttribute("searchStudentList");
-
-		System.out.println(list);
 
 		// 워크북 생성
 		Workbook wb = new HSSFWorkbook();
