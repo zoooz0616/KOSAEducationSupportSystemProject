@@ -392,6 +392,7 @@ public class ManagerController {
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
 		model.addAttribute("title", title);
+		session.setAttribute("searchWorklogList", wlogList);
 		return "manager/wlog_list";
 	}
 	
@@ -598,7 +599,7 @@ public class ManagerController {
 			dto.setStrInTmDd(dto.getInTmAsString());
 			dto.setStrOutTmDd(dto.getOutTmAsString());
 		}
-		
+		session.setAttribute("searchWorklogList", wlogList);
 		Map<String, Object> wlogListResponse = new HashMap<>();
 		wlogListResponse.put("wlogList", wlogList);
 		return wlogListResponse;
