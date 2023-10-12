@@ -534,7 +534,6 @@ public class ExcelController {
 	
 	@RequestMapping("/manager/worklog")
 	public void excelDownManagerWorklog(HttpSession session, HttpServletResponse response) throws Exception {
-
 		// 출퇴근 목록조회
 		@SuppressWarnings("unchecked")
 		List<WorklogDTO> list = (List<WorklogDTO>) session.getAttribute("searchWorklogList");
