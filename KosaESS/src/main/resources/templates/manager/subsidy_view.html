@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header_2 :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/manager/manager_subsidy_view.css}" rel="stylesheet" />
+<link th:href="@{/css/manager/alert_box.css}" rel="stylesheet" />
+</head>
+<body>
+	<!-- 서브바 부분 -->
+	<div th:replace="~{/include/manager_subbar_2 :: subbar}"></div>
+	<!-- End 서브바 -->
+
+	<!-- 얼럴트 -->
+	<div class="look_at_me">
+		<span class="read_this">이봐!</span>
+	</div>
+	<!-- End : 얼럴트 -->
+
+	<!-- 컨텐츠 부분 -->
+	<div class="home-section">
+		<!-- title -->
+		<div class="title_wrap">
+			<span class="title" th:text="${title}"></span> <br>
+			<div style="display: none;">
+<!-- 			<div> -->
+<!-- 				input id="class_id_save" type="text"> -->
+<!-- 				input id="start_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssStartDd:null}"> -->
+<!-- 				input id="end_date_save" type="text" th:value="${thisClass.clssId!=null?thisClass.clssEndDd:null}"> -->
+<!-- 				input id="keyword_save" type="text"> -->
+			</div>
+		</div>
+		<!-- content wrap-->
+		<div class="content_wrap">
+			<div class="search_filter_wrap">
+				<!-- 검색 필터 테이블 -->
+				<div class="search_filter_table">
+					<div class="search_filter_name">
+						교육과정
+					</div>
+					<div class="search_filter_input">
+						<select id="classId">
+							<option value="" disabled selected>교육과정명을 선택하세요</option>
+							<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
+						</select>
+					</div>
+					<div class="search_filter_name">
+						검색 기간
+					</div>
+					<div class="search_filter_input">
+						<select id="start_date_y">
+							<option value="" disabled selected>연</option>
+							<option th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}" th:text="${yNum}" th:value="${yNum}" />
+						</select>
+						<select id="start_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}" th:text="${monthNum}" th:value="${monthNum}" />
+						</select>
+						<span>&nbsp;~&nbsp;</span>
+						<select id="end_date_y">
+							<option value="" disabled selected>연</option>
+							<option th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}" th:text="${yNum}" th:value="${yNum}" />
+						</select>
+						<select id="end_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}" th:text="${monthNum}" th:value="${monthNum}" />
+						</select>
+					</div>
+					<div class="search_filter_name">검색어</div>
+					<div class="search_filter_input">
+						<input type="text" class="input_keyword" placeholder="이메일 또는 이름">
+					</div>
+					<div class="search_filter_name">지급 상태</div>
+					<div class="search_filter_input">
+						<span class="chk_all_span">
+							<label th:text="전체" class="chk_all_label"></label> <input type="checkbox" checked="checked" id="chk_all_cmpt">
+						</span>
+						<span class="chk_all_span" th:each="monyCN:${monyCodeNameList}">
+							<label class="mony_name" th:text="${monyCN.cmcdNm}"></label>
+							<input class="mony_checkbox" type="checkbox" checked="checked" th:value="${monyCN.cmcdId}">
+						</span>
+					</div>
+				</div>
+				<!-- 검색 버튼 -->
+				<div class="search_filter_btn_wrap">
+					<button class="search_reset_btn" th:id="resetButton"
+						onclick="reset()">초기화</button>
+					<button class="search_filter_btn" th:id="searchButton"
+						onclick="search()">검색</button>
+				</div>
+				<!-- End : 검색 버튼 -->
+			</div>
+			<!-- End : 검색 필터 테이블-->
+
+			<!-- 테이블 조작 -->
+			<div class="table_controller" id="tableController">
+				<div class="result_count">
+					<span>총&nbsp;</span>
+					<span th:text="${resultCount}" id="result_count"></span>
+					<span>&nbsp;명</span>
+				</div>
+				<div class="mony_button">
+					<button th:each="monyCodeName:${monyCodeNameList}" onclick="cmptUpdate(this)" th:value="${monyCodeName.cmcdId}" th:text="${monyCodeName.cmcdNm}" class="mony_btn"></button>
+					<button onclick="location.href='/manager/subsidy_insert'" class="mony_btn">등록하기</button>
+				</div>
+			</div>
+			<!-- End : 테이블 조작 -->
+
+			<!-- table 시작 -->
+			<table id="stdt_list_table">
+				<thead id="stdt_list_table_thead">
+					<tr class="stdt_list_table_head">
+						<th><input type="checkbox" id="chkAllStdt"></th>
+						<th>번호</th>
+						<th>이름</th>
+						<th>이메일</th>
+						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
+						<th>출석일수</th>
+						<th>교육일수</th>
+						<th>출석률<br>(%)</th>
+						<th>지원금<br>(&#8361;)</th>
+						<th>지급기준일</th>
+						<th>지급일</th>
+						<th>지급상태</th>
+					</tr>
+				</thead>
+				<tbody id="subsidy_list_table_tbody" class="subsidy_list_table_tbody">
+					<tr th:each="subsidy:${subsidyList}" class="subsidy_list_table_row">
+						<td class="fixed_length_cell">
+							<input type="checkbox" name="checkedStdt" th:value="${subsidy.monyId}">
+						</td>
+						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
+						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
+						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
+<!-- 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td> -->
+						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
+						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
+						<td class="number_cell" th:text="${#numbers.formatDecimal(__${subsidy.wlogCnt}__ * 100.0 / __${subsidy.maxWlogCnt}__, 1, 1)}">출석률</td>
+						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
+						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
+						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
+						<td class="fixed_length_cell" th:text="${subsidy.monyNm}" th:value="${subsidy.monyCd}">지급상태</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- End : table 시작-->
+		</div>
+	</div>
+</body>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/manager/alert_box.js"></script>
+<script src="/js/manager/student_list.js"></script>
+</html>

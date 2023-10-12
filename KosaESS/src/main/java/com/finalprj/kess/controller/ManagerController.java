@@ -29,12 +29,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.ReasonDTO;
 import com.finalprj.kess.dto.StudentInfoDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
@@ -393,6 +395,81 @@ public class ManagerController {
 		return "manager/wlog_list";
 	}
 	
+	@GetMapping("/subsidy")
+	public String getMoneyList(Model model, HttpSession session, HttpServletRequest httpServletRequest
+			,@RequestParam(required = false) String clssId
+			,@RequestParam(required = false) String startDate
+			,@RequestParam(required = false) String endDate
+			,@RequestParam(required = false) String keyword
+			,@RequestParam(required = false, value = "filterString[]") List<String> filterString
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//End : 유저 필터링
+		//파라미터가 null이면 ""으로 변환
+		if(clssId==null) {clssId="";}
+		if(startDate==null) {startDate="";}
+		if(endDate==null) {endDate="";}
+		if(keyword==null) {keyword="";}
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		String title = "지원금 관리";
+		
+		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
+		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		
+		for (SubsidyDTO dto : subsidyList) {
+			dto.setWlog("");
+			for (CommonCodeVO cmcd : wlogCodeNameList) {
+				dto.appendWlog(String.valueOf(cmcd.getCmcdId() + managerService.getCountByClssIdWlogCdStdtId(clssId, cmcd.getCmcdId(), dto.getStdtId(), startDate, endDate)));
+				dto.appendWlog(",");
+			}
+		}
+		
+		model.addAttribute("title", title);
+		model.addAttribute("subsidyList", subsidyList);
+		model.addAttribute("resultCount", subsidyList.size());
+		model.addAttribute("classList", classList);
+		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
+		
+		return "manager/subsidy_view";
+	}
+	
+	@GetMapping("/subsidy_insert")
+	public String insertSubsidy(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//End : 유저 필터링
+		
+		String mngrId = (String) session.getAttribute("mngrId");
+		String title = "지원금 관리";
+		
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
+		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		
+		model.addAttribute("title", title);
+		model.addAttribute("classList", classList);
+		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
+		
+		return "manager/subsidy_insert";
+	}
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
 	@ResponseBody
@@ -690,4 +767,12 @@ public class ManagerController {
 		response.put("wlogCdList", wlogCdList);
 		return response;
 	}
+	
+	/*		
+		,@RequestParam(required = false) String clssId
+		,@RequestParam(required = false) String startDate
+		,@RequestParam(required = false) String endDate
+		,@RequestParam(required = false) String keyword
+		,@RequestParam(required = false, value = "filterString[]") List<String> filterString
+	*/
 }
