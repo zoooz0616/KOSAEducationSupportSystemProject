@@ -38,6 +38,10 @@
 /* 	color: rgb(255, 255, 255); */
 }
 
+input[type="submit"]:hover, input[type="button"]:hover{
+	cursor: pointer;
+}
+
 input[type="submit"]{
 /* 	border-radius: 5px; */
 /* 	width: 7em; */
@@ -56,10 +60,6 @@ input[type="submit"]{
 	color: white;
 	margin :1em;
 /* 	width: 5em; */
-}
-
-.confirm_form input[type="submit"]:hover{
-	cursor: pointer;
 }
 
 .confirm_form form{
