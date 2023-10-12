@@ -1,7 +1,6 @@
 table {
 	border-collapse: collapse;
 	width: 95%;
-	margin-bottom: 5%;
 }
 
 table a {
@@ -9,35 +8,35 @@ table a {
 }
 
 th, td {
-	border: 1px solid #9FBCCD;
+	/* border: 2px solid #9FBCCD; */
+	border-bottom: 2px solid #9FBCCD;
 	border-collapse: collapse;
 	padding: 1.5% 0;
 }
 
-thead tr {
-	border-bottom: 2px solid #0E5881;
+table tr {
+	/* border-bottom: 2px solid #9FBCCD; */
+	
 }
 
 table td {
 	font-weight: bold;
+	padding: 4px 3%;
 }
 
 table th {
 	background-color: #E7EFF3;
-	width: 15%;
+	color: #0E5881;
+	width: 115px;
 }
 
 .content {
-	padding: 5% 2%;
-	flex-direction: column;
 	align-items: center;
 	flex-wrap: wrap;
-	width: 70%;
 	margin: 5% auto;
-	box-shadow: 0px 40px 40px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-	border-style: groove;
 	border-color: black;
 	text-align: center;
+	width: 95%;
 }
 
 .postFile {
@@ -63,7 +62,7 @@ ul {
 .btn {
 	text-align: center;
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: center;
 }
 
 .btn button {
@@ -122,10 +121,6 @@ pre {
 	white-space: pre-wrap;
 }
 
-.reply th {
-	width: 20%;
-}
-
 .reply pre {
 	display: flex;
 }
@@ -134,12 +129,21 @@ pre {
 	text-align: left;
 }
 
+.reply th, .reply td {
+	border: 0;
+}
+
 .reply span {
-	margin-left: 20px;
+	padding-left: 5%;
+}
+
+.replyTable li {
+	border-bottom: 2px solid #9FBCCD;
+	padding:1%0;
 }
 
 .rgstBtn {
-	width: 100%;
+	width: 95%;
 	display: flex;
 	justify-content: flex-end;
 }

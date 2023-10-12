@@ -415,23 +415,33 @@ td button {
 	width: 13%;
 }
 
+.replyTop1, .replyTop2 {
+	text-align: center;
+	background-color: #E7EFF3;
+	color: #0E5881;
+	font-weight: bold;
+}
+
 .reply {
 	list-style: none;
-	border: #0E5881;
-	border-style: solid;
-	background: #F3F6F8;
 	padding: 0;
 	text-align: left;
+}
+
+.reply div {
 	padding: 1%;
-	border-top: 0;
+}
+
+.reply pre {
+	margin: 0;
 }
 
 .reply li {
 	padding: 1%;
 }
 
-.reply li:not(:first-child) {
-	border-top: 1px solid black;
+.reply {
+	border-top: 1px solid #CFDEE6
 }
 
 .reply span {

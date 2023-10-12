@@ -438,6 +438,17 @@ public class StudentController {
 		return OutWlogVO;
 	}
 
+	@PostMapping("/checkSubscription")
+	@ResponseBody
+	public String checkSubscription(@RequestParam String email) {
+		String memberYN = studentService.checkMember(email);
+		if (memberYN != null) {
+			studentService.updateSubcript(memberYN);
+			return "member"; // 이미 회원인 경우
+		} else {
+			return "non-member"; // 회원이 아닌 경우
+		}
+	}
 	// 공지사항 리스트확인
 
 	/**

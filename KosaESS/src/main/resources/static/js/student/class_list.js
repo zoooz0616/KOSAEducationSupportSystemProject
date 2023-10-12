@@ -168,6 +168,7 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage;
 		const endIdx = startIdx + countPerPage;
 		const filteredData = todoData.slice(startIdx, endIdx);
+		const num = $('.totalRowCount').text();
 		var classTable;
 		if ($('.list-view').hasClass('active')) {
 			// 리스트 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
@@ -182,9 +183,9 @@ $(document).ready(function() {
 
 
 				// 각 열에 해당하는 데이터를 행에 추가합니다.
-				row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
-				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text(classVO.clssNm);
-				row.append($('<td></td>').append(applyBtn));
+				row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
+				var applyBtn = $('<a>').attr('href', '/student/class/view/' + classVO.clssId).text(classVO.clssNm);
+				row.append($('<td style=" text-overflow: ellipsis;overflow: hidden; white-space: nowrap;"></td>').append(applyBtn));
 				if (classVO.aplyStartDd == null) {
 					row.append('<td><span>미정</span></td>');
 				} else {
@@ -284,7 +285,7 @@ $(document).ready(function() {
 				} else {
 					row.append('<td class="classImg"><div style="width: 100%; text-align: center;"><img src="/img/logo.png"></div>');
 				}
-				row.append('<td style="font-weight: bold; font-size: 18px; word-break: keep-all">' + classVO.clssNm + '</td>');
+				row.append('<td style="font-weight: bold; font-size: 18px; word-break: keep-all; text-overflow: ellipsis;overflow: hidden; white-space: nowrap;">' + classVO.clssNm + '</td>');
 				if (classVO.aplyStartDd == null) {
 					row.append('<td><span>지원:  미정  </span></td>');
 				} else {

@@ -231,6 +231,36 @@
 		lastLogDd = formatTimestamp(lastLogTime);
 
 		document.getElementById("lastLog").textContent = lastLogDd;
+
+		function subscribe() {
+			var email = document.getElementById("email").value;
+
+			$.ajax({
+				type : 'POST',
+				url : '/student/checkSubscription', // 서버에서 이메일을 확인하는 엔드포인트를 사용
+				data : {
+					email : email
+				},
+				success : function(response) {
+					if (response === "member") {
+						alert("구독이 되었습니다.\n 이제 매달 협회의 소식을 메일을 통해 받으실 수 있습니다.");
+						window.location.href = '/student';
+					} else if (response === "non-member") {
+						var result = confirm("회원이 아닙니다. 회원가입을 진행하시겠습니까?");
+						if (result) {
+							window.location.href = '/student/join';
+						} else {
+							window.location.href = '/student';
+						}
+					} else {
+						alert("오류 발생");
+					}
+				},
+				error : function() {
+					alert("오류가 발생했습니다.");
+				}
+			});
+		}
 	</script>
 	<script th:if="${session.userEmail == null}"
 		src="/js/student/calendar.js"></script>

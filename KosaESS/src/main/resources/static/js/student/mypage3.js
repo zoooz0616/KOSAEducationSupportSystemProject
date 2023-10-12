@@ -12,7 +12,7 @@ $(document).ready(function() {
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
 				todoData3 = data;
-				$('.wlogCnt').text('총 ' + todoData3.length + '건');
+				$('.wlogCnt').text(todoData3.length);
 				setTable(1);
 				setPaging(1);
 			}
@@ -70,6 +70,7 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage3;
 		const endIdx = startIdx + countPerPage3;
 		const filteredData = todoData3.slice(startIdx, endIdx);
+		const num = $('.wlogCnt').text();
 
 		var tbody = $('.wlogTable tbody');
 		tbody.empty(); // tbody 내용을 비웁니다.
@@ -83,13 +84,13 @@ $(document).ready(function() {
 			else
 				var outTmDd = formatTimestamp(WorklogVO.outTm);
 
-			row.append('<td><span >' + (i + startIdx + 1) + '</span></td>');
+			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 			row.append('<td style="word-break: keep-all;">' + WorklogVO.clssNm + '</td>');
 			row.append('<td>' + inTmDd + '</td>');
 			row.append('<td>' + outTmDd + '</td>');
 			if (WorklogVO.wlogNm == '정상') {
 				row.append('<td>' + WorklogVO.wlogNm + '</td>');
-			} else if (WorklogVO.wlogNm == ('지각' || '조퇴')){
+			} else if (WorklogVO.wlogNm === '지각' || WorklogVO.wlogNm ===  '조퇴'){
 				row.append('<td style="color:blue;">' + WorklogVO.wlogNm + '</td>');
 			}else {
 				row.append('<td style="color:red;">' + WorklogVO.wlogNm + '</td>');

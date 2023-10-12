@@ -80,6 +80,9 @@ table td {
 
 .notice-table td:nth-child(2) {
 	width: 60%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .notice-table td:nth-child(3) {
@@ -177,6 +180,6 @@ input::placeholder {
 	border: solid 2px #0E5881
 }
 
-select{
+select {
 	cursor: pointer;
 }

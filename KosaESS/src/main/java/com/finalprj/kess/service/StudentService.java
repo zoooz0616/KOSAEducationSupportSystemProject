@@ -373,6 +373,15 @@ public class StudentService implements IStudentService {
 		studentRepository.quit(stdtEmail);
 	}
 
+	@Override
+	public String checkMember(String email) {
+		return studentRepository.checkMember(email);
+	}
+
+	@Override
+	public void updateSubcript(String memberYN) {
+		studentRepository.updateSubcript(memberYN);
+	}
 	/*
 	 * public class CertificateService {
 	 * 
