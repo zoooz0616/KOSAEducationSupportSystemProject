@@ -192,8 +192,8 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public List<WorklogVO> searchWlogList(String stdtId) {
-		return studentRepository.searchWlogList(stdtId);
+	public List<WorklogVO> searchWlogList(String stdtId, String selectedClssNm) {
+		return studentRepository.searchWlogList(stdtId,selectedClssNm);
 	}
 
 	@Override
@@ -397,5 +397,10 @@ public class StudentService implements IStudentService {
 	 * 
 	 * return os.toByteArray(); } }
 	 */
+
+	@Override
+	public List<WorklogVO> getWlogList(String stdtId) {
+		return studentRepository.getWlogList(stdtId);
+	}
 
 }

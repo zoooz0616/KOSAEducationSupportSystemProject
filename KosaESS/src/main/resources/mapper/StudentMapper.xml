@@ -812,7 +812,7 @@
 			JOIN cmcd on cmcd.cmcd_id = wlog.wlog_cd
 			JOIN clss on clss.clss_id = wlog.clss_id
 			LEFT JOIN resn on resn.wlog_id = wlog.wlog_id
-			WHERE stdt_id=#{stdtId}
+			WHERE stdt_id=#{stdtId} and clss.clss_nm LIKE ('%'|| #{selectedClssNm} ||'%')
 			ORDER BY wlog.rgst_dt DESC
 	]]>
 	</select>
@@ -1053,5 +1053,14 @@
 		where stdt_id=#{stdtId}
 	]]>
 	</update>
+	
+	<select id="getWlogList" resultType="com.finalprj.kess.dto.WorklogDTO">
+	<![CDATA[
+		select clss_nm 
+		from clss
+		WHERE clss_id in (select clss_id from wlog where stdt_id = #{stdtId})
+	]]>
+	</select>
+	
 
 </mapper>

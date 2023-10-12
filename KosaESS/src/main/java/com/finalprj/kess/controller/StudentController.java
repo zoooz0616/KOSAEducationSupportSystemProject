@@ -933,13 +933,19 @@ public class StudentController {
 	 * @throws IOException
 	 */
 	@GetMapping("/mypage")
-	public String mypageMain(Model model) {
+	public String mypageMain(Model model,HttpSession session) {
+		String stdtId = (String) session.getAttribute("stdtId");
+
 		List<CommonCodeVO> genderList = studentService.getCommonCodeList("GRP0000006");
 		model.addAttribute("genderList", genderList);
 
 		// 직업 리스트
 		List<CommonCodeVO> jobList = studentService.getCommonCodeList("GRP0000007");
 		model.addAttribute("jobList", jobList);
+		
+		List<WorklogVO> wlogList = studentService.getWlogList(stdtId);
+		model.addAttribute("wlogList", wlogList);
+		
 		return "student/mypage";
 	}
 
@@ -1064,9 +1070,9 @@ public class StudentController {
 
 	@PostMapping("/mypage/wlogList")
 	@ResponseBody
-	public List<WorklogVO> searchWlogList(HttpSession session, Model model) {
+	public List<WorklogVO> searchWlogList(HttpSession session, Model model, @RequestParam("selectedClssNm") String selectedClssNm) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId, selectedClssNm);
 		model.addAttribute("wlogList", wlogList);
 		return wlogList;
 	}

@@ -90,7 +90,7 @@ public interface IStudentRepository {
 
 	ClassVO getWlogClass(String clssId);
 
-	List<WorklogVO> searchWlogList(String stdtId);
+	List<WorklogVO> searchWlogList(String stdtId, String selectedClssNm);
 
 	String getMaxResnId();
 
@@ -171,5 +171,7 @@ public interface IStudentRepository {
 	String checkMember(String email);
 
 	void updateSubcript(String memberYN);
+
+	List<WorklogVO> getWlogList(String stdtId);
 
 }
