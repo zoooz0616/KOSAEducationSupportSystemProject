@@ -418,10 +418,10 @@ public class ManagerController {
 		if(startDate==null) {startDate="";}
 		if(endDate==null) {endDate="";}
 		if(keyword==null) {keyword="";}
+		//End : 파라미터가 null이면 ""으로 변환
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "지원금 관리";
-		
 		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
 		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
@@ -446,7 +446,7 @@ public class ManagerController {
 	}
 	
 	@GetMapping("/subsidy_insert")
-	public String insertSubsidy(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+	public String insertSubsidyView(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
 			return "redirect:/login";
@@ -699,6 +699,28 @@ public class ManagerController {
 		// End : 업데이트
 		Map<String, Object> response = new HashMap<>();
 		response.put("result", result);
+		return response;
+	}
+	
+	//출퇴근 기록 삭제
+	@PostMapping("/worklog/delete_wlog")
+	@ResponseBody
+	public Map<String, Object> deleteWlog(
+			HttpSession session,
+			@RequestParam (value="wlogList[]") List<String> wlogList
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		//End : 유저 필터링
+		
+		//업데이트
+		for (String wlogId : wlogList) {
+			managerService.deleteWlog(wlogId);
+		}
+		
+		Map<String, Object> response = new HashMap<>();
 		return response;
 	}
 	

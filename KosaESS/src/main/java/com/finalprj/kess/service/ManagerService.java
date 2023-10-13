@@ -145,6 +145,11 @@ public class ManagerService implements IManagerService {
 		return managerRepository.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 	}
 
+	@Override
+	public void deleteWlog(String wlogId) {
+		managerRepository.deleteWlog(wlogId);
+	}
+
 //	@Override
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
 //		return managerRepository.getStudentListBySearch(classId, startDate, endDate);

@@ -236,9 +236,20 @@ $(document).ready(
 	
 	//classId!=null ? date = start & end date : null 
 	initStartDate(),
+	//End
 	
 	//classId != null ? this_class_period.checked = true : false
 	checkClassPeriod(),
+	//End
+	
+	//교육과정을 선택했을 경우, date가 null이라면 시작~종료를 default로 지정해주기
+	$('#classId').on("change", function () {
+		if(($('#startDate').val()=="")&&($('#endDate').val()=="")){
+			$('#startDate').val($('#start_date_save').val());
+			$('#endDate').val($('#end_date_save').val());
+		}
+	}),
+	//End
 	
 );
 //End : 체크박스 컨트롤

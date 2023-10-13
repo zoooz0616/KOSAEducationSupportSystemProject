@@ -83,7 +83,7 @@
 							<td th:text="|${class.clssStartDd} ~ ${class.clssEndDd}|">
 							<td class="variable_length_cell" th:text="${class.clssAdr}">class address</td>
 							<td><a th:text="${class.rgstCnt}" th:href="@{/manager/student?classId=__${class.clssId}__}"></a><span th:text="|/${class.limitCnt}|"></span></td>
-							<td class="variable_length_cell" th:text="${class.clssCd}">status</td>
+							<td class="fixed_length_cell" th:text="${class.clssCd}">status</td>
 						</tr>
 					</tbody>
 				</table>

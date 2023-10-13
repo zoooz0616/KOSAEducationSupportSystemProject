@@ -65,4 +65,6 @@ public interface IManagerService {
 	public void updateManagerInfo(ManagerVO updateManager);
 
 	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString);
+
+	public void deleteWlog(String wlogId);
 }

@@ -1,13 +1,14 @@
 var chkAll = $("#chkAll");//"전체" 체크박스
-var chkList = $("input[class=chkWokCd]");//출석 상태 체크박스 리스트
 var isChecked = chkAll.prop("checked");//"전체" 체크박스의 체크 상태(true 또는 false)
-var allChecked = chkList.filter(":checked").length === chkList.length;
-var wlogListTable = $('#wlog_list_tbody');//tbody 선택하기
+var chkMonyCd = $("input[class=mony_checkbox]");//출석 상태 체크박스 리스트
+var allChecked = chkMonyCd.filter(":checked").length === chkList.length;
 var date = new Date();
 var year = date.getFullYear();
 var stdtListTable = document.getElementById('stdt_list_table_tbody');//tbody 선택하기
 var date = new Date();
 var year = date.getFullYear();
+
+var wlogListTable = $('#wlog_list_tbody');//tbody 선택하기
 var isResnChanged;
 
 var radioBtns = $("input[name=default_period]");
@@ -204,31 +205,6 @@ function updateWlogCode(button){
 	reload();
 }
 
-// resn 상태 업데이트(인자가 버튼이면 버튼값으로, 인자가 버튼이 아니라면 그 값으로 업데이트)
-function updateResnCode(button){
-	targetResnCode = button;
-	isResnChanged = true;
-	//console.log(typeof targetResnCode);
-	if(typeof targetResnCode === 'object'){
-		$.ajax({
-		type: 'post',
-		url: '/manager/worklog/update_resn_code', // 서버의 엔드포인트 URL
-		data: {
-			resnId:$('.resn_modal').val()
-			,resnCd:targetResnCode.value
-		},
-		async: false,
-		success: function(response) {
-			if(response != null){
-				$('#modal_prcs_name').text(button.innerText);
-			}
-		},error: function(error) {
-			console.log("error: ", error);
-		}
-		})
-	}
-}
-
 //---------------------------------------------------------------------------
 // 1. 체크박스 컨트롤
 $(document).ready(
@@ -293,103 +269,12 @@ $(document).ready(
 );
 //End : 체크박스 컨트롤
 
-// 모달창 외부를 클릭 시 모달창을 제거
-function closeModal(){
-	$('.resn_modal_wrap').css("display",'none');
-	$('body').css("overflow",'auto');
-	if(isResnChanged){
-		reload();
-		isResnChanged=false;
-	}
-}
-
-// 아이콘을 누르면 모달을 표시
-function showModal(resnIcon) {
-	let thisResnId = resnIcon.getAttribute("value");
-	isResnChanged = false;
-	$.ajax({
-		type: 'get',
-		url: '/manager/worklog/resnContent',
-		data: {
-			resnId:thisResnId
-		},
-		success: function(response) {
-			//console.log(response)
-			//console.log(response.resnContent)
-			
-			$('.resn_modal_wrap').css("display",'flex');
-			$('body').css("overflow",'hidden');
-			
-			$('.resn_modal').val(response.resnContent.resnId);
-			
-			$('#modal_name').text(response.resnContent.stdtNm);
-			$('#modal_email').text(response.resnContent.userEmail);
-			$('#modal_prcs_name').text(response.resnContent.prcsNm);
-			
-			if(response.resnContent.strInTmDd != null){
-				$('#modal_in_time').html(response.resnContent.strInTmDd);
-			}else{
-				$('#modal_in_time').html('-')
-			}
-			
-			if(response.resnContent.strOutTmDd != null){
-				$('#modal_out_time').text(response.resnContent.strOutTmDd);
-			}else{
-				$('#modal_out_time').text('-')
-			}
-			
-			$('#modal_wlog_cd').text(response.resnContent.wlogNm);
-			
-			$('.resn_text').text(response.resnContent.resnContent);
-			
-			$.ajax({
-				type: 'get',
-				url: '/manager/worklog/resn_file_list',
-				data: {
-					resnId:thisResnId
-				},success: function(resnFileResponse) {
-					resnFileList = resnFileResponse.resnFileList;
-					for(let i = 0; i<resnFileList.length;i++){
-						console.log(resnFileList[i])
-					}
-				},error: function(error) {
-					console.log("error: ", error);
-				}
-			});
-			
-			$('.resn_controller').empty();
-			for(let i = 0;i < response.resnCdList.length;i++){
-				///*
-				let newButton = $('<button onclick="updateResnCode(this)" value = "'+response.resnCdList[i].cmcdId+'" >'+response.resnCdList[i].cmcdNm+'</button>')
-				$('.resn_controller').append(newButton);
-				// */
-				//console.log(response.wlogCdList[i].cmcdNm);
-			}
-			
-		},error: function(error) {
-			console.log("error: ", error);
-		}
-	})
-}
 
 function search() {
 	
 	var targetClassId = $('#class_selector option:selected').val();
 	var startDate = document.getElementById("startDate").value;
 	var endDate = document.getElementById("endDate").value;
-	
-	/*
-	// 교육과정이 선택되지 않았다면 알림을 띄운다
-	if(targetClassId == ''){
-		alertFade("담당 중인 모든 교육과정의 결과입니다.","F9DCCB","FF333E")
-	}
-	// End
-	// 검색 기간이 선택되지 않았다면 알림을 띄운다
-	if(startDate == '' && endDate == ''){
-		alertFade("모든 기간에 걸친 검색 결과입니다.","F9DCCB","FF333E")
-	}
-	// End
-	*/
 	
 	if(targetClassId != ''){
 		targetClassId = targetClassId.split("(")[1];
