@@ -140,6 +140,11 @@
 										th:text="${ApplyDetailDTO.aplyId}"></span></td>
 								</tr>
 							</tbody>
+							<tfoot class="applyFoot" style="display: none; height: 300px;">
+								<tr>
+									<td colspan="8"><h3>조회된 결과가 없습니다.</h3></td>
+								</tr>
+							</tfoot>
 						</table>
 						<div class="paging paging1">
 							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
@@ -187,6 +192,11 @@
 											alt="file  아이콘"></a></td>
 								</tr> -->
 							</tbody>
+							<tfoot class="rgstFoot" style="display: none; height: 300px;">
+								<tr>
+									<td colspan="6"><h3>조회된 결과가 없습니다.</h3></td>
+								</tr>
+							</tfoot>
 						</table>
 						<div class="paging paging2">
 							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
@@ -199,17 +209,17 @@
 				</div>
 				<div class="workLog" style="display: none;">
 					<div class="listHead">
-						<h3>출퇴근 관리</h3>
+						<div style="display: flex; width: 80%;">
+							<h3 style="margin-right: 3%;">출퇴근 관리</h3>
+							<select name="wlogNm" id="wlogClssNm">
+								<option value="">전체</option>
+								<option th:each="Wlog: ${wlogList}" class="wlogOption"
+									th:value="${Wlog.clssNm}" th:text="${Wlog.clssNm}">
+							</select>
+						</div>
 						<p>
 							총 <span class="wlogCnt"></span>건
 						</p>
-					</div>
-					<div>
-						<select name="wlogNm" id="wlogClssNm">
-							<option value="">전체</option>
-							<option th:each="Wlog: ${wlogList}" class="wlogOption"
-								th:value="${Wlog.clssNm}" th:text="${Wlog.clssNm}">
-						</select>
 					</div>
 					<div>
 						<table class="wlogTable">
@@ -238,6 +248,11 @@
 										th:text="${WorklogVO.resnNm}"></td>
 								</tr> -->
 							</tbody>
+							<tfoot class="wlogFoot" style="display: none; height: 300px;">
+								<tr>
+									<td colspan="7"><h3>조회된 결과가 없습니다.</h3></td>
+								</tr>
+							</tfoot>
 						</table>
 						<div class="paging paging3">
 							<i class="left" id="first_page" th:src="@{/img/first_page}"></i>
@@ -287,6 +302,11 @@
 								</li>
 							</ul>
 						</tbody>
+						<tfoot class="postFoot" style="display: none; height: 300px;">
+							<tr>
+								<td colspan="5"><h3>조회된 결과가 없습니다.</h3></td>
+							</tr>
+						</tfoot>
 					</table>
 					<div class="paging paging4">
 						<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i
@@ -298,17 +318,17 @@
 				</div>
 				<div class="sbsdList" style="display: none;">
 					<div class="listHead">
-						<h3>지원금 수령 내역</h3>
+						<div style="display: flex; width: 80%;">
+							<h3 style="margin-right: 3%;">지원금 수령 내역</h3>
+							<select name="sbsdNm" id="sbsdClssNm">
+								<option value="">전체</option>
+								<option th:each="sbsd: ${sbsdList}" class="sbsdOption"
+									th:value="${sbsd.clssNm}" th:text="${sbsd.clssNm}">
+							</select>
+						</div>
 						<p>
 							총 <span class="sbsdCnt"></span>건
 						</p>
-					</div>
-					<div>
-						<select name="sbsdNm" id="sbsdClssNm">
-							<option value="">전체</option>
-							<option th:each="sbsd: ${sbsdList}" class="sbsdOption"
-								th:value="${sbsd.clssNm}" th:text="${sbsd.clssNm}">
-						</select>
 					</div>
 					<table class="sbsdTable">
 						<thead>
@@ -323,6 +343,11 @@
 						<tbody>
 
 						</tbody>
+						<tfoot class="sbsdFoot" style="display: none; height: 300px;">
+							<tr>
+								<td colspan="5"><h3>조회된 결과가 없습니다.</h3></td>
+							</tr>
+						</tfoot>
 					</table>
 					<div class="paging paging4">
 						<i class="left" id="first_page" th:src="@{/img/first_page}"></i> <i

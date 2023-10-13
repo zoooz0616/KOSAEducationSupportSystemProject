@@ -15,6 +15,11 @@ $(document).ready(function() {
 				$('.postCnt').text(todoData4.length);
 				setTable(1);
 				setPaging(1);
+				
+				if (data.length == 0)
+					$('.postFoot').show();
+				else
+					$('.postFoot').hide();
 			}
 		});
 	}
@@ -83,7 +88,7 @@ $(document).ready(function() {
 			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
 			row.append('<td style="word-break: keep-all;"><a href="/student/inquiry/view/' + PostVO.postId + '"><span>' + PostVO.postTitle + '</span></a></td>');
 			row.append('<td>' + PostVO.rgstDd + '</td>');
-			if (PostVO.cmcdNm === '답변완료') {
+			if (PostVO.postCd === 'PST0000004') {
 				row.append('<td style="color:blue;">' + PostVO.cmcdNm + '</td>');
 			} else {
 				row.append('<td>' + PostVO.cmcdNm + '</td>');

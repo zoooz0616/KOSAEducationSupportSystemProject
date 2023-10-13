@@ -216,6 +216,7 @@ table td {
 	border-bottom: 1px solid #CFDEE6;
 }
 
+
 .infoTable th {
 	width: 15%;
 	border-right: 2px solid #CFDEE6;
@@ -416,7 +417,6 @@ td button {
 	width: 13%;
 }
 
-
 .replyTop1, .replyTop2 {
 	text-align: center;
 	background-color: #E7EFF3;
@@ -480,4 +480,10 @@ td button {
 
 .paging .active {
 	background: #E7EFF3;
+}
+
+
+tfoot td {
+	text-align: center;
+	font-size: 20px !important;
 }

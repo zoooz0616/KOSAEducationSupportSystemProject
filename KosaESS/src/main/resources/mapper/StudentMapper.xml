@@ -160,7 +160,7 @@
 						where cmcd_id='PST0000001')
 					ORDER BY rgst_dt DESC
 				)
-				WHERE ROWNUM <= 5
+				WHERE ROWNUM <= 8
 		]]>
 	</select>
 

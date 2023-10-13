@@ -15,6 +15,11 @@ $(document).ready(function() {
 				$('.sbsdCnt').text(todoData5.length);
 				setTable(1);
 				setPaging(1);
+				
+				if (data.length == 0)
+					$('.sbsdFoot').show();
+				else
+					$('.sbsdFoot').hide();
 			}
 		});
 	}
@@ -94,7 +99,7 @@ $(document).ready(function() {
 			else {
 				row.append('<td>' + SubsidyVO.payment + '</td>');
 			}
-			if (SubsidyVO.monyNm === '지급완료') {
+			if (SubsidyVO.monyCd === 'MNY0000002') {
 				row.append('<td style="color:blue;">' + SubsidyVO.monyNm + '</td>');
 			}
 			else {

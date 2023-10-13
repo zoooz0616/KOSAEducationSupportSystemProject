@@ -14,6 +14,11 @@ $(document).ready(function() {
 				$('.aplyCnt').text(todoData1.length);
 				setTable(1);
 				setPaging(1);
+				
+				if (data.length == 0)
+					$('.aplyFoot').show();
+				else
+					$('.aplyFoot').hide();
 			}
 		});
 	}
@@ -87,9 +92,9 @@ $(document).ready(function() {
 			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 			row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
 			row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
-			if(ApplyDetailDTO.cmcdNm === '지원취소' || ApplyDetailDTO.cmcdNm === '수강포기'){
+			if(ApplyDetailDTO.aplyCd === 'APL0000001' || ApplyDetailDTO.aplyCd === 'APL0000006'){
 				row.append('<td style="color:red;">' + ApplyDetailDTO.cmcdNm + '</td>');
-			}else if(ApplyDetailDTO.cmcdNm === ('합격')){
+			}else if(ApplyDetailDTO.aplyCd === ('APL0000003')){
 				row.append('<td style="color:blue;">' + ApplyDetailDTO.cmcdNm + '</td>');
 			}else{
 				row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');

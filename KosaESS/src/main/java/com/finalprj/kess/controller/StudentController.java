@@ -442,14 +442,14 @@ public class StudentController {
 
 	@PostMapping("/checkSubscription")
 	@ResponseBody
-	public String checkSubscription(@RequestParam String email) {
-		String memberYN = studentService.checkMember(email);
-		if (memberYN != null) {
+	public String checkSubscription(HttpSession session) {
+		String email = (String) session.getAttribute("userEmail");
+		if (email != null) {
+			String memberYN = studentService.checkMember(email);
 			studentService.updateSubcript(memberYN);
 			return "member"; // 이미 회원인 경우
-		} else {
-			return "non-member"; // 회원이 아닌 경우
 		}
+		return "non-member"; // 회원이 아닌 경우
 	}
 	// 공지사항 리스트확인
 
@@ -585,7 +585,7 @@ public class StudentController {
 
 	@PostMapping("/inquiry/write")
 	@ResponseBody
-	public void write(@RequestParam("files[]") MultipartFile[] files, @RequestParam("title") String title,
+	public void write(@RequestParam(name = "files[]" , required = false) MultipartFile[] files, @RequestParam("title") String title,
 			@RequestParam("content") String content, HttpSession session, Model model) throws IOException {
 
 		String stdtId = (String) session.getAttribute("stdtId");
@@ -680,7 +680,7 @@ public class StudentController {
 	@ResponseBody
 	public String updateInquiry(@PathVariable String postId, @RequestParam("updatedTitle") String updatedTitle,
 			@RequestParam("updatedContent") String updatedContent, HttpSession session,
-			@RequestParam("files[]") MultipartFile[] files, RedirectAttributes redirectAttrs) {
+			@RequestParam(name = "files[]" , required = false) MultipartFile[] files, RedirectAttributes redirectAttrs) {
 
 		String stdtId = (String) session.getAttribute("stdtId");
 
@@ -1192,7 +1192,7 @@ public class StudentController {
 	 */
 
 	@PostMapping("/mypage/submitResn/{wlogId}")
-	public String insertResnFile(@PathVariable String wlogId, @RequestParam("files[]") MultipartFile[] files,
+	public String insertResnFile(@PathVariable String wlogId, @RequestParam(name = "files[]" , required = false) MultipartFile[] files,
 			@RequestParam("resnText") String resnText, HttpSession session, Model model) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
@@ -1236,7 +1236,7 @@ public class StudentController {
 
 	// 마이페이지 사유서 내역 업데이트
 	@PostMapping("/mypage/uploadResn/{resnId}")
-	public String updateResnFile(@PathVariable String resnId, @RequestParam("files[]") MultipartFile[] files,
+	public String updateResnFile(@PathVariable String resnId, @RequestParam(name = "files[]" , required = false) MultipartFile[] files,
 			@RequestParam("resnText") String resnText, HttpSession session) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
