@@ -21,7 +21,6 @@
 	margin: auto;
 	position : fixed;
 	background-color:rgba(255, 255, 255, 1);
-	
 }
 
 .resn_modal_wrap .resn_modal .wlog_info{
@@ -32,6 +31,7 @@
 	margin :0, auto;
 	border-collapse: collapse;
 	border : 1px black solid;
+/* 	border-top: 2px 0E5881 solid; */
 /* 	width: auto; */
 }
 

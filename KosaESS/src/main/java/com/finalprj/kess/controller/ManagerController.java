@@ -625,6 +625,8 @@ public class ManagerController {
 		response.put("classDetail", targetClass);
 		return response;
 	}
+	
+	//사유서 내용 출력
 	@GetMapping("/worklog/resnContent")
 	@ResponseBody
 	public Map<String, Object> getResnContent(HttpSession session
@@ -648,6 +650,36 @@ public class ManagerController {
 		Map<String, Object> response = new HashMap<>();
 		response.put("resnContent", thisResn);
 		response.put("resnCdList", resnCdList);
+		return response;
+	}
+	
+	//사유서 파일 목록 반환
+	@GetMapping("/worklog/resn_file_list")
+	@ResponseBody
+	public Map<String, Object> getResnFile(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@RequestParam String resnId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		ReasonDTO thisResn = managerService.getResnDetailByResnId(resnId);
+		String thisFileId = thisResn.getFileId();
+		List<Integer> resnFileList = managerService.getFileSubIdListByFileId(thisResn.getFileId());
+		List<String> resnFileNameList = new ArrayList<String>();
+		for (Integer i : resnFileList) {
+			System.out.println(managerService.getFileInfoByIds(thisFileId, i).getFileNm());
+			resnFileNameList.add(managerService.getFileInfoByIds(thisFileId, i).getFileNm());
+		}
+		Map<String, Object> response = new HashMap<>();
+		response.put("resnFileList", resnFileList);
+		response.put("resnFileNameList", resnFileNameList);
 		return response;
 	}
 	
