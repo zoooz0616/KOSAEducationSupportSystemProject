@@ -348,15 +348,14 @@ function showModal(resnIcon) {
 				data: {
 					resnId:thisResnId
 				},success: function(resnFileResponse) {
-					resnFileList = resnFileResponse.resnFileList;
-					for(let i = 0; i<resnFileList.length;i++){
-						console.log(resnFileList[i])
+					resnFileNameList = resnFileResponse.resnFileNameList;
+					for(let i = 0; i<resnFileNameList.length;i++){
+						console.log(resnFileNameList[i])
 					}
 				},error: function(error) {
 					console.log("error: ", error);
 				}
 			});
-			
 			$('.resn_controller').empty();
 			for(let i = 0;i < response.resnCdList.length;i++){
 				///*
