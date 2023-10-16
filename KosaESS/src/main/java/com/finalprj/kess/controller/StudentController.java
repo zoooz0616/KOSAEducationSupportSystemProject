@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -45,6 +46,7 @@ import com.finalprj.kess.model.PostVO;
 import com.finalprj.kess.model.ReasonVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
@@ -440,14 +442,14 @@ public class StudentController {
 
 	@PostMapping("/checkSubscription")
 	@ResponseBody
-	public String checkSubscription(@RequestParam String email) {
-		String memberYN = studentService.checkMember(email);
-		if (memberYN != null) {
+	public String checkSubscription(HttpSession session) {
+		String email = (String) session.getAttribute("userEmail");
+		if (email != null) {
+			String memberYN = studentService.checkMember(email);
 			studentService.updateSubcript(memberYN);
 			return "member"; // 이미 회원인 경우
-		} else {
-			return "non-member"; // 회원이 아닌 경우
 		}
+		return "non-member"; // 회원이 아닌 경우
 	}
 	// 공지사항 리스트확인
 
@@ -583,7 +585,7 @@ public class StudentController {
 
 	@PostMapping("/inquiry/write")
 	@ResponseBody
-	public void write(@RequestParam("files[]") MultipartFile[] files, @RequestParam("title") String title,
+	public void write(@RequestParam(name = "files[]" , required = false) MultipartFile[] files, @RequestParam("title") String title,
 			@RequestParam("content") String content, HttpSession session, Model model) throws IOException {
 
 		String stdtId = (String) session.getAttribute("stdtId");
@@ -678,7 +680,7 @@ public class StudentController {
 	@ResponseBody
 	public String updateInquiry(@PathVariable String postId, @RequestParam("updatedTitle") String updatedTitle,
 			@RequestParam("updatedContent") String updatedContent, HttpSession session,
-			@RequestParam("files[]") MultipartFile[] files, RedirectAttributes redirectAttrs) {
+			@RequestParam(name = "files[]" , required = false) MultipartFile[] files, RedirectAttributes redirectAttrs) {
 
 		String stdtId = (String) session.getAttribute("stdtId");
 
@@ -933,13 +935,21 @@ public class StudentController {
 	 * @throws IOException
 	 */
 	@GetMapping("/mypage")
-	public String mypageMain(Model model) {
+	public String mypageMain(Model model, HttpSession session) {
+		String stdtId = (String) session.getAttribute("stdtId");
+
 		List<CommonCodeVO> genderList = studentService.getCommonCodeList("GRP0000006");
 		model.addAttribute("genderList", genderList);
 
 		// 직업 리스트
 		List<CommonCodeVO> jobList = studentService.getCommonCodeList("GRP0000007");
 		model.addAttribute("jobList", jobList);
+
+		List<WorklogVO> wlogList = studentService.getWlogList(stdtId);
+		model.addAttribute("wlogList", wlogList);
+
+		List<SubsidyVO> sbsdList = studentService.getSbsdList(stdtId);
+		model.addAttribute("sbsdList", sbsdList);
 		return "student/mypage";
 	}
 
@@ -1064,9 +1074,10 @@ public class StudentController {
 
 	@PostMapping("/mypage/wlogList")
 	@ResponseBody
-	public List<WorklogVO> searchWlogList(HttpSession session, Model model) {
+	public List<WorklogVO> searchWlogList(HttpSession session, Model model,
+			@RequestParam("selectedClssNm") String selectedClssNm) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId);
+		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId, selectedClssNm);
 		model.addAttribute("wlogList", wlogList);
 		return wlogList;
 	}
@@ -1181,7 +1192,7 @@ public class StudentController {
 	 */
 
 	@PostMapping("/mypage/submitResn/{wlogId}")
-	public String insertResnFile(@PathVariable String wlogId, @RequestParam("files[]") MultipartFile[] files,
+	public String insertResnFile(@PathVariable String wlogId, @RequestParam(name = "files[]" , required = false) MultipartFile[] files,
 			@RequestParam("resnText") String resnText, HttpSession session, Model model) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
@@ -1225,7 +1236,7 @@ public class StudentController {
 
 	// 마이페이지 사유서 내역 업데이트
 	@PostMapping("/mypage/uploadResn/{resnId}")
-	public String updateResnFile(@PathVariable String resnId, @RequestParam("files[]") MultipartFile[] files,
+	public String updateResnFile(@PathVariable String resnId, @RequestParam(name = "files[]" , required = false) MultipartFile[] files,
 			@RequestParam("resnText") String resnText, HttpSession session) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
@@ -1300,6 +1311,24 @@ public class StudentController {
 		List<PostVO> postList = studentService.searchPostList(stdtId);
 		model.addAttribute("postList", postList);
 		return postList;
+	}
+
+	// 마이페이지 문의 내역 조회
+	/**
+	 * @author : dabin
+	 * @date : 2023. 9 .13
+	 * @parameter : session, model
+	 * @return :
+	 */
+
+	@PostMapping("/mypage/sbsdList")
+	@ResponseBody
+	public List<SubsidyDTO> searchSbsdList(HttpSession session, Model model) {
+		String stdtId = (String) session.getAttribute("stdtId");
+		List<SubsidyDTO> sbsdList = studentService.searchSbsdList(stdtId);
+		model.addAttribute("sbsdList", sbsdList);
+		System.out.println(sbsdList);
+		return sbsdList;
 	}
 
 	/*

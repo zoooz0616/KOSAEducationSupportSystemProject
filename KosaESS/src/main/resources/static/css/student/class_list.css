@@ -28,7 +28,7 @@ input {
 }
 
 input::placeholder {
-	color: #0E5881;
+	color: #B5B6BA;
 }
 
 .searchBtn {
@@ -148,7 +148,7 @@ tfoot td {
 }
 
 .list-style td {
-	padding: 0.5%;
+	padding: 1% 0;
 }
 
 .list-style a {
@@ -166,17 +166,17 @@ tfoot td {
 }
 
 .list-style td:nth-child(2) {
-	width: 40%;
+	width: 30%;
 	font-weight: bold;
 }
 
 .list-style td:nth-child(3) {
-	width: 13%;
+	width: 18%;
 	text-align: center;
 }
 
 .list-style td:nth-child(4) {
-	width: 13%;
+	width: 18%;
 	text-align: center;
 }
 
@@ -198,6 +198,7 @@ tfoot td {
 .list-style td:nth-child(8) {
 	width: 10%;
 	text-align: center;
+	padding: 0.2%;
 }
 
 .totalcnt {
@@ -392,7 +393,8 @@ a, .searchBtn, select {
 	cursor: pointer
 }
 
-.openModalBtn:hover, .applyBtn:hover, .aplyBtn:hover, .closeModalBtn:hover, .searchBtn:hover{
+.openModalBtn:hover, .applyBtn:hover, .aplyBtn:hover, .closeModalBtn:hover,
+	.searchBtn:hover {
 	background-color: #F1A77E;
 }
 

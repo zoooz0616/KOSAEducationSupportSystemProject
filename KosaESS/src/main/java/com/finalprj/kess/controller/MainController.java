@@ -39,6 +39,8 @@ public class MainController {
 
 	@Autowired
 	IMainService mainService;
+	
+	@Autowired
 	IStudentService studentService;
 
 	@Autowired
@@ -192,17 +194,19 @@ public class MainController {
 	/**
 	 * @author : eunji
 	 * @date : 2023. 10. 1.
+	 * @updater : dabin
+	 * @update : 2023. 10. 15.
 	 * @parameter : model
 	 * @return :
 	 */
 	@GetMapping("/student/join")
 	public String join(Model model) {
 		// 성별 리스트
-		List<CommonCodeVO> genderList = adminService.getCommonCodeList("GRP0000006");
+		List<CommonCodeVO> genderList = studentService.getCommonCodeList("GRP0000006");
 		model.addAttribute("genderList", genderList);
 
 		// 직업 리스트
-		List<CommonCodeVO> jobList = adminService.getCommonCodeList("GRP0000007");
+		List<CommonCodeVO> jobList = studentService.getCommonCodeList("GRP0000007");
 		model.addAttribute("jobList", jobList);
 		return "signup";
 	}

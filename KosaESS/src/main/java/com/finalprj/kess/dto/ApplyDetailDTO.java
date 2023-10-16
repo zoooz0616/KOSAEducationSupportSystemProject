@@ -22,6 +22,8 @@ public class ApplyDetailDTO {
 	private String clssId;
 
 	private String clssNm;
+	private String clssCd;
+	private String clssCdNm;
 	private Date aplyStartDd;// 지원시작일시 (날짜)
 	private Timestamp aplyEndDt;// 지원종료일시
 	private Date aplyEndDd;// 지원종료일시 (날짜)

@@ -37,11 +37,11 @@
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table">
 					<div class="search_filter_name">
-						교육과정명<span class="star">*</span>
+						교육과정<span class="star">*</span>
 					</div>
 					<div class="search_filter_input">
 						<select id="classId">
-							<option value="" disabled selected>교육과정명을 선택하세요</option>
+							<option value="" disabled selected>교육과정을 선택하세요</option>
 							<option th:each="class:${classList}" th:text="${class.clssNm}"
 								th:value="${class}" />
 						</select>
@@ -86,9 +86,10 @@
 
 			<!-- 테이블 조작 -->
 			<div class="table_controller" id="tableController">
-			<div>
+			<div class="result_count">
+				<span>총&nbsp;</span>
 				<span th:text="${stdtCnt}" id="stdtCnt"></span>
-				<span class="stdt_count_unit">명</span>
+				<span>&nbsp;명</span>
 			</div>
 			<div class="cmpt_button">
 				<button th:each="cmptCodeName:${cmptCodeNameList}" onclick="cmptUpdate(this)" th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}" class="cmpt_btn" th:classappend="${cmptCodeNameStat.count}"></button>

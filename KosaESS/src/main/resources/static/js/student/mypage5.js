@@ -8,13 +8,18 @@ $(document).ready(function() {
 	function updateMoneyTable() {
 		$.ajax({
 			type: 'POST',
-			url: '/student/mypage/moneyList',
+			url: '/student/mypage/sbsdList',
 			success: function(data) {
-
+				console.log(data);
 				todoData5 = data;
-				$('.moneyCnt').text(todoDat5.length);
+				$('.sbsdCnt').text(todoData5.length);
 				setTable(1);
 				setPaging(1);
+
+				if (data.length == 0)
+					$('.sbsdFoot').show();
+				else
+					$('.sbsdFoot').hide();
 			}
 		});
 	}
@@ -71,38 +76,40 @@ $(document).ready(function() {
 		const startIdx = (pageNum - 1) * countPerPage5;
 		const endIdx = startIdx + countPerPage5;
 		const filteredData = todoData5.slice(startIdx, endIdx);
-		const num = $('.totalRowCount').text();
+		const num = $('.sbsdCnt').text();
 		// 받은 데이터로 테이블을 업데이트합니다.
-		var tbody = $('.moneyTable tbody');
+		var tbody = $('.sbsdTable tbody');
 		tbody.empty(); // tbody 내용을 비웁니다.
 
-		/*for (var i = 0; i < filteredData.length; i++) {
-			var moneyVO = filteredData[i];
+		for (var i = 0; i < filteredData.length; i++) {
+			var SubsidyVO = filteredData[i];
 
-			var row = $('<tr class="postRow"></tr>');
+			var row = $('<tr class="sbsyRow"></tr>');
 			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
-			row.append('<td style="word-break: keep-all;"><a href="/student/inquiry/view/' + PostVO.postId + '"><span>' + PostVO.postTitle + '</span></a></td>');
-			row.append('<td>' + PostVO.rgstDd + '</td>');
-			if (PostVO.cmcdNm === '답변완료') {
-				row.append('<td style="color:blue;">' + PostVO.cmcdNm + '</td>');
-			}else {
-				row.append('<td>' + PostVO.cmcdNm + '</td>');
+			row.append('<td style="word-break: keep-all;">' + SubsidyVO.clssNm + '</td>');
+			if (SubsidyVO.subsidyDd === '') {
+				row.append('<td> - </td>');
+			}
+			else {
+				row.append('<td>' + SubsidyVO.subsidyDd + '</td>');
+			}
+			const number = SubsidyVO.payment;
+			number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+			if (SubsidyVO.payment === '') {
+				row.append('<td> - </td>');
+			}
+			else {
+				row.append('<td>' + number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + '</td>');
+			}
+			if (SubsidyVO.monyCd === 'MNY0000002') {
+				row.append('<td style="color:blue;">' + SubsidyVO.monyNm + '</td>');
+			}
+			else {
+				row.append('<td style="color:red;">' + SubsidyVO.monyNm + '</td>');
 			}
 
-			var replyTd = $('<td></td>');
-			if (PostVO.postCd === 'PST0000004') {
-				replyTd.append('<input type="button" class="toggleReplyButton" value="확인하기" onclick = "toggleReply(this)">');
-			} else {
-				replyTd.append('<input type="button" class="toggleReplyButton" style="display: none;">');
-			}
-			row.append(replyTd);
-			row.append('<td style="display: none;">' + PostVO.postId + '</td>');
 			tbody.append(row);
-
-			// 답변 컨테이너를 추가합니다.
-			var replyContainer = $('<tr class="reply-container" style="display: none;"><td>' + PostVO.postContent + '</td></tr>');
-			tbody.append(replyContainer);
-		}*/
+		}
 	}
 
 	// 페이징 정보를 설정하는 함수
@@ -140,3 +147,4 @@ $(document).ready(function() {
 		$('#last_page').show();
 	}
 });
+

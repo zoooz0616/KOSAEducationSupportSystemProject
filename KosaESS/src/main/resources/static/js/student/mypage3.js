@@ -4,17 +4,30 @@ $(document).ready(function() {
 	let todoData3 = [];
 
 	updateWlogTable();
+	var selectedValue = '';
+
+	$('#wlogClssNm').change(function() {
+		selectedValue = $(this).val();
+
+		updateWlogTable();
+	});
 
 	function updateWlogTable() {
 		$.ajax({
 			type: 'POST',
 			url: '/student/mypage/wlogList',
+			data: { selectedClssNm: selectedValue },
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
 				todoData3 = data;
 				$('.wlogCnt').text(todoData3.length);
 				setTable(1);
 				setPaging(1);
+				
+				if (data.length == 0)
+					$('.wlogFoot').show();
+				else
+					$('.wlogFoot').hide();
 			}
 		});
 	};
@@ -85,14 +98,14 @@ $(document).ready(function() {
 				var outTmDd = formatTimestamp(WorklogVO.outTm);
 
 			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
-			row.append('<td style="word-break: keep-all;">' + WorklogVO.clssNm + '</td>');
+			row.append('<td>' + WorklogVO.clssNm + '</td>');
 			row.append('<td>' + inTmDd + '</td>');
 			row.append('<td>' + outTmDd + '</td>');
-			if (WorklogVO.wlogNm == '정상') {
+			if (WorklogVO.wlogCd == 'WOK0000001') {
 				row.append('<td>' + WorklogVO.wlogNm + '</td>');
-			} else if (WorklogVO.wlogNm === '지각' || WorklogVO.wlogNm ===  '조퇴'){
+			} else if (WorklogVO.wlogCd === 'WOK0000002' || WorklogVO.wlogCd === 'WOK0000003') {
 				row.append('<td style="color:blue;">' + WorklogVO.wlogNm + '</td>');
-			}else {
+			} else {
 				row.append('<td style="color:red;">' + WorklogVO.wlogNm + '</td>');
 			}
 			row.append('<td><button class="submitResn" >제출</button><button class="updateResn">수정</button></td>');
@@ -254,3 +267,4 @@ $(document).ready(function() {
 		});
 	});
 });
+

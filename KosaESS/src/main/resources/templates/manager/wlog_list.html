@@ -42,10 +42,10 @@
 		<div class="search_filter_wrap">
 			<!-- 검색 필터 테이블 -->
 			<div class="search_filter_table">
-				<div class="search_filter_name">교육과정명</div>
+				<div class="search_filter_name">교육과정</div>
 				<div class="search_filter_input">
 					<select id="class_selector">
-						<option value="" disabled selected>교육과정명을 선택하세요</option>
+						<option value="" disabled selected>교육과정을 선택하세요</option>
 						<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
 					</select>
 				</div>
@@ -63,9 +63,9 @@
 						<input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
 					</div>
 				</div>
-				<div class="search_filter_name">교육생 이름</div>
+				<div class="search_filter_name">검색어</div>
 				<div class="search_filter_input">
-					<input type="text" id="search_keyword">
+					<input type="text" id="search_keyword" placeholder="이름 또는 이메일">
 				</div>
 				<div class="search_filter_name">출석 상태</div>
 				<div class="search_filter_input">
@@ -76,9 +76,8 @@
 						<input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}" checked="checked">
 					</div>
 				</div>
-				<div class="search_filter_name">기록 상태</div>
+				<div class="search_filter_name">사유서</div>
 				<div class="search_filter_input">
-					<span>사유서 포함 된 기록만 보기</span>
 					<input type="checkbox" id="fileContainedOnly">
 				</div>
 			</div>
@@ -94,15 +93,17 @@
 		
 		<!-- 테이블 조작 -->
 		<div class="table_controller" id="tableController">
-			<div>
-				<span>
-					<span th:text="${wlogCnt}" id="wlogCnt"></span>
-					<span class="wlog_count_unit">건</span>
-				</span>
+			<div class="result_count">
+				<span>총&nbsp;</span>
+				<span th:text="${wlogCnt}" id="wlogCnt"></span>
+				<span>&nbsp;건</span>
 			</div>
 			<div class="wlog_update_buttons">
 				<div th:each="wlogCd:${wlogCdList}" class="wlog_controller">
 					<button onclick="updateWlogCode(this)" th:value="${wlogCd.cmcdId}" th:text="${wlogCd.cmcdNm}" class="wlog_btn"></button>
+				</div>
+				<div class="wlog_controller">
+					<button onclick="deleteWlogCode()" class="delete_btn"><img src="/img/minus_white.png">선택 삭제</button>
 				</div>
 			</div>
 		</div>
@@ -116,11 +117,11 @@
 					<th>번호</th>
 					<th>이름</th>
 					<th>이메일</th>
+					<th>교육과정</th>
 					<th>출근</th>
 					<th>퇴근</th>
-					<th>출석 인정 시간<br>(h)</th>
+					<th>출석 인정 시간(h)</th>
 					<th>출석 상태</th><!-- 셀렉박스 -->
-					<th>삭제 여부</th>
 					<th>사유서</th>
 					<th>처리 상태</th><!-- 사유서 모달에서 변경함 -->
 				</tr>
@@ -129,16 +130,16 @@
 			<tbody id="wlog_list_tbody">
 				<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
 					<td class="fixed_length_cell"> <input type="checkbox" class="chk_wlog" th:value="${wlog.wlogId}"> </td>
-					<td class="number_cell" th:text="${wlogStat.count}">번호</td>
+					<td class="fixed_length_cell" th:text="${wlogStat.count}">번호</td>
 					<td class="fixed_length_cell" th:text="${wlog.stdtNm}">이름</td>
 					<td class="variable_length_cell" th:text="${wlog.userEmail}">이메일</td>
+					<td class="variable_length_cell" th:text="${wlog.clssNm}">교육과정</td>
 					<td class="fixed_length_cell" th:text="${wlog.inTm!=null?#dates.format(wlog.inTm,'yyyy-MM-dd HH:mm:ss'):'-'}">출근 기록</td>
 					<td class="fixed_length_cell" th:text="${wlog.outTm!=null?#dates.format(wlog.outTm,'yyyy-MM-dd HH:mm:ss'):'-'}">퇴근 기록</td>
 					<td class="number_cell" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
 					<td class="fixed_length_cell" th:text="${wlog.wlogCd}">출석 상태</td>
-					<td class="fixed_length_cell" th:text="${wlog.deleteYn}">삭제 여부</td>
 					<td class="fixed_length_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal(this)" th:value="${wlog.resnId}" src="/img/file.png"></td>
-					<td class="fixed_length_cell" th:text="${wlog.prcsCd}">처리 상태</td>
+					<td class="fixed_length_cell" id="prcs_cd" th:text="${wlog.prcsCd}" th:value="${wlog.resnCd}">처리 상태</td>
 				</tr>
 			</tbody>
 		</table>

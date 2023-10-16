@@ -212,7 +212,6 @@ table tr {
 
 table td {
 	padding: 10px;
-	vertical-align: center;
 	border-bottom: 1px solid #CFDEE6;
 }
 
@@ -287,17 +286,18 @@ td button {
 }
 
 .applyTable td:nth-child(2) {
-	width: 25%;
-	text-align: left;
+	width: 30%;
 	font-weight: bold;
+	text-align: left;
+	word-break: keep-all;
 }
 
 .applyTable td:nth-child(3) {
-	width: 12%;
+	width: 10%;
 }
 
 .applyTable td:nth-child(4) {
-	width: 12%;
+	width: 10%;
 }
 
 .applyTable td:nth-child(5) {
@@ -305,7 +305,7 @@ td button {
 }
 
 .applyTable td:nth-child(6) {
-	width: 12%;
+	width: 7%;
 }
 
 .applyTable td:nth-child(7) {
@@ -313,7 +313,11 @@ td button {
 }
 
 .applyTable td:nth-child(8) {
-	width: 15%;
+	width: 7%;
+}
+
+.applyTable td:nth-child(9) {
+	width: 12%;
 }
 
 .rgstTable td:nth-child(1) {
@@ -321,13 +325,14 @@ td button {
 }
 
 .rgstTable td:nth-child(2) {
-	width: 45%;
+	width: 40%;
 	text-align: left;
 	font-weight: bold;
+	word-break: keep-all;
 }
 
 .rgstTable td:nth-child(3) {
-	width: 18%;
+	width: 23%;
 }
 
 .rgstTable td:nth-child(4) {
@@ -347,29 +352,30 @@ td button {
 }
 
 .wlogTable td:nth-child(2) {
-	width: 31%;
+	width: 29%;
 	text-align: left;
 	font-weight: bold;
+	word-break: keep-all;
 }
 
 .wlogTable td:nth-child(3) {
-	width: 12%;
+	width: 17%;
 }
 
 .wlogTable td:nth-child(4) {
-	width: 12%;
+	width: 17%;
 }
 
 .wlogTable td:nth-child(5) {
-	width: 13%;
+	width: 10%;
 }
 
 .wlogTable td:nth-child(6) {
-	width: 11%;
+	width: 10%;
 }
 
 .wlogTable td:nth-child(7) {
-	width: 14%;
+	width: 10%;
 }
 
 .postTable td:nth-child(1) {
@@ -380,6 +386,7 @@ td button {
 	width: 52%;
 	text-align: left;
 	font-weight: bold;
+	word-break: keep-all;
 }
 
 .postTable td:nth-child(3) {
@@ -394,24 +401,26 @@ td button {
 	width: 13%;
 }
 
-.postTable th:nth-child(1) {
+.sbsdTable td:nth-child(1) {
 	width: 7%;
 }
 
-.postTable th:nth-child(2) {
+.sbsdTable td:nth-child(2) {
 	width: 52%;
+	text-align: left;
 	font-weight: bold;
+	word-break: keep-all;
 }
 
-.postTable th:nth-child(3) {
+.sbsdTable td:nth-child(3) {
 	width: 15%;
 }
 
-.postTable th:nth-child(4) {
+.sbsdTable td:nth-child(4) {
 	width: 13%;
 }
 
-.postTable th:nth-child(5) {
+.sbsdTable td:nth-child(5) {
 	width: 13%;
 }
 
@@ -478,4 +487,9 @@ td button {
 
 .paging .active {
 	background: #E7EFF3;
+}
+
+tfoot td {
+	text-align: center;
+	font-size: 20px !important;
 }
