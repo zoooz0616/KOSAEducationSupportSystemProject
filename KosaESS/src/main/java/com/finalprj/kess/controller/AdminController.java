@@ -2090,7 +2090,6 @@ public class AdminController {
 	@GetMapping("/commoncode/insert/detailcode/popup/{selectedCode}")
 	public String insertDetail(Model model, @PathVariable String selectedCode) {
 		model.addAttribute("cmcdId", selectedCode);
-		
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
 		model.addAttribute("groupCodeList", groupCodeList);
 		
