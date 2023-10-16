@@ -76,4 +76,6 @@ public interface IManagerRepository {
 	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString);
 
 	public void insertSubsidy(SubsidyVO subsidyVO);
+
+	public void deleteWlog(String wlogId);
 }

@@ -13,6 +13,7 @@ public class WorklogDTO {
 	private String stdtNm;//교육생 이름
 	private String userEmail;//교육생 이메일
 	private String clssId;//교육과정id
+	private String clssNm;//교육과정 이름
 	
 	private Timestamp inTm;//출근시간
 	private Timestamp outTm;//퇴근시간
@@ -31,8 +32,8 @@ public class WorklogDTO {
 	
 	private String resnId;//사유서 id
 	private String resnNm;//사유서 제목
-	private String clssNm;//교육과정명
 	private String wlogNm;//출퇴근 상태
+	private String resnCd;//처리 상태
 	private String prcsCd;//처리 상태
 		
 	public String getInTmAsString() {
