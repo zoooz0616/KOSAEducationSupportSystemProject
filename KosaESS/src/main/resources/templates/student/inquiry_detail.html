@@ -33,7 +33,7 @@
 					<tr>
 						<td colspan="2" style="border: none;">
 						<th>답변상태</th>
-						<td><span th:if="${inquiryDetail.cmcdNm} == '답변완료'"
+						<td style="padding: 4px 0;"><span th:if="${inquiryDetail.cmcdNm} == '답변완료'"
 							th:text="${inquiryDetail.cmcdNm}" style="color: blue;"></span> <span
 							th:if="${inquiryDetail.cmcdNm} != '답변완료'"
 							th:text="${inquiryDetail.cmcdNm}"></span></td>

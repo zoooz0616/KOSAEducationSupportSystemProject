@@ -98,7 +98,7 @@ $(document).ready(function() {
 				var outTmDd = formatTimestamp(WorklogVO.outTm);
 
 			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
-			row.append('<td style="word-break: keep-all;">' + WorklogVO.clssNm + '</td>');
+			row.append('<td>' + WorklogVO.clssNm + '</td>');
 			row.append('<td>' + inTmDd + '</td>');
 			row.append('<td>' + outTmDd + '</td>');
 			if (WorklogVO.wlogCd == 'WOK0000001') {

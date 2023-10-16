@@ -356,8 +356,8 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public List<CommonCodeVO> getCommonCodeList(String string) {
-		return studentRepository.getCommonCodeList(string);
+	public List<CommonCodeVO> getCommonCodeList(String tpcdId) {
+		return studentRepository.getCommonCodeList(tpcdId);
 	}
 
 	@Override

@@ -179,6 +179,7 @@ $(document).ready(function() {
 
 			for (var i = 0; i < filteredData.length; i++) {
 				var classVO = filteredData[i];
+				var aplyEnd = formatTimestamp(classVO.aplyEndDt);
 				var row = $('<tr class="classRow"></tr>');
 
 
@@ -186,15 +187,15 @@ $(document).ready(function() {
 				row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 				var applyBtn = $('<a>').attr('href', '/student/class/view/' + classVO.clssId).text(classVO.clssNm);
 				row.append($('<td style=" text-overflow: ellipsis;overflow: hidden; white-space: nowrap;"></td>').append(applyBtn));
-				if (classVO.aplyStartDd == null) {
+				if (classVO.aplyEndDt == null) {
 					row.append('<td><span>미정</span></td>');
 				} else {
-					row.append('<td><span>' + classVO.aplyStartDd + '<br> ~ ' + classVO.aplyEndDd + '</span></td>');
+					row.append('<td><span>' + ' ~ ' + aplyEnd + '</span></td>');
 				}
-				if (classVO.aplyStartDd == null) {
+				if (classVO.clssStartDd == null) {
 					row.append('<td><span>미정</span></td>');
 				} else {
-					row.append('<td><span>' + classVO.clssStartDd + '<br> ~ ' + classVO.clssEndDd + '</span></td>');
+					row.append('<td><span>' + classVO.clssStartDd + ' ~ ' + classVO.clssEndDd + '</span></td>');
 				}
 				if (classVO.clssAdr == null) {
 					row.append('<td><span>미정</span></td>');
@@ -267,6 +268,7 @@ $(document).ready(function() {
 
 			for (var i = 0; i < filteredData.length; i++) {
 				var classVO = filteredData[i];
+				var aplyEnd = formatTimestamp(classVO.aplyEndDt);
 				var row = $('<tr class="classRow"></tr>');
 
 				// 각 tr 요소를 순회하면서 5의 배수인 경우 클래스를 추가합니다.
@@ -286,10 +288,10 @@ $(document).ready(function() {
 					row.append('<td class="classImg"><div style="width: 100%; text-align: center;"><img src="/img/logo.png"></div>');
 				}
 				row.append('<td style="font-weight: bold; font-size: 18px; word-break: keep-all; text-overflow: ellipsis;overflow: hidden; white-space: nowrap;">' + classVO.clssNm + '</td>');
-				if (classVO.aplyStartDd == null) {
+				if (classVO.aplyEndDt == null) {
 					row.append('<td><span>지원:  미정  </span></td>');
 				} else {
-					row.append('<td><span>지원: </span><span>' + classVO.aplyStartDd + '~' + classVO.aplyEndDd + '</span></td>');
+					row.append('<td><span>지원: </span><span>' +  '~ ' + aplyEnd + '</span></td>');
 				}
 				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
 				row.append($('<td>').append(applyBtn));
@@ -347,4 +349,19 @@ const topBtn = document.querySelector(".moveTopBtn");
 topBtn.addEventListener('click', () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+function formatTimestamp(timestamp) {
+	const date = new Date(timestamp);
+
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	const hours = String(date.getHours()).padStart(2, '0');
+	const minutes = String(date.getMinutes()).padStart(2, '0');
+	const seconds = String(date.getSeconds()).padStart(2, '0');
+
+	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+	return formattedTimestamp;
+}
 

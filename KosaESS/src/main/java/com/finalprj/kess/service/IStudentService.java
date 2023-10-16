@@ -153,7 +153,7 @@ public interface IStudentService {
 
 	String getContent(String postId);
 
-	List<CommonCodeVO> getCommonCodeList(String string);
+	List<CommonCodeVO> getCommonCodeList(String tpcdId);
 
 	void updateInfo(StudentVO userInfo);
 
