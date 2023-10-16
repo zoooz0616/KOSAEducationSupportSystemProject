@@ -1,5 +1,5 @@
 a {
-	text-decoration-line: none;	
+	text-decoration-line: none;
 	color: #0E5881;
 	font-weight: bold;
 }
@@ -82,20 +82,17 @@ a {
 	color: #0E5881;
 }
 
-.insert {
+.search_filter_wrap {
 	border-top: 2px solid #0E5881;
 	border-bottom: 1px solid #CFDEE6;
 	background: #E7EFF3;
 	display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
-.insert div > span{
+.search_filter_wrap div>span {
 	color: #0E5881;
-    font-weight: bold;
-}
-
-.insert div *{
-	margin-right:5px;
+	font-weight: bold;
 }
 
 .table_wrap {
@@ -107,10 +104,11 @@ a {
 	font-weight: bold;
 	display: flex;
 	align-items: center;
-    justify-content: space-between;
+	justify-content: space-between;
+	margin-top: 10px;
 }
 
-.content_info_wrap .cnt , .detailCodeCnt {
+.content_info_wrap .cnt, .detailCodeCnt {
 	color: #0E5881;
 }
 
@@ -118,11 +116,11 @@ a {
 	display: flex;
 }
 
-.content_info_btn_wrap > button {
+.content_info_btn_wrap>button {
 	display: flex;
 }
 
-.content_info_btn_wrap > button > img{
+.content_info_btn_wrap>button>img {
 	width: 20px;
 }
 
@@ -136,13 +134,10 @@ a {
 	margin: 5px;
 	padding: 5px;
 	height: 30px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
 }
-
-.insert_professor div span {
-	color: #0E5881;
-	font-weight: bold;
-}
-
 .insert_btn {
 	width: 60px;
 	border: none;
@@ -152,6 +147,7 @@ a {
 	font-weight: bold;
 	padding: 5px;
 	margin-left: 5px;
+	cursor: pointer;
 }
 
 .table_wrap table tr td button {
@@ -172,7 +168,10 @@ a {
 }
 
 .error_div {
-	width: 100%; height: 100%; text-align: center; padding-top: 40%;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	padding-top: 40%;
 }
 
 .group_code_id {
@@ -181,15 +180,51 @@ a {
 	cursor: pointer;
 }
 
-.red{
+.red {
 	color: red;
 	vertical-align: middle;
 }
 
-.td_group_check_box, .td_detail_check_box, .td_num, .td_cmcd_id, .td_tpcd_id, .td_order, .td_use_yn {
+.td_group_check_box, .td_detail_check_box, .td_num, .td_cmcd_id,
+	.td_tpcd_id, .td_order, .td_use_yn {
 	text-align: center;
 }
 
 .detail_cmcd_order {
 	width: 50px;
+}
+
+.home-section .content_middle .search_filter_btn_wrap {
+	display: flex;
+}
+
+.search_filter_btn_wrap button {
+	text-align: center;
+	color: white;
+	font-weight: bold;
+	border: none;
+	margin: 2px;
+	border-radius: 3px;
+	padding: 5px;
+	display: flex;
+	cursor: pointer;
+}
+
+.search_filter_btn_wrap button img {
+	width: 20px;
+}
+
+.search_filter_btn_wrap .reset_btn {
+	background: #9FBCCD;
+}
+
+.search_filter_btn_wrap .search_btn {
+	background: #0E5881;
+}
+
+.search_filter {
+	margin-right: 20px;
+}
+.search_filter>span{
+	margin-right: 5px;
 }

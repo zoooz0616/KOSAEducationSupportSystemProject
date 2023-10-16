@@ -649,7 +649,7 @@
 	<![CDATA[
 	select *
 	from cmcd
-	where cmcd_id like 'GRP%'
+	where cmcd_id like 'GRP%' and delete_yn ='N'
 	order by cmcd_id
 	]]>
 	</select>
@@ -1000,7 +1000,7 @@
 	<![CDATA[
 		select COALESCE(COUNT(cmcd_id), 0)
 		from cmcd
-		where cmcd_id like 'GRP%' and tpcd_id = #{tpcdId}
+		where cmcd_id like 'GRP%' and tpcd_id = #{tpcdId} and delete_yn='N'
 	]]>
 	</select>
 
@@ -1034,7 +1034,7 @@
 			open="DECLARE BEGIN" separator=";" close="; END;">
 			update cmcd
 			set
-			use_yn = 'N',
+			delete_yn = 'Y',
 			updt_dt = SYSTIMESTAMP,
 			updter_id = 'MNGR000001'
 			where cmcd_id =

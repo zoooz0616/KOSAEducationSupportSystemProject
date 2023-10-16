@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>KOSA 교육지원시스템</title>
+</head>
+<head>
+<link th:href="@{/css/admin/insert_group_code_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>상세코드 등록</h2>
+	<div class="insert_wrap">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">코드구분<span class="red">*</span></span></th>
+				<td>
+					<select th:if="${cmcdId} == 'all'">
+						<option th:each="groupCode : ${groupCodeList}" th:value="${groupCode.cmcdId}" th:text="${groupCode.tpcdId}"></option>
+					</select>
+					
+					<input type="text" th:if="${cmcdId} != 'all'"
+					th:value="${cmcdId}" readonly>
+				</td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">상세코드명<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertGroupCode();}"
+				class="group_code_cmcd_nm" placeholder="ex) ㅇㅇㅇㅇ상태"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="btn_wrap">
+		<button class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertdetailCode();">확인</button>
+	</div>
+	<script>
+	//상세코드 등록
+	function insertdetailCode() {
+		//그룹코드 cmcdId값
+		var cmcdIdSelect = document.getElementById("group_code_select")
+		var cmcdId = cmcdIdSelect.value;
+		//상세코드명
+		var cmcdNmInput = document.querySelector(".detailCmcdNm");
+		var cmcdNm = cmcdNmInput.value;
+
+		console.log(cmcdId);
+
+		$.ajax({
+			url : '/admin/commoncode/insert/detailcode',
+			method : 'POST',
+			data : {
+				cmcdId : cmcdId,
+				cmcdNm : cmcdNm
+			},
+			success : function(response) {
+				console.log(response);
+				if (response == "fail") {
+					alert("상세코드가 이미 존재합니다.");
+				} else {
+					alert("상세코드가 추가되었습니다.");
+					selectDetailCodeList(response);
+
+					cmcdIdSelect.value = "all";
+					cmcdNmInput.value = "";
+
+				}
+			}
+		});
+	}
+	</script>
+</body>
+</html>
