@@ -61,6 +61,7 @@
 							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.clssAdr!= null}"
 							th:text="${classDetail.clssAdr}"></span></td>
+
 					</tr>
 					<tr>
 						<th>총 이수 시간</th>
@@ -118,7 +119,7 @@
 								<td style="width: 35%;" th:text="${CurriculumDetailDTO.lctrNm}"></td>
 								<td th:text="${CurriculumDetailDTO.sbjtNm}"></td>
 								<td th:text="${CurriculumDetailDTO.profNm}"></td>
-								<td class="lctrTm" th:text="${CurriculumDetailDTOm.lctrT}"></td>
+								<td class="lctrTm" th:text="${CurriculumDetailDTO.lctrTm}"></td>
 							</tr>
 							<tfoot>
 								<tr>
