@@ -152,5 +152,6 @@ public interface IAdminRepository {
 
 	void updateDetailCode(CommonCodeVO[] updateDetailList);
 	void updateGroupCode(CommonCodeVO[] updateGroupList);
+	void updateUseYnDetailCode(CommonCodeVO[] updateGroupList);
 
 }

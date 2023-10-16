@@ -5,7 +5,7 @@
 <title>KOSA 교육지원시스템</title>
 </head>
 <head>
-<link th:href="@{/css/admin/insert_group_code_popup.css}" rel="stylesheet">
+<link th:href="@{/css/admin/insert_detail_code_popup.css}" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -15,18 +15,22 @@
 			<tr class="input_wrap">
 				<th><span class="title">코드구분<span class="red">*</span></span></th>
 				<td>
-					<select th:if="${cmcdId} == 'all'">
-						<option th:each="groupCode : ${groupCodeList}" th:value="${groupCode.cmcdId}" th:text="${groupCode.tpcdId}"></option>
+					<select id="tpcd_select">
+						<option th:value="all">선택</option>
+						<option th:each="groupCode : ${groupCodeList}" 
+						th:value="${groupCode.cmcdId}" th:text="${groupCode.tpcdId}"
+						th:selected="${cmcdId} == ${groupCode.cmcdId}"></option>
 					</select>
-					
-					<input type="text" th:if="${cmcdId} != 'all'"
-					th:value="${cmcdId}" readonly>
 				</td>
 			</tr>
 			<tr class="input_wrap">
 				<th><span class="title">상세코드명<span class="red">*</span></span></th>
-				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertGroupCode();}"
-				class="group_code_cmcd_nm" placeholder="ex) ㅇㅇㅇㅇ상태"></td>
+				<td><input type="text" class="group_code_cmcd_nm" placeholder="상세코드명"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">우선순위<span class="red">*</span></span></th>
+				<td><input type="number" min="0" onkeyup="if(window.event.keyCode==13){insertGroupCode();}"
+				class="group_code_cmcd_order" placeholder="우선순위"></td>
 			</tr>
 		</table>
 	</div>
@@ -35,39 +39,51 @@
 		<button class="btn" onclick="self.close();">취소</button>
 		<button class="btn" onclick="insertdetailCode();">확인</button>
 	</div>
-	<script>
+	<script th:inline="javascript">
+	var cmcdId = /*[[${cmcdId}]]*/"";
+    var selectElement = document.getElementById("tpcd_select");
+    
+    
+    if (cmcdId != 'all') {
+    	console.log(cmcdId);
+        selectElement.disabled = true;
+    }
+	
 	//상세코드 등록
 	function insertdetailCode() {
 		//그룹코드 cmcdId값
-		var cmcdIdSelect = document.getElementById("group_code_select")
+		var cmcdIdSelect = document.getElementById("tpcd_select")
 		var cmcdId = cmcdIdSelect.value;
 		//상세코드명
-		var cmcdNmInput = document.querySelector(".detailCmcdNm");
+		var cmcdNmInput = document.querySelector(".group_code_cmcd_nm");
 		var cmcdNm = cmcdNmInput.value;
-
-		console.log(cmcdId);
-
-		$.ajax({
-			url : '/admin/commoncode/insert/detailcode',
-			method : 'POST',
-			data : {
-				cmcdId : cmcdId,
-				cmcdNm : cmcdNm
-			},
-			success : function(response) {
-				console.log(response);
-				if (response == "fail") {
-					alert("상세코드가 이미 존재합니다.");
-				} else {
-					alert("상세코드가 추가되었습니다.");
-					selectDetailCodeList(response);
-
-					cmcdIdSelect.value = "all";
-					cmcdNmInput.value = "";
-
+		//우선순위
+		var cmcdOrderInput = document.querySelector(".group_code_cmcd_order");
+		var cmcdOrder = cmcdOrderInput.value; 
+		
+		
+		if(cmcdId === "all" || cmcdNm === "" ||cmcdOrder === ""){
+			alert("필수값을 모두 입력해주세요.");
+		}else {
+			$.ajax({
+				url : '/admin/commoncode/insert/detailcode',
+				method : 'POST',
+				data : {
+					cmcdId : cmcdId,
+					cmcdNm : cmcdNm,
+					cmcdOrder : cmcdOrder
+				},
+				success : function(response) {
+					if (response == "fail") {
+						alert("상세코드가 이미 존재합니다.");
+					} else {
+						alert("상세코드가 추가되었습니다.");
+						self.close();//팝업창 닫기
+					}
 				}
-			}
-		});
+			});
+		}
+		
 	}
 	</script>
 </body>

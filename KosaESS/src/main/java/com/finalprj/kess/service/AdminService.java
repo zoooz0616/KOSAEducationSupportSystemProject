@@ -627,6 +627,7 @@ public class AdminService implements IAdminService {
 	@Override
 	public void updateGroupCode(CommonCodeVO[] updateGroupList) {
 		adminRepository.updateGroupCode(updateGroupList);
+		adminRepository.updateUseYnDetailCode(updateGroupList);
 	}
 	
 	
