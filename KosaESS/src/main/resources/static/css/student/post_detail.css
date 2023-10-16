@@ -21,7 +21,7 @@ table tr {
 
 table td {
 	font-weight: bold;
-	padding: 4px 3%;
+	padding: 4px 1%;
 }
 
 table th {
@@ -65,14 +65,22 @@ ul {
 	justify-content: space-evenly;
 }
 
-.btn button {
-	padding: 0 3%;
-}
-
-.back, .openModalBtn, .update, .delete {
+.back, .openModalBtn{
 	background: #0E5881;
 	color: white;
-	padding: 1%;
+	margin: 8px 0;
+	border: 0;
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 10px;
+	cursor: pointer;
+	width: 25%;
+}
+
+.update, .delete {
+	background: #0E5881;
+	color: white;
+	padding: 0.7%;
 	margin: 8px 0;
 	border: 0;
 	font-size: 15px;
@@ -139,7 +147,7 @@ pre {
 
 .replyTable li {
 	border-bottom: 2px solid #9FBCCD;
-	padding:1%0;
+	padding: 1% 0;
 }
 
 .rgstBtn {

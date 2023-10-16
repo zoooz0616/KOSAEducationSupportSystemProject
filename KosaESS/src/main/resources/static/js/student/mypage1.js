@@ -83,14 +83,14 @@ $(document).ready(function() {
 
 		for (var i = 0; i < filteredData.length; i++) {
 			var ApplyDetailDTO = filteredData[i];
-
+			var aplyEnd = formatTimestamp2(ApplyDetailDTO.aplyEndDt);
 			var row = $('<tr class="aplyRow"></tr>');
 
 			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 			var apply = $('<a>').attr('href', '/student/class/view/' + ApplyDetailDTO.clssId).text(ApplyDetailDTO.clssNm);
 			row.append($('<td></td>').append(apply));
-			row.append('<td><span>' + ApplyDetailDTO.aplyStartDd + '<br> ~ ' + ApplyDetailDTO.aplyEndDd + '</span></td>');
-			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
+			row.append('<td><span>' + '~ ' + aplyEnd  + '</span></td>');
+			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + ' ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 			row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
 			if (ApplyDetailDTO.clssCd === 'CLS0000003' || ApplyDetailDTO.clssCd === 'CLS0000008') {
 				row.append('<td style="color:red;">' + ApplyDetailDTO.clssCdNm + '</td>');
@@ -284,6 +284,21 @@ function formatTimestamp(timestamp) {
 	const seconds = String(date.getSeconds()).padStart(2, '0');
 
 	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+	return formattedTimestamp;
+}
+
+function formatTimestamp2(timestamp) {
+	const date = new Date(timestamp);
+
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	const hours = String(date.getHours()).padStart(2, '0');
+	const minutes = String(date.getMinutes()).padStart(2, '0');
+	const seconds = String(date.getSeconds()).padStart(2, '0');
+
+	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}`;
 
 	return formattedTimestamp;
 }
