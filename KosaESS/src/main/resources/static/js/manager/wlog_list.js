@@ -196,7 +196,7 @@ function updateWlogCode(button) {
 		},
 		async: false,
 		success: function(response) {
-			console.log(response.result);
+			//console.log(response.result);
 			reload();
 			alertFade("상태를 변경하였습니다.","CFDEE6","0E5881");
 		}, error: function(error) {
@@ -243,7 +243,8 @@ function updateResnCode(button) {
 			async: false,
 			success: function(response) {
 				if (response != null) {
-					$('#modal_prcs_name').text(button.innerText);
+					$('#modal_prcs_name').text(response.responseName);
+					$('#modal_prcs_name').val(response.responseValue);
 				}
 				alertFade("상태를 변경하였습니다.","CFDEE6","0E5881");
 				reload();
@@ -321,18 +322,21 @@ $(document).ready(
 
 // 모달창 외부를 클릭 시 모달창을 제거
 function closeModal() {
-	$('.resn_modal_wrap').css("display", 'none');
-	$('body').css("overflow", 'auto');
 	if (isResnChanged) {
 		reload();
-		isResnChanged = false;
 	}else{
-		let prcsCd = resnIcon.parentNode.parentNode.lastChild.previousSibling.getAttribute("value");
+		let prcsCd = $('#modal_prcs_name').val();
+		console.log(prcsCd);
 		//미확인이라면 보류로 변경
 		if(prcsCd == 'RES0000001'){
+			//$('#modal_prcs_name').removeAttr("value")
 			updateResnCode('RES0000004');
+			reload();
 		}
 	}
+	isResnChanged = false;
+	$('.resn_modal_wrap').css("display", 'none');
+	$('body').css("overflow", 'auto');
 }
 
 // 아이콘을 누르면 모달을 표시
@@ -359,6 +363,7 @@ function showModal(resnIcon) {
 			$('#modal_name').text(response.resnContent.stdtNm);
 			$('#modal_email').text(response.resnContent.userEmail);
 			$('#modal_prcs_name').text(response.resnContent.prcsNm);
+			$('#modal_prcs_name').val(response.resnContent.resnCd);
 
 			if (response.resnContent.strInTmDd != null) {
 				$('#modal_in_time').html(response.resnContent.strInTmDd);
@@ -373,7 +378,6 @@ function showModal(resnIcon) {
 			}
 
 			$('#modal_wlog_cd').text(response.resnContent.wlogNm);
-			$('#modal_wlog_cd').value(response.resnContent.wlogNm);
 
 			$('.resn_text').text(response.resnContent.resnContent);
 
@@ -685,7 +689,8 @@ function reload() {
 				rowClssNm.attr("class", "variable_length_cell");
 				rowResn.attr("class", "fixed_length_cell");
 				rowResnCd.attr("class", "fixed_length_cell");
-				rowResnCd.attr("value", wlogList[i].resnCd);
+				//rowResnCd.attr("value", wlogList[i].resnCd);
+				rowResnCd.val(wlogList[i].resnCd);
 
 				newRow.append(rowChk);
 				newRow.append(rowNum);

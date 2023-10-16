@@ -48,7 +48,7 @@
 		<![CDATA[
 			SELECT *
 			FROM cmcd
-			WHERE cmcd_id like #{keyword} ||'%'
+			WHERE cmcd_id like trim(#{keyword}) ||'%'
 				AND use_yn = 'Y'
 			ORDER BY cmcd_order
 		]]>
@@ -122,7 +122,7 @@
 		</foreach>
 		<if test='keyword != null'>
 			<![CDATA[
-				AND ((stdt_nm like '%'||#{keyword}||'%')OR(user_email like '%'||#{keyword}||'%'))
+				AND ((stdt_nm like '%'||trim(#{keyword})||'%')OR(user_email like '%'||trim(#{keyword})||'%'))
 			]]>
 		</if>
 		<![CDATA[
@@ -194,7 +194,7 @@
 		]]>
 		</if>
 		<![CDATA[
-			ORDER BY clss_nm
+			ORDER BY clss_id
 		]]>
 	</select>
 	
@@ -334,7 +334,7 @@
 		</if>
 		<if test='keyword!=""'>
 			<![CDATA[
-				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE ((s.stdt_nm like '%'||#{keyword}||'%' ) OR (s.user_email like '%'||#{keyword}||'%')))
+				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE ((s.stdt_nm like '%'||trim(#{keyword})||'%' ) OR (s.user_email like '%'||trim(#{keyword})||'%')))
 			]]>
 		</if>
 		<if test='filterString!=null'>
@@ -411,15 +411,15 @@
 		<![CDATA[
 			SELECT 
 				rowNum
-				,m.mony_id
+				,m.sbsd_id
 				,m.clss_id
 				,clss_nm
 				,clss_subsidy
 				,m.stdt_id
 				,stdt_nm
 				,user_email
-				,mony_cd
-				,c1.cmcd_nm as mony_nm
+				,sbsd_cd
+				,c1.cmcd_nm as sbsd_nm
 				,paid_dd
 				,payment
 				,subsidy_dd
@@ -429,10 +429,10 @@
 				,m.rgster_id
 				,m.updt_dt
 				,m.updter_id
-			FROM mony m 
+			FROM sbsd m 
 				JOIN stdt s ON m.stdt_id=s.stdt_id 
 				JOIN clss c ON m.clss_id=c.clss_id
-				JOIN cmcd c1 ON m.mony_cd=c1.cmcd_id
+				JOIN cmcd c1 ON m.sbsd_cd=c1.cmcd_id
 			WHERE m.clss_id in (SELECT clss_id FROM clss WHERE mngr_id = #{mngrId})
 		]]>
 		<if test='clssId!=""'>
@@ -452,12 +452,12 @@
 		</if>
 		<if test='keyword!=""'>
 			<![CDATA[
-				AND m.stdt_id in (SELECT stdt_id FROM stdt WHERE ((stdt_nm like '%'||#{keyword}||'%' ) OR (user_email like '%'||#{keyword}||'%')))
+				AND m.stdt_id in (SELECT stdt_id FROM stdt WHERE ((stdt_nm like '%'||trim(#{keyword})||'%' ) OR (user_email like '%'||trim(#{keyword})||'%')))
 			]]>
 		</if>
 		<if test='filterString!=""'>
 		<if test='filterString!=null'>
-			AND mony_cd IN
+			AND sbsd_cd IN
 			<foreach collection="filterString" item="item" open="(" separator="," close=")">
 				<![CDATA[
 					 #{item}
@@ -467,7 +467,13 @@
 		</if>
 	</select>
 	<insert id="insertSubsidy">
-			<![CDATA[
-			]]>
+		<![CDATA[
+			INSERT INTO sbsd VALUES
+		]]>
 	</insert>
+	<select id="getCodeVO">
+		<![CDATA[
+			SELECT * FROM CMCD WHERE cmcd_id = #{resnCd}
+		]]>
+	</select>
 </mapper>

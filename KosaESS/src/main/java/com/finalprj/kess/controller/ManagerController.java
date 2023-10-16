@@ -424,7 +424,7 @@ public class ManagerController {
 		String title = "지원금 관리";
 		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
-		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
+		List<CommonCodeVO> sbsdCodeNameList = managerService.getCodeNameList("SSD");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 		
 		for (SubsidyDTO dto : subsidyList) {
@@ -439,7 +439,7 @@ public class ManagerController {
 		model.addAttribute("subsidyList", subsidyList);
 		model.addAttribute("resultCount", subsidyList.size());
 		model.addAttribute("classList", classList);
-		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		model.addAttribute("sbsdCodeNameList", sbsdCodeNameList);
 		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
 		
 		return "manager/subsidy_view";
@@ -715,7 +715,7 @@ public class ManagerController {
 	
 	@PostMapping("/worklog/update_resn_code")
 	@ResponseBody
-	public String updateResnCd(
+	public Map<String, Object> updateResnCd(
 			HttpSession session,
 			@RequestParam String resnId,
 			@RequestParam String resnCd
@@ -732,7 +732,10 @@ public class ManagerController {
 		//업데이트
 		managerService.updateResnCd(resnId, resnCd, (String)session.getAttribute("mngrId"));
 		// End : 업데이트
-		return "OK!";
+		Map<String, Object> response = new HashMap<>();
+		response.put("responseName", managerService.getCodeVO(resnCd).getCmcdNm());
+		response.put("responseValue", resnCd);
+		return  response;
 		// End : 업데이트 결과 전송
 	}
 
