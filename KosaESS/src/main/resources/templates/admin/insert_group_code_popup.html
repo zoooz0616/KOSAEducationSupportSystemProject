@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>KOSA 교육지원시스템</title>
+</head>
+<head>
+<link th:href="@{/css/admin/insert_group_code_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>공통코드 등록</h2>
+	<div class="insert_wrap">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">코드구분<span class="red">*</span></span></th>
+				<td><input type="text"
+				class="group_code_tpcd_id" placeholder="ex) NTC" maxlength="3"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">코드구분명<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertGroupCode();}"
+				class="group_code_cmcd_nm" placeholder="ex) ㅇㅇㅇㅇ상태"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="btn_wrap">
+		<button class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertGroupCode();">확인</button>
+	</div>
+	<script>	
+	/*
+	*그룹코드 및 상세코드 등록
+	*/
+	//그룹코드 등록
+	function insertGroupCode() {
+		//그룹코드 tpcdId
+		var tpcdId = document.querySelector(".group_code_tpcd_id").value;
+		//그룹코드 cmcdNm
+		var cmcdNm = document.querySelector(".group_code_cmcd_nm").value;
+
+		if(tpcdId ==="" || cmcdNm ===""){
+			alert("값을 모두 입력해주세요.");
+		}else {
+			$.ajax({
+				url : '/admin/commoncode/insert/groupcode',
+				method : 'POST',
+				data : {
+					tpcdId : tpcdId,
+					cmcdNm : cmcdNm
+				},
+				success : function(response) {
+					if (response == "success") {
+						alert("그룹코드가 생성되었습니다.");
+						opener.location.href="/admin/commoncode/list";
+						self.close();//팝업창 닫기
+					} else {
+						alert("코드구분이 중복됩니다. 다시 입력해주세요.");
+					}
+				}
+			});
+		}
+	}
+	</script>
+</body>
+</html>

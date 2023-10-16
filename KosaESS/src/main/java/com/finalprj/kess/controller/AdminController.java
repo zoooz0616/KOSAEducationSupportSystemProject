@@ -176,7 +176,7 @@ public class AdminController {
 		List<PostVO> noticeList = adminService.getNoticeList();
 		model.addAttribute("noticeList", noticeList);
 		session.setAttribute("searchNoticeList", noticeList);
-		
+
 		return "admin/notice_list";
 	}
 
@@ -425,15 +425,15 @@ public class AdminController {
 	 */
 	@PostMapping("/notice/search")
 	@ResponseBody
-	public Map<String, Object> noticeSearch(HttpSession session, @RequestParam String searchInputCategory, @RequestParam String searchInput,
-			@RequestParam("postStatusList[]") List<String> postStatusList) {
+	public Map<String, Object> noticeSearch(HttpSession session, @RequestParam String searchInputCategory,
+			@RequestParam String searchInput, @RequestParam("postStatusList[]") List<String> postStatusList) {
 
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 공지사항 리스트 전달
 		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
 		session.setAttribute("searchNoticeList", noticeList);
-		
+
 		response.put("noticeList", noticeList);
 		return response;
 	}
@@ -456,7 +456,7 @@ public class AdminController {
 		List<PostVO> inquiryList = adminService.getInquiryList();
 		model.addAttribute("inquiryList", inquiryList);
 		session.setAttribute("searchInquiryList", inquiryList);
-		
+
 		return "admin/inquiry_list";
 	}
 
@@ -554,15 +554,15 @@ public class AdminController {
 	 */
 	@PostMapping("/inquiry/search")
 	@ResponseBody
-	public Map<String, Object> inquirySearch(HttpSession session, @RequestParam String searchInputCategory, @RequestParam String searchInput,
-			@RequestParam("postStatusList[]") List<String> postStatusList) {
+	public Map<String, Object> inquirySearch(HttpSession session, @RequestParam String searchInputCategory,
+			@RequestParam String searchInput, @RequestParam("postStatusList[]") List<String> postStatusList) {
 
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 문의사항 리스트 전달
 		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
 		session.setAttribute("searchInquiryList", inquiryList);
-		
+
 		response.put("inquiryList", inquiryList);
 		return response;
 	}
@@ -1125,7 +1125,8 @@ public class AdminController {
 	 */
 	@GetMapping("/class/search")
 	@ResponseBody
-	public List<ClassVO> classSearch(HttpSession session, @RequestParam(name = "clssNm", required = false) String clssNm,
+	public List<ClassVO> classSearch(HttpSession session,
+			@RequestParam(name = "clssNm", required = false) String clssNm,
 			@RequestParam(name = "clssCd", required = false) String clssCd,
 			@RequestParam(name = "aplyStartDt", required = false) String aplyStartDt,
 			@RequestParam(name = "aplyEndDt", required = false) String aplyEndDt,
@@ -1151,7 +1152,7 @@ public class AdminController {
 
 		return classList;
 	}
-	
+
 	/**
 	 * 교육과정 생성시 강의정보
 	 * 
@@ -1181,7 +1182,7 @@ public class AdminController {
 	 * 
 	 * @author : eunji
 	 * @date : 2023. 9. 27.
-	 * @parameter : 
+	 * @parameter :
 	 * @return : Map<String, Object>
 	 */
 	@PostMapping("/class/insert/getlecturelist")
@@ -1196,7 +1197,6 @@ public class AdminController {
 
 		return response;
 	}
-	
 
 	/**
 	 * 교육과정 지원자 목록조회
@@ -1823,7 +1823,7 @@ public class AdminController {
 		List<StudentVO> studentList = adminService.getStudentList();
 		model.addAttribute("studentList", studentList);
 		session.setAttribute("searchStudentList", studentList);
-		
+
 		// 검색부분
 
 		// 교육과정 리스트
@@ -1919,9 +1919,9 @@ public class AdminController {
 	 */
 	@GetMapping("/student/search")
 	@ResponseBody
-	public List<StudentVO> searchStudent(HttpSession session, @RequestParam(name = "stdtNm", required = false) String stdtNm,
-			@RequestParam String clssId, @RequestParam String genderCd, @RequestParam String jobCd,
-			@RequestParam String userCd) {
+	public List<StudentVO> searchStudent(HttpSession session,
+			@RequestParam(name = "stdtNm", required = false) String stdtNm, @RequestParam String clssId,
+			@RequestParam String genderCd, @RequestParam String jobCd, @RequestParam String userCd) {
 
 		List<StudentVO> studentList = adminService.getSearchStudentList(stdtNm, clssId, genderCd, jobCd, userCd);
 		session.setAttribute("searchStudentList", studentList);
@@ -1981,7 +1981,20 @@ public class AdminController {
 
 		return groupCodeList;
 	}
-
+	
+	/**
+	 * 기준정보 그룹코드 생성
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@RequestMapping("/commoncode/insert/groupcode")
+	public String insertCMCD() {
+		return "admin/insert_group_code_popup";
+	}
+	
 	/**
 	 * 기준정보 그룹코드 생성
 	 * 
@@ -2039,16 +2052,11 @@ public class AdminController {
 	 */
 	@PostMapping("/commoncode/delete/groupcode")
 	@ResponseBody
-	public String deleteGroupCode(
-			@RequestParam(name = "selectedGroupCodeIds[]", required = false) List<String> selectedGroupCodeIds) {
-		if (selectedGroupCodeIds == null) {
-			return "fail";
-		} else {
-			// 사용여부'N', updt 수정
-			adminService.deleteGroupCode(selectedGroupCodeIds);
+	public String deleteGroupCode(@RequestParam(name = "selectedGroupCodeIds[]") List<String> selectedGroupCodeIds) {
+		adminService.deleteGroupCode(selectedGroupCodeIds);
 
-			return "success";
-		}
+		return "success";
+
 	}
 
 	/**
@@ -2070,6 +2078,24 @@ public class AdminController {
 
 		return response;
 	}
+	
+	/**
+	 * 기준정보 상세코드 등록
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10.16
+	 * @parameter : selectedCode, model
+	 * @return : String
+	 */
+	@GetMapping("/commoncode/insert/detailcode/popup/{selectedCode}")
+	public String insertDetail(Model model, @PathVariable String selectedCode) {
+		model.addAttribute("cmcdId", selectedCode);
+		
+		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
+		model.addAttribute("groupCodeList", groupCodeList);
+		
+		return "admin/insert_detail_code_popup";
+	}
 
 	/**
 	 * 기준정보 상세코드 등록
@@ -2081,7 +2107,7 @@ public class AdminController {
 	 */
 	@PostMapping("/commoncode/insert/detailcode")
 	@ResponseBody
-	public String deleteDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm) {
+	public String insertDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm) {
 		// 이미 그 그룹코드에 사용여부가 Y중에 입력한 상세코드명이 있는지 확인
 		int detailCodeCnt = adminService.getDetailCodeNmCnt(cmcdId, cmcdNm);
 		// 있으면 return fail
@@ -2154,8 +2180,8 @@ public class AdminController {
 	 */
 	@GetMapping("/subsidy/list")
 	public String selectSubsidyList(HttpSession session, Model model) {
-		
+
 		return "admin/subsidy_list";
 	}
-	
+
 }
