@@ -107,7 +107,7 @@ tfoot td {
 }
 
 .className {
-	color: red;
+	color: blue;
 	font-size: 15px;
 }
 
@@ -131,7 +131,6 @@ tfoot td {
 	justify-content: space-between;
 	border-style: none;
 	background: #E7EFF3;
-	padding: 0.5% 0;
 	color: #0E5881;
 	border-bottom: 2px solid #0E5881;
 }

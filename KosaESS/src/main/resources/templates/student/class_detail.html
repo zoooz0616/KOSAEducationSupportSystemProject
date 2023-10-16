@@ -23,19 +23,23 @@
 						<td colspan="5" th:text="${classDetail.clssNm}"
 							style="text-align: left; padding-left: 2%;"></td>
 						<th>교육 상태</th>
-						<td th:if="${classDetail.cmcdNm} == '접수중'"
+						<td th:if="${classDetail.clssCd} == 'CLS0000002'"
+							style="width: 15%; color: blue;" th:text="${classDetail.cmcdNm}"
+							)></td>
+						<td th:if="${classDetail.clssCd} == 'CLS0000008'"
 							style="width: 15%; color: red;" th:text="${classDetail.cmcdNm}" )></td>
-						<td th:if="${classDetail.cmcdNm} != '접수중'" style="width: 15%;"
-							th:text="${classDetail.cmcdNm}" )></td>
+						<td
+							th:if="${classDetail.clssCd} != 'CLS0000002' and ${classDetail.clssCd} != 'CLS0000008'"
+							style="width: 15%;" th:text="${classDetail.cmcdNm}" )></td>
 					</tr>
 					<tr>
 						<th>지원 기간</th>
-						<td colspan="2"><span
+						<td colspan="2" style="padding: 0;"><span
 							th:if="${classDetail.aplyStartDt == null}"
 							style="color: lightslategray;">미정</span> <span
-							th:if="${classDetail.aplyStartDt != null}"
-							th:text="${classDetail.aplyStartDt} + ' ~ ' +${classDetail.aplyEndDt}"></span></td>
-
+							th:text="${#dates.format(classDetail.aplyStartDt, 'yyyy-MM-dd HH:mm:ss')}"></span><br>
+							<span
+							th:text="'~ ' + ${#dates.format(classDetail.aplyEndDt, 'yyyy-MM-dd HH:mm:ss')}"></span>
 						<th>교육 기간</th>
 						<td colspan="2"><span
 							th:if="${classDetail.clssStartDd == null}"
@@ -226,9 +230,16 @@
 					<button type="reset" class="closeModalBtn">취소</button>
 					<button type="submit" class="aplyBtn">제출</button>
 				</div>
+				<script th:if="${message}" type="text/javascript">
+					var message = /*[[${message}]]*/'';
+					// 알림창을 표시
+					alert(message);
+					window.location.href = "redirect:/student/class/list";
+				</script>
 			</form>
 		</div>
 	</div>
+
 	<script th:inline="javascript">
 		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
 		var clssCd = /*[[${classDetail.clssCd}]]*/'';
@@ -256,6 +267,8 @@
 			if (selectedFiles.length < 1) {
 				alert("지원서 파일을 첨부해주세요.");
 				event.preventDefault();
+			} else {
+				alert("제출이 완료되었습니다.");
 			}
 		});
 		$("#fileInput").on('change', function() {
@@ -269,21 +282,6 @@
 			var fileNameString = fileNames.join(', ');
 			$(".upload-name").val(fileNameString);
 		});
-
-		function formatTimestamp(timestamp) {
-			const date = new Date(timestamp);
-
-			const year = date.getFullYear();
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const day = String(date.getDate()).padStart(2, '0');
-			const hours = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-
-			const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
-			return formattedTimestamp;
-		}
 	</script>
 	<script src="/js/student/class_detail.js"></script>
 </body>

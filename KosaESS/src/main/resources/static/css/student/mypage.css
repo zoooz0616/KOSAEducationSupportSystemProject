@@ -282,26 +282,26 @@ td button {
 }
 
 .applyTable td:nth-child(1) {
-	width: 7%;
+	width: 5%;
 }
 
 .applyTable td:nth-child(2) {
-	width: 30%;
+	width: 23%;
 	font-weight: bold;
 	text-align: left;
 	word-break: keep-all;
 }
 
 .applyTable td:nth-child(3) {
-	width: 10%;
+	width: 14%;
 }
 
 .applyTable td:nth-child(4) {
-	width: 10%;
+	width: 17%;
 }
 
 .applyTable td:nth-child(5) {
-	width: 7%;
+	width: 5%;
 }
 
 .applyTable td:nth-child(6) {
@@ -321,7 +321,7 @@ td button {
 }
 
 .rgstTable td:nth-child(1) {
-	width: 7%;
+	width: 5%;
 }
 
 .rgstTable td:nth-child(2) {
@@ -332,7 +332,7 @@ td button {
 }
 
 .rgstTable td:nth-child(3) {
-	width: 23%;
+	width: 25%;
 }
 
 .rgstTable td:nth-child(4) {
@@ -348,11 +348,11 @@ td button {
 }
 
 .wlogTable td:nth-child(1) {
-	width: 7%;
+	width: 5%;
 }
 
 .wlogTable td:nth-child(2) {
-	width: 29%;
+	width: 31%;
 	text-align: left;
 	font-weight: bold;
 	word-break: keep-all;
@@ -379,11 +379,11 @@ td button {
 }
 
 .postTable td:nth-child(1) {
-	width: 7%;
+	width: 5%;
 }
 
 .postTable td:nth-child(2) {
-	width: 52%;
+	width: 54%;
 	text-align: left;
 	font-weight: bold;
 	word-break: keep-all;
@@ -402,7 +402,7 @@ td button {
 }
 
 .sbsdTable td:nth-child(1) {
-	width: 7%;
+	width: 5%;
 }
 
 .sbsdTable td:nth-child(2) {
@@ -413,7 +413,7 @@ td button {
 }
 
 .sbsdTable td:nth-child(3) {
-	width: 15%;
+	width: 17%;
 }
 
 .sbsdTable td:nth-child(4) {

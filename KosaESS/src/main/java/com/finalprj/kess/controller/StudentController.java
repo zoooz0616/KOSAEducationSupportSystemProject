@@ -904,7 +904,7 @@ public class StudentController {
 		apply.setFileId(maxFileId);
 		apply.setRgsterId(stdtId);
 		studentService.uploadAplyFile(apply);
-
+		
 		return "redirect:/student/class/list";
 	}
 
