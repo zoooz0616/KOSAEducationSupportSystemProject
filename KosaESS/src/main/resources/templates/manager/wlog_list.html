@@ -120,7 +120,7 @@
 					<th>교육과정</th>
 					<th>출근</th>
 					<th>퇴근</th>
-					<th>출석 인정 시간<br>(h)</th>
+					<th>출석 인정 시간(h)</th>
 					<th>출석 상태</th><!-- 셀렉박스 -->
 					<th>사유서</th>
 					<th>처리 상태</th><!-- 사유서 모달에서 변경함 -->
@@ -139,7 +139,7 @@
 					<td class="number_cell" th:text="${#numbers.formatDecimal(wlog.wlogTotalTm, 1, 1)}">출석 인정 시간</td>
 					<td class="fixed_length_cell" th:text="${wlog.wlogCd}">출석 상태</td>
 					<td class="fixed_length_cell"><img class="resn_icon" th:if="${wlog.resnId!=null}" onclick="showModal(this)" th:value="${wlog.resnId}" src="/img/file.png"></td>
-					<td class="fixed_length_cell" th:text="${wlog.prcsCd}">처리 상태</td>
+					<td class="fixed_length_cell" id="prcs_cd" th:text="${wlog.prcsCd}" th:value="${wlog.resnCd}">처리 상태</td>
 				</tr>
 			</tbody>
 		</table>

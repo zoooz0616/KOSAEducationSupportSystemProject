@@ -295,6 +295,7 @@
 				, c1.cmcd_nm as wlogCd --출석 상태
 				, w.delete_yn --삭제 여부
 				, resn_id --사유서 id
+				, resn_cd
 				, c2.cmcd_nm as prcsCd --처리 상태
 				, clss_nm
 			FROM wlog w

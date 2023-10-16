@@ -671,16 +671,46 @@ public class ManagerController {
 		
 		ReasonDTO thisResn = managerService.getResnDetailByResnId(resnId);
 		String thisFileId = thisResn.getFileId();
-		List<Integer> resnFileList = managerService.getFileSubIdListByFileId(thisResn.getFileId());
-		List<String> resnFileNameList = new ArrayList<String>();
-		for (Integer i : resnFileList) {
-			System.out.println(managerService.getFileInfoByIds(thisFileId, i).getFileNm());
-			resnFileNameList.add(managerService.getFileInfoByIds(thisFileId, i).getFileNm());
+		List<Integer> resnFileSubIdList = managerService.getFileSubIdListByFileId(thisResn.getFileId());
+		List<FileVO> resnFileList = new ArrayList<FileVO>();
+		for (Integer i : resnFileSubIdList) {
+			resnFileList.add(managerService.getFileInfoByIds(thisFileId, i));
 		}
 		Map<String, Object> response = new HashMap<>();
 		response.put("resnFileList", resnFileList);
-		response.put("resnFileNameList", resnFileNameList);
+		response.put("resnFileList", resnFileList);
 		return response;
+	}
+	
+	//사유서 내용 출력
+	@GetMapping("/resn/{fileId}/{fileSubId}")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@PathVariable("fileId") String fileId
+			,@PathVariable("fileSubId") int fileSubId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		FileVO file = managerService.getFileByIds(fileId, fileSubId);
+		final HttpHeaders headers = new HttpHeaders();
+		String[] mtypes = file.getFileType().split("/");
+		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+		headers.setContentLength(file.getFileSize());
+		try {
+			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+			headers.setContentDispositionFormData("attachment", encodedFileName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
 	
 	@PostMapping("/worklog/update_resn_code")

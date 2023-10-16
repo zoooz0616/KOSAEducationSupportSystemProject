@@ -37,6 +37,7 @@ button{
 	font-size: 1.1em;
 	height: 2em;
 }
+
 .delete_btn img{
 	width:1em;
 }
@@ -83,6 +84,7 @@ button{
 	font-size: 1.1em;
 	height: 2em;
 }
+
 .search_filter_wrap {
 /* 	display: flex; */
 /* 	justify-content: space-between; */
