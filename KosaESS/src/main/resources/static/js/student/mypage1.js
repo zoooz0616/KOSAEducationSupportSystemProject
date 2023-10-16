@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var countPerPage1 = 5; // 페이지당 데이터 건수
+	var countPerPage1 = 10; // 페이지당 데이터 건수
 	var showPageCnt = 5;
 	let todoData1 = [];
 
@@ -14,6 +14,11 @@ $(document).ready(function() {
 				$('.aplyCnt').text(todoData1.length);
 				setTable(1);
 				setPaging(1);
+
+				if (data.length == 0)
+					$('.aplyFoot').show();
+				else
+					$('.aplyFoot').hide();
 			}
 		});
 	}
@@ -82,16 +87,24 @@ $(document).ready(function() {
 			var row = $('<tr class="aplyRow"></tr>');
 
 			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
-			row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + ApplyDetailDTO.clssId + '"><span>' + ApplyDetailDTO.clssNm + '</span></a></td>');
+			var apply = $('<a>').attr('href', '/student/class/view/' + ApplyDetailDTO.clssId).text(ApplyDetailDTO.clssNm);
+			row.append($('<td></td>').append(apply));
 			row.append('<td><span>' + ApplyDetailDTO.aplyStartDd + '<br> ~ ' + ApplyDetailDTO.aplyEndDd + '</span></td>');
 			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + '<br> ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 			row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
+			if (ApplyDetailDTO.clssCd === 'CLS0000003' || ApplyDetailDTO.clssCd === 'CLS0000008') {
+				row.append('<td style="color:red;">' + ApplyDetailDTO.clssCdNm + '</td>');
+			} else if (ApplyDetailDTO.clssCd === ('CLS0000002')) {
+				row.append('<td style="color:blue;">' + ApplyDetailDTO.clssCdNm + '</td>');
+			} else {
+				row.append('<td>' + ApplyDetailDTO.clssCdNm + '</td>');
+			}
 			row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
-			if(ApplyDetailDTO.cmcdNm === '지원취소' || ApplyDetailDTO.cmcdNm === '수강포기'){
+			if (ApplyDetailDTO.aplyCd === 'APL0000001' || ApplyDetailDTO.aplyCd === 'APL0000006') {
 				row.append('<td style="color:red;">' + ApplyDetailDTO.cmcdNm + '</td>');
-			}else if(ApplyDetailDTO.cmcdNm === ('합격')){
+			} else if (ApplyDetailDTO.aplyCd === ('APL0000003')) {
 				row.append('<td style="color:blue;">' + ApplyDetailDTO.cmcdNm + '</td>');
-			}else{
+			} else {
 				row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
 			}
 			row.append('<td><button class="update">수정</button><button class="apply">수강</button><button class="cancel">지원취소</button><button class="drop">수강포기</button></td>');

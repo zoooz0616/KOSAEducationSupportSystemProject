@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	var calendarEl = $('#calendar')[0];
 	// full-calendar 생성하기
 	var calendar = new FullCalendar.Calendar(calendarEl, {
-		height: '600px',
-		expandRows: false, // 화면에 맞게 높이 재설정
+		height: '730px',
+		expandRows: true, // 화면에 맞게 높이 재설정
 		slotMinTime: '08:00', // Day 캘린더에서 시작 시간
 		slotMaxTime: '24:00', // Day 캘린더에서 종료 시간
 		// 해더에 표시할 툴바

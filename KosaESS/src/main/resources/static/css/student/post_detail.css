@@ -9,7 +9,7 @@ table a {
 
 th, td {
 	/* border: 2px solid #9FBCCD; */
-	border-bottom: 2px solid #9FBCCD;
+	border: 2px solid #9FBCCD;
 	border-collapse: collapse;
 	padding: 1.5% 0;
 }
@@ -36,7 +36,7 @@ table th {
 	margin: 5% auto;
 	border-color: black;
 	text-align: center;
-	width: 95%;
+	width: 90%;
 }
 
 .postFile {
@@ -62,7 +62,7 @@ ul {
 .btn {
 	text-align: center;
 	display: flex;
-	justify-content: center;
+	justify-content: space-evenly;
 }
 
 .btn button {
@@ -75,7 +75,7 @@ ul {
 	padding: 1%;
 	margin: 8px 0;
 	border: 0;
-	font-size: 12px;
+	font-size: 15px;
 	font-weight: bold;
 	border-radius: 10px;
 	cursor: pointer;

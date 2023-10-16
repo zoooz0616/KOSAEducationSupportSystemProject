@@ -15,6 +15,11 @@ $(document).ready(function() {
 				$('.sbsdCnt').text(todoData5.length);
 				setTable(1);
 				setPaging(1);
+
+				if (data.length == 0)
+					$('.sbsdFoot').show();
+				else
+					$('.sbsdFoot').hide();
 			}
 		});
 	}
@@ -82,24 +87,27 @@ $(document).ready(function() {
 			var row = $('<tr class="sbsyRow"></tr>');
 			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
 			row.append('<td style="word-break: keep-all;">' + SubsidyVO.clssNm + '</td>');
-			if (SubsidyVO.subsidyDd  === '') {
+			if (SubsidyVO.subsidyDd === '') {
 				row.append('<td> - </td>');
 			}
 			else {
-				row.append('<td>' + SubsidyVO.subsidyDd  + '</td>');
+				row.append('<td>' + SubsidyVO.subsidyDd + '</td>');
 			}
+			const number = SubsidyVO.payment;
+			number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 			if (SubsidyVO.payment === '') {
 				row.append('<td> - </td>');
 			}
 			else {
-				row.append('<td>' + SubsidyVO.payment + '</td>');
+				row.append('<td>' + number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + '</td>');
 			}
-			if (SubsidyVO.monyNm === '지급완료') {
+			if (SubsidyVO.monyCd === 'MNY0000002') {
 				row.append('<td style="color:blue;">' + SubsidyVO.monyNm + '</td>');
 			}
 			else {
 				row.append('<td style="color:red;">' + SubsidyVO.monyNm + '</td>');
 			}
+
 			tbody.append(row);
 		}
 	}
@@ -139,3 +147,4 @@ $(document).ready(function() {
 		$('#last_page').show();
 	}
 });
+

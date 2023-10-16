@@ -20,62 +20,75 @@
 				<table>
 					<tr>
 						<th>교육명</th>
-						<td colspan="5" th:text="${classDetail.clssNm}" style="text-align:left;"></td>
+						<td colspan="5" th:text="${classDetail.clssNm}"
+							style="text-align: left; padding-left: 2%;"></td>
 						<th>교육 상태</th>
-						<td th:if="${classDetail.cmcdNm} == '접수중'" style="width: 15%; color:red;" th:text="${classDetail.cmcdNm}" )></td>
-						<td th:if="${classDetail.cmcdNm} != '접수중'" style="width: 15%;" th:text="${classDetail.cmcdNm}" )></td>
+						<td th:if="${classDetail.cmcdNm} == '접수중'"
+							style="width: 15%; color: red;" th:text="${classDetail.cmcdNm}" )></td>
+						<td th:if="${classDetail.cmcdNm} != '접수중'" style="width: 15%;"
+							th:text="${classDetail.cmcdNm}" )></td>
 					</tr>
 					<tr>
 						<th>지원 기간</th>
-						<td colspan="2" style="text-align:left;"><span
-							th:if="${classDetail.aplyStartDd == null}" style="color:lightslategray;">미정</span> <span
-							th:if="${classDetail.aplyStartDd != null}"
-							th:text="${classDetail.aplyStartDd} + ' ~ ' +${classDetail.aplyEndDd}"></span></td>
+						<td colspan="2"><span
+							th:if="${classDetail.aplyStartDt == null}"
+							style="color: lightslategray;">미정</span> <span
+							th:if="${classDetail.aplyStartDt != null}"
+							th:text="${classDetail.aplyStartDt} + ' ~ ' +${classDetail.aplyEndDt}"></span></td>
 
 						<th>교육 기간</th>
-						<td colspan="2" style="text-align:left;"><span
-							th:if="${classDetail.clssStartDd == null}" style="color:lightslategray;">미정</span> <span
+						<td colspan="2"><span
+							th:if="${classDetail.clssStartDd == null}"
+							style="color: lightslategray;">미정</span> <span
 							th:if="${classDetail.clssStartDd!= null}"
 							th:text="${classDetail.clssStartDd} + ' ~ ' +${classDetail.clssEndDd}"></span></td>
 						<th>업무담당자</th>
-						<td><span th:if="${classDetail.mngrNm == null}" style="color:lightslategray;">미정</span><span
+						<td><span th:if="${classDetail.mngrNm == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.mngrNm!= null}"
 							th:text="${classDetail.mngrNm}"></span></td>
 					</tr>
 					<tr>
-
 						<th>회사</th>
-						<td colspan="3" style="text-align:left;"><span th:if="${classDetail.cmpyNm == null}" style="color: lightslategray;">미정</span><span
+						<td colspan="3" style="text-align: left; padding-left: 2%;"><span
+							th:if="${classDetail.cmpyNm == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.cmpyNm!= null}"
 							th:text="${classDetail.cmpyNm}"></span></td>
 						<th>교육 장소</th>
-						<td colspan="3" style="text-align:left;"><span th:if="${classDetail.clssAdr == null}" style="color:lightslategray;">미정</span><span
+						<td colspan="3" style="text-align: left; padding-left: 2%;"><span
+							th:if="${classDetail.clssAdr == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.clssAdr!= null}"
 							th:text="${classDetail.clssAdr}"></span></td>
 
 					</tr>
 					<tr>
 						<th>총 이수 시간</th>
-						<td><span th:if="${classDetail.clssTotalTm == null}" style="color:lightslategray;">미정</span><span
+						<td><span th:if="${classDetail.clssTotalTm == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.clssTotalTm!= null}"
 							th:text="${classDetail.clssTotalTm}+ '시간'"></span></td>
 						<th>시작 시간</th>
-						<td><span th:if="${classDetail.setInTime == null}" style="color:lightslategray;">미정</span><span
+						<td><span th:if="${classDetail.setInTime == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.setInTime!= null}"
 							th:text="${classDetail.setInTime}+ '시'"></span></td>
 						<th>종료 시간</th>
-						<td><span th:if="${classDetail.setOutTime == null}" style="color:lightslategray;">미정</span><span
+						<td><span th:if="${classDetail.setOutTime == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.setOutTime!= null}"
 							th:text="${classDetail.setOutTime}+ '시'"></span></td>
 						<th>수강 정원</th>
-						<td><span th:if="${classDetail.limitCnt == null}" style="color:lightslategray;">미정</span><span
+						<td><span th:if="${classDetail.limitCnt == null}"
+							style="color: lightslategray;">미정</span><span
 							th:if="${classDetail.limitCnt!= null}"
 							th:text="${classDetail.limitCnt}+ '명'"></span></td>
 					</tr>
 					<tr>
 						<th>관련 파일</th>
 						<td colspan="7"><ul
-								style="margin: 0; text-align: left;">
+								style="margin: 0; text-align: left; padding-left: 2%;">
 								<li th:each="FileVO : ${classFileList}"><a
 									style="display: flex;" th:if="${FileVO.fType == 'application'}"
 									th:href="@{/download/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"
@@ -125,6 +138,9 @@
 						</ul>
 						<h5>기타사항</h5>
 						<h5 th:text="${classDetail.clssEtc}"></h5>
+						<div class="btn" style="width: 100%;">
+							<button class="openModalBtn1" style="padding: 1.3%; width: 20%;">지원하기</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -180,8 +196,8 @@
 	<div
 		style="position: fixed; display: block; right: 20px; bottom: 20px; width: 15%;">
 		<div class="btn">
+			<button class="openModalBtn2">지원하기</button>
 			<button class="back">목록으로</button>
-			<button class="openModalBtn">지원하기</button>
 			<button class="moveTopBtn">
 				<img th:src="@{/img/up_navy.png}" style="height: 40px;">
 			</button>
@@ -221,11 +237,13 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			// '지원하기' 버튼 엘리먼트 가져오기
-			var openModalBtn = document.querySelector('.openModalBtn');
+			var openModalBtn1 = document.querySelector('.openModalBtn1');
+			var openModalBtn2 = document.querySelector('.openModalBtn2');
 
 			// '지원하기' 버튼을 표시 또는 숨깁니다.
 			if (clssCd === 'CLS0000002') {
-				openModalBtn.style.display = 'block'; // 버튼을 표시
+				openModalBtn1.style.display = 'block'; // 버튼을 표시
+				openModalBtn2.style.display = 'block'; // 버튼을 표시
 			}
 		});
 		var button = document.querySelector(".aplyBtn");
@@ -251,6 +269,21 @@
 			var fileNameString = fileNames.join(', ');
 			$(".upload-name").val(fileNameString);
 		});
+
+		function formatTimestamp(timestamp) {
+			const date = new Date(timestamp);
+
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+
+			const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+			return formattedTimestamp;
+		}
 	</script>
 	<script src="/js/student/class_detail.js"></script>
 </body>

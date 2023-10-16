@@ -6,7 +6,7 @@
 	select
 		*
 	from lgin
-	where user_email=#{email}
+	where user_email=#{email} and user_pwd =#{pwd}
 	]]>
 	</select>
 	

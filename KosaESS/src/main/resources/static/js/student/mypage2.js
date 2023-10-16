@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var countPerPage2 = 5; // 페이지당 데이터 건수
+	var countPerPage2 = 10; // 페이지당 데이터 건수
 	var showPageCnt = 5;
 	let todoData2 = [];
 
@@ -15,6 +15,11 @@ $(document).ready(function() {
 				$('.rgstCnt').text(todoData2.length);
 				setTable(1);
 				setPaging(1);
+				
+				if (data.length == 0)
+					$('.rgstFoot').show();
+				else
+					$('.rgstFoot').hide();
 			}
 		});
 	}
@@ -83,12 +88,12 @@ $(document).ready(function() {
 
 			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 
-			row.append('<td style="word-break: keep-all;"><a href="/student/class/view/' + RegistrationVO.clssId + '"><span>' + RegistrationVO.clssNm + '</span></a></td>');
-			row.append('<td><span>' + RegistrationVO.clssStartDd + '<br> ~ ' + RegistrationVO.clssEndDd + '</span></td>');
+			row.append('<td><a href="/student/class/view/' + RegistrationVO.clssId + '">' + RegistrationVO.clssNm + '</a></td>');
+			row.append('<td><span>' + RegistrationVO.clssStartDd + ' ~ ' + RegistrationVO.clssEndDd + '</span></td>');
 			row.append('<td>' + RegistrationVO.rgstNm + '</td>');
-			if (RegistrationVO.cmptNm === '미이수') {
+			if (RegistrationVO.cmptCd === 'CMP0000001') {
 				row.append('<td style="color:blue;">' + RegistrationVO.cmptNm + '</td>');
-			} else if (RegistrationVO.cmptNm === '중도포기') {
+			} else if (RegistrationVO.cmptCd === 'CMP0000003') {
 				row.append('<td style="color:red;">' + RegistrationVO.cmptNm + '</td>');
 			} else {
 				row.append('<td>' + RegistrationVO.cmptNm + '</td>');

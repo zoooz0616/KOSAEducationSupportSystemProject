@@ -57,10 +57,9 @@
 		where stdt_id = #{stdtId})
 		]]>
 	</select>
-	
+
 	<!-- 교육생 비밀번호 수정 -->
-	<update id="updatePwd"
-		parameterType="String">
+	<update id="updatePwd" parameterType="String">
 		<![CDATA[
 		 UPDATE lgin
 		SET USER_PWD=#{pwd}
@@ -110,7 +109,7 @@
 		aply_start_dt,
 		aply_end_dt
 		from clss
-		where aply_start_dt IS NOT NULL and (clss_cd ='CLS0000001' or clss_cd ='CLS0000002')
+		where aply_start_dt IS NOT NULL and (clss_cd ='CLS0000001' or clss_cd ='CLS0000002') and delete_yn ='N'
 		]]>
 	</select>
 
@@ -124,7 +123,7 @@
 		clss_start_dd,
 		clss_end_dd
 		from clss
-		where clss_id IN (select clss_id from rgst where stdt_id = #{stdtId})
+		where clss_id IN (select clss_id from rgst where stdt_id = #{stdtId}) and delete_yn ='N'
 		]]>
 	</select>
 
@@ -138,7 +137,7 @@
 		aply_start_dt,
 		aply_end_dt
 		from clss
-		where (clss_id IN (select clss_id from aply where stdt_id = #{stdtId})) and clss_cd = 'CLS0000002'
+		where (clss_id IN (select clss_id from aply where stdt_id = #{stdtId})) and clss_cd = 'CLS0000002' and delete_yn ='N'
 		]]>
 	</select>
 
@@ -160,7 +159,7 @@
 						where cmcd_id='PST0000001')
 					ORDER BY rgst_dt DESC
 				)
-				WHERE ROWNUM <= 5
+				WHERE ROWNUM <= 8
 		]]>
 	</select>
 
@@ -278,7 +277,7 @@
 		    SELECT cmcd_id
 		    FROM cmcd
 		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
-		) and delete_yn = 'N'
+		) and post.delete_yn = 'N'
 		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
@@ -304,7 +303,7 @@
 		    SELECT cmcd_id
 		    FROM cmcd
 		    WHERE cmcd_id IN ('PST0000003', 'PST0000004')
-		) and delete_yn = 'N' and (UPPER(post_title) LIKE ('%'|| UPPER(#{keyword}) ||'%') or UPPER(stdt_nm) LIKE ('%'|| UPPER(#{keyword}) ||'%'))
+		) and post.delete_yn = 'N' and (UPPER(post_title) LIKE ('%'|| UPPER(#{keyword}) ||'%') or UPPER(stdt_nm) LIKE ('%'|| UPPER(#{keyword}) ||'%'))
 		ORDER BY post.rgst_dt DESC
 		]]>
 	</select>
@@ -368,7 +367,7 @@
 		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
 		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
 		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
-		WHERE master_id=#{postId} 
+		WHERE master_id=#{postId} and post.delete_yn ='N'
 		]]>
 	</select>
 
@@ -388,10 +387,10 @@
 				WHERE clss_cd=
 					(select cmcd_id
 					from cmcd
-					where cmcd_id='CLS0000002')
-					ORDER BY rgst_dt DESC
+					where cmcd_id='CLS0000002' and delete_yn ='N')
+					ORDER BY rgst_dt DESC 
 			)
-			WHERE ROWNUM <= 5
+			WHERE ROWNUM <= 5 
 		]]>
 	</select>
 
@@ -403,8 +402,8 @@
 			   clss_id,
 		       clss_nm,
 		       clss.cmpy_id,
-		       aply_start_dt as "aplyStartDd",
-			   aply_end_dt as "aplyEndDd",
+		       aply_start_dt,
+			   aply_end_dt,
 		       clss_start_dd,
 		       clss_end_dd,
 		       substr(clss_adr, 1, 3) as "clssAdr", 
@@ -431,8 +430,9 @@
 			    clss_id,
 			    clss_nm,
 			    clss.cmpy_id,
-			    aply_start_dt as "aplyStartDd",
-			    aply_end_dt as "aplyEndDd",
+			    cmpy.cmpy_nm as "cmpyNm",
+			    aply_start_dt,
+			    aply_end_dt,
 			    clss_start_dd,
 			    clss_end_dd,
 			    substr(clss_adr, 1, 3) as "clssAdr", 
@@ -445,7 +445,7 @@
 			JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 			LEFT JOIN flup on flup.file_id = cmpy.file_id
-			WHERE clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') and clss_cd LIKE (#{ingClass} ||'%') and clss.delete_yn= 'N' and clss.clss_cd <> 'CLS0000007'
+			WHERE (clss_nm LIKE ('%'|| UPPER(#{keyword}) ||'%') or cmpy.cmpy_nm LIKE ('%'|| UPPER(#{keyword}) ||'%')) and clss_cd LIKE (#{ingClass} ||'%') and clss.delete_yn= 'N' and clss.clss_cd <> 'CLS0000007'
 			ORDER BY clss.rgst_dt DESC
 		]]>
 	</select>
@@ -458,8 +458,8 @@
 			    clss_id,
 			    clss_nm,
 			    clss_content,
-			    aply_start_dt as "aplyStartDd",
-			    aply_end_dt as "aplyEndDd",
+			    aply_start_dt,
+			    aply_end_dt,
 			    clss_start_dd,
 			    clss_end_dd,
 			    clss_adr,
@@ -489,7 +489,7 @@
         join lctr on lctr.lctr_id = crcl.lctr_id
         join sbjt on sbjt.sbjt_id = lctr.sbjt_id
         join prof on prof.prof_id = lctr.prof_id
-        WHERE crcl.clss_id = #{clssId}
+        WHERE crcl.clss_id = #{clssId} and crcl.delete_yn ='N'
 	]]>
 	</select>
 
@@ -535,7 +535,7 @@
 		   JOIN cmcd on cmcd.cmcd_id = clss.clss_cd
 		   LEFT JOIN cmpy on cmpy.cmpy_id = clss.cmpy_id
 		   LEFT JOIN flup on flup.file_id = cmpy.file_id
-		   WHERE clss.clss_id = #{viewClass}
+		   WHERE clss.clss_id = #{viewClass} and clss_cd != 'CLS0000007' and clss.delete_yn ='N'
 		]]>
 	</select>
 
@@ -545,8 +545,8 @@
 	<![CDATA[
 		select * 
 		from cmcd
-		where tpcd_id = #{tpcdId}
-		order by cmcd_id
+		where tpcd_id = #{tpcdId} and use_yn = 'Y'
+		order by (cmcd_order || cmcd_id)
 	]]>
 	</select>
 
@@ -557,7 +557,7 @@
 		select COALESCE(COUNT(aply_id), 0) as "applyYN"
 			from aply
 			where stdt_id = #{stdtId}
-				and clss_id = #{classId}
+				and clss_id = #{classId} 
 	]]>
 	</select>
 
@@ -623,7 +623,7 @@
 			from rgst
 			where stdt_id= #{stdtId}
 		            and cmpt_cd ='CMP0000001'
-					and rgst_cd ='CLS0000005') 
+					and rgst_cd ='CLS0000005') and delete_yn ='N'
 	]]>
 	</select>
 
@@ -634,6 +634,8 @@
 		select 
 			aply_id,
 			clss.clss_id,
+			clss.clss_cd,
+			(select cmcd_nm from cmcd where cmcd_id = clss.clss_cd) as "clssCdNm",
 			clss_nm,
 			aply_cd,
 			aply_end_dt,
@@ -812,7 +814,7 @@
 			JOIN cmcd on cmcd.cmcd_id = wlog.wlog_cd
 			JOIN clss on clss.clss_id = wlog.clss_id
 			LEFT JOIN resn on resn.wlog_id = wlog.wlog_id
-			WHERE stdt_id=#{stdtId} and clss.clss_nm LIKE ('%'|| #{selectedClssNm} ||'%')
+			WHERE stdt_id=#{stdtId} and clss.clss_nm LIKE ('%'|| #{selectedClssNm} ||'%') and wlog.delete_yn ='N'
 			ORDER BY wlog.rgst_dt DESC
 	]]>
 	</select>
@@ -963,7 +965,7 @@
 			post.rgst_dt as "rgstDd"
 			FROM post
 			LEFT JOIN mngr on mngr.mngr_id = post.rgster_id
-			WHERE master_id=#{postId}
+			WHERE master_id=#{postId} and delete_yn ='N'
 			ORDER BY post.rgst_dt DESC
 	]]>
 
@@ -976,10 +978,10 @@
 		 select 
 			post_content
 			FROM post
-			WHERE post_id=#{postId}
+			WHERE post_id=#{postId} and delete_yn ='N'
 	]]>
 	</select>
-	
+
 	<!-- 지원금 내역 조회 -->
 	<select id="searchSbsdList" parameterType="string"
 		resultType="com.finalprj.kess.dto.SubsidyDTO">
@@ -999,8 +1001,8 @@
 			ORDER BY rgst_dt DESC
 	]]>
 	</select>
-	
-	
+
+
 
 
 	<!-- 문의작성하기 -->
@@ -1040,7 +1042,7 @@
 			post_content,
 			file_id
 			from post
-		where post_id=#{postId}
+		where post_id=#{postId} and delete_yn ='N'
 	]]>
 	</select>
 
@@ -1057,7 +1059,7 @@
 		where post_id=#{postId}
 	]]>
 	</update>
-	
+
 	<!-- 멤버 확인 유무 -->
 	<select id="checkMember" resultType="string">
 	<![CDATA[
@@ -1066,31 +1068,31 @@
 		WHERE user_email=#{email}
 	]]>
 	</select>
-	
-	<update id="updateSubcript"
-		parameterType="string">
+
+	<update id="updateSubcript" parameterType="string">
 	<![CDATA[
 		update stdt
 		set  RECEIVE_MAIL='Y'
 		where stdt_id=#{stdtId}
 	]]>
 	</update>
-	
-	<select id="getWlogList" resultType="com.finalprj.kess.dto.WorklogDTO">
+
+	<select id="getWlogList"
+		resultType="com.finalprj.kess.dto.WorklogDTO">
 	<![CDATA[
 		select clss_nm 
 		from clss
-		WHERE clss_id in (select clss_id from wlog where stdt_id = #{stdtId})
+		WHERE clss_id in (select clss_id from wlog where stdt_id = #{stdtId}) and delete_yn ='N'
 	]]>
 	</select>
-	
-	<select id="getSbsdList" resultType="com.finalprj.kess.dto.SubsidyDTO">
+
+	<select id="getSbsdList"
+		resultType="com.finalprj.kess.dto.SubsidyDTO">
 	<![CDATA[
 		select clss_nm 
 		from clss
-		WHERE clss_id in (select clss_id from mony where stdt_id = #{stdtId})
+		WHERE clss_id in (select clss_id from mony where stdt_id = #{stdtId}) and delete_yn ='N'
 	]]>
 	</select>
-	
 
 </mapper>

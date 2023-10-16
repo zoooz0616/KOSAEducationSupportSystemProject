@@ -62,7 +62,8 @@
 						비밀번호<span class="star">*</span>
 					</h3>
 					<span class="signup-input"> <input id="signup-pw"
-						name="userPwd" type="password" placeholder="영문자+숫자+특수문자(8자~20자)"
+						maxlength='20' name="userPwd" type="password"
+						placeholder="영문자+숫자+특수문자(8자~20자)"
 						oninput="checkPasswordValidity()"></input> <span class="pw-lock"
 						onclick="pwLock(this)"></span>
 					</span>
@@ -72,7 +73,7 @@
 						비밀번호 재확인<span class="star">*</span>
 					</h3>
 					<span class="signup-input"> <input id="signup-pww"
-						type="password" placeholder="영문자+숫자+특수문자(8자~20자)"
+						maxlength='20' type="password" placeholder="영문자+숫자+특수문자(8자~20자)"
 						oninput="checkPasswordSame()"></input> <span class="pww-lock"
 						onclick="pwLock(this)"></span>
 					</span>
@@ -93,7 +94,7 @@
 						생년월일<span class="star">*</span>
 					</h3>
 					<span style="display: flex;"> <input type="hidden"
-						 id="birth_dd" name="birthday"> <span
+						id="birth_dd" name="birthday"> <span
 						class="signup-input-birth"> <select id="signup-birth-yy"
 							class="selectbox" name="year">
 								<option value="year">년</option>
@@ -116,7 +117,8 @@
 								<option value="12">12</option>
 						</select>
 					</span> <span class="signup-input-birth" style="margin-left: 10px;">
-							<input id="signup-birth-dd" type="text" placeholder="일"></input>
+							<input id="signup-birth-dd" type="number" placeholder="일"
+							oninput='handleOnInput(this, 2)' min="1" max="31"></input>
 					</span>
 					</span>
 
@@ -169,12 +171,12 @@
 					</h3>
 					<p style="font-size: 10px; text-align: left;">(문의답변/합격통지 등의 메일은
 						수신동의와 무관하게 받으실 수 있습니다.)</p>
-						<input type="hidden" name="receiveMail" id="receive_mail">
+					<input type="hidden" name="receiveMail" id="receive_mail">
 					<div style="display: flex;">
 						<span> <input id="yes" type="radio" name="isReceiveMail"
-							value="Y" checked="checked"><label for="yes">동의</label>
-							<input id="no" type="radio" name="isReceiveMail" value="N">
-							<label for="no">비동의</label>
+							value="Y" checked="checked"><label for="yes">동의</label> <input
+							id="no" type="radio" name="isReceiveMail" value="N"> <label
+							for="no">비동의</label>
 						</span>
 					</div>
 				</div>
@@ -197,6 +199,13 @@
 		style="width: 100%;"></div>
 	<!--Footer-->
 	<script>
+	
+	function handleOnInput(el, maxlength) {
+		  if(el.value.length > maxlength)  {
+		    el.value 
+		      = el.value.substr(0, maxlength);
+		  }
+		}
 	//인증코드 담아 둘 변수
 	var verificationCode = "";
 	

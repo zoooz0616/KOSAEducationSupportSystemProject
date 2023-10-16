@@ -15,7 +15,7 @@ th, td {
 } */
 table td {
 	font-weight: bold;
-	padding: 2% 3%;
+	padding: 2% 0%;
 	word-break: keep-all;
 }
 
@@ -83,26 +83,28 @@ ul {
 }
 
 .btn button {
-	padding: 0 3%;
 	border: 0;
 }
 
-.back, .openModalBtn {
+.openModalBtn1:hover, .openModalBtn2:hover, .applyBtn:hover, .aplyBtn:hover,
+	.closeModalBtn:hover, .back:hover, .moveBtn:hover {
+	background-color: #F1A77E;
+}
+
+.back, .openModalBtn1, .openModalBtn2 {
 	background: #0E5881;
 	color: white;
-	padding: 1.5%;
 	margin: 8px 0;
-	border: 0;
 	font-size: 15px;
 	font-weight: bold;
 	border-radius: 10px;
 	border: 0;
 	cursor: pointer;
+	width: 30%;
 }
 
-.openModalBtn {
+.openModalBtn1, .openModalBtn2 {
 	display: none;
-	border: 0;
 }
 
 .moveTopBtn {
@@ -256,6 +258,7 @@ ul {
 	font-size: 15px;
 	border-radius: 10px;
 	text-decoration-line: none;
+	font-weight: bold;
 }
 
 .viewClass img {
