@@ -38,7 +38,7 @@
 					<div class="content_info_wrap">
 						<div>
 							총 <span class="lecture_cnt cnt"
-								th:text="${#lists.size(lectureList)}"></span> 개
+								th:text="${#lists.size(lectureList)}"></span> 건
 						</div>
 						<div class="content_info_button_wrap" style="display: flex;">
 							<button id="lecture_delete_btn">
@@ -156,7 +156,7 @@
 					<div class="content_info_wrap">
 						<div>
 							과목 총 <span class="cnt subject_cnt"
-								th:text="${#lists.size(subjectList)}"></span> 개
+								th:text="${#lists.size(subjectList)}"></span> 건
 						</div>
 						<div class="content_info_button_wrap">
 							<button id="subject_delete_btn">
@@ -235,7 +235,7 @@
 					<div class="content_info_wrap">
 						<div>
 							강사 총 <span class="cnt professor_cnt" th:text="${#lists.size(professorList)}"></span>
-							명
+							건
 						</div>
 						<div class="content_info_button_wrap">
 							<button id="professor_delete_btn">

@@ -33,7 +33,7 @@
 }
 
 .home-section .content_middle {
-	margin: 40px;
+	margin: 40px 40px 0 40px;
 	display: flex;
 	justify-content: space-between;
 	border-top: 2px solid #0E5881;
@@ -72,6 +72,7 @@
 	border-radius: 3px;
 	padding: 5px;
 	display: flex;
+	cursor: pointer;
 }
 
 .search_filter_btn_wrap button img {
@@ -87,7 +88,7 @@
 }
 
 .home-section .content_bottom {
-	margin: 40px;
+	margin: 10px 40px 40px 40px;
 }
 
 .home-section .content_bottom .content_info_wrap {
@@ -183,11 +184,12 @@
 	white-space: nowrap;
 }
 
-.notice_check, .mngr_nm, .notice_num, .notice_file, .rgst_dd, .notice_hit, .notice_status {
+.notice_check, .mngr_nm, .notice_num, .notice_file, .rgst_dd,
+	.notice_hit, .notice_status {
 	text-align: center;
 }
 
-.blue{
+.blue {
 	color: blue;
 }
 
@@ -197,6 +199,6 @@
 	color: green;
 }
 
-#excel_btn > img{
+#excel_btn>img {
 	margin-right: 5px;
 }

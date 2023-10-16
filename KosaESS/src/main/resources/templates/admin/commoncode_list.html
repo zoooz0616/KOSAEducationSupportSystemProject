@@ -34,13 +34,46 @@
 				<!-- 그룹코드 관리 -->
 				<div class="lecture_wrap" style="height: 100%;">
 
+					<!-- Search Filter wrap -->
+					<div class="search_filter_wrap" style="padding: 5px;">
+						<div style="display: flex;">
+							<div class="search_filter">
+								<span>코드구분</span> <input type="text" class="group_code_tpcd_id"
+									placeholder="ex)NTC" maxlength="3">
+							</div>
+							<div class="search_filter">
+								<span>코드구분명</span> <input type="text" class="group_code_cmcd_nm"
+									placeholder="ex)ㅇㅇㅇㅇ상태">
+							</div>
+						</div>
+
+						<!-- Search Button wrap -->
+						<div class="search_filter_btn_wrap">
+							<button type="button" class="reset_btn" onclick="resetInput()">
+								<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+							</button>
+							<button type="button" class="search_btn" onclick="search()">
+								<img th:src="@{/img/search_white.png}"> <span>조회</span>
+							</button>
+						</div>
+						<!-- Search Button wrap -->
+					</div>
+					<!-- Search Filter wrap -->
+
+
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
-							공통코드 총 <span class="cnt group_cnt" th:text="${#lists.size(groupCodeList)}"></span>
-							건
+							총 <span class="cnt group_cnt"
+								th:text="${#lists.size(groupCodeList)}"></span> 건
 						</div>
 						<div class="content_info_btn_wrap">
+							<!-- 등록하기 버튼 -->
+							<button type="button" onclick="showInsertGroupPopup();">
+								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+							</button>
+							<!-- 등록하기 버튼 -->
+
 							<button id="group_delete_btn">
 								<img th:src="@{/img/minus_white.png}">선택삭제
 							</button>
@@ -54,27 +87,13 @@
 								<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
 							</button>
 
-							<button id="group_save_btn" onclick ="saveGroupCode()" style="display: none;">
+							<button id="group_save_btn" onclick="saveGroupCode()"
+								style="display: none;">
 								<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
 							</button>
 						</div>
 					</div>
 					<!-- 총 개수 및 버튼-->
-
-					<!-- 그룹코드 등록하기 -->
-					<div class="insert_lecture insert" style="padding: 5px;">
-						<div>
-							<span>코드구분<span class="red">*</span></span> <input type="text"
-								class="group_code_tpcd_id" placeholder="ex)NTC" maxlength="3">
-							<span>코드구분명<span class="red">*</span></span> <input type="text"
-								class="group_code_cmcd_nm" placeholder="ex)ㅇㅇㅇㅇ상태">
-						</div>
-						<div>
-							<button class="insert_btn" type="button"
-								onclick="insertGroupCode()">등록하기</button>
-						</div>
-					</div>
-					<!-- 그룹코드 등록하기 -->
 
 					<!-- 리스트 -->
 					<div class="table_wrap"
@@ -95,16 +114,15 @@
 							<tbody class="group_tbody">
 								<tr th:each="groupCode,iterStat : ${groupCodeList}">
 									<td class="td_group_check_box"><input type="checkbox"
-										onclick="groupCheckSelectAll()" class="group_chk group_checkbox_item"
-										name="group_select" th:value="${groupCode.cmcdId}"> <input
-										type="hidden" class="group_update_yn" value="N"></td>
-									<td class="td_num" th:text="${#lists.size(groupCodeList)-iterStat.index}"></td>
-									<td class="td_cmcd_id"><div onclick="detailCodeList(this)"
-											class="group_code_id" th:text="${groupCode.cmcdId}"></div></td>
+										onclick="groupCheckSelectAll()"
+										class="group_chk group_checkbox_item" name="group_select"
+										th:value="${groupCode.cmcdId}"> <input type="hidden"
+										class="group_update_yn" value="N"></td>
+									<td class="td_num" th:text="${iterStat.index+1}"></td>
+									<td class="td_cmcd_id"><div th:text="${groupCode.cmcdId}"></div></td>
 									<td class="td_tpcd_id">
-										<div th:text="${groupCode.tpcdId}"></div> <input
-										class="group_tpcd_id" type="text"
-										th:value="${groupCode.tpcdId}" style="display: none;">
+										<div th:onclick="detailCodeList([[${groupCode.cmcdId}]])"
+											class="group_code_id" th:text="${groupCode.tpcdId}"></div>
 									</td>
 									<td class="td_cmcd_nm">
 										<div class="group_div" th:text="${groupCode.cmcdNm}"></div> <input
@@ -133,6 +151,35 @@
 				<!-- 상세코드 관리 -->
 				<div class="lecture_wrap" style="height: 100%;">
 
+					<!-- 상세코드 조회하기 -->
+					<div class="search_filter_wrap" style="padding: 5px;">
+						<div style="display: flex;">
+							<div class="search_filter">
+								<span>코드구분</span> <select
+									id="group_code_select">
+									<option value="all">선택</option>
+									<option th:each="groupCode: ${groupCodeList}"
+										th:value="${groupCode.cmcdId}" th:text="${groupCode.tpcdId}"></option>
+								</select>
+							</div>
+							<div class="search_filter">
+								<span>상세코드명</span> <input
+									class="detailCmcdNm" type="text" placeholder="상세코드명">
+							</div>
+						</div>
+						<!-- Search Button wrap -->
+						<div class="search_filter_btn_wrap">
+							<button type="button" class="reset_btn" onclick="resetInput()">
+								<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+							</button>
+							<button type="button" class="search_btn" onclick="search()">
+								<img th:src="@{/img/search_white.png}"> <span>조회</span>
+							</button>
+						</div>
+						<!-- Search Button wrap -->
+					</div>
+					<!-- 상세코드 조회하기 -->
+
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
@@ -140,6 +187,12 @@
 								th:text="${#lists.size(detailCodeList)}">0</span> 건
 						</div>
 						<div class="content_info_btn_wrap">
+							<!-- 등록하기 버튼 -->
+							<button type="button" onclick="showInsertDetailPopup();">
+								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+							</button>
+							<!-- 등록하기 버튼 -->
+
 							<button type="button" id="detail_delete_btn"
 								style="display: none;">
 								<img th:src="@{/img/minus_white.png}">선택삭제
@@ -162,24 +215,6 @@
 						</div>
 					</div>
 					<!-- 총 개수 및 버튼-->
-
-					<!-- 상세코드 등록하기 -->
-					<div class="insert_lecture insert" style="padding: 5px;">
-						<div>
-							<span>공통코드<span class="red">*</span></span> <select
-								id="group_code_select">
-								<option value="all">선택</option>
-								<option th:each="groupCode: ${groupCodeList}"
-									th:value="${groupCode.cmcdId}" th:text="${groupCode.cmcdNm}"></option>
-							</select> <span>상세코드명<span class="red">*</span></span> <input
-								class="detailCmcdNm" type="text" placeholder="상세코드명">
-						</div>
-						<div>
-							<button class="insert_btn" type="button"
-								onclick="insertdetailCode()">등록하기</button>
-						</div>
-					</div>
-					<!-- 상세코드 등록하기 -->
 
 					<!-- 리스트 -->
 					<div class="table_wrap"
@@ -218,6 +253,9 @@
 	</div>
 
 	<script>
+	var selectedCode = "";
+	
+	
 	/*
 	*전체 선택 및 개별 선택
 	*/
@@ -280,7 +318,7 @@
 				.addEventListener(
 						"click",
 						function() {
-							console.log("dmd");
+							
 							var selectedGroupCodeIds = [];
 
 							// 선택된 체크박스를 모두 선택합니다.
@@ -292,25 +330,32 @@
 								selectedGroupCodeIds.push(checkbox.value);
 							});
 
-							console.log(selectedGroupCodeIds);
-							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-							$
-									.ajax({
-										url : '/admin/commoncode/delete/groupcode',
-										method : 'POST',
-										data : {
-											selectedGroupCodeIds : selectedGroupCodeIds
-										},
-										success : function(response) {
-											console.log(response);
-											if (response == "success") {
-												alert("선택한 그룹코드가 미사용으로 설정되었습니다.");
-												window.location.href = "/admin/commoncode/list";
-											} else {
-												alert("삭제할 그룹코드를 선택해주세요.");
-											}
-										}
-									});
+							//선택한 개수 확인
+							if(selectedGroupCodeIds.length == 0){
+								alert("선택된 공통코드가 없습니다.");
+							}else{
+								//진짜 삭제할 건지 확인
+								if(!confirm("삭제하시겠습니까?")){
+									//아니오
+								}else{
+									//확인
+									// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+									$
+											.ajax({
+												url : '/admin/commoncode/delete/groupcode',
+												method : 'POST',
+												data : {
+													selectedGroupCodeIds : selectedGroupCodeIds
+												},
+												success : function(response) {
+													if (response == "success") {
+														alert("선택한 그룹코드가 삭제되었습니다.");
+														window.location.href = "/admin/commoncode/list";
+													}
+												}
+											});
+								}
+							}							
 						});
 		
 		//상세코드 선택삭제
@@ -349,68 +394,8 @@
 				});
 
 		
-		/*
-		*그룹코드 및 상세코드 등록
-		*/
-		//그룹코드 등록
-		function insertGroupCode() {
-			//그룹코드 tpcdId
-			var tpcdId = document.querySelector(".group_code_tpcd_id").value;
-			//그룹코드 cmcdNm
-			var cmcdNm = document.querySelector(".group_code_cmcd_nm").value;
-
-			$.ajax({
-				url : '/admin/commoncode/insert/groupcode',
-				method : 'POST',
-				data : {
-					tpcdId : tpcdId,
-					cmcdNm : cmcdNm
-				},
-				success : function(response) {
-					console.log(response);
-					if (response == "success") {
-						alert("그룹코드가 생성되었습니다.");
-						window.location.href = "/admin/commoncode/list";
-					} else {
-						alert("코드 구분명이 중복됩니다.");
-					}
-				}
-			});
-
-		}
-		//상세코드 등록
-		function insertdetailCode() {
-			//그룹코드 cmcdId값
-			var cmcdIdSelect = document.getElementById("group_code_select")
-			var cmcdId = cmcdIdSelect.value;
-			//상세코드명
-			var cmcdNmInput = document.querySelector(".detailCmcdNm");
-			var cmcdNm = cmcdNmInput.value;
-
-			console.log(cmcdId);
-
-			$.ajax({
-				url : '/admin/commoncode/insert/detailcode',
-				method : 'POST',
-				data : {
-					cmcdId : cmcdId,
-					cmcdNm : cmcdNm
-				},
-				success : function(response) {
-					console.log(response);
-					if (response == "fail") {
-						alert("상세코드가 이미 존재합니다.");
-					} else {
-						alert("상세코드가 추가되었습니다.");
-						selectDetailCodeList(response);
-
-						cmcdIdSelect.value = "all";
-						cmcdNmInput.value = "";
-
-					}
-				}
-			});
-		}
+		
+		
 		
 		
 		/*
@@ -569,6 +554,9 @@
 		
 		//cmcdId값에 맞는 상세코드 가져오기
 		function selectDetailCodeList(cmcdId) {
+			selectedCode = cmcdId;
+			
+			
 			//버튼 보이게 하기
 			const deleteBtn = document.querySelector('#detail_delete_btn');
 	        const updateBtn = document.querySelector('#detail_update_btn');
@@ -628,7 +616,7 @@
 
 									var tdNum = document.createElement("td");
 									tdNum.className="td_num";
-									tdNum.innerHTML = detailCodeList.length - i;
+									tdNum.innerHTML = i + 1;
 
 									var td2 = document.createElement("td");
 									td2.className = 'td_cmcd_id';
@@ -720,10 +708,10 @@
 		}
 
 		//그룹코드 클릭 => 상세코드 리스트 보기
-		function detailCodeList(div) {
-			var cmcdId = div.textContent;
-			console.log(cmcdId);
-
+		function detailCodeList(cmcdId) {
+			var cmcdId = cmcdId;
+			selectedCode = cmcdId;
+			
 			selectDetailCodeList(cmcdId);
 		}
 		// <select> 요소에 onchange 이벤트 핸들러를 할당
@@ -1002,7 +990,25 @@
 	    		// 오류 처리
 			});
 		}
-			
+	}
+	
+	function showInsertGroupPopup(){
+		window.open(
+				"/admin/commoncode/insert/groupcode", "insertgroupcode", 
+				"width=500, height=250, left=900, top=500"		
+		);
+	}
+	
+	function showInsertDetailPopup(){
+		if(selectedCode === ""){
+			selectedCode = "all";
+		}
+		
+		var url = "/admin/commoncode/insert/detailcode/popup/" + selectedCode;
+		window.open(
+				url, "insertdetailcode", 
+				"width=500, height=250, left=900, top=500"		
+		);
 	}
 	
 	</script>
