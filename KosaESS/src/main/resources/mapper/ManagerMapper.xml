@@ -210,6 +210,16 @@
 		]]>
 	</update>
 	
+	<update id="deleteWlog">
+		<![CDATA[
+			UPDATE wlog
+			SET
+				delete_yn='Y'
+			WHERE
+				wlog_ID=#{wlogId}
+		]]>
+	</update>
+	
 	<update id="updateManagerInfo" parameterType="com.finalprj.kess.model.ManagerVO">
 		<![CDATA[
 			UPDATE mngr
@@ -285,10 +295,13 @@
 				, c1.cmcd_nm as wlogCd --출석 상태
 				, w.delete_yn --삭제 여부
 				, resn_id --사유서 id
+				, resn_cd
 				, c2.cmcd_nm as prcsCd --처리 상태
+				, clss_nm
 			FROM wlog w
 				JOIN stdt s ON w.stdt_id = s.stdt_id
 				JOIN cmcd c1 ON w.wlog_cd = c1.cmcd_id
+				JOIN clss ON w.clss_id = clss.clss_id
 				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
 				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
 			WHERE

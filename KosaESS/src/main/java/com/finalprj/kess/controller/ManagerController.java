@@ -418,10 +418,10 @@ public class ManagerController {
 		if(startDate==null) {startDate="";}
 		if(endDate==null) {endDate="";}
 		if(keyword==null) {keyword="";}
+		//End : 파라미터가 null이면 ""으로 변환
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "지원금 관리";
-		
 		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
 		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
@@ -446,7 +446,7 @@ public class ManagerController {
 	}
 	
 	@GetMapping("/subsidy_insert")
-	public String insertSubsidy(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+	public String insertSubsidyView(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
 			return "redirect:/login";
@@ -625,6 +625,8 @@ public class ManagerController {
 		response.put("classDetail", targetClass);
 		return response;
 	}
+	
+	//사유서 내용 출력
 	@GetMapping("/worklog/resnContent")
 	@ResponseBody
 	public Map<String, Object> getResnContent(HttpSession session
@@ -649,6 +651,66 @@ public class ManagerController {
 		response.put("resnContent", thisResn);
 		response.put("resnCdList", resnCdList);
 		return response;
+	}
+	
+	//사유서 파일 목록 반환
+	@GetMapping("/worklog/resn_file_list")
+	@ResponseBody
+	public Map<String, Object> getResnFile(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@RequestParam String resnId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		ReasonDTO thisResn = managerService.getResnDetailByResnId(resnId);
+		String thisFileId = thisResn.getFileId();
+		List<Integer> resnFileSubIdList = managerService.getFileSubIdListByFileId(thisResn.getFileId());
+		List<FileVO> resnFileList = new ArrayList<FileVO>();
+		for (Integer i : resnFileSubIdList) {
+			resnFileList.add(managerService.getFileInfoByIds(thisFileId, i));
+		}
+		Map<String, Object> response = new HashMap<>();
+		response.put("resnFileList", resnFileList);
+		response.put("resnFileList", resnFileList);
+		return response;
+	}
+	
+	//사유서 내용 출력
+	@GetMapping("/resn/{fileId}/{fileSubId}")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(HttpSession session
+			, HttpServletRequest httpServletRequest
+			,@PathVariable("fileId") String fileId
+			,@PathVariable("fileSubId") int fileSubId
+			) {
+		
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return null;
+		}else if(!((String)session.getAttribute("roleCd")).equals("ROL0000003")){
+			return null;
+		}
+		//End : 유저 필터링
+		
+		FileVO file = managerService.getFileByIds(fileId, fileSubId);
+		final HttpHeaders headers = new HttpHeaders();
+		String[] mtypes = file.getFileType().split("/");
+		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
+		headers.setContentLength(file.getFileSize());
+		try {
+			String encodedFileName = URLEncoder.encode(file.getFileNm(), "UTF-8");
+			headers.setContentDispositionFormData("attachment", encodedFileName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
 	
 	@PostMapping("/worklog/update_resn_code")
@@ -699,6 +761,28 @@ public class ManagerController {
 		// End : 업데이트
 		Map<String, Object> response = new HashMap<>();
 		response.put("result", result);
+		return response;
+	}
+	
+	//출퇴근 기록 삭제
+	@PostMapping("/worklog/delete_wlog")
+	@ResponseBody
+	public Map<String, Object> deleteWlog(
+			HttpSession session,
+			@RequestParam (value="wlogList[]") List<String> wlogList
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		//End : 유저 필터링
+		
+		//업데이트
+		for (String wlogId : wlogList) {
+			managerService.deleteWlog(wlogId);
+		}
+		
+		Map<String, Object> response = new HashMap<>();
 		return response;
 	}
 	
