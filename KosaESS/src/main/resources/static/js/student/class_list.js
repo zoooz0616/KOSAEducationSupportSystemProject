@@ -179,6 +179,7 @@ $(document).ready(function() {
 
 			for (var i = 0; i < filteredData.length; i++) {
 				var classVO = filteredData[i];
+				var aplyStart = formatTimestamp(classVO.aplyStartDt);
 				var aplyEnd = formatTimestamp(classVO.aplyEndDt);
 				var row = $('<tr class="classRow"></tr>');
 
@@ -188,26 +189,26 @@ $(document).ready(function() {
 				var applyBtn = $('<a>').attr('href', '/student/class/view/' + classVO.clssId).text(classVO.clssNm);
 				row.append($('<td style=" text-overflow: ellipsis;overflow: hidden; white-space: nowrap;"></td>').append(applyBtn));
 				if (classVO.aplyEndDt == null) {
-					row.append('<td><span>미정</span></td>');
+					row.append('<td><span style="color: lightslategray;">미정</span></td>');
 				} else {
-					row.append('<td><span>' + ' ~ ' + aplyEnd + '</span></td>');
+					row.append('<td><span>' + aplyStart + ' ~ ' + aplyEnd + '</span></td>');
 				}
 				if (classVO.clssStartDd == null) {
-					row.append('<td><span>미정</span></td>');
+					row.append('<td><span style="color: lightslategray;">미정</span></td>');
 				} else {
 					row.append('<td><span>' + classVO.clssStartDd + ' ~ ' + classVO.clssEndDd + '</span></td>');
 				}
 				if (classVO.clssAdr == null) {
-					row.append('<td><span>미정</span></td>');
+					row.append('<td><span style="color: lightslategray;">미정</span></td>');
 				} else {
 					row.append('<td><span>' + classVO.clssAdr + '</span></td>');
 				}
 				if (classVO.limitCnt == 0) {
-					row.append('<td><span>미정</span></td>');
+					row.append('<td><span style="color: lightslategray;">미정</span></td>');
 				} else {
 					row.append('<td><span>' + classVO.limitCnt + '</span></td>');
 				}
-				if (classVO.cmcdNm == '접수중') {
+				if (classVO.clssCd == 'CLS0000002') {
 					row.append('<td><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
 					var applyButtonCell = $('<td></td>');
 					var applyButton = $('<button class="openModalBtn">지원하기</button>');
@@ -216,6 +217,9 @@ $(document).ready(function() {
 					applyButtonCell.append(applyInput);
 					row.append(applyButtonCell);
 					console.log(applyInput.value);
+				} else if (classVO.clssCd == 'CLS0000008')  {
+					row.append('<td><span class="className" style="color: red;">' + classVO.cmcdNm + '</span></td>');
+					row.append('<td></td>');
 				} else {
 					row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
 					row.append('<td></td>');
@@ -277,8 +281,10 @@ $(document).ready(function() {
 				}
 
 				// 각 열에 해당하는 데이터를 행에 추가합니다.
-				if (classVO.cmcdNm == '접수중') {
+				if (classVO.clssCd == 'CLS0000002') {
 					row.append('<td style="text-align: center;"><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
+				}else if (classVO.clssCd == 'CLS0000008') {
+					row.append('<td style="text-align: center;"><span class="className" style="font-weight: bold; color: red;">' + classVO.cmcdNm + '</span></td>');
 				} else {
 					row.append('<td style="text-align: center;"><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
 				}
@@ -289,9 +295,9 @@ $(document).ready(function() {
 				}
 				row.append('<td style="font-weight: bold; font-size: 18px; word-break: keep-all; text-overflow: ellipsis;overflow: hidden; white-space: nowrap;">' + classVO.clssNm + '</td>');
 				if (classVO.aplyEndDt == null) {
-					row.append('<td><span>지원:  미정  </span></td>');
+					row.append('<td><span>지원마감일시:  미정  </span></td>');
 				} else {
-					row.append('<td><span>지원: </span><span>' +  '~ ' + aplyEnd + '</span></td>');
+					row.append('<td><span>지원마감일시: </span><span>' + aplyEnd + '</span></td>');
 				}
 				var applyBtn = $('<a>').addClass('applyBtn').attr('href', '/student/class/view/' + classVO.clssId).text('자세히보기');
 				row.append($('<td>').append(applyBtn));
@@ -358,9 +364,8 @@ function formatTimestamp(timestamp) {
 	const day = String(date.getDate()).padStart(2, '0');
 	const hours = String(date.getHours()).padStart(2, '0');
 	const minutes = String(date.getMinutes()).padStart(2, '0');
-	const seconds = String(date.getSeconds()).padStart(2, '0');
 
-	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}`;
 
 	return formattedTimestamp;
 }

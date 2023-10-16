@@ -18,10 +18,11 @@
 		<div class="content" style="flex-direction: column;">
 			<div class="search">
 				<div class="searchform">
-					<input type="text" class="searchInput" placeholder="교육과정명 또는 회사명을 검색하세요.">
-					<input type="button" class="searchBtn" value="검색"> <input
-						type="checkbox" name="aplyclass" id="aply"><label
-						for="aply">지원가능한 교육만</label>
+					<input type="text" class="searchInput"
+						placeholder="교육과정명 또는 회사명을 검색하세요."> <input type="button"
+						class="searchBtn" value="검색"> <input type="checkbox"
+						name="aplyclass" id="aply"><label for="aply">지원가능한
+						교육만</label>
 				</div>
 
 				<div>
@@ -99,7 +100,7 @@
 									</div>
 									<div class="modalFooter">
 										<button type="reset" class="closeModalBtn">취소</button>
-										<button type="submit" class="aplyBtn">제출</button>
+										<button type="submit" class="aplyBtn" onclick="aply()">제출</button>
 									</div>
 								</form>
 							</div>
@@ -180,7 +181,8 @@
 		if (selectedFiles.length < 1) {
 			alert("지원서 파일을 첨부해주세요.");
 			event.preventDefault();
-		}
+		}else
+			alert("제출이 완료되었습니다.");
 	});
 	$("#fileInput").on('change', function() {
 		var files = $("#fileInput")[0].files;

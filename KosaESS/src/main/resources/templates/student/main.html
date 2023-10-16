@@ -104,7 +104,7 @@
 							<div class="inouttm">
 								<p id="dDay"></p>
 								<h3 th:text="${ingClassVO.clssNm}"
-									style="margin: 0 0 2% 0; height: 55px; display: flex; justify-content: center; align-items: center;"></h3>
+									style="margin: 0 0 2% 0; height: 55px; display: flex; justify-content: center; align-items: center; word-break: keep-all;"></h3>
 								<div class="viewinout">
 									<div>
 										<label for="intm"></label> <input type="text"
@@ -148,8 +148,30 @@
 			</div>
 			<div class=" con" style="width: 45%; margin-bottom: 4%;">
 				<div>
-					<h2 th:if="${session.userEmail == null}">지원 일정</h2>
-					<h2 th:if="${session.userEmail != null}">지원 및 교육 일정</h2>
+					<div th:if="${session.userEmail == null}"
+						style="margin-bottom: 2%;">
+						<h2 style="margin-bottom: 0;">지원 일정</h2>
+						<div
+							style="display: flex; justify-content: flex-end; padding-right: 4%;">
+							<span style="padding-right: 5px;">접수중</span><span
+								style="background-color: #F1A77E; padding: 0 30px; border-radius: 10px; margin-right: 3%;">
+							</span> <span style="padding-right: 5px;">접수예정</span><span
+								style="background-color: #6E9BB3; padding: 0 30px; border-radius: 10px;">
+							</span>
+						</div>
+					</div>
+					<div th:if="${session.userEmail != null}"
+						style="margin-bottom: 2%;">
+						<h2 style="margin-bottom: 0;">지원 및 교육 일정</h2>
+						<div
+							style="display: flex; justify-content: flex-end; padding-right: 4%;">
+							<span style="padding-right: 5px;">이수중</span><span
+								style="background-color: #F1A77E; padding: 0 30px; border-radius: 10px; margin-right: 3%;">
+							</span> <span style="padding-right: 5px;">지원완료</span><span
+								style="background-color: #6E9BB3; padding: 0 30px; border-radius: 10px;">
+							</span>
+						</div>
+					</div>
 					<div style="width: 100%;">
 						<div class="content">
 							<div id="calendar-container"
