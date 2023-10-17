@@ -2167,6 +2167,50 @@ public class AdminController {
 		return groupCodeId;
 
 	}
+	
+	/**
+	 * 기준정보 그룹코드 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 17.
+	 * @parameter : selectedDetailCodeIds
+	 * @return : String
+	 */
+	@GetMapping("/commoncode/search/groupcode")
+	@ResponseBody
+	public Map<String, Object> searchGroupCode(@RequestParam(required = false) String tpcdId, @RequestParam(required = false) String cmcdNm,
+			@RequestParam(required = false) String useYn) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<CommonCodeVO> searchGroupCodeList = adminService.getSearchGroupCodeList(tpcdId.trim(), cmcdNm.trim(), useYn);
+		map.put("groupCodeList", searchGroupCodeList);
+		
+		return map;
+	}
+	
+	
+	
+	/**
+	 * 기준정보 상세코드 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 17.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@GetMapping("/commoncode/search/detailcode")
+	@ResponseBody
+	public Map<String, Object> searchDetailCode(@RequestParam String tpcdId, @RequestParam String cmcdNm) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<CommonCodeVO> searchDetailCodeList = adminService.getSearchDetailCodeList(tpcdId, cmcdNm.trim());
+		map.put("detailCodeList", searchDetailCodeList);
+		
+		return map;
+	}
+	
+	
+	
 
 	/**
 	 * 지원금 목록조회

@@ -95,6 +95,11 @@ a {
 	font-weight: bold;
 }
 
+.search_filter>label{
+	color: #0E5881;
+	font-weight: bold;
+}
+
 .table_wrap {
 	margin-top: 10px;
 }

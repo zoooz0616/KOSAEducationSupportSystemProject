@@ -154,4 +154,7 @@ public interface IAdminRepository {
 	void updateGroupCode(CommonCodeVO[] updateGroupList);
 	void updateUseYnDetailCode(CommonCodeVO[] updateGroupList);
 
+	List<CommonCodeVO> getSearchDetailCodeList(String tpcdId, String cmcdNm);
+	List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn);
+
 }

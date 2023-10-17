@@ -158,4 +158,7 @@ public interface IAdminService {
 
 	void updateDetailCode(CommonCodeVO[] updateDetailList);
 	void updateGroupCode(CommonCodeVO[] updateGroupList);
+
+	List<CommonCodeVO> getSearchDetailCodeList(String tpcdId, String cmcdNm);
+	List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn);
 }
