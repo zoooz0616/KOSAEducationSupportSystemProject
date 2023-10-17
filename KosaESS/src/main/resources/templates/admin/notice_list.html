@@ -83,7 +83,8 @@
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
-					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/notice'">
+					<button type="button" id="excel_btn"
+						onclick="location.href='/excel/admin/notice'">
 						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 					</button>
 
@@ -126,7 +127,8 @@
 							<td class="notice_check"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${notice.postId}"></td>
-							<td class="notice_num" th:text="${#lists.size(noticeList)-iterStat.index}"></td>
+							<td class="notice_num"
+								th:text="${#lists.size(noticeList)-iterStat.index}"></td>
 							<td><a class="notice_title"
 								th:href="@{/admin/notice/view/__${notice.postId}__}"
 								th:text="${notice.postTitle}"></a></td>
@@ -144,6 +146,24 @@
 			<!-- 컨텐츠 리스트 부분 -->
 		</div>
 		<!-- Content Bottom-->
+		
+		<!-- Paging -->
+		<nav class="page_nav" aria-label="Page navigation">
+			<ul class="pagination">
+				<li th:if="${nowPageBlock>1}"><a
+					th:href="@{/admin/notice/list/__${startPage-1}__}"
+					aria-label="Previous">이전</a></li>
+
+				<li th:each="i: ${#numbers.sequence(startPage, endPage)}"
+					th:classappend="${i==nowPage}?active"><a
+					th:href="@{/admin/notice/list/__${i}__}">[[${i}]]</a></li>
+
+				<li th:if="${nowPageBlock<totalPageBlock}"><a
+					th:href="@{/admin/notice/list/__${endPage+1}__}"
+					aria-label="Next">다음</a></li>
+			</ul>
+		</nav>
+		<!-- Paging -->
 	</div>
 	<script>
 		//전체선택

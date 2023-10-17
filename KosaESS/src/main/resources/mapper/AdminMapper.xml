@@ -6,7 +6,7 @@
 	<![CDATA[
 		select count(post_id)
 		from post
-		where post_id like 'NOTC%'
+		where post_id like 'NOTC%' and delete_yn='N'
 	]]>
 	</select>
 
@@ -575,15 +575,34 @@
 		</foreach>
 	</update>
 
-	<select id="getNoticeList"
+	<select id="getNoticeList" parameterType="int"
 		resultType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
 		select *
-		from post
+		from (
+        select row_number() over(order by post_cd,post_id desc) as row_num,
+        post_id,
+        master_id,
+        post_title,
+        post_content,
+        post_hit, 
+        post_cd,
+        post.file_id,
+        post.rgst_dt,
+        post.rgster_id,
+        post.updt_dt,
+        post.updter_id,
+        post.delete_yn,
+        cmcd.cmcd_id,
+        cmcd.tpcd_id,
+        cmcd.cmcd_nm,
+        mngr.mngr_nm
+        from post
 		join cmcd on cmcd.cmcd_id = post.post_cd
 		join mngr on mngr.mngr_id = post.rgster_id
 		where post.post_id like 'NOTC%' and post.delete_yn='N'
-		order by post_cd, post_id desc
+		)
+        where row_num between #{start} and #{end}
 	]]>
 	</select>
 

@@ -166,15 +166,40 @@ public class AdminController {
 	 * @parameter : session, model
 	 * @return : String
 	 */
-	@GetMapping("/notice/list")
-	public String noticeList(HttpSession session, Model model) {
+	@GetMapping("/notice/list/{page}")
+	public String noticeList(@PathVariable int page, HttpSession session, Model model) {
+		session.setAttribute("page", page);
+
 		// 공지사항 상태 리스트 전달
 		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
 		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
 
 		// 공지사항 리스트 전달
-		List<PostVO> noticeList = adminService.getNoticeList();
+		List<PostVO> noticeList = adminService.getNoticeList(page);
 		model.addAttribute("noticeList", noticeList);
+
+		int bbsCount = adminService.getNoticeCnt();
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 20 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 20) {
+			endPage = nowPageBlock * 20;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+
 		session.setAttribute("searchNoticeList", noticeList);
 
 		return "admin/notice_list";
@@ -2167,7 +2192,7 @@ public class AdminController {
 		return groupCodeId;
 
 	}
-	
+
 	/**
 	 * 기준정보 그룹코드 검색
 	 * 
@@ -2178,18 +2203,17 @@ public class AdminController {
 	 */
 	@GetMapping("/commoncode/search/groupcode")
 	@ResponseBody
-	public Map<String, Object> searchGroupCode(@RequestParam(required = false) String tpcdId, @RequestParam(required = false) String cmcdNm,
-			@RequestParam(required = false) String useYn) {
+	public Map<String, Object> searchGroupCode(@RequestParam(required = false) String tpcdId,
+			@RequestParam(required = false) String cmcdNm, @RequestParam(required = false) String useYn) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		List<CommonCodeVO> searchGroupCodeList = adminService.getSearchGroupCodeList(tpcdId.trim(), cmcdNm.trim(), useYn);
+
+		List<CommonCodeVO> searchGroupCodeList = adminService.getSearchGroupCodeList(tpcdId.trim(), cmcdNm.trim(),
+				useYn);
 		map.put("groupCodeList", searchGroupCodeList);
-		
+
 		return map;
 	}
-	
-	
-	
+
 	/**
 	 * 기준정보 상세코드 검색
 	 * 
@@ -2202,15 +2226,12 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> searchDetailCode(@RequestParam String tpcdId, @RequestParam String cmcdNm) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		List<CommonCodeVO> searchDetailCodeList = adminService.getSearchDetailCodeList(tpcdId, cmcdNm.trim());
 		map.put("detailCodeList", searchDetailCodeList);
-		
+
 		return map;
 	}
-	
-	
-	
 
 	/**
 	 * 지원금 목록조회
