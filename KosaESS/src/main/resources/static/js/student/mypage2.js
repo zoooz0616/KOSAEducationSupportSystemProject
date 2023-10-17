@@ -92,10 +92,12 @@ $(document).ready(function() {
 			row.append('<td><span>' + RegistrationVO.clssStartDd + ' ~ ' + RegistrationVO.clssEndDd + '</span></td>');
 			row.append('<td>' + RegistrationVO.rgstNm + '</td>');
 			if (RegistrationVO.cmptCd === 'CMP0000001') {
-				row.append('<td style="color:blue;">' + RegistrationVO.cmptNm + '</td>');
-			} else if (RegistrationVO.cmptCd === 'CMP0000003') {
 				row.append('<td style="color:red;">' + RegistrationVO.cmptNm + '</td>');
-			} else {
+			} else if (RegistrationVO.cmptCd === 'CMP0000003') {
+				row.append('<td style="color:lightslategray;">' + RegistrationVO.cmptNm + '</td>');
+			} else if (RegistrationVO.cmptCd === 'CMP0000002') {
+				row.append('<td style="color:blue;">' + RegistrationVO.cmptNm + '</td>');
+			}else {
 				row.append('<td>' + RegistrationVO.cmptNm + '</td>');
 			}
 			if (RegistrationVO.cmptCd === 'CMP0000002') {
