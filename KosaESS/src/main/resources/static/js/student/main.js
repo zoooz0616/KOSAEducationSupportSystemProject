@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	}
-
 	// 주기적으로 화면 넘기기
 	function getInterval() {
 		return setInterval(() => {
