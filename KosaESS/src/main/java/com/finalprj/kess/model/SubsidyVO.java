@@ -7,11 +7,11 @@ import lombok.Data;
 
 @Data
 public class SubsidyVO {
-	private String monyId;// 지원금id
+	private String sbsdId;// 지원금id
 	private String clssId;// 교육과정id
 	private String stdtId;// 교육생id
 	
-	private String monyCd;// 지급 상태
+	private String sbsdCd;// 지급 상태
 	private Date paidDd;//지급 확정 일자
 	private int payment;//지급액
 	private Date subsidyDd;//지원금 해당 연월

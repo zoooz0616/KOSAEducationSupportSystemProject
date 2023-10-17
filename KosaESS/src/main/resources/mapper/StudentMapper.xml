@@ -471,7 +471,8 @@
 			    clss_cd,
 			    mngr.mngr_nm ,
 			    cmpy.cmpy_nm ,
-			    cmcd.cmcd_nm 
+			    cmcd.cmcd_nm ,
+			    clss_subsidy
 			FROM clss
 			JOIN cmcd ON cmcd.cmcd_id = clss.clss_cd
 			LEFT JOIN MNGR on mngr.mngr_id = clss.mngr_id
@@ -545,7 +546,7 @@
 	<![CDATA[
 		select * 
 		from cmcd
-		where tpcd_id = #{tpcdId} and use_yn = 'Y'
+		where tpcd_id = #{tpcdId} and use_yn = 'Y' and delete_yn ='N'
 		order by (cmcd_order || cmcd_id)
 	]]>
 	</select>
@@ -987,17 +988,18 @@
 		resultType="com.finalprj.kess.dto.SubsidyDTO">
 	<![CDATA[
 		 select 
-			mony_id,
-			(select clss_nm from clss where clss.clss_id = mony.clss_id) as "clssNm",
-            (select cmcd_nm from cmcd where cmcd.cmcd_id = mony.mony_cd) as "monyNm",
+			sbsd_id,
+			(select clss_nm from clss where clss.clss_id = sbsd.clss_id) as "clssNm",
+            (select cmcd_nm from cmcd where cmcd.cmcd_id = sbsd.sbsd_cd) as "sbsdNm",
+            sbsd_cd,
             paid_dd,
             payment,
             subsidy_dd,
             max_wlog_cnt,
             wlog_cnt,
 			rgst_dt as "rgstDd"
-			FROM mony
-			WHERE stdt_id=#{stdtId} and (mony_cd ='MNY0000002' or mony_cd ='MNY0000003')
+			FROM sbsd
+			WHERE stdt_id=#{stdtId} and (sbsd_cd ='SSD0000002' or sbsd_cd ='SSD0000003')
 			ORDER BY rgst_dt DESC
 	]]>
 	</select>
@@ -1091,7 +1093,7 @@
 	<![CDATA[
 		select clss_nm 
 		from clss
-		WHERE clss_id in (select clss_id from mony where stdt_id = #{stdtId}) and delete_yn ='N'
+		WHERE clss_id in (select clss_id from sbsd where stdt_id = #{stdtId}) and delete_yn ='N'
 	]]>
 	</select>
 
