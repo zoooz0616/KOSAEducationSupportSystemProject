@@ -179,6 +179,7 @@ public class AdminController {
 		model.addAttribute("noticeList", noticeList);
 
 		int bbsCount = adminService.getNoticeCnt();
+		model.addAttribute("noticeCnt", bbsCount);
 		int totalPage = 0;
 		if (bbsCount > 0) {
 			totalPage = (int) Math.ceil(bbsCount / 20.0);
@@ -186,10 +187,10 @@ public class AdminController {
 
 		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
 		int nowPageBlock = (int) Math.ceil(page / 10.0);
-		int startPage = (nowPageBlock - 1) * 20 + 1;
+		int startPage = (nowPageBlock - 1) * 10 + 1;
 		int endPage = 0;
-		if (totalPage > nowPageBlock * 20) {
-			endPage = nowPageBlock * 20;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
 		} else {
 			endPage = totalPage;
 		}
