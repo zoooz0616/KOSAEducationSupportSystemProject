@@ -202,3 +202,7 @@ button:hover{
 	align-items: center;
 	justify-content: center;
 }
+
+.input_workday{
+	width: 4em;
+}

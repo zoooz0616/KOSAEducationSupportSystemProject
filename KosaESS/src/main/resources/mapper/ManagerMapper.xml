@@ -8,7 +8,7 @@
 				clss_Id, mngr_Id, cmpy_id, clss_Nm, clss_Content,
 				limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
 				set_In_Tm, set_Out_Tm, m1.cmcd_nm as clss_Cd, clss_Adr, clss_Total_Tm,
-				c.file_Id, clss_Etc
+				c.file_Id, clss_Etc, clss_subsidy
 			FROM clss c
 				JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
 			WHERE
@@ -60,7 +60,7 @@
 				clss.clss_Id, mngr.mngr_Nm AS mngrId, NVL(cmpy.cmpy_nm,'') as cmpy_Id, clss_Nm, clss_Content,
 				limit_Cnt, aply_Start_Dt, aply_End_Dt, clss_Start_Dd, clss_End_Dd,
 				set_In_Tm, set_Out_Tm, m.cmcd_nm as clss_Cd, clss.clss_Adr, clss_Total_Tm,
-				clss.file_Id, clss_Etc
+				clss.file_Id, clss_Etc, clss_subsidy
 			FROM clss
 				JOIN cmcd m ON clss.clss_cd = m.cmcd_id
 				JOIN mngr ON mngr.mngr_id=clss.mngr_id
@@ -178,7 +178,7 @@
 			set_In_Tm, set_Out_Tm, 
 			m1.cmcd_nm as clss_Cd
 			, clss_Adr, clss_Total_Tm,
-			c.file_Id, clss_Etc
+			c.file_Id, clss_Etc, clss_subsidy
 		FROM clss c
 			JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
 		WHERE

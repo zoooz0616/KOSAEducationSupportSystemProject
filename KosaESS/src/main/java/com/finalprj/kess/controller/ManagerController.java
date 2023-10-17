@@ -455,17 +455,20 @@ public class ManagerController {
 		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
 			return "redirect:/admin";
 		}
-		//End : 유저 필터링
 		
+		// mngrId
 		String mngrId = (String) session.getAttribute("mngrId");
+		
+		// 페이지 제목 추가
 		String title = "지원금 관리(등록)";
-		
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
-		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
-		
 		model.addAttribute("title", title);
+		
+		//교육과정 목록 추가
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
 		model.addAttribute("classList", classList);
-		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		
+		//출석 종류 추가
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
 		
 		return "manager/subsidy_insert";
