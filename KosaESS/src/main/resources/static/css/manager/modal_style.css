@@ -15,7 +15,7 @@
 /* 	display : block; */
 }
 .resn_modal_wrap .resn_modal{
-	padding : 5%;
+/* 	padding : 5%; */
 	width : 70%;
 	height : 70%;
 	margin: auto;
@@ -52,4 +52,17 @@
 }
 .resn_file_list img{
 	height : 1.1em;
+}
+
+.modal_close_wrap {
+	height : 1.4em;
+	background-color: #0E5881;
+}
+
+.modal_close_wrap img:hover{
+	cursor: pointer;
+}
+.modal_close_wrap img{
+	height : 100%;
+	float: right;
 }

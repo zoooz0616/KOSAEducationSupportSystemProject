@@ -78,4 +78,6 @@ public interface IManagerRepository {
 	public void insertSubsidy(SubsidyVO subsidyVO);
 
 	public void deleteWlog(String wlogId);
+
+	public ClassVO getCodeVO(String resnCd);
 }
