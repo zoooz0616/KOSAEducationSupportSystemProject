@@ -56,13 +56,13 @@
 					</div>
 					<div class="insert_name">교육일수<span class="star">*</span></div>
 					<div class="insert_input">
-						<select id="start_date_m">
+						<select id="max_wlog_cnt">
 							<option th:each="monthNum:${#numbers.sequence(1,__${monthLength}__)}" th:text="${monthNum}" th:value="${monthNum}"/>
 						</select>
 						<input type="button" class="batch_input" value="일괄적용" onclick="batchInput(this)">
 					</div>
 					<div class="insert_name">지원금</div>
-					<div class="insert_input">10000<span>&nbsp;&#8361;</span></div>
+					<div class="insert_input"><span id="subsidy_value">10000</span><span>&nbsp;&#8361;</span></div>
 					<input type="button" class="batch_input" value="일괄적용" onclick="batchInput(this)">
 				</div>
 				<!-- 검색 버튼 -->
