@@ -96,8 +96,10 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<ClassVO> getClassList() {
-		return adminRepository.getClassList();
+	public List<ClassVO> getClassList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getClassList(start,start+19);
 	}
 
 	@Override
@@ -111,13 +113,17 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<CompanyVO> getCompanyList() {
-		return adminRepository.getCompanyList();
+	public List<CompanyVO> getCompanyList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getCompanyList(start,start+19);
 	}
 
 	@Override
-	public List<ManagerVO> getManagerList() {
-		return adminRepository.getManagerList();
+	public List<ManagerVO> getManagerList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getManagerList(start,start+19);
 	}
 
 	@Override
@@ -317,8 +323,10 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<PostVO> getInquiryList() {
-		return adminRepository.getInquiryList();
+	public List<PostVO> getInquiryList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getInquiryList(start,start+19);
 	}
 
 	@Override

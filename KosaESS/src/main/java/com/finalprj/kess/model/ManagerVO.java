@@ -20,4 +20,6 @@ public class ManagerVO {
 	private Timestamp lastLoginDt;//마지막 로그인 일시
 	
 	private String cmcdNm;//계정상태이름
+	
+	private int rowNum;
 }

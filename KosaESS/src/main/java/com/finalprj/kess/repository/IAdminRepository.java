@@ -43,12 +43,12 @@ public interface IAdminRepository {
 	List<PostVO> getWaitInquiryList();
 	int getCompleteClassCnt();
 	List<ClassVO> getCompleteClassList();
-	List<ClassVO> getClassList();
+	List<ClassVO> getClassList(@Param("start")int start, @Param("end")int end);
 	List<String> getClassCodeNameList();
 
 	String getMaxClassId();
-	List<CompanyVO> getCompanyList();
-	List<ManagerVO> getManagerList();
+	List<CompanyVO> getCompanyList(@Param("start")int start, @Param("end")int end);
+	List<ManagerVO> getManagerList(@Param("start")int start, @Param("end")int end);
 	List<LectureVO> getLectureList();
 	
 	SubjectVO getSubject(String lectureId);
@@ -87,7 +87,7 @@ public interface IAdminRepository {
 	void deleteSubject(List<String> selectedSubjectIds);
 	void deleteProfessor(List<String> selectedProfessorIds);
 	List<PostVO> getNoticeList(@Param("start")int start, @Param("end")int end);
-	List<PostVO> getInquiryList();
+	List<PostVO> getInquiryList(@Param("start")int start, @Param("end")int end);
 	List<CommonCodeVO> getNoticeCommonCodeList(String string);
 	List<CommonCodeVO> getInquriyCommonCodeList(String string);
 	void deleteAllNotice(List<String> selectedNoticeIds);

@@ -78,7 +78,7 @@
 			<div class="content_info_wrap">
 				<div class="content_info">
 					<span>총 <span class="notice_list_cnt"
-						th:text="${#lists.size(noticeList)}">noticeListCnt</span> 건
+						th:text="${noticeCnt}">noticeListCnt</span> 건
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
@@ -128,7 +128,7 @@
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${notice.postId}"></td>
 							<td class="notice_num"
-								th:text="${#lists.size(noticeList)-iterStat.index}"></td>
+								th:text="${notice.rowNum}"></td>
 							<td><a class="notice_title"
 								th:href="@{/admin/notice/view/__${notice.postId}__}"
 								th:text="${notice.postTitle}"></a></td>
