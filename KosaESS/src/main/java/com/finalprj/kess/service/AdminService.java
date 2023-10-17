@@ -145,13 +145,13 @@ public class AdminService implements IAdminService {
 		return adminRepository.getCommonCodeList(tpcdId);
 	}
 
-	//삭제할거임
+	// 삭제할거임
 	@Override
 	public void insertClassVO(ClassVO classVO) {
 		adminRepository.insertClassVO(classVO);
 	}
 
-	//삭제할거임
+	// 삭제할거임
 	@Override
 	public void insertCurriculumVO(CurriculumVO curriculumVO) {
 		adminRepository.insertCurriculumVO(curriculumVO);
@@ -161,7 +161,7 @@ public class AdminService implements IAdminService {
 	@Transactional
 	public void createClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList) {
 		if (fileList != null) {
-			for(FileVO fileVO : fileList) {
+			for (FileVO fileVO : fileList) {
 				uploadFileRepository.uploadFile(fileVO);
 			}
 		}
@@ -169,7 +169,7 @@ public class AdminService implements IAdminService {
 		adminRepository.insertClassVO(classVO);
 
 		if (curriculumList != null) {
-			for(CurriculumVO curriculumVO : curriculumList) {
+			for (CurriculumVO curriculumVO : curriculumList) {
 				adminRepository.insertCurriculumVO(curriculumVO);
 			}
 		}
@@ -180,7 +180,7 @@ public class AdminService implements IAdminService {
 	public ClassVO getClass(String clssId) {
 		return adminRepository.getClass(clssId);
 	}
-	
+
 	@Override
 	public List<CurriculumVO> getCurriculumList(String clssId) {
 		return adminRepository.getCurriculumList(clssId);
@@ -190,12 +190,12 @@ public class AdminService implements IAdminService {
 	public CurriculumDetailDTO getCurriculumDetail(String lctrId) {
 		return adminRepository.getCurriculumDetail(lctrId);
 	}
-	
+
 	@Override
 	public void deleteFile(String fileId, List<String> fileSubIds) {
 		adminRepository.deleteFile(fileId, fileSubIds);
 	}
-	
+
 	@Override
 	public Integer getMaxFileSubId(String fileId) {
 		return adminRepository.getMaxFileSubId(fileId);
@@ -205,7 +205,7 @@ public class AdminService implements IAdminService {
 	@Transactional
 	public void updateClass(List<FileVO> fileList, ClassVO classVO, List<CurriculumVO> curriculumList) {
 		if (fileList != null) {
-			for(FileVO fileVO : fileList) {
+			for (FileVO fileVO : fileList) {
 				uploadFileRepository.uploadFile(fileVO);
 			}
 		}
@@ -213,7 +213,7 @@ public class AdminService implements IAdminService {
 
 		if (curriculumList != null) {
 			adminRepository.deleteCurriculum(classVO.getClssId());
-			for(CurriculumVO curriculumVO : curriculumList) {
+			for (CurriculumVO curriculumVO : curriculumList) {
 				adminRepository.insertCurriculumVO(curriculumVO);
 			}
 		}
@@ -273,7 +273,7 @@ public class AdminService implements IAdminService {
 	public String getMaxProfId() {
 		return adminRepository.getMaxProfId();
 	}
-	
+
 	@Override
 	public void insertProfessorVO(ProfessorVO professorVO) {
 		adminRepository.insertProfessorVO(professorVO);
@@ -310,8 +310,10 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<PostVO> getNoticeList() {
-		return adminRepository.getNoticeList();
+	public List<PostVO> getNoticeList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getNoticeList(start,start+19);
 	}
 
 	@Override
@@ -323,7 +325,7 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getNoticeCommonCodeList(String string) {
 		return adminRepository.getNoticeCommonCodeList(string);
 	}
-	
+
 	@Override
 	public List<CommonCodeVO> getInquriyCommonCodeList(String string) {
 		return adminRepository.getInquriyCommonCodeList(string);
@@ -348,58 +350,55 @@ public class AdminService implements IAdminService {
 	@Transactional
 	public void insertNoticeVO(List<FileVO> fileList, PostVO postVO) {
 		if (fileList != null) {
-			for(FileVO fileVO : fileList) {
+			for (FileVO fileVO : fileList) {
 				uploadFileRepository.uploadFile(fileVO);
 			}
 		}
-		
+
 		adminRepository.insertNoticeVO(postVO);
 	}
-	
-	
+
 	@Override
 	public PostVO getPostVO(String postId) {
 		return adminRepository.getPostVO(postId);
 	}
-	
-	
-	
+
 	@Override
 	public void deleteAllInquiry(List<String> selectedInquiryIds) {
 		adminRepository.deleteAllInquiry(selectedInquiryIds);
 	}
-	
+
 	@Override
 	public void updateNoticeVO(List<FileVO> fileList, PostVO postVO) {
 		if (fileList != null) {
-			for(FileVO fileVO : fileList) {
+			for (FileVO fileVO : fileList) {
 				uploadFileRepository.uploadFile(fileVO);
 			}
 		}
-		
+
 		adminRepository.updateNoticeVO(postVO);
 	}
-	
+
 	@Override
 	public List<PostVO> getSearchPostList(String searchInputCategory, String searchInput, List<String> postStatusList) {
 		return adminRepository.getSearchPostList(searchInputCategory, searchInput, postStatusList);
 	}
-	
+
 	@Override
 	public List<PostVO> getReplyList(String postId) {
 		return adminRepository.getReplyList(postId);
 	}
-	
+
 	@Override
 	public String getMaxReplyId() {
 		return adminRepository.getMaxReplyId();
 	}
-	
+
 	@Override
 	public void insertReplyVO(PostVO postVO) {
 		adminRepository.insertReplyVO(postVO);
 	}
-	
+
 	@Override
 	public void updateInquiryStatus(String postId) {
 		adminRepository.updateInquiryStatus(postId);
@@ -409,137 +408,135 @@ public class AdminService implements IAdminService {
 	public String getMaxManagerId() {
 		return adminRepository.getMaxManagerId();
 	}
-	
+
 	@Override
 	@Transactional
 	public void insertManagerVO(ManagerVO managerVO) {
-		//lgin에 먼저 insert
+		// lgin에 먼저 insert
 		adminRepository.insertLgin(managerVO);
-		//mngr에 insert
+		// mngr에 insert
 		adminRepository.insertManager(managerVO);
 	}
-	
+
 	@Override
 	public List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput) {
 		return adminRepository.getSearchManagerList(searchInputCategory, searchInput);
 	}
-	
+
 	@Override
 	@Transactional
 	public void deleteManagerList(List<String> selectedManagerIds) {
 		adminRepository.deleteLgin(selectedManagerIds);
 		adminRepository.deleteManagerList(selectedManagerIds);
 	}
-	
+
 	@Override
 	public ManagerVO getManager(String mngrId) {
 		return adminRepository.getManager(mngrId);
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateManager(ManagerVO managerVO) {
 		adminRepository.updateLgin(managerVO);
 		adminRepository.updateManager(managerVO);
 	}
-	
+
 	@Override
 	public SubjectVO getSubjectVO(String subjectId) {
 		return adminRepository.getSubjectVO(subjectId);
 	}
-	
+
 	@Override
 	public ProfessorVO getProfessorVO(String professorId) {
 		return adminRepository.getProfessorVO(professorId);
 	}
-	
+
 	@Override
 	public String getMaxCompanyId() {
 		return adminRepository.getMaxCompanyId();
 	}
-	
+
 	@Override
 	@Transactional
 	public void insertCompanyVO(FileVO fileVO, CompanyVO companyVO) {
-		if(fileVO != null) {
+		if (fileVO != null) {
 			uploadFileRepository.uploadFile(fileVO);
 		}
-		
+
 		adminRepository.insertCompanyVO(companyVO);
 	}
-	
+
 	@Override
 	public CompanyVO getCompanyVO(String cmpyId) {
 		return adminRepository.getCompanyVO(cmpyId);
 	}
-	
+
 	@Override
 	public void deleteCompany(List<String> selectedCompanyIds) {
 		adminRepository.deleteCompany(selectedCompanyIds);
 	}
-	
+
 	@Override
 	public int getTpcdIdCnt(String tpcdId) {
 		return adminRepository.getTpcdIdCnt(tpcdId);
 	}
-	
+
 	@Override
 	public String getMaxGroupCodeId() {
 		return adminRepository.getMaxGroupCodeId();
 	}
-	
+
 	@Override
 	public void insertGroupCode(CommonCodeVO commonCodeVO) {
 		adminRepository.insertGroupCode(commonCodeVO);
 	}
-	
+
 	@Override
 	public void deleteGroupCode(List<String> selectedGroupCodeIds) {
 		adminRepository.deleteGroupCode(selectedGroupCodeIds);
 	}
-	
+
 	@Override
 	public List<CommonCodeVO> getDetailCodeList(String cmcdId) {
 		return adminRepository.getDetailCodeList(cmcdId);
 	}
 
-	
 	@Override
 	public String getGroupCodeId(String cmcdId) {
 		return adminRepository.getGroupCodeId(cmcdId);
 	}
-	
+
 	@Override
 	public int getDetailCodeNmCnt(String cmcdId, String cmcdNm) {
 		return adminRepository.getDetailCodeNmCnt(cmcdId, cmcdNm);
 	}
-	
+
 	@Override
 	public String getMaxDetailCodeId(String cmcdId) {
 		return adminRepository.getMaxDetailCodeId(cmcdId);
 	}
-	
+
 	@Override
 	public void insertDetailCode(CommonCodeVO commonCodeVO) {
 		adminRepository.insertDetailcode(commonCodeVO);
 	}
-	
+
 	@Override
 	public String getStudentEmailByAplyId(String aplyId) {
 		return adminRepository.getStudentEmailByAplyId(aplyId);
 	}
-	
+
 	@Override
 	public String getClssNmByAplyId(String aplyId) {
 		return adminRepository.getClssNmByAplyId(aplyId);
 	}
-	
-	
+
 	@Override
 	public void deleteInquiryReply(String replyId) {
 		adminRepository.deleteInquiryReply(replyId);
 	}
-	
+
 	@Override
 	public int getFileCnt(String fileId) {
 		return adminRepository.getFileCnt(fileId);
@@ -549,19 +546,19 @@ public class AdminService implements IAdminService {
 	public List<StudentVO> getStudentList() {
 		return adminRepository.getStudentList();
 	}
-	
+
 	@Override
 	public int getManagerEmailCnt(String managerEmail) {
 		return adminRepository.getManagerEmailCnt(managerEmail);
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateCompany(FileVO fileVO, CompanyVO companyVO) {
 		if (fileVO != null) {
 			uploadFileRepository.uploadFile(fileVO);
 		}
-		
+
 		adminRepository.updateCompany(companyVO);
 	}
 
@@ -577,43 +574,44 @@ public class AdminService implements IAdminService {
 		adminRepository.deleteLginStudent(selectedStudentIds);
 		adminRepository.deleteStudentList(selectedStudentIds);
 	}
-	
+
 	@Override
 	public StudentVO getStudent(String stdtId) {
 		return adminRepository.getStudent(stdtId);
 	}
-	
+
 	@Override
 	public List<ApplyVO> getApplyListByStudent(String stdtId) {
 		return adminRepository.getApplyListByStudent(stdtId);
 	}
-	
+
 	@Override
 	public List<RegistrationVO> getRegistListByStudent(String stdtId) {
 		return adminRepository.getRegistListByStudent(stdtId);
 	}
-	
+
 	@Override
 	public List<ClassVO> getSearchClassList(String clssNm, String clssCd, String aplyStartDt, String aplyEndDt,
 			String clssStartDd, String clssEndDd, String cmpyId) {
-		return adminRepository.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd, clssEndDd, cmpyId);
+		return adminRepository.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd, clssEndDd,
+				cmpyId);
 	}
-	
+
 	@Override
 	public List<String> getClassSearch(String term) {
 		return adminRepository.getClassSearch(term);
 	}
-	
+
 	@Override
 	public void updateLecture(LectureVO[] lectureList) {
 		adminRepository.updateLecture(lectureList);
 	}
-	
+
 	@Override
 	public void updateSubject(SubjectVO[] updateSubjectList) {
 		adminRepository.updateSubject(updateSubjectList);
 	}
-	
+
 	@Override
 	public void updateProfessor(ProfessorVO[] updateProfessorList) {
 		adminRepository.updateProfessor(updateProfessorList);
@@ -629,21 +627,17 @@ public class AdminService implements IAdminService {
 		adminRepository.updateGroupCode(updateGroupList);
 		adminRepository.updateUseYnDetailCode(updateGroupList);
 	}
-	
+
 	@Override
 	public List<CommonCodeVO> getSearchDetailCodeList(String tpcdId, String cmcdNm) {
 		return adminRepository.getSearchDetailCodeList(tpcdId, cmcdNm);
 	}
-	
+
 	@Override
 	public List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn) {
 		return adminRepository.getSearchGroupCodeList(tpcdId, cmcdNm, useYn);
 	}
-	
-	
-	
-	
-	
+
 	@Override
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();

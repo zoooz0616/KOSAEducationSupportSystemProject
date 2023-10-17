@@ -86,7 +86,7 @@ public interface IAdminRepository {
 	void deleteLecture(List<String> lectureIds);
 	void deleteSubject(List<String> selectedSubjectIds);
 	void deleteProfessor(List<String> selectedProfessorIds);
-	List<PostVO> getNoticeList();
+	List<PostVO> getNoticeList(@Param("start")int start, @Param("end")int end);
 	List<PostVO> getInquiryList();
 	List<CommonCodeVO> getNoticeCommonCodeList(String string);
 	List<CommonCodeVO> getInquriyCommonCodeList(String string);
