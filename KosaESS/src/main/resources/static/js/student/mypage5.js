@@ -94,18 +94,19 @@ $(document).ready(function() {
 				row.append('<td>' + SubsidyVO.subsidyDd + '</td>');
 			}
 			const number = SubsidyVO.payment;
-			number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 			if (SubsidyVO.payment === '') {
 				row.append('<td> - </td>');
 			}
 			else {
-				row.append('<td>' + number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + '</td>');
+				row.append('<td>' + number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + '원</td>');
 			}
-			if (SubsidyVO.monyCd === 'MNY0000002') {
-				row.append('<td style="color:blue;">' + SubsidyVO.monyNm + '</td>');
+			if (SubsidyVO.sbsdCd === 'SSD0000001') {
+				row.append('<td style="color:blue;">' + SubsidyVO.sbsdNm + '</td>');
 			}
-			else {
-				row.append('<td style="color:red;">' + SubsidyVO.monyNm + '</td>');
+			else if (SubsidyVO.sbsdCd === 'SSD0000003') {
+				row.append('<td style="color:red;">' + SubsidyVO.sbsdNm + '</td>');
+			} else {
+				row.append('<td style="color:black;">' + SubsidyVO.sbsdNm + '</td>');
 			}
 
 			tbody.append(row);

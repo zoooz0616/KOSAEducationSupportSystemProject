@@ -94,7 +94,7 @@ public interface IAdminService {
 	void deleteSubject(List<String> selectedSubjectIds);
 	void deleteProfessor(List<String> selectedProfessorIds);
 
-	List<PostVO> getNoticeList();
+	List<PostVO> getNoticeList(int page);
 	List<PostVO> getInquiryList();
 	List<CommonCodeVO> getNoticeCommonCodeList(String string);
 	List<CommonCodeVO> getInquriyCommonCodeList(String string);

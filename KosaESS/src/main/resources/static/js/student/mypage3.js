@@ -13,17 +13,20 @@ $(document).ready(function() {
 	});
 
 	function updateWlogTable() {
+		console.log("updateWlogTable")
 		$.ajax({
 			type: 'POST',
 			url: '/student/mypage/wlogList',
-			data: { selectedClssNm: selectedValue },
+			data: {
+				selectedClssNm: selectedValue
+			},
 			success: function(data) {
 				// 받은 데이터로 테이블을 업데이트합니다.
 				todoData3 = data;
 				$('.wlogCnt').text(todoData3.length);
 				setTable(1);
 				setPaging(1);
-				
+
 				if (data.length == 0)
 					$('.wlogFoot').show();
 				else
@@ -102,9 +105,9 @@ $(document).ready(function() {
 			row.append('<td>' + inTmDd + '</td>');
 			row.append('<td>' + outTmDd + '</td>');
 			if (WorklogVO.wlogCd == 'WOK0000001') {
-				row.append('<td>' + WorklogVO.wlogNm + '</td>');
+				row.append('<td style="color:black;">' + WorklogVO.wlogNm + '</td>');
 			} else if (WorklogVO.wlogCd === 'WOK0000002' || WorklogVO.wlogCd === 'WOK0000003') {
-				row.append('<td style="color:blue;">' + WorklogVO.wlogNm + '</td>');
+				row.append('<td style="color:#F1A77E;">' + WorklogVO.wlogNm + '</td>');
 			} else {
 				row.append('<td style="color:red;">' + WorklogVO.wlogNm + '</td>');
 			}
@@ -184,23 +187,30 @@ $(document).ready(function() {
 
 	var modal2 = $('.modal2');
 	var wlogTable = $('.wlogTable');
+	var clickedRow = "";
+	var wlogId = "";
 
-	wlogTable.on('click', '.submitResn', function() {
-		var clickedRow = $(this).closest('tr');
-		var wlogId = clickedRow.find('td.wlogId').text();
+	wlogTable.on('click', '.submitResn', function(event) {
+		clickedRow = $(this).closest('tr');
+		wlogId = clickedRow.find('td.wlogId').text();
 		modal2.show();
+		event.stopPropagation();
+	});
+	// 모달 내부의 .submitBtn 버튼 클릭 시
+	modal2.on('click', '.submitBtn', function(event) {
 
-		// 모달 내부의 .submitBtn 버튼 클릭 시
-		modal2.on('click', '.submitBtn', function() {
+		var resnText = $('.resnText1').val();
+		var formData = new FormData();
+		var files = document.querySelector("#fileInput2").files; // 파일 리스트를 가져옵니다.
 
-			var resnText = $('.resnText1').val();
-			var formData = new FormData();
-			var files = document.querySelector("#fileInput2").files; // 파일 리스트를 가져옵니다.
-
-			for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
-				var file = files[i]; // 각 파일을 가져옵니다.
-				formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
-			}
+		for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
+			var file = files[i]; // 각 파일을 가져옵니다.
+			formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
+		}
+		if (resnText == '') {
+			alert("사유를 입력하세요.");
+			event.stopPropagation();
+		} else {
 			formData.append("resnText", resnText)
 			console.log(resnText);
 			console.log(formData);
@@ -212,59 +222,74 @@ $(document).ready(function() {
 				processData: false,
 				contentType: false,
 				success: function() {
+					$('.resnText1').val('');  // .resnText1의 값을 지웁니다.
+					$('#fileInput2').val(''); // #fileInput2의 값을 지웁니다.
+					$('.upload-name2').val('');
 					modal2.hide();
 					alert("사유서를 제출하였습니다.");
 					updateWlogTable();
-
 				}
 			});
-		});
+		}
+		event.stopPropagation();
+	});
 
-		modal2.on('click', '.closeBtn', function() {
-			modal2.hide();
-		});
+	modal2.on('click', '.closeBtn', function(event) {
+		$('.resnText1').val('');  // .resnText1의 값을 지웁니다.
+		$('#fileInput2').val(''); // #fileInput2의 값을 지웁니다.
+		$('.upload-name2').val('');
+		modal2.hide();
+		event.stopPropagation();
 	});
 
 	var modal3 = $('.modal3');
-
-	wlogTable.on('click', '.updateResn', function() {
-		var clickedRow = $(this).closest('tr');
-		var resnId = clickedRow.find('td.resnId').text();
+	var clickedRow = "";
+	var resnId = "";
+	wlogTable.on('click', '.updateResn', function(event) {
+		clickedRow = $(this).closest('tr');
+		resnId = clickedRow.find('td.resnId').text();
 		modal3.show();
+		event.stopPropagation();
+	});
+	// 모달 내부의 .submitBtn 버튼 클릭 시
+	modal3.on('click', '.submitBtn', function(event) {
+		var resnText = $('.resnText2').val();
+		var formData = new FormData();
+		var files = document.querySelector("#fileInput3").files; // 파일 리스트를 가져옵니다.
 
-		// 모달 내부의 .submitBtn 버튼 클릭 시
-		modal3.on('click', '.submitBtn', function() {
-			var resnText = $('.resnText2').val();
-			var formData = new FormData();
-			var files = document.querySelector("#fileInput3").files; // 파일 리스트를 가져옵니다.
+		for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
+			var file = files[i]; // 각 파일을 가져옵니다.
+			formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
+		}
+		formData.append("resnText", resnText)
+		console.log(resnText);
+		console.log(formData);
+		console.log(file);
 
-			for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
-				var file = files[i]; // 각 파일을 가져옵니다.
-				formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
+		$.ajax({
+			type: 'POST',
+			url: '/student/mypage/uploadResn/' + resnId,
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function() {
+				$('.resnText2').val('');  // .resnText1의 값을 지웁니다.
+				$('#fileInput3').val('');   // #fileInput2의 값을 지웁니다.
+				$('.upload-name3').val('');
+				modal3.hide();
+				alert("사유서를 업데이트하였습니다.");
+				updateWlogTable();
 			}
-			formData.append("resnText", resnText)
-			console.log(resnText);
-			console.log(formData);
-			console.log(file);
-
-			$.ajax({
-				type: 'POST',
-				url: '/student/mypage/uploadResn/' + resnId,
-				data: formData,
-				processData: false,
-				contentType: false,
-				success: function() {
-					modal3.hide();
-					alert("사유서를 업데이트하였습니다.");
-					updateWlogTable();
-
-				}
-			});
 		});
+		event.stopPropagation();
+	});
 
-		modal3.on('click', '.closeBtn', function() {
-			modal3.hide();
-		});
+	modal3.on('click', '.closeBtn', function(event) {
+		$('.resnText2').val('');  // .resnText1의 값을 지웁니다.
+		$('#fileInput3').val('');   // #fileInput2의 값을 지웁니다.
+		$('.upload-name3').val('');
+		$('.modal3').hide();
+		event.stopPropagation();
 	});
 });
 

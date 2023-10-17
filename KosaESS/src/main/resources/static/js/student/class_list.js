@@ -163,6 +163,8 @@ $(document).ready(function() {
 	 * @param {int} pageNum - Page Number
 	 */
 
+	var clssId = "";
+	const modal = document.querySelector('.modal');
 	// 데이터를 테이블로 출력하는 함수
 	function setTable(pageNum) {
 		const startIdx = (pageNum - 1) * countPerPage;
@@ -170,6 +172,7 @@ $(document).ready(function() {
 		const filteredData = todoData.slice(startIdx, endIdx);
 		const num = $('.totalRowCount').text();
 		var classTable;
+
 		if ($('.list-view').hasClass('active')) {
 			// 리스트 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
 			// 테이블 헤더 업데이트
@@ -216,9 +219,11 @@ $(document).ready(function() {
 					applyButtonCell.append(applyButton);
 					applyButtonCell.append(applyInput);
 					row.append(applyButtonCell);
-					console.log(applyInput.value);
-				} else if (classVO.clssCd == 'CLS0000008')  {
-					row.append('<td><span class="className" style="color: red;">' + classVO.cmcdNm + '</span></td>');
+				} else if (classVO.clssCd == 'CLS0000008') {
+					row.append('<td><span class="className" style="color: lightslategray;">' + classVO.cmcdNm + '</span></td>');
+					row.append('<td></td>');
+				} else if (classVO.clssCd == 'CLS0000001') {
+					row.append('<td><span class="className" style="color: blue">' + classVO.cmcdNm + '</span></td>');
 					row.append('<td></td>');
 				} else {
 					row.append('<td><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
@@ -227,20 +232,18 @@ $(document).ready(function() {
 
 				classTable.append(row);
 			}
-			const modal = document.querySelector('.modal');
-			const closeModalBtn = document.querySelector('.closeModalBtn');
 			var openModalBtns = $('.openModalBtn');
 			// openModalBtn에 클릭 이벤트 리스너 추가
 			openModalBtns.click(function() {
 				// 클릭된 버튼의 data-clssId 값을 가져오기 위해 this를 사용
-				var clssId = $(this).closest('tr').find('input[name="clssId"]').val(); // $(this)를 사용하여 클릭된 버튼의 정보를 가져옵니다.
+				clssId = $(this).closest('tr').find('input[name="clssId"]').val(); // $(this)를 사용하여 클릭된 버튼의 정보를 가져옵니다.
 				console.log(clssId);
 				$.ajax({
 					url: '/student/class/apply',
 					method: 'GET',
 					success: function(stdtId) {
 						if (stdtId == "") {
-							var result = confirm("로그인 후 지원이 가능합니다.\n로그인창으로 넘어가시겠습니까?");
+							var result = confirm("로그인 후 지원이 가능합니다.\n로그인 화면으로 이동하시겠습니까?");
 							if (result) {
 								window.location.href = '/login'; // 로그인 페이지로 이동
 							}
@@ -260,11 +263,6 @@ $(document).ready(function() {
 					}
 				});
 			});
-
-			closeModalBtn.addEventListener('click', () => {
-				modal.style.display = 'none';
-			});
-
 		} else if ($('.grid-view').hasClass('active')) {
 			// 그리드 뷰 버튼이 활성화되어 있으면 리스트 테이블을 업데이트
 			classTable = $('.grid-style tbody');
@@ -283,9 +281,12 @@ $(document).ready(function() {
 				// 각 열에 해당하는 데이터를 행에 추가합니다.
 				if (classVO.clssCd == 'CLS0000002') {
 					row.append('<td style="text-align: center;"><span class="className" style="font-weight: bold;">' + classVO.cmcdNm + '</span></td>');
-				}else if (classVO.clssCd == 'CLS0000008') {
-					row.append('<td style="text-align: center;"><span class="className" style="font-weight: bold; color: red;">' + classVO.cmcdNm + '</span></td>');
-				} else {
+				} else if (classVO.clssCd == 'CLS0000008') {
+					row.append('<td style="text-align: center;"><span class="className" style="font-weight: bold; color: lightslategray;">' + classVO.cmcdNm + '</span></td>');
+				} else if (classVO.clssCd == 'CLS0000001') {
+					row.append('<td style="text-align: center;"><span class="className" style="font-weight: bold; color: blue">' + classVO.cmcdNm + '</span></td>');
+				}
+				else {
 					row.append('<td style="text-align: center;"><span class="className" style="color: black;">' + classVO.cmcdNm + '</span></td>');
 				}
 				if (classVO.fileId != null) {
@@ -348,6 +349,41 @@ $(document).ready(function() {
 		$('.searchBtn').trigger('click');
 	}
 
+	var aplyBtn = document.querySelector(".aplyBtn");
+	aplyBtn.addEventListener("click", function(event) {
+		// 버튼이 disabled 상태인 경우에만 알림을 띄웁니다.
+		var x = document.getElementById("fileInput");
+		var selectedFiles = x.files;
+		if (selectedFiles.length < 1) {
+			alert("지원서 파일을 첨부해주세요.");
+			event.preventDefault();
+		} else {
+			let formData = new FormData();
+			let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+			formData.append("file", file); // FormData에 파일 추가
+			console.log(clssId);
+			console.log(file);
+			console.log(formData);
+			$.ajax({
+				type: 'POST',
+				url: '/student/upload/' + clssId,
+				data: formData, // FormData 사용
+				processData: false,
+				contentType: false,
+				success: function() {
+					modal.style.display = 'none'; // 모달을 숨기기 위해 hide() 메서드 사용
+					alert("제출이 완료되었습니다.");
+					window.location.href = '/student/class/list';
+				}
+			});
+		}
+	});
+	var closeModalBtn = document.querySelector('.closeModalBtn');
+	closeModalBtn.addEventListener('click', function(event) {
+		modal.style.display = 'none';
+		event.stopPropagation();
+	});
+
 });
 const topBtn = document.querySelector(".moveTopBtn");
 
@@ -369,4 +405,11 @@ function formatTimestamp(timestamp) {
 
 	return formattedTimestamp;
 }
+
+$("#fileInput").on('change', function() {
+	var files = $("#fileInput")[0].files[0];
+	var fileNames = files.name;
+	console.log(fileNames);
+	$(".upload-name").val(fileNames);
+});
 

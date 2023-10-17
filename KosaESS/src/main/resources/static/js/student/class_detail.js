@@ -67,7 +67,7 @@ closeModalBtn.addEventListener('click', () => {
 });
 
 
-let totalLctrTm = 0;
+/*let totalLctrTm = 0;
 
 // 각 lctrTm 값을 가져와서 totalLctrTm에 더합니다.
 document.querySelectorAll('.lctrTm').forEach(function(element) {
@@ -78,7 +78,7 @@ document.querySelectorAll('.lctrTm').forEach(function(element) {
 });
 
 // 총 이수 시간을 결과를 담고 있는 요소에 설정합니다.
-document.querySelector('.lctrTotalTm').textContent = totalLctrTm;
+document.querySelector('.lctrTotalTm').textContent = totalLctrTm;*/
 
 const backBtn = document.querySelector('.back');
 

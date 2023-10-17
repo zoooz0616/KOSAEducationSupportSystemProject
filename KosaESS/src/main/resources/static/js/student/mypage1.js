@@ -89,20 +89,24 @@ $(document).ready(function() {
 			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
 			var apply = $('<a>').attr('href', '/student/class/view/' + ApplyDetailDTO.clssId).text(ApplyDetailDTO.clssNm);
 			row.append($('<td></td>').append(apply));
-			row.append('<td><span>' + '~ ' + aplyEnd  + '</span></td>');
+			row.append('<td><span>' + '~ ' + aplyEnd + '</span></td>');
 			row.append('<td><span>' + ApplyDetailDTO.clssStartDd + ' ~ ' + ApplyDetailDTO.clssEndDd + '</span></td>');
 			row.append('<td>' + ApplyDetailDTO.limitCnt + '</td>');
-			if (ApplyDetailDTO.clssCd === 'CLS0000003' || ApplyDetailDTO.clssCd === 'CLS0000008') {
-				row.append('<td style="color:red;">' + ApplyDetailDTO.clssCdNm + '</td>');
-			} else if (ApplyDetailDTO.clssCd === ('CLS0000002')) {
+			if (ApplyDetailDTO.clssCd === 'CLS0000008') {
+				row.append('<td style="color: lightslategray;">' + ApplyDetailDTO.clssCdNm + '</td>');
+			} else if (ApplyDetailDTO.clssCd === ('CLS0000001')) {
 				row.append('<td style="color:blue;">' + ApplyDetailDTO.clssCdNm + '</td>');
+			} else if (ApplyDetailDTO.clssCd === ('CLS0000002')) {
+				row.append('<td style="color:red;">' + ApplyDetailDTO.clssCdNm + '</td>');
 			} else {
 				row.append('<td>' + ApplyDetailDTO.clssCdNm + '</td>');
 			}
 			row.append('<td>' + ApplyDetailDTO.rgstDd + '</td>');
-			if (ApplyDetailDTO.aplyCd === 'APL0000001' || ApplyDetailDTO.aplyCd === 'APL0000006') {
-				row.append('<td style="color:red;">' + ApplyDetailDTO.cmcdNm + '</td>');
+			if (ApplyDetailDTO.aplyCd === 'APL0000001' || ApplyDetailDTO.aplyCd === 'APL0000006' || ApplyDetailDTO.aplyCd === 'APL0000004') {
+				row.append('<td style="color:lightslategray;">' + ApplyDetailDTO.cmcdNm + '</td>');
 			} else if (ApplyDetailDTO.aplyCd === ('APL0000003')) {
+				row.append('<td style="color:red;">' + ApplyDetailDTO.cmcdNm + '</td>');
+			} else if (ApplyDetailDTO.aplyCd === ('APL0000005')) {
 				row.append('<td style="color:blue;">' + ApplyDetailDTO.cmcdNm + '</td>');
 			} else {
 				row.append('<td>' + ApplyDetailDTO.cmcdNm + '</td>');
@@ -148,34 +152,41 @@ $(document).ready(function() {
 	}
 	var modal1 = $('.modal1');
 	var applyTable = $('.applyTable');
+	var clickedRow = "";
+	var aplyId = "";
 
-	applyTable.on('click', '.update', function() {
-		var clickedRow = $(this).closest('tr');
-		var aplyId = clickedRow.find('td:hidden span').text();
+	applyTable.on('click', '.update', function(event) {
+		clickedRow = $(this).closest('tr');
+		aplyId = clickedRow.find('td:hidden span').text();
 		modal1.show();
-
-		// 모달 내부의 .aplyBtn 버튼 클릭 시
-		modal1.on('click', '.aplyBtn', function() {
-			let formData = new FormData();
-			let file = document.querySelector("#fileInput1").files[0]; // 파일 인풋 필드에서 파일을 가져옴
-			formData.append("formData", file); // FormData에 파일 추가
-
-			$.ajax({
-				type: 'POST',
-				url: '/student/mypage/uploadFile/' + aplyId,
-				data: formData, // FormData 사용
-				processData: false,
-				contentType: false,
-				success: function() {
-					modal1.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
-					alert("지원서를 수정하였습니다.");
-					updateAplyTable();// 성공한 후 테이블 업데이트
-				}
-			});
-		});
+		event.stopPropagation();
 	});
-	modal1.on('click', '.closeModalBtn', function() {
+	modal1.on('click', '.aplyBtn', function(event) {
+		let formData = new FormData();
+		let file = document.querySelector("#fileInput1").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+		formData.append("formData", file); // FormData에 파일 추가
+
+		$.ajax({
+			type: 'POST',
+			url: '/student/mypage/uploadFile/' + aplyId,
+			data: formData, // FormData 사용
+			processData: false,
+			contentType: false,
+			success: function() {
+				$('#fileInput1').val(''); // #fileInput2의 값을 지웁니다.
+				$('.upload-name1').val('');
+				modal1.hide(); // 모달을 숨기기 위해 hide() 메서드 사용
+				alert("지원서를 수정하였습니다.");
+				updateAplyTable();
+			}
+		});
+		event.stopPropagation();
+	});
+	modal1.on('click', '.closeModalBtn', function(event) {
+		$('#fileInput1').val(''); // #fileInput2의 값을 지웁니다.
+		$('.upload-name1').val('');
 		modal1.hide();
+		event.stopPropagation();
 	});
 
 	applyTable.on('click', '.cancel', function() {
@@ -296,7 +307,6 @@ function formatTimestamp2(timestamp) {
 	const day = String(date.getDate()).padStart(2, '0');
 	const hours = String(date.getHours()).padStart(2, '0');
 	const minutes = String(date.getMinutes()).padStart(2, '0');
-	const seconds = String(date.getSeconds()).padStart(2, '0');
 
 	const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}`;
 

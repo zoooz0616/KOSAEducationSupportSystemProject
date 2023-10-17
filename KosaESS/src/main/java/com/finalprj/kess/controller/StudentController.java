@@ -585,8 +585,9 @@ public class StudentController {
 
 	@PostMapping("/inquiry/write")
 	@ResponseBody
-	public void write(@RequestParam(name = "files[]" , required = false) MultipartFile[] files, @RequestParam("title") String title,
-			@RequestParam("content") String content, HttpSession session, Model model) throws IOException {
+	public void write(@RequestParam(name = "files[]", required = false) MultipartFile[] files,
+			@RequestParam("title") String title, @RequestParam("content") String content, HttpSession session,
+			Model model) throws IOException {
 
 		String stdtId = (String) session.getAttribute("stdtId");
 		String maxFileId = uploadFileService.getMaxFileId();
@@ -680,7 +681,7 @@ public class StudentController {
 	@ResponseBody
 	public String updateInquiry(@PathVariable String postId, @RequestParam("updatedTitle") String updatedTitle,
 			@RequestParam("updatedContent") String updatedContent, HttpSession session,
-			@RequestParam(name = "files[]" , required = false) MultipartFile[] files, RedirectAttributes redirectAttrs) {
+			@RequestParam(name = "files[]", required = false) MultipartFile[] files, RedirectAttributes redirectAttrs) {
 
 		String stdtId = (String) session.getAttribute("stdtId");
 
@@ -904,7 +905,7 @@ public class StudentController {
 		apply.setFileId(maxFileId);
 		apply.setRgsterId(stdtId);
 		studentService.uploadAplyFile(apply);
-		
+
 		return "redirect:/student/class/list";
 	}
 
@@ -1075,12 +1076,20 @@ public class StudentController {
 	@PostMapping("/mypage/wlogList")
 	@ResponseBody
 	public List<WorklogVO> searchWlogList(HttpSession session, Model model,
-			@RequestParam("selectedClssNm") String selectedClssNm) {
+			@RequestParam(name = "selectedClssNm", required = false) String selectedClssNm) {
 		String stdtId = (String) session.getAttribute("stdtId");
 		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId, selectedClssNm);
 		model.addAttribute("wlogList", wlogList);
 		return wlogList;
 	}
+//	@GetMapping("/mypage/wlogList")
+//	public String searchWlogList(HttpSession session, Model model,
+//			@RequestParam("selectedClssNm") String selectedClssNm) {
+//		String stdtId = (String) session.getAttribute("stdtId");
+//		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId, selectedClssNm);
+//		model.addAttribute("wlogList", wlogList);
+//		return "/student/mypage?select=4";
+//	}
 
 	// 마이페이지 이수 내역 조회
 	/**
@@ -1192,42 +1201,47 @@ public class StudentController {
 	 */
 
 	@PostMapping("/mypage/submitResn/{wlogId}")
-	public String insertResnFile(@PathVariable String wlogId, @RequestParam(name = "files[]" , required = false) MultipartFile[] files,
+	public String insertResnFile(@PathVariable String wlogId,
+			@RequestParam(name = "files[]", required = false) MultipartFile[] files,
 			@RequestParam("resnText") String resnText, HttpSession session, Model model) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
-		// 업로드하기
-		String maxFileId = uploadFileService.getMaxFileId();
-
-		if (files[0] != null && !files[0].isEmpty()) {
-			int subFileId = 1;
-			try {
-				for (MultipartFile file : files) {
-					if (file != null && !file.isEmpty()) {
-						FileVO fileVO = new FileVO();
-						fileVO.setFileId(maxFileId);
-						fileVO.setFileSubId(subFileId);
-						fileVO.setFileNm(file.getOriginalFilename());
-						fileVO.setFileSize(file.getSize());
-						fileVO.setFileType(file.getContentType());
-						fileVO.setFileContent(file.getBytes());
-						uploadFileService.uploadFile(fileVO);
-						subFileId++;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		// 이력서 내역 추가하기
 		String maxResnId = studentService.getMaxResnId();
 		ReasonVO resn = new ReasonVO();
 		resn.setResnId(maxResnId);
 		resn.setWlogId(wlogId);
 		resn.setResnContent(resnText);
 		resn.setResnCd("RES0000001");
-		resn.setFileId(maxFileId);
+		resn.setRgsterId(stdtId);
+
+		if (files != null) {
+			// 업로드하기
+			String maxFileId = uploadFileService.getMaxFileId();
+			if (files[0] != null && !files[0].isEmpty()) {
+				int subFileId = 1;
+				try {
+					for (MultipartFile file : files) {
+						if (file != null && !file.isEmpty()) {
+							FileVO fileVO = new FileVO();
+							fileVO.setFileId(maxFileId);
+							fileVO.setFileSubId(subFileId);
+							fileVO.setFileNm(file.getOriginalFilename());
+							fileVO.setFileSize(file.getSize());
+							fileVO.setFileType(file.getContentType());
+							fileVO.setFileContent(file.getBytes());
+							uploadFileService.uploadFile(fileVO);
+							subFileId++;
+						}
+						resn.setFileId(maxFileId);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		// 이력서 내역 추가하기
 		resn.setRgsterId(stdtId);
 		studentService.uploadResnFile(resn);
 
@@ -1236,13 +1250,15 @@ public class StudentController {
 
 	// 마이페이지 사유서 내역 업데이트
 	@PostMapping("/mypage/uploadResn/{resnId}")
-	public String updateResnFile(@PathVariable String resnId, @RequestParam(name = "files[]" , required = false) MultipartFile[] files,
+	public String updateResnFile(@PathVariable String resnId,
+			@RequestParam(name = "files[]", required = false) MultipartFile[] files,
 			@RequestParam("resnText") String resnText, HttpSession session) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
-		String maxFileId = uploadFileService.getMaxFileId();
+		
 
 		if (files[0] != null && !files[0].isEmpty()) {
+			String maxFileId = uploadFileService.getMaxFileId();
 			int subFileId = 1;
 			try {
 				for (MultipartFile file : files) {
@@ -1257,12 +1273,13 @@ public class StudentController {
 						uploadFileService.uploadFile(fileVO);
 						subFileId++;
 					}
+					studentService.updateResndt(resnId, stdtId, resnText, maxFileId);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		studentService.updateResndt(resnId, stdtId, resnText, maxFileId);
+		studentService.updateResndt(resnId, stdtId, resnText, null);
 
 		return "redirect:/student/mypage";
 	}
