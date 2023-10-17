@@ -14,7 +14,7 @@
 	<![CDATA[
 		select count(post_id)
 		from post
-		where post_id like 'INQY%'
+		where post_id like 'INQY%' and delete_yn='N'
 	]]>
 	</select>
 
@@ -47,7 +47,7 @@
 	<![CDATA[
 		select count(clss_id)
 		from clss
-		where clss_cd != 'CLS0000007'
+		where delete_yn='N' 
 	]]>
 	</select>
 
@@ -102,16 +102,43 @@
 	]]>
 	</select>
 
-	<select id="getClassList"
+	<select id="getClassList" parameterType="int"
 		resultType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
 		select *
+		from (
+        select row_number() over(order by clss.clss_id desc) as row_num,
+		clss.clss_id,
+		clss.mngr_id,
+		clss.cmpy_id,
+		clss.clss_nm,
+		clss.clss_content,
+		clss.limit_cnt,
+		clss.aply_start_dt,
+		clss.aply_end_dt,
+		clss.clss_start_dd,
+		clss.clss_end_dd,
+		clss.set_in_tm,
+		clss.set_out_tm,
+		clss.clss_adr,
+		clss.clss_total_tm,
+		clss.clss_etc,
+		clss.rgst_dt,
+		clss.rgster_id,
+		clss.updt_dt,
+		clss.updter_id,
+		clss.delete_yn,
+		clss.clss_subsidy,
+		cmcd.cmcd_nm,
+		mngr.mngr_nm,
+		mngr.user_email		
 		from clss
 		left join mngr on mngr.mngr_id = clss.mngr_id
 		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
 		join cmcd on cmcd.cmcd_id = clss.clss_cd
 		where clss.delete_yn='N'
-		order by clss.clss_id desc
+		)
+        where row_num between #{start} and #{end}
 	]]>
 	</select>
 
@@ -130,24 +157,55 @@
 	]]>
 	</select>
 
-	<select id="getCompanyList"
+	<select id="getCompanyList" parameterType="int"
 		resultType="com.finalprj.kess.model.CompanyVO">
 	<![CDATA[
 		select *
+		from (
+        select row_number() over(order by cmpy_id) as row_num,
+        cmpy_id,
+        cmpy_nm,
+        cmpy_tel,
+        cmpy_adr,
+        file_id,
+        rgst_dt,
+        rgster_id,
+        updt_dt,
+        updter_id,
+        delete_yn
 		from cmpy
 		where delete_yn = 'N' and cmpy_id != 'CMPY000000'
+		)
+        where row_num between #{start} and #{end}
 	]]>
 	</select>
 
-	<select id="getManagerList"
+	<select id="getManagerList" parameterType="int"
 		resultType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 		select *
+		from (
+        select row_number() over(order by mngr_nm) as row_num,
+		mngr.mngr_id,
+		mngr.user_email,
+		mngr.mngr_nm,
+		mngr.mngr_tel,
+		mngr.rgst_dt,
+		mngr.rgster_id,
+		mngr.updt_dt, 
+		mngr.updter_id,
+		cmcd.cmcd_id,
+		cmcd.cmcd_nm,
+		lgin.role_cd,
+		lgin.user_pwd,
+		lgin.user_cd,
+		lgin.last_login_dt
 		from mngr
 		join lgin on lgin.user_email = mngr.user_email
 		join cmcd on cmcd.cmcd_id = lgin.user_cd
 		where role_cd = 'ROL0000003'
-		order by mngr_id 
+		)
+        where row_num between #{start} and #{end}
 	]]>
 	</select>
 
@@ -606,11 +664,13 @@
 	]]>
 	</select>
 
-	<select id="getInquiryList"
+	<select id="getInquiryList" parameterType="int"
 		resultType="com.finalprj.kess.model.PostVO">
 	<![CDATA[		
-		SELECT 
-		    post_id,
+	select *
+		from (
+        select row_number() over(order by post_cd,post_id desc) as row_num,
+        	post_id,
 		    post_title,
 		    post_content,
 		    post_cd,
@@ -625,7 +685,8 @@
 		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
 		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
 		WHERE post_id LIKE 'INQY%' AND post.delete_yn = 'N'
-		order by post_cd, post_id desc
+		)
+		where row_num between #{start} and #{end}
 		]]>
 	</select>
 
@@ -995,7 +1056,7 @@
 	<![CDATA[
 	select *
 	from cmpy
-	where cmpy_id = #{cmpyId}
+	where cmpy_id = #{cmpyId} 
 	]]>
 	</select>
 
@@ -1483,7 +1544,7 @@ order by stdt.stdt_nm
 	<![CDATA[
 		select *
 		from cmcd
-		where delete_yn='N' 
+		where cmcd_id like 'GRP%' and delete_yn='N' 
 		and tpcd_id like '%'||#{tpcdId}||'%'
 		and cmcd_nm like '%'||#{cmcdNm}||'%'
 		and use_yn like '%'||#{useYn}||'%'
