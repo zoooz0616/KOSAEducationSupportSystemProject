@@ -1452,7 +1452,25 @@ order by stdt.stdt_nm
 		</foreach>
 	</update>
 
-
+	<select id="getSearchDetailCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		select *
+		from cmcd
+		where delete_yn='N' and tpcd_id = #{tpcdId} and cmcd_nm like '%'||#{cmcdNm}||'%'
+	]]>
+	</select>
+	
+	<select id="getSearchGroupCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		select *
+		from cmcd
+		where delete_yn='N' 
+		and tpcd_id like '%'||#{tpcdId}||'%'
+		and cmcd_nm like '%'||#{cmcdNm}||'%'
+		and use_yn like '%'||#{useYn}||'%'
+		
+	]]>
+	</select>
 
 
 

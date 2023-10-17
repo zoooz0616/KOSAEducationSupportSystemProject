@@ -25,7 +25,8 @@
 			</tr>
 			<tr class="input_wrap">
 				<th><span class="title">상세코드명<span class="red">*</span></span></th>
-				<td><input type="text" class="group_code_cmcd_nm" placeholder="상세코드명"></td>
+				<td><input type="text" class="group_code_cmcd_nm" placeholder="상세코드명"
+				onkeyup="if(window.event.keyCode==13){insertdetailCode();}"></td>
 			</tr>
 			<tr class="input_wrap">
 				<th><span class="title">우선순위<span class="red">*</span></span></th>
