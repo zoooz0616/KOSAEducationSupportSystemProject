@@ -14,16 +14,11 @@
 			WHERE
 				mngr_id = #{mngrId}
 		]]>
-		<choose>
-			<when test='sortBy.equalsIgnoreCase("name")'>
-				ORDER BY clss_id
-			</when>
-			<otherwise>
-				ORDER BY clss_id
-			</otherwise>
-		</choose>
-		<if test='order.equalsIgnoreCase("DESC")'>
-			DESC
+		<if test='year != null'>
+			<![CDATA[
+				AND clss_end_dd > to_date(#{year}-1||'-12-31', 'YYYY-MM-DD')
+				AND clss_start_dd < to_date(#{year}+1||'-01-01', 'YYYY-MM-DD')
+			]]>
 		</if>
 	</select>
 
@@ -192,6 +187,12 @@
 		<![CDATA[
 			AND c.clss_nm like '%'|| #{searchKeyword} ||'%'
 		]]>
+		</if>
+		<if test='year != null'>
+			<![CDATA[
+				AND clss_end_dd > to_date(#{year}-1||'-12-31', 'YYYY-MM-DD')
+				AND clss_start_dd < to_date(#{year}+1||'-01-01', 'YYYY-MM-DD')
+			]]>
 		</if>
 		<![CDATA[
 			ORDER BY clss_id
@@ -474,6 +475,15 @@
 	<select id="getCodeVO">
 		<![CDATA[
 			SELECT * FROM CMCD WHERE cmcd_id = #{resnCd}
+		]]>
+	</select>
+	<select id="getYearList">
+		<![CDATA[
+			SELECT distinct extract (year from clss_start_dd)
+		FROM clss
+		WHERE
+			mngr_id = #{mngrId}
+			order by 1 desc
 		]]>
 	</select>
 </mapper>

@@ -34,10 +34,11 @@
 						교육과정<span class="star">*</span>
 					</div>
 					<div class="insert_input">
-						<select>
-							<option th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}" th:text="${yNum}" th:value="${yNum}"/>
+						<select id="select_year">
+							<option th:text="전체" th:value=null/>
+							<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
 						</select>
-						<select id="classId">
+						<select id="select_class">
 							<option value="" disabled selected>교육과정명을 선택하세요</option>
 							<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
 						</select>
@@ -47,18 +48,16 @@
 					</div>
 					<div class="insert_input">
 						<select id="start_date_y">
-							<option value="" disabled selected>연</option>
 							<option th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}" th:text="${yNum}" th:value="${yNum}"/>
 						</select>
 						<select id="start_date_m">
-							<option value="" disabled selected>월</option>
 							<option th:each="monthNum:${#numbers.sequence(1,12)}" th:text="${monthNum}" th:value="${monthNum}"/>
 						</select>
 					</div>
 					<div class="insert_name">교육일수<span class="star">*</span></div>
 					<div class="insert_input">
 						<select id="start_date_m">
-							<option th:each="monthNum:${#numbers.sequence(1,12)}" th:text="${monthNum}" th:value="${monthNum}"/>
+							<option th:each="monthNum:${#numbers.sequence(1,__${monthLength}__)}" th:text="${monthNum}" th:value="${monthNum}"/>
 						</select>
 						<input type="button" class="batch_input" value="일괄적용" onclick="batchInput(this)">
 					</div>
