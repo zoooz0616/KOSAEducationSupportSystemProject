@@ -37,7 +37,7 @@
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
 						<div>
-							총 <span class="cnt" th:text="${#lists.size(companyList)}"></span>
+							총 <span class="cnt" th:text="${companyCnt}"></span>
 							건
 						</div>
 						<button id="delete_btn">
@@ -48,38 +48,35 @@
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 기업 등록하기 -->
-						<div class="company_insert" style="padding: 5px;">
-							<div>
-								<span>기업명<span class="red">*</span></span> 
-								<input type="text"
-									name="cmpyNm" placeholder="기업명"> 
-								<span>전화번호<span
-									class="red">*</span></span> 
-								<input type="text" name="cmpyTel"
-									placeholder="전화번호"> 
-								<span>주소<span class="red">*</span></span>
-								<input type="text" id="streetAdr" name="cmpyAdr"
-									class="form-control" onclick="findAddr()"
-									placeholder="도로명 주소를 입력하세요" readonly>
-							</div>
-							<div style="display: flex; align-items: center;">
-								<span>기업CI</span> <input id="lecture_tm_input" type="file" accept="image/*"
-									name="file">
-								<button class="insert_btn" type="button" onclick="insertCompany()">
-									<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
-								</button>
-							</div>
+					<div class="company_insert" style="padding: 5px;">
+						<div>
+							<span>기업명<span class="red">*</span></span> <input type="text"
+								name="cmpyNm" placeholder="기업명"> <span>전화번호<span
+								class="red">*</span></span> <input type="text" name="cmpyTel"
+								placeholder="전화번호"> <span>주소<span class="red">*</span></span>
+							<input type="text" id="streetAdr" name="cmpyAdr"
+								class="form-control" onclick="findAddr()"
+								placeholder="도로명 주소를 입력하세요" readonly>
 						</div>
+						<div style="display: flex; align-items: center;">
+							<span>기업CI</span> <input id="lecture_tm_input" type="file"
+								accept="image/*" name="file">
+							<button class="insert_btn" type="button"
+								onclick="insertCompany()">
+								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+							</button>
+						</div>
+					</div>
 					<!-- 기업 등록하기 -->
 
 					<!-- 리스트 -->
-					<div class="table_wrap"
-						style="height: 90%; border: 1px solid #CFDEE6;">
+					<div class="table_wrap" style="height: 90%;">
 						<table class="company_list_table">
 							<thead>
 								<tr class="content_list_th">
-									<th style="width: 5%"><input type="checkbox" id="chkAll" name="select_all"
-										class="lecture_checkbox_all" onclick="selectAll(this)"></th>
+									<th style="width: 5%"><input type="checkbox" id="chkAll"
+										name="select_all" class="lecture_checkbox_all"
+										onclick="selectAll(this)"></th>
 									<th style="width: 5%;">번호</th>
 									<th style="width: 30%;">기업명</th>
 									<th style="width: 15%;">전화번호</th>
@@ -89,8 +86,10 @@
 							<tbody id="tbody">
 								<tr th:each="company, iterStat: ${companyList}">
 									<td class="td_checkbox"><input type="checkbox"
-										class="check_box" name="select" onclick="checkSelectAll()" th:value="${company.cmpyId}"></td>
-									<td class="td_num" th:text="${#lists.size(companyList)-iterStat.index}"></td>
+										class="check_box" name="select" onclick="checkSelectAll()"
+										th:value="${company.cmpyId}"></td>
+									<td class="td_num"
+										th:text="${company.rowNum}"></td>
 									<td><span class="cmpy_nm" th:text="${company.cmpyNm}"
 										onclick="companyDetail(this)"></span></td>
 									<td th:text="${company.cmpyTel}"></td>
@@ -102,6 +101,24 @@
 					<!-- 리스트 -->
 				</div>
 				<!-- 기업 관리 -->
+
+				<!-- Paging -->
+				<nav class="page_nav" aria-label="Page navigation">
+					<ul class="pagination">
+						<li th:if="${nowPageBlock>1}"><a
+							th:href="@{/admin/notice/list/__${startPage-1}__}"
+							aria-label="Previous">이전</a></li>
+
+						<li th:each="i: ${#numbers.sequence(startPage, endPage)}"
+							th:classappend="${i==nowPage}?active"><a
+							th:href="@{/admin/notice/list/__${i}__}">[[${i}]]</a></li>
+
+						<li th:if="${nowPageBlock<totalPageBlock}"><a
+							th:href="@{/admin/notice/list/__${endPage+1}__}"
+							aria-label="Next">다음</a></li>
+					</ul>
+				</nav>
+				<!-- Paging -->
 			</div>
 			<!-- left section -->
 
@@ -172,7 +189,8 @@
 											</div>
 											<div class="detail_input" style="display: none;">
 												<div style="padding: 5px;">
-													<input class="detail_cmpy_file_input" type="file" accept="image/*">
+													<input class="detail_cmpy_file_input" type="file"
+														accept="image/*">
 												</div>
 											</div>
 										</td>
