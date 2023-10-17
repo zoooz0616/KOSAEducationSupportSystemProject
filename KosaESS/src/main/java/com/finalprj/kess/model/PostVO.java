@@ -24,4 +24,6 @@ public class PostVO {
 	private String cmcdNm;//상태이름
 	private String stdtNm;//등록자이름
 	private String mngrNm;//등록자이름
+	
+	private int rowNum;//번호
 }
