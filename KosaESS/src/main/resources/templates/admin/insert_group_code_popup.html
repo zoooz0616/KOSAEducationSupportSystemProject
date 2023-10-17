@@ -14,7 +14,7 @@
 		<table>
 			<tr class="input_wrap">
 				<th><span class="title">코드구분<span class="red">*</span></span></th>
-				<td><input type="text"
+				<td><input type="text" oninput="handleOnInput(this)"
 				class="group_code_tpcd_id" placeholder="ex) NTC" maxlength="3"></td>
 			</tr>
 			<tr class="input_wrap">
@@ -30,6 +30,11 @@
 		<button class="btn" onclick="insertGroupCode();">확인</button>
 	</div>
 	<script>	
+	//코드구분 영어만 입력하게 하기
+	function handleOnInput(e)  {
+		  e.value = e.value.replace(/[^A-Za-z]/ig, '')
+		}
+	
 	/*
 	*그룹코드 및 상세코드 등록
 	*/

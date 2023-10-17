@@ -39,20 +39,20 @@
 						<div style="display: flex;">
 							<div class="search_filter">
 								<span>코드구분</span> <input type="text" class="group_code_tpcd_id"
-									placeholder="ex)NTC" maxlength="3">
+									placeholder="코드구분" maxlength="3">
 							</div>
 							<div class="search_filter">
 								<span>코드구분명</span> <input type="text" class="group_code_cmcd_nm"
-									placeholder="ex)ㅇㅇㅇㅇ상태">
+									placeholder="코드구분명">
 							</div>
 						</div>
 
 						<!-- Search Button wrap -->
 						<div class="search_filter_btn_wrap">
-							<button type="button" class="reset_btn" onclick="resetInput()">
+							<button type="button" class="reset_btn" onclick="resetGroupInput()">
 								<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
 							</button>
-							<button type="button" class="search_btn" onclick="search()">
+							<button type="button" class="search_btn" onclick="searchGroupCode()">
 								<img th:src="@{/img/search_white.png}"> <span>조회</span>
 							</button>
 						</div>
@@ -155,21 +155,21 @@
 					<div class="search_filter_wrap" style="padding: 5px;">
 						<div style="display: flex;">
 							<div class="search_filter">
-								<span>코드구분</span> <select
-									id="group_code_select">
+								<span>코드구분</span> 
+								<select id="group_code_select">
 									<option value="all">선택</option>
 									<option th:each="groupCode: ${groupCodeList}"
 										th:value="${groupCode.cmcdId}" th:text="${groupCode.tpcdId}"></option>
 								</select>
 							</div>
 							<div class="search_filter">
-								<span>상세코드명</span> <input
-									class="detailCmcdNm" type="text" placeholder="상세코드명">
+								<span>상세코드명</span> <input class="detailCmcdNm" type="text"
+									placeholder="상세코드명">
 							</div>
 						</div>
 						<!-- Search Button wrap -->
 						<div class="search_filter_btn_wrap">
-							<button type="button" class="reset_btn" onclick="resetInput()">
+							<button type="button" class="reset_btn" onclick="resetDetailInput()">
 								<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
 							</button>
 							<button type="button" class="search_btn" onclick="search()">
@@ -373,30 +373,29 @@
 						selectedDetailCodeIds.push(checkbox.value);
 					});
 
-					console.log(selectedDetailCodeIds);
-					// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-					$.ajax({
-						url : '/admin/commoncode/delete/detailcode',
-						method : 'POST',
-						data : {
-							selectedDetailCodeIds : selectedDetailCodeIds
-						},
-						success : function(response) {
-							console.log(response);
-							if (response == "fail") {
-								alert("삭제할 그룹코드를 선택해주세요.");
-							} else {
-								alert("선택한 상세코드가 미사용으로 설정되었습니다.");
-								selectDetailCodeList(response);
+					if(selectedDetailCodeIds.length == 0){
+						alert("선택된 상세코드가 없습니다.");
+					}else {
+						//진짜 삭제할 건지 확인
+						if(!confirm("삭제하시겠습니까?")){
+							//아니오
+						}else{
+						$.ajax({
+							url : '/admin/commoncode/delete/detailcode',
+							method : 'POST',
+							data : {
+								selectedDetailCodeIds : selectedDetailCodeIds
+							},
+							success : function(response) {
+									alert("선택한 상세코드가 삭제되었습니다.");
+									selectDetailCodeList(response);
+								
 							}
+						});
 						}
-					});
+					}
 				});
 
-		
-		
-		
-		
 		
 		/*
 		*그룹코드 리스트 뿌리기
@@ -455,15 +454,13 @@
 	        			//번호
 	        			var tdNum = document.createElement('td');
 	        			tdNum.className="td_num";
-	        			tdNum.textContent = groupCodeList.length - i;
+	        			tdNum.textContent = i+1;
 	        			tr.appendChild(tdNum);
 	        			
 	        			//공통코드ID
 	        			var tdCmcdId = document.createElement('td');
 	        			tdCmcdId.className = 'td_cmcd_id';
 	        			var divCmcdId = document.createElement('div');
-	        			divCmcdId.className = 'group_code_id';
-	        			divCmcdId.onclick = 'detailCodeList(this)';
 	        			divCmcdId.textContent = groupCode.cmcdId;
 	        			tdCmcdId.appendChild(divCmcdId);
 	        			tr.appendChild(tdCmcdId);
@@ -472,15 +469,13 @@
 	        			var tdTpcdId = document.createElement('td');
 	        			tdTpcdId.className ='td_tpcd_id';
 	        			var divTpcdId = document.createElement('div');
-	        			divTpcdId.className="group_div";
+	        			divTpcdId.onclick = function(){
+	        				detailCodeList(groupCode.cmcdId);
+	        			}
+	        			divTpcdId.className = 'group_code_id';
 	        			divTpcdId.textContent = groupCode.tpcdId;
-	        			var inputTpcdId = document.createElement('input');
-	        			inputTpcdId.className='group_input group_tpcd_id';
-	        			inputTpcdId.type="text";
-	        			inputTpcdId.value= groupCode.tpcdId;
-	        			inputTpcdId.style.display='none';
+	        			
 	        			tdTpcdId.appendChild(divTpcdId);
-	        			tdTpcdId.appendChild(inputTpcdId);
 	        			tr.appendChild(tdTpcdId);
 	        			
 	        			//cmcdNm
@@ -508,11 +503,11 @@
 	        			selectUseYn.className='group_input group_use_yn';
 	        			selectUseYn.style.display = 'none';
 	        			var optionY = document.createElement('option');
-	        			optionY.value='Y';
-	        			optionY.textContent = 'Y';
+	        			optionY.value="Y";
+	        			optionY.textContent = "Y";
 	        			var optionX = document.createElement('option');
-	        			optionY.value='X';
-	        			optionY.textContent = 'X';
+	        			optionX.value="X";
+	        			optionX.textContent = 'X';
 	        			selectUseYn.appendChild(optionY);
 	        			selectUseYn.appendChild(optionX);
 	        			selectUseYn.value=groupCode.useYn;
@@ -522,6 +517,17 @@
 	        			
 	        			groupTbody.appendChild(tr);
 	        		}
+	        		
+	        		//그룹코드 수정하면 update_yn=Y로 바꾸기
+	        		var groupInputs = document.querySelectorAll('.group_input');
+	        		groupInputs.forEach(function(groupInput) {
+	        		    // onchange 이벤트를 추가합니다.
+	        		    groupInput.addEventListener("change", function() {
+	        		    	const parentTr = groupInput.closest('tr');
+	        		    	var updateYnInput = parentTr.querySelector(".td_group_check_box .group_update_yn");
+	        		    	updateYnInput.value = "Y";
+	        		    });
+	        		});
 	        		
 	        		
 	        		//상세코드 등록에 필요한 그룹코드 select 다시 불러오기
@@ -713,7 +719,13 @@
 			selectedCode = cmcdId;
 			
 			selectDetailCodeList(cmcdId);
+			
+			//상세코드 조회부분 select option설정.
+			var searchDetailCodeSelect = document.querySelector("#group_code_select");
+			searchDetailCodeSelect.value = cmcdId; 
+			searchDetailCodeSelect.disabled = true;
 		}
+		
 		// <select> 요소에 onchange 이벤트 핸들러를 할당
 		document.getElementById("group_code_select").onchange = function handleSelectChange() {
 			var cmcdId = document.getElementById("group_code_select").value;
@@ -894,32 +906,37 @@
 			updateGroupList.push(groupCode);
 		});
 		
-		//객체 배열을 json문자열로 직렬화 하기
-		var jsonData = JSON.stringify(updateGroupList);
+		if(updateGroupList.length == 0){
+			alert("수정사항이 없습니다.");
+		}else{
+			//객체 배열을 json문자열로 직렬화 하기
+			var jsonData = JSON.stringify(updateGroupList);
+			
+			//비동기로 배열 전달하기
+			fetch('/admin/commoncode/update/groupcode', {
+	    		method: 'POST',
+	    		headers: {
+	        		'Content-Type': 'application/json',
+	    		},
+	    		body: jsonData,
+			})
+			.then(response =>response.json())
+			.then(data => {
+				console.log(data);
+				if (data.message === "success") {
+			        alert("그룹코드가 수정되었습니다.");
+			        //그룹코드리스트 다시 불러오기
+			        selectGroupCodeList();
+			        
+			    } else {
+			    	alert("실패했습니다. 다시 시도해주세요.");
+			    }
+			})
+			.catch(error => {
+	    		// 오류 처리
+			});
+		}
 		
-		//비동기로 배열 전달하기
-		fetch('/admin/commoncode/update/groupcode', {
-    		method: 'POST',
-    		headers: {
-        		'Content-Type': 'application/json',
-    		},
-    		body: jsonData,
-		})
-		.then(response =>response.json())
-		.then(data => {
-			console.log(data);
-			if (data.message === "success") {
-		        alert("그룹코드가 수정되었습니다.");
-		        //그룹코드리스트 다시 불러오기
-		        selectGroupCodeList();
-		        
-		    } else {
-		    	alert("실패했습니다. 다시 시도해주세요.");
-		    }
-		})
-		.catch(error => {
-    		// 오류 처리
-		});
 	}
 	
 	//상세코드 저장하기 버튼 클릭
@@ -999,16 +1016,68 @@
 		);
 	}
 	
+	var popup;
+	
 	function showInsertDetailPopup(){
 		if(selectedCode === ""){
 			selectedCode = "all";
 		}
 		
 		var url = "/admin/commoncode/insert/detailcode/popup/" + selectedCode;
-		window.open(
+		popup = window.open(
 				url, "insertdetailcode", 
-				"width=500, height=250, left=900, top=500"		
+				"width=500, height=290, left=900, top=500"		
 		);
+		
+		popup.onbeforeunload = function() {
+			if(selectedCode === ""){
+				selectDetailCodeList(selectedCode);
+			}
+		};
+	}
+	
+	//그룹코드 초기화 버튼
+	function resetGroupInput() {
+		// 모든 요소를 선택
+		const inputElement1 = document.querySelector(".group_code_tpcd_id");
+		inputElement1.value = "";
+
+		// 모든 요소를 선택
+		const inputElement2 = document.querySelector(".group_code_cmcd_nm");
+		inputElement2.value = "";
+	}
+	
+	//상세코드 초기화 버튼
+	function resetDetailInput() {
+		// 모든 요소를 선택
+		const inputElement1 = document.querySelector("#group_code_select");
+		inputElement1.value = "all";
+
+		// 모든 요소를 선택
+		const inputElement2 = document.querySelector(".detailCmcdNm");
+		inputElement2.value = "";
+	}
+	
+	//그룹코드 검색
+	function searchGroupCode(){
+		//둘 중에 하나라도 검색되게
+		//새로 리로드
+	}
+	
+	//상세코드 검색
+	function searchDetailCode(){
+		// 코드 구분값
+		const tpcdIdSelect = document.querySelector("#group_code_select");
+		var tpcdId = tpcdIdSelect.value;
+
+		// 상세코드명
+		const cmcdNmInput = document.querySelector(".detailCmcdNm");
+		var cmcdNm = cmcdNmInput.value;
+		
+		if(tpcdId === "all" || cmcdNmInput === ""){
+			alert()
+			//select disabled되면 value못 가져옴 input hidden 필요
+		}
 	}
 	
 	</script>
