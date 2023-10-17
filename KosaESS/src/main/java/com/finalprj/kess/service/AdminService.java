@@ -627,10 +627,18 @@ public class AdminService implements IAdminService {
 	@Override
 	public void updateGroupCode(CommonCodeVO[] updateGroupList) {
 		adminRepository.updateGroupCode(updateGroupList);
+		adminRepository.updateUseYnDetailCode(updateGroupList);
 	}
 	
+	@Override
+	public List<CommonCodeVO> getSearchDetailCodeList(String tpcdId, String cmcdNm) {
+		return adminRepository.getSearchDetailCodeList(tpcdId, cmcdNm);
+	}
 	
-	
+	@Override
+	public List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn) {
+		return adminRepository.getSearchGroupCodeList(tpcdId, cmcdNm, useYn);
+	}
 	
 	
 	

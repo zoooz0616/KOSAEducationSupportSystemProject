@@ -150,6 +150,11 @@ public class ManagerService implements IManagerService {
 		managerRepository.deleteWlog(wlogId);
 	}
 
+	@Override
+	public ClassVO getCodeVO(String resnCd) {
+		return managerRepository.getCodeVO(resnCd);
+	}
+
 //	@Override
 //	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
 //		return managerRepository.getStudentListBySearch(classId, startDate, endDate);

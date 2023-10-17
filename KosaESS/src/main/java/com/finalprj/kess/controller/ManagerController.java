@@ -424,7 +424,7 @@ public class ManagerController {
 		String title = "지원금 관리";
 		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
-		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
+		List<CommonCodeVO> sbsdCodeNameList = managerService.getCodeNameList("SSD");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
 		
 		for (SubsidyDTO dto : subsidyList) {
@@ -439,7 +439,7 @@ public class ManagerController {
 		model.addAttribute("subsidyList", subsidyList);
 		model.addAttribute("resultCount", subsidyList.size());
 		model.addAttribute("classList", classList);
-		model.addAttribute("monyCodeNameList", monyCodeNameList);
+		model.addAttribute("sbsdCodeNameList", sbsdCodeNameList);
 		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
 		
 		return "manager/subsidy_view";
@@ -455,10 +455,40 @@ public class ManagerController {
 		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
 			return "redirect:/admin";
 		}
+		
+		// mngrId
+		String mngrId = (String) session.getAttribute("mngrId");
+		
+		// 페이지 제목 추가
+		String title = "지원금 관리(등록)";
+		model.addAttribute("title", title);
+		
+		//교육과정 목록 추가
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
+		model.addAttribute("classList", classList);
+		
+		//출석 종류 추가
+		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
+		
+		return "manager/subsidy_insert";
+	}
+	
+	/*
+	@PostMapping("/subsidy/insert")
+	public String insertSubsidyView(Model model, HttpSession session, HttpServletRequest httpServletRequest) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
 		//End : 유저 필터링
 		
 		String mngrId = (String) session.getAttribute("mngrId");
-		String title = "지원금 관리";
+		String title = "지원금 관리(등록)";
 		
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, "", "");
 		List<CommonCodeVO> monyCodeNameList = managerService.getCodeNameList("MNY");
@@ -471,6 +501,7 @@ public class ManagerController {
 		
 		return "manager/subsidy_insert";
 	}
+	*/
 // AJAX 메서드---------------------------------------------------------------------------------------------------------------
 	@GetMapping("/student/search")
 	@ResponseBody
@@ -715,7 +746,7 @@ public class ManagerController {
 	
 	@PostMapping("/worklog/update_resn_code")
 	@ResponseBody
-	public String updateResnCd(
+	public Map<String, Object> updateResnCd(
 			HttpSession session,
 			@RequestParam String resnId,
 			@RequestParam String resnCd
@@ -732,7 +763,10 @@ public class ManagerController {
 		//업데이트
 		managerService.updateResnCd(resnId, resnCd, (String)session.getAttribute("mngrId"));
 		// End : 업데이트
-		return "OK!";
+		Map<String, Object> response = new HashMap<>();
+		response.put("responseName", managerService.getCodeVO(resnCd).getCmcdNm());
+		response.put("responseValue", resnCd);
+		return  response;
 		// End : 업데이트 결과 전송
 	}
 

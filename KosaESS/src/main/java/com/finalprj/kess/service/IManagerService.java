@@ -67,4 +67,6 @@ public interface IManagerService {
 	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString);
 
 	public void deleteWlog(String wlogId);
+
+	public ClassVO getCodeVO(String resnCd);
 }

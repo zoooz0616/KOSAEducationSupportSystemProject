@@ -1981,7 +1981,7 @@ public class AdminController {
 
 		return groupCodeList;
 	}
-	
+
 	/**
 	 * 기준정보 그룹코드 생성
 	 * 
@@ -1994,7 +1994,7 @@ public class AdminController {
 	public String insertCMCD() {
 		return "admin/insert_group_code_popup";
 	}
-	
+
 	/**
 	 * 기준정보 그룹코드 생성
 	 * 
@@ -2078,7 +2078,7 @@ public class AdminController {
 
 		return response;
 	}
-	
+
 	/**
 	 * 기준정보 상세코드 등록
 	 * 
@@ -2092,7 +2092,7 @@ public class AdminController {
 		model.addAttribute("cmcdId", selectedCode);
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList();
 		model.addAttribute("groupCodeList", groupCodeList);
-		
+
 		return "admin/insert_detail_code_popup";
 	}
 
@@ -2106,7 +2106,8 @@ public class AdminController {
 	 */
 	@PostMapping("/commoncode/insert/detailcode")
 	@ResponseBody
-	public String insertDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm) {
+	public String insertDetailCode(@RequestParam String cmcdId, @RequestParam String cmcdNm,
+			@RequestParam int cmcdOrder) {
 		// 이미 그 그룹코드에 사용여부가 Y중에 입력한 상세코드명이 있는지 확인
 		int detailCodeCnt = adminService.getDetailCodeNmCnt(cmcdId, cmcdNm);
 		// 있으면 return fail
@@ -2117,6 +2118,7 @@ public class AdminController {
 			commonCodeVO.setCmcdId(adminService.getMaxDetailCodeId(cmcdId));
 			commonCodeVO.setTpcdId(cmcdId);
 			commonCodeVO.setCmcdNm(cmcdNm);
+			commonCodeVO.setCmcdOrder(cmcdOrder);
 
 			adminService.insertDetailCode(commonCodeVO);
 
@@ -2157,17 +2159,58 @@ public class AdminController {
 	@ResponseBody
 	public String deleteDetailCode(
 			@RequestParam(name = "selectedDetailCodeIds[]", required = false) List<String> selectedDetailCodeIds) {
-		if (selectedDetailCodeIds == null) {
-			return "fail";
-		} else {
-			// 사용여부'N', updt 수정
-			adminService.deleteGroupCode(selectedDetailCodeIds);
 
-			String groupCodeId = adminService.getGroupCodeId(selectedDetailCodeIds.get(0));
+		// 삭제여부'Y', updt 수정
+		adminService.deleteGroupCode(selectedDetailCodeIds);
+		String groupCodeId = adminService.getGroupCodeId(selectedDetailCodeIds.get(0));
 
-			return groupCodeId;
-		}
+		return groupCodeId;
+
 	}
+	
+	/**
+	 * 기준정보 그룹코드 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 17.
+	 * @parameter : selectedDetailCodeIds
+	 * @return : String
+	 */
+	@GetMapping("/commoncode/search/groupcode")
+	@ResponseBody
+	public Map<String, Object> searchGroupCode(@RequestParam(required = false) String tpcdId, @RequestParam(required = false) String cmcdNm,
+			@RequestParam(required = false) String useYn) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<CommonCodeVO> searchGroupCodeList = adminService.getSearchGroupCodeList(tpcdId.trim(), cmcdNm.trim(), useYn);
+		map.put("groupCodeList", searchGroupCodeList);
+		
+		return map;
+	}
+	
+	
+	
+	/**
+	 * 기준정보 상세코드 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 17.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@GetMapping("/commoncode/search/detailcode")
+	@ResponseBody
+	public Map<String, Object> searchDetailCode(@RequestParam String tpcdId, @RequestParam String cmcdNm) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<CommonCodeVO> searchDetailCodeList = adminService.getSearchDetailCodeList(tpcdId, cmcdNm.trim());
+		map.put("detailCodeList", searchDetailCodeList);
+		
+		return map;
+	}
+	
+	
+	
 
 	/**
 	 * 지원금 목록조회

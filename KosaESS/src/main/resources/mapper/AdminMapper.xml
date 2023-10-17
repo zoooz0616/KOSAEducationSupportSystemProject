@@ -605,7 +605,7 @@
 		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
 		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
 		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
-		WHERE post_id LIKE 'INQY%' AND delete_yn = 'N'
+		WHERE post_id LIKE 'INQY%' AND post.delete_yn = 'N'
 		order by post_cd, post_id desc
 		]]>
 	</select>
@@ -1047,7 +1047,7 @@
 	<![CDATA[
 		select *
 		from cmcd
-		where tpcd_id = #{cmcdId}
+		where tpcd_id = #{cmcdId} and delete_yn='N'
 		order by cmcd_id
 	]]>
 	</select>
@@ -1066,7 +1066,7 @@
 	<![CDATA[
 	select COALESCE(COUNT(cmcd_id), 0)
 	from cmcd
-	where tpcd_id = #{cmcdId} and cmcd_nm =#{cmcdNm}
+	where tpcd_id = #{cmcdId} and cmcd_nm =#{cmcdNm} and delete_yn='N'
 	]]>
 	</select>
 
@@ -1088,12 +1088,16 @@
 		cmcd_id,
 		tpcd_id,
 		cmcd_nm,
+		cmcd_order,
+		rgst_dt,
 		rgster_id
 	)
 	values(
 		#{cmcdId}, 
 		#{tpcdId}, 
 		#{cmcdNm},
+		#{cmcdOrder},
+		systimestamp,
 		'MNGR000001')
 	]]>
 	</insert>
@@ -1435,8 +1439,38 @@ order by stdt.stdt_nm
 			where cmcd_id = #{item.cmcdId}
 		</foreach>
 	</update>
+	
+	<update id="updateUseYnDetailCode" parameterType="java.util.List">
+		<foreach collection="updateGroupList" item="item"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update cmcd
+			set
+			use_yn = #{item.useYn},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			where tpcd_id = #{item.cmcdId}
+		</foreach>
+	</update>
 
-
+	<select id="getSearchDetailCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		select *
+		from cmcd
+		where delete_yn='N' and tpcd_id = #{tpcdId} and cmcd_nm like '%'||#{cmcdNm}||'%'
+	]]>
+	</select>
+	
+	<select id="getSearchGroupCodeList" parameterType="string" resultType="com.finalprj.kess.model.CommonCodeVO">
+	<![CDATA[
+		select *
+		from cmcd
+		where delete_yn='N' 
+		and tpcd_id like '%'||#{tpcdId}||'%'
+		and cmcd_nm like '%'||#{cmcdNm}||'%'
+		and use_yn like '%'||#{useYn}||'%'
+		
+	]]>
+	</select>
 
 
 
