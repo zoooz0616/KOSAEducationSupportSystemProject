@@ -1548,7 +1548,7 @@ order by stdt.stdt_nm
 		and tpcd_id like '%'||#{tpcdId}||'%'
 		and cmcd_nm like '%'||#{cmcdNm}||'%'
 		and use_yn like '%'||#{useYn}||'%'
-		
+		order by cmcd_id
 	]]>
 	</select>
 
