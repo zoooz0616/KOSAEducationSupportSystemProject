@@ -15,7 +15,7 @@ $(document).ready(function() {
 				$('.rgstCnt').text(todoData2.length);
 				setTable(1);
 				setPaging(1);
-				
+
 				if (data.length == 0)
 					$('.rgstFoot').show();
 				else
@@ -86,7 +86,7 @@ $(document).ready(function() {
 			var RegistrationVO = filteredData[i];
 			var row = $('<tr class="rgstRow"></tr>');
 
-			row.append('<td><span >' + (num - i - startIdx) + '</span></td>');
+			row.append('<td><span>' + (num - i - startIdx) + '</span></td>');
 
 			row.append('<td><a href="/student/class/view/' + RegistrationVO.clssId + '">' + RegistrationVO.clssNm + '</a></td>');
 			row.append('<td><span>' + RegistrationVO.clssStartDd + ' ~ ' + RegistrationVO.clssEndDd + '</span></td>');
@@ -97,16 +97,16 @@ $(document).ready(function() {
 				row.append('<td style="color:lightslategray;">' + RegistrationVO.cmptNm + '</td>');
 			} else if (RegistrationVO.cmptCd === 'CMP0000002') {
 				row.append('<td style="color:blue;">' + RegistrationVO.cmptNm + '</td>');
-			}else {
+			} else {
 				row.append('<td>' + RegistrationVO.cmptNm + '</td>');
 			}
 			if (RegistrationVO.cmptCd === 'CMP0000002') {
-				row.append('<td class="rgstPrint" style="display: revert;"><a href="/download/file/' + RegistrationVO.fileId + '/' + RegistrationVO.fileSubId + '"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></a></td>');
+				/*row.append('<td class="rgstPrint" style="display: revert;"><a href="/download/file/' + RegistrationVO.fileId + '/' + RegistrationVO.fileSubId + '"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></a></td>');*/
+				row.append('<td class="rgstPrint" style="display: revert;"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></td>');
 			} else {
 				row.append('<td class="rgstPrint" style="display: none;"></td >');
-
 			}
-
+			row.append('<td class="clssId" style="display:none;">' + RegistrationVO.clssId + '</td>');
 			tbody.append(row);
 		}
 	}
@@ -147,3 +147,29 @@ $(document).ready(function() {
 	}
 });
 
+var rgstRow = "";
+var clssId = "";
+
+$(document).on('click', '.rgstPrint', function() {
+	rgstRow = $(this).closest('tr');
+	clssId = rgstRow.find('td.clssId').text();
+	console.log(clssId);
+	$.ajax({
+		type: 'POST',
+		url: '/student/getAplyVO',
+		data: { clssId: clssId },
+		xhrFields: {
+			responseType: 'blob' // Binary 데이터를 다운로드합니다.
+		},
+		success: function(data) {
+			// PDF 다운로드 링크를 생성하고 클릭하여 다운로드합니다.
+			var a = document.createElement('a');
+			var url = window.URL.createObjectURL(data);
+			a.href = url;
+			a.download = 'certificate.pdf'; // 파일 이름 지정
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url); // 사용 후 URL을 해제합니다.
+		}
+	});
+});

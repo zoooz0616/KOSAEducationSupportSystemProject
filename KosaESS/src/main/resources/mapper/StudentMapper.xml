@@ -1097,4 +1097,24 @@
 	]]>
 	</select>
 
+	<select id="getRgstVO"
+		resultType="com.finalprj.kess.dto.RegistrationDTO">
+	<![CDATA[
+		 select
+			stdt_id,
+			(select stdt_nm from stdt where stdt_id =#{stdtId}) as "stdtNm",
+			clss.clss_id,
+			clss.clss_nm,
+			clss.clss_start_dd,
+			clss.clss_end_dd,
+			cmpt_cd,
+			(select cmcd_nm from cmcd where cmcd_id = cmpt_cd) as "cmptNm",
+			clss.clss_total_tm,
+			systimestamp as "printDd"
+		from rgst
+		JOIN clss on clss.clss_id = #{clssId}
+		WHERE stdt_id =#{stdtId} and rgst.clss_id = #{clssId}
+	]]>
+	</select>
+
 </mapper>

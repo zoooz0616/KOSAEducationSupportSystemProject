@@ -3,9 +3,11 @@ package com.finalprj.kess.service;
 import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -171,4 +173,5 @@ public interface IStudentService {
 
 	List<SubsidyDTO> searchSbsdList(String stdtId);
 
+	RegistrationDTO getRgstVO(String stdtId, String clssId);
 }
