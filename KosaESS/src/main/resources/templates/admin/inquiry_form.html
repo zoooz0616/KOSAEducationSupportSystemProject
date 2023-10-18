@@ -118,7 +118,7 @@
 				<input class="inquiry_id" type="hidden" th:value="${postVO.postId}">
 				<button id="delete_btn" class="cancel_btn" type="button">삭제</button>
 				<button class="insert_btn" type="button"
-					onclick="location.href='/admin/inquiry/list'">목록</button>
+					th:onclick="|location.href='@{/admin/inquiry/list/__${session.page}__}'|">목록</button>
 			</div>
 		</div>
 		<!-- Content Bottom-->

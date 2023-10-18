@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>KOSA 교육지원시스템</title>
+</head>
+<head>
+<link th:href="@{/css/admin/insert_manager_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>업무담당자 등록</h2>
+	<div class="insert_wrap">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">이름<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertManager()}"
+				class="input_manager_name" placeholder="이름(최대 6자)" maxlength="6"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">이메일<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertManager()}"
+				class="input_manager_email" placeholder="이메일"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">비밀번호<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertManager()}"
+				class="input_manager_pwd" placeholder="비밀번호"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">전화번호<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertManager()}"
+				class="input_manager_tel" placeholder="전화번호"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="btn_wrap">
+		<button class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertManager();">확인</button>
+	</div>
+	<script>	
+	
+	//코드구분 영어만 입력하게 하기
+	function handleOnInput(e)  {
+		  e.value = e.value.replace(/[^A-Za-z]/ig, '')
+		}
+	
+	//등록하기
+	function insertManager(){
+		var managerNm = document.querySelector(".input_manager_name").value;
+		var managerEmail = document.querySelector(".input_manager_email").value;
+		var managerPwd = document.querySelector(".input_manager_pwd").value;
+		var managerTel = document.querySelector(".input_manager_tel").value;
+		
+		// 이메일 형식 검사
+		var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		
+		//모두 입력했는지 확인
+		if (managerNm === "" || managerEmail === "" || managerPwd === "" || managerTel === "") {
+			alert("입력 필드를 모두 채워주세요.");
+		} else if (!emailPattern.test(managerEmail)) {
+		    alert("올바른 이메일 형식을 입력하세요.");
+		} else {
+			//이메일 유효성 검사
+			$.ajax({
+        					url: '/admin/manager/check_email',
+        					async:true,
+        					method: 'POST',
+        					data: {
+        						managerEmail : managerEmail
+        					},
+        					success : function(response){
+        						if(response == 'fail'){
+        							alert("이미 존재하는 이메일 주소입니다.");
+        						}else if(response == 'success'){
+        							//모두 완벽하다면
+                    				$.ajax({
+                    					url: '/admin/manager/insert',
+                    					async:true,
+                    					method: 'POST',
+                    					data: {
+                    						managerNm : managerNm,
+                    						managerEmail : managerEmail,
+                    						managerPwd : managerPwd,
+                    						managerTel : managerTel
+                    					},
+                    					success : function(response){
+                    						if(response == 'success'){
+                    							alert("업무담당자가 등록되었습니다.");
+                    							opener.location.href="/admin/manager/list/1";
+                    							self.close();//팝업창 닫기
+                    						}
+                    					}
+                    				});
+        						}
+        					}
+        				});
+		}
+	}
+	</script>
+</body>
+</html>

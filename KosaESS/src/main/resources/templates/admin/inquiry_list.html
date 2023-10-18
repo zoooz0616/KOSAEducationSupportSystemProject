@@ -22,7 +22,7 @@
 			<!-- Route -->
 			<div class="route">
 				<a th:href="@{/admin}">대시보드</a> > <a
-					th:href="@{/admin/inquiry/list}">문의사항 관리</a>
+					th:href="@{/admin/inquiry/list/1}">문의사항 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -315,7 +315,7 @@
 									//num
 									var tdNum = document.createElement("td");
 									tdNum.className = "inquiry_num";
-									tdNum.textContent = inquiryList.length - i;
+									tdNum.textContent = i+1;
 									tr.appendChild(tdNum);
 
 									//inquiryTitle

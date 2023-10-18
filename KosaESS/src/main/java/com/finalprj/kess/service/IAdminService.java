@@ -171,4 +171,6 @@ public interface IAdminService {
 	List<ClassVO> getClassListAll();
 	List<StudentVO> getStudentListAll();
 	List<CommonCodeVO> getGroupCodeListAll();
+
+	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
 }
