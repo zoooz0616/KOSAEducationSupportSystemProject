@@ -154,6 +154,8 @@ a:hover{
 	font-weight: bold;
 	padding: 5px;
 	margin: 0 0 0 10px;
+	cursor: pointer;
+	font-size: 20px;
 }
 
 .x_btn {
@@ -168,4 +170,8 @@ a:hover{
 
 .x_btn img {
 	width:20px;
+}
+
+.red {
+	color: red;
 }

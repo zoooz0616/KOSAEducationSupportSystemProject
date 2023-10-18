@@ -204,22 +204,27 @@
 			            alert("삭제할 문의를 선택해주세요.");
 			            
 			        }else{
-			        	console.log(selectedInquiryIds);
-						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-						$.ajax({
-							url : '/admin/inquiry/delete',
-							method : 'POST',
-							data : {
-								selectedInquiryIds : selectedInquiryIds
-							},
-							success : function(response) {
-								console.log(response);
-								if (response == "success") {
-									alert("선택한 문의가 삭제되었습니다.");
-									window.location.href = "/admin/inquiry/list";
+			        	
+			        	if(!confirm("삭제하시겠습니까?")){
+			        		//아니오
+			        	}else{
+			        		console.log(selectedInquiryIds);
+							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+							$.ajax({
+								url : '/admin/inquiry/delete',
+								method : 'POST',
+								data : {
+									selectedInquiryIds : selectedInquiryIds
+								},
+								success : function(response) {
+									console.log(response);
+									if (response == "success") {
+										alert("선택한 문의가 삭제되었습니다.");
+										window.location.href = "/admin/inquiry/list";
+									}
 								}
-							}
-						});
+							});
+			        	}
 			        }
 				});
 

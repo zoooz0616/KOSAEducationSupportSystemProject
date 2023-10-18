@@ -568,7 +568,6 @@ public class AdminController {
 		postVO.setRgsterId("MNGR000001");
 
 		adminService.insertReplyVO(postVO);
-
 		adminService.updateInquiryStatus(postId);
 
 		return "redirect:/admin/inquiry/view/" + postId;

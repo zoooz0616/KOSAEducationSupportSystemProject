@@ -695,6 +695,7 @@
 		select * 
 		from cmcd
 		where tpcd_id = #{tpcdId} and cmcd_id in ('PST0000003', 'PST0000004')
+		order by cmcd_order
 	]]>
 	</select>
 
