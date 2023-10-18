@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -179,5 +180,7 @@ public interface IStudentRepository {
 	List<SubsidyVO> getSbsdList(String stdtId);
 
 	List<SubsidyDTO> searchSbsdList(String stdtId);
+
+	RegistrationDTO getRgstVO(String stdtId, String clssId);
 
 }

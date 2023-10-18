@@ -66,9 +66,9 @@
 							th:if="${classDetail.clssAdr!= null}"
 							th:text="${classDetail.clssAdr}"></span></td>
 						<th>지원금</th>
-						<td><span th:if="${classDetail.clssSubsidy == null}"
-							style="color: lightslategray;">미정</span> <span
-							th:if="${classDetail.clssSubsidy != null}"
+						<td><span th:if="${classDetail.clssSubsidy == 0}"
+							style="color: lightslategray;">미지급</span> <span
+							th:if="${classDetail.clssSubsidy != 0}"
 							th:text="${#numbers.formatInteger(classDetail.clssSubsidy, 3, 'COMMA') + '원'}"></span>
 						</td>
 

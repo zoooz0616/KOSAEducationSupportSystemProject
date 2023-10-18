@@ -1,14 +1,19 @@
 package com.finalprj.kess.service;
 
+import java.io.IOException;
 import java.sql.Clob;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -24,6 +29,10 @@ import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IStudentRepository;
 import com.finalprj.kess.repository.IUploadFileRepository;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @Service
 public class StudentService implements IStudentService {
@@ -195,7 +204,7 @@ public class StudentService implements IStudentService {
 
 	@Override
 	public List<WorklogVO> searchWlogList(String stdtId, String selectedClssNm) {
-		return studentRepository.searchWlogList(stdtId,selectedClssNm);
+		return studentRepository.searchWlogList(stdtId, selectedClssNm);
 	}
 
 	@Override
@@ -384,21 +393,6 @@ public class StudentService implements IStudentService {
 	public void updateSubcript(String memberYN) {
 		studentRepository.updateSubcript(memberYN);
 	}
-	/*
-	 * public class CertificateService {
-	 * 
-	 * public byte[] generatePdfCertificate(CertificateModel model) throws
-	 * DocumentException, IOException { Document document = new Document();
-	 * ByteArrayOutputStream os = new ByteArrayOutputStream();
-	 * PdfWriter.getInstance(document, os);
-	 * 
-	 * document.open(); document.add(new Paragraph("인증서",
-	 * FontFactory.getFont(FontFactory.HELVETICA_BOLD, 24))); document.add(new
-	 * Paragraph("이름: " + model.getName())); document.add(new Paragraph("날짜: " +
-	 * model.getDate())); document.close();
-	 * 
-	 * return os.toByteArray(); } }
-	 */
 
 	@Override
 	public List<WorklogVO> getWlogList(String stdtId) {
@@ -408,6 +402,11 @@ public class StudentService implements IStudentService {
 	@Override
 	public List<SubsidyVO> getSbsdList(String stdtId) {
 		return studentRepository.getSbsdList(stdtId);
+	}
+
+	@Override
+	public RegistrationDTO getRgstVO(String stdtId, String clssId) {
+		return studentRepository.getRgstVO(stdtId, clssId);
 	}
 
 	@Override
