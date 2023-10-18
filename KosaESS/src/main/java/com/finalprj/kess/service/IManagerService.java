@@ -20,7 +20,7 @@ import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
 
 public interface IManagerService {
-	public List<ClassVO> getClassListByMngrId(String mngrId, String sortBy, String order);
+	public List<ClassVO> getClassListByMngrId(String mngrId, Integer year);
 
 	public int getApplyCountByClssId(String clssId);
 
@@ -44,7 +44,7 @@ public interface IManagerService {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
-	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword);
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword, int year);
 
 	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId);
 
@@ -69,4 +69,6 @@ public interface IManagerService {
 	public void deleteWlog(String wlogId);
 
 	public ClassVO getCodeVO(String resnCd);
+
+	public List<Integer> getYearList(String mngrId);
 }
