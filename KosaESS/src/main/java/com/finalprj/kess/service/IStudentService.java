@@ -73,7 +73,7 @@ public interface IStudentService {
 
 	void updateAplydt(String aplyId, String stdtId);
 
-	List<RegistrationVO> searchRgstList(String stdtId);
+	List<RegistrationDTO> searchRgstList(String stdtId);
 
 	int getRgstIngCnt(String stdtId);
 
@@ -174,4 +174,8 @@ public interface IStudentService {
 	List<SubsidyDTO> searchSbsdList(String stdtId);
 
 	RegistrationDTO getRgstVO(String stdtId, String clssId);
+
+	double getStudentTmSumByIds(String clssIdRgst, String stdtId);
+
+	Double getClassTm(String clssIdRgst);
 }

@@ -91,6 +91,14 @@ $(document).ready(function() {
 			row.append('<td><a href="/student/class/view/' + RegistrationVO.clssId + '">' + RegistrationVO.clssNm + '</a></td>');
 			row.append('<td><span>' + RegistrationVO.clssStartDd + ' ~ ' + RegistrationVO.clssEndDd + '</span></td>');
 			row.append('<td>' + RegistrationVO.rgstNm + '</td>');
+			row.append('<td>' + RegistrationVO.clssTotalTm + '</td>');
+			row.append('<td>' + RegistrationVO.stdtTmSum + '</td>');
+			console.log(RegistrationVO.cmptRate);
+			if (RegistrationVO.cmptRate >= 80.0) {
+				row.append('<td style="color:blue;">' + RegistrationVO.cmptRate + '(%)</td>');
+			} else {
+				row.append('<td style="color:red;">' + RegistrationVO.cmptRate + '(%)</td>');
+			}
 			if (RegistrationVO.cmptCd === 'CMP0000001') {
 				row.append('<td style="color:red;">' + RegistrationVO.cmptNm + '</td>');
 			} else if (RegistrationVO.cmptCd === 'CMP0000003') {

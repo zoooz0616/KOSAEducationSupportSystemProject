@@ -252,6 +252,9 @@ table td {
 	background-color: #0E5881;
 	color: white;
 }
+#quit{
+	background-color: #F1A77E;
+}
 
 td button {
 	padding: 7px;
@@ -325,26 +328,35 @@ td button {
 }
 
 .rgstTable td:nth-child(2) {
-	width: 40%;
+	width: 30%;
 	text-align: left;
 	font-weight: bold;
 	word-break: keep-all;
 }
 
 .rgstTable td:nth-child(3) {
-	width: 25%;
+	width: 18%;
 }
 
 .rgstTable td:nth-child(4) {
-	width: 10%;
+	width: 8%;
 }
 
 .rgstTable td:nth-child(5) {
-	width: 10%;
+	width: 8%;
 }
 
 .rgstTable td:nth-child(6) {
-	width: 10%;
+	width: 8%;
+}
+.rgstTable td:nth-child(7) {
+	width: 8%;
+}
+.rgstTable td:nth-child(8) {
+	width: 8%;
+}
+.rgstTable td:nth-child(9) {
+	width: 7%;
 }
 
 .wlogTable td:nth-child(1) {
