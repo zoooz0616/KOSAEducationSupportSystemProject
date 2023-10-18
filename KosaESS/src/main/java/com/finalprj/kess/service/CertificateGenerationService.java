@@ -16,12 +16,9 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfImage;
 import com.itextpdf.text.pdf.PdfWriter;
 
 @Service
@@ -37,7 +34,6 @@ public class CertificateGenerationService {
 
 	@SuppressWarnings("unused")
 	public byte[] generatePdfCertificate(RegistrationDTO rgst) throws DocumentException, IOException {
-		System.out.println("갔나?");
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY.MM.dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("YYYY년 MM월 dd일");
 
@@ -51,8 +47,6 @@ public class CertificateGenerationService {
 		int classTt = rgst.getClssTotalTm();
 		Timestamp printDd = rgst.getPrintDd();
 		String printDate = sdf2.format(printDd);
-
-		System.out.println(rgst);
 
 		Font TitleFont = null;
 		Font ContentFont = null;

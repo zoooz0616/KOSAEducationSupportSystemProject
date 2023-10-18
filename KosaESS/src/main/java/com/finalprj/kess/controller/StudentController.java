@@ -1346,14 +1346,11 @@ public class StudentController {
 	public ResponseEntity<?> generatePdfCertificate(HttpSession session, @RequestParam("clssId") String clssId)
 			throws IOException, DocumentException {
 		try {
-
 			String stdtId = (String) session.getAttribute("stdtId");
 
 			RegistrationDTO rgst = new RegistrationDTO();
 			rgst = studentService.getRgstVO(stdtId, clssId);
-			System.out.println("야호");
 			byte[] certificateBytes = certificateGenerationService.generatePdfCertificate(rgst);
-			System.out.println("했나?");
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
 			headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=certificate.pdf");
