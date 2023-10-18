@@ -15,4 +15,6 @@ public class CommonCodeVO {
 	private String updterId;//수정자id
 	private String useYn;//삭제여부
 	private int cmcdOrder;//우선순위
+	
+	private int rowNum;
 }
