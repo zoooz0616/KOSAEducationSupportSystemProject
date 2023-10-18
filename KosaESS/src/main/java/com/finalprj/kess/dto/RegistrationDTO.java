@@ -27,4 +27,6 @@ public class RegistrationDTO {
 	private Date clssStartDd;// 교육시작일자
 	private Date clssEndDd;// 교육종료일자
 	private int clssTotalTm;// 교육과정 이수시간
+	private Double cmptRate;
+	private Double stdtTmSum;
 }

@@ -163,7 +163,7 @@ public class StudentService implements IStudentService {
 	}
 
 	@Override
-	public List<RegistrationVO> searchRgstList(String stdtId) {
+	public List<RegistrationDTO> searchRgstList(String stdtId) {
 		return studentRepository.searchRgstList(stdtId);
 	}
 
@@ -412,6 +412,16 @@ public class StudentService implements IStudentService {
 	@Override
 	public List<SubsidyDTO> searchSbsdList(String stdtId) {
 		return studentRepository.searchSbsdList(stdtId);
+	}
+
+	@Override
+	public double getStudentTmSumByIds(String clssIdRgst, String stdtId) {
+		return studentRepository.getStudentTmSumByIds(clssIdRgst, stdtId);
+	}
+
+	@Override
+	public Double getClassTm(String clssIdRgst) {
+		return studentRepository.getClassTm(clssIdRgst);
 	}
 
 }

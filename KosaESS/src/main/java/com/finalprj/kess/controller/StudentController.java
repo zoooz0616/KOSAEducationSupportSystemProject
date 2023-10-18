@@ -1097,10 +1097,39 @@ public class StudentController {
 
 	@PostMapping("/mypage/rgstList")
 	@ResponseBody
-	public List<RegistrationVO> searchRgstList(HttpSession session, Model model) {
+	public List<RegistrationDTO> searchRgstList(HttpSession session, Model model) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
+		List<RegistrationDTO> rgstList = studentService.searchRgstList(stdtId);
+
+		for (int i = 0; i < rgstList.size(); i++) {
+			String clssIdRgst = rgstList.get(i).getClssId(); // 배열 요소에 대한 접근 수정
+			double stdtTmSum = studentService.getStudentTmSumByIds(clssIdRgst, stdtId);
+			stdtTmSum = Math.round(stdtTmSum * 10.0) / 10.0;
+
+			if (Double.isNaN(stdtTmSum)) {
+				stdtTmSum = 0;
+			}
+
+			Double classTm = studentService.getClassTm(clssIdRgst); // classId 변수에 대한 정의 누락
+
+			if (classTm != null) { // null 체크
+				if (classTm == 0) {
+					rgstList.get(i).setCmptRate(0.0);
+				} else if (stdtTmSum / classTm > 1) {
+					rgstList.get(i).setCmptRate(100.0);
+					rgstList.get(i).setStdtTmSum(stdtTmSum);
+				} else if (stdtTmSum / classTm < 0) {
+					rgstList.get(i).setCmptRate(0.0);
+					rgstList.get(i).setStdtTmSum(stdtTmSum);
+				} else {
+					rgstList.get(i).setCmptRate(Math.round((100.0 * stdtTmSum / classTm)* 10.0) / 10.0);
+					rgstList.get(i).setStdtTmSum(stdtTmSum);
+				}
+			}
+		}
+
 		model.addAttribute("rgstList", rgstList);
+
 		return rgstList;
 	}
 
