@@ -365,10 +365,11 @@
 				c1.cmcd_nm AS gender_Cd,
 				s.birth_Dd,
 				s.stdt_Tel,
-				r.cmpt_cd AS job_Cd
+				r.cmpt_cd AS cmpt_Cd,
+				r.cmpt_nm AS cmpt_Nm
 			FROM stdt s
 				JOIN cmcd c1 ON s.gender_cd = c1.cmcd_id
-				JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_nm AS cmpt_cd FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
+				JOIN (SELECT stdt_id, clss_id, cmcd.cmcd_id AS cmpt_cd, cmcd.cmcd_nm AS cmpt_nm FROM rgst JOIN cmcd ON cmcd.cmcd_id = rgst.cmpt_cd) r ON s.stdt_id = r.stdt_id
 			WHERE s.stdt_id in (SELECT stdt_id FROM rgst WHERE clss_id = #{clssId})
 				AND r.clss_id = #{clssId}
 			ORDER BY s.stdt_nm
@@ -433,6 +434,7 @@
 				,m.rgster_id
 				,m.updt_dt
 				,m.updter_id
+				,sbsd_etc
 			FROM sbsd m 
 				JOIN stdt s ON m.stdt_id=s.stdt_id 
 				JOIN clss c ON m.clss_id=c.clss_id
@@ -470,9 +472,25 @@
 		</if>
 		</if>
 	</select>
-	<insert id="insertSubsidy">
+	<insert id="insertSubsidy" parameterType="com.finalprj.kess.model.SubsidyVO">
 		<![CDATA[
-			INSERT INTO sbsd VALUES
+			INSERT INTO sbsd
+			VALUES (
+				#{sbsdId},
+				#{clssId},
+				#{stdtId},
+				#{sbsdCd},
+				#{paidDd},
+				#{payment},
+				#{subsidyDd},
+				#{maxWlogCnt},
+				#{wlogCnt},
+				#{sbsdEtc},
+				#{rgstDt},
+				#{rgsterId},
+				#{updtDt},
+				#{updterId}
+			)
 		]]>
 	</insert>
 	<select id="getCodeVO">
