@@ -25,6 +25,7 @@ import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IAdminRepository;
 import com.finalprj.kess.repository.IUploadFileRepository;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 @Service
 public class AdminService implements IAdminService {
@@ -693,5 +694,10 @@ public class AdminService implements IAdminService {
 	@Override
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();
+	}
+
+	@Override
+	public List<CommonCodeVO> getNoticeCommonCodeListByInsert() {
+		return adminRepository.getNoticeCommonCodeListByInsert();
 	}
 }

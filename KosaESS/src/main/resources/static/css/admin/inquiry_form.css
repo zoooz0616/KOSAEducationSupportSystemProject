@@ -117,15 +117,10 @@ a:hover{
 	font-size: 20px;
 	color: white;
 	margin: 10px;
-}
-
-.home-section .content_bottom .btn_wrap .cancel_btn {
-	background: #CFDEE6;
-}
-
-.home-section .content_bottom .btn_wrap .insert_btn {
 	background: #0E5881;
+	cursor: pointer;
 }
+
 
 .reply {
 	margin: 10px 0 10px 0;
@@ -159,6 +154,8 @@ a:hover{
 	font-weight: bold;
 	padding: 5px;
 	margin: 0 0 0 10px;
+	cursor: pointer;
+	font-size: 20px;
 }
 
 .x_btn {
@@ -173,4 +170,8 @@ a:hover{
 
 .x_btn img {
 	width:20px;
+}
+
+.red {
+	color: red;
 }
