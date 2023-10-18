@@ -32,19 +32,19 @@
 			<!-- left section -->
 			<div class="left_section">
 				<!-- 그룹코드 관리 -->
-				<div class="lecture_wrap" style="height: 100%;">
+				<div class="lecture_wrap">
 
 					<!-- Search Filter wrap -->
 					<div class="search_filter_wrap" style="padding: 5px;">
 						<div style="display: flex;">
 							<div class="search_filter">
 								<span>코드구분</span> <input type="text" class="group_code_tpcd_id"
-								onkeyup="if(window.event.keyCode==13){searchGroupCode();}"
+									onkeyup="if(window.event.keyCode==13){searchGroupCode();}"
 									placeholder="코드구분" maxlength="3">
 							</div>
 							<div class="search_filter">
 								<span>코드구분명</span> <input type="text" class="group_code_cmcd_nm"
-								onkeyup="if(window.event.keyCode==13){searchGroupCode();}"
+									onkeyup="if(window.event.keyCode==13){searchGroupCode();}"
 									placeholder="코드구분명">
 							</div>
 							<div class="search_filter">
@@ -74,7 +74,7 @@
 					<div class="content_info_wrap">
 						<div>
 							그룹코드 총 <span class="cnt group_cnt"
-								th:text="${#lists.size(groupCodeList)}"></span> 건
+								th:text="${groupCodeCnt}"></span> 건
 						</div>
 						<div class="content_info_btn_wrap">
 							<!-- 등록하기 버튼 -->
@@ -105,8 +105,7 @@
 					<!-- 총 개수 및 버튼-->
 
 					<!-- 리스트 -->
-					<div class="table_wrap"
-						style="height: 80%; border: 1px solid #CFDEE6;">
+					<div class="table_wrap">
 						<table>
 							<thead>
 								<tr class="content_list_th">
@@ -127,7 +126,7 @@
 										class="group_chk group_checkbox_item" name="group_select"
 										th:value="${groupCode.cmcdId}"> <input type="hidden"
 										class="group_update_yn" value="N"></td>
-									<td class="td_num" th:text="${iterStat.index+1}"></td>
+									<td class="td_num" th:text="${groupCode.rowNum}"></td>
 									<td class="td_cmcd_id"><div th:text="${groupCode.cmcdId}"></div></td>
 									<td class="td_tpcd_id">
 										<div th:onclick="detailCodeList([[${groupCode.cmcdId}]])"
@@ -152,6 +151,24 @@
 					<!-- 리스트 -->
 				</div>
 				<!-- 그룹코드 관리 -->
+
+				<!-- Paging -->
+				<nav class="page_nav" aria-label="Page navigation" style="margin-top: 20px;">
+					<ul class="pagination">
+						<li th:if="${nowPageBlock>1}"><a
+							th:href="@{/admin/commoncode/list/__${startPage-1}__}"
+							aria-label="Previous">이전</a></li>
+
+						<li th:each="i: ${#numbers.sequence(startPage, endPage)}"
+							th:classappend="${i==nowPage}?active"><a
+							th:href="@{/admin/commoncode/list/__${i}__}">[[${i}]]</a></li>
+
+						<li th:if="${nowPageBlock<totalPageBlock}"><a
+							th:href="@{/admin/commoncode/list/__${endPage+1}__}"
+							aria-label="Next">다음</a></li>
+					</ul>
+				</nav>
+				<!-- Paging -->
 			</div>
 			<!-- left section -->
 
@@ -230,7 +247,7 @@
 
 					<!-- 리스트 -->
 					<div class="table_wrap"
-						style="height: 80%; border: 1px solid #CFDEE6;">
+						style="height: 80%;">
 
 						<div>
 							<div class="error_div"

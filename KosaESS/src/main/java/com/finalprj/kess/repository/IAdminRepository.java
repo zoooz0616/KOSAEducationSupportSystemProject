@@ -91,7 +91,7 @@ public interface IAdminRepository {
 	List<CommonCodeVO> getNoticeCommonCodeList(String string);
 	List<CommonCodeVO> getInquriyCommonCodeList(String string);
 	void deleteAllNotice(List<String> selectedNoticeIds);
-	List<CommonCodeVO> getGroupCodeList();
+	List<CommonCodeVO> getGroupCodeList(@Param("start")int start, @Param("end")int end);
 	String getMaxNoticeId();
 	void insertNoticeVO(PostVO postVO);
 	PostVO getPostVO(String postId);
@@ -130,7 +130,7 @@ public interface IAdminRepository {
 	String getClssNmByAplyId(String aplyId);
 	void deleteInquiryReply(String replyId);
 	int getFileCnt(String fileId);
-	List<StudentVO> getStudentList();
+	List<StudentVO> getStudentList(@Param("start")int start, @Param("end")int end);
 	int getManagerEmailCnt(String managerEmail);
 	void updateCompany(CompanyVO companyVO);
 	List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd, String userCd);
@@ -156,5 +156,15 @@ public interface IAdminRepository {
 
 	List<CommonCodeVO> getSearchDetailCodeList(String tpcdId, String cmcdNm);
 	List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn);
+
+	int getGroupCodeCnt();
+
+	List<PostVO> getNoticeListAll();
+	List<PostVO> getInquiryListAll();
+	List<ManagerVO> getManagerListAll();
+	List<CompanyVO> getCompanyListAll();
+	List<ClassVO> getClassListAll();
+	List<StudentVO> getStudentListAll();
+	List<CommonCodeVO> getGroupCodeListAll();
 
 }

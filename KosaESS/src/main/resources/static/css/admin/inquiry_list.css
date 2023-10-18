@@ -34,7 +34,7 @@
 }
 
 .home-section .content_middle {
-	margin: 40px;
+	margin: 40px 40px 0 40px;
 	display: flex;
 	justify-content: space-between;
 	border-top: 2px solid #0E5881;
@@ -73,6 +73,7 @@
 	border-radius: 3px;
 	padding: 5px;
 	display: flex;
+	cursor: pointer;
 }
 
 .search_filter_btn_wrap button img {
@@ -88,7 +89,7 @@
 }
 
 .home-section .content_bottom {
-	margin: 40px;
+	margin: 10px 40px 40px 40px;
 }
 
 .home-section .content_bottom .content_info_wrap {
@@ -126,6 +127,7 @@
 	margin: 2px;
 	padding: 5px;
 	cursor: pointer;
+	align-items: center;
 }
 
 .content_list {

@@ -100,7 +100,7 @@ public interface IAdminService {
 	List<CommonCodeVO> getInquriyCommonCodeList(String string);
 	
 	void deleteAllNotice(List<String> selectedNoticeIds);
-	List<CommonCodeVO> getGroupCodeList();
+	List<CommonCodeVO> getGroupCodeList(int page);
 	String getMaxNoticeId();
 	void insertNoticeVO(List<FileVO> fileList, PostVO postVO);
 	PostVO getPostVO(String postId);
@@ -137,7 +137,7 @@ public interface IAdminService {
 	String getClssNmByAplyId(String aplyId);
 	void deleteInquiryReply(String replyId);
 	int getFileCnt(String fileId);
-	List<StudentVO> getStudentList();
+	List<StudentVO> getStudentList(int page);
 	int getManagerEmailCnt(String managerEmail);
 	void updateCompany(FileVO fileVO, CompanyVO companyVO);
 	List<StudentVO> getSearchStudentList(String stdtNm, String clssId, String genderCd, String jobCd, String userCd);
@@ -161,4 +161,14 @@ public interface IAdminService {
 
 	List<CommonCodeVO> getSearchDetailCodeList(String tpcdId, String cmcdNm);
 	List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn);
+
+	int getGroupCodeCnt();
+	
+	List<PostVO> getNoticeListAll();
+	List<PostVO> getInquiryListAll();
+	List<ManagerVO> getManagerListAll();
+	List<CompanyVO> getCompanyListAll();
+	List<ClassVO> getClassListAll();
+	List<StudentVO> getStudentListAll();
+	List<CommonCodeVO> getGroupCodeListAll();
 }
