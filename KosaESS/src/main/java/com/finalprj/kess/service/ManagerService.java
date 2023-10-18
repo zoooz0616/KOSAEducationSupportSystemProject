@@ -1,6 +1,5 @@
 package com.finalprj.kess.service;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,6 @@ import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
-import com.finalprj.kess.model.ReasonVO;
-import com.finalprj.kess.model.StudentVO;
-import com.finalprj.kess.model.SubsidyVO;
-import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.repository.IManagerRepository;
 
 @Service
@@ -26,8 +21,8 @@ public class ManagerService implements IManagerService {
 	IManagerRepository managerRepository;
 
 	@Override
-	public List<ClassVO> getClassListByMngrId(String mngrId, String sortBy, String order) {
-		return managerRepository.getClassListByMngrId(mngrId, sortBy, order);
+	public List<ClassVO> getClassListByMngrId(String mngrId, Integer year) {
+		return managerRepository.getClassListByMngrId(mngrId, year);
 	}
 
 	@Override
@@ -86,13 +81,9 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword) {
-		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString,  searchKeyword);
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword, int year) {
+		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString,  searchKeyword, year);
 	}
-//	@Override
-//	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, String[] filterString) {
-//		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString);
-//	}
 
 	@Override
 	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId) {
@@ -150,9 +141,13 @@ public class ManagerService implements IManagerService {
 		managerRepository.deleteWlog(wlogId);
 	}
 
-//	@Override
-//	public List<StudentInfoDTO> getStudentListBySearch(String classId, String startDate, String endDate) {
-//		return managerRepository.getStudentListBySearch(classId, startDate, endDate);
-//	}
+	@Override
+	public ClassVO getCodeVO(String resnCd) {
+		return managerRepository.getCodeVO(resnCd);
+	}
 
+	@Override
+	public List<Integer> getYearList(String mngrId) {
+		return managerRepository.getYearList(mngrId);
+	}
 }

@@ -6,13 +6,9 @@
 <!-- End : 얼럴트 -->
 
 경고창은 
-"F9DCCB","FF333E"
 alertFade("교육과정을 선택하세요.","F9DCCB","FF333E")
-alertFade("검색 기간을 입력하세요.","F9DCCB","FF333E")
-return;
 
 성공창은 
-"9FBCCD", "0E5881"
 alertFade(wlogList+"건이 검색되었습니다.","CFDEE6","0E5881");
 
  */

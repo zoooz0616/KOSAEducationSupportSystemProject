@@ -84,25 +84,22 @@
 								<div class="modalHeader">
 									<h2 class="modalTitle" style="margin: 0;">지원하기</h2>
 								</div>
-								<form th:action="@{/student/upload/__${classVO.clssId}__}"
-									method="post" id="uploadAplyForm" enctype="multipart/form-data">
-									<div class="modalContent">
-										<div class="upload-area">
-											<p>지원서파일을 여기에 첨부하세요.</p>
-											<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다(1개) ※</p>
-											<div style="width: 80%;">
-												<input class="upload-name" value="선택된 첨부파일이 없습니다"
-													placeholder="선택된 첨부파일이 없습니다" readonly> <label
-													for="fileInput">파일찾기</label> <input type="file" name="file"
-													id="fileInput" class="fileInput" accept=".pdf">
-											</div>
+								<div class="modalContent">
+									<div class="upload-area">
+										<p>지원서파일을 여기에 첨부하세요.</p>
+										<p style="color: red;">※ pdf형식의 파일만 첨부 가능합니다(1개) ※</p>
+										<div style="width: 80%;">
+											<input class="upload-name" value="선택된 첨부파일이 없습니다"
+												placeholder="선택된 첨부파일이 없습니다" readonly> <label
+												for="fileInput">파일찾기</label> <input type="file" name="file"
+												id="fileInput" class="fileInput" accept=".pdf">
 										</div>
 									</div>
-									<div class="modalFooter">
-										<button type="reset" class="closeModalBtn">취소</button>
-										<button type="submit" class="aplyBtn" onclick="aply()">제출</button>
-									</div>
-								</form>
+								</div>
+								<div class="modalFooter">
+									<button type="reset" class="closeModalBtn">취소</button>
+									<button type="submit" class="aplyBtn">제출</button>
+								</div>
 							</div>
 						</div>
 				</tbody>
@@ -170,31 +167,5 @@
 		</div>
 	</div>
 </body>
-<script>
-	var button = document.querySelector(".aplyBtn");
-
-	// 클릭 이벤트를 감지합니다.
-	button.addEventListener("click", function(event) {
-		// 버튼이 disabled 상태인 경우에만 알림을 띄웁니다.
-		var x = document.getElementById("fileInput");
-		var selectedFiles = x.files;
-		if (selectedFiles.length < 1) {
-			alert("지원서 파일을 첨부해주세요.");
-			event.preventDefault();
-		}else
-			alert("제출이 완료되었습니다.");
-	});
-	$("#fileInput").on('change', function() {
-		var files = $("#fileInput")[0].files;
-		var fileNames = [];
-
-		for (var i = 0; i < files.length; i++) {
-			fileNames.push(files[i].name);
-		}
-
-		var fileNameString = fileNames.join(', ');
-		$(".upload-name").val(fileNameString);
-	});
-</script>
 <script src="/js/student/class_list.js"></script>
 </html>

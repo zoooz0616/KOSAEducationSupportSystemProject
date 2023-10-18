@@ -76,9 +76,9 @@
 						<span class="chk_all_span">
 							<label th:text="전체" class="chk_all_label"></label> <input type="checkbox" checked="checked" id="chk_all_cmpt">
 						</span>
-						<span class="chk_all_span" th:each="monyCN:${monyCodeNameList}">
-							<label class="mony_name" th:text="${monyCN.cmcdNm}"></label>
-							<input class="mony_checkbox" type="checkbox" checked="checked" th:value="${monyCN.cmcdId}">
+						<span class="chk_all_span" th:each="sbsdCN:${sbsdCodeNameList}">
+							<label class="sbsd_name" th:text="${sbsdCN.cmcdNm}"></label>
+							<input class="sbsd_checkbox" type="checkbox" checked="checked" th:value="${sbsdCN.cmcdId}">
 						</span>
 					</div>
 				</div>
@@ -100,9 +100,9 @@
 					<span th:text="${resultCount}" id="result_count"></span>
 					<span>&nbsp;명</span>
 				</div>
-				<div class="mony_button">
-					<button th:each="monyCodeName:${monyCodeNameList}" onclick="cmptUpdate(this)" th:value="${monyCodeName.cmcdId}" th:text="${monyCodeName.cmcdNm}" class="mony_btn"></button>
-					<button onclick="location.href='/manager/subsidy_insert'" class="mony_btn">등록하기</button>
+				<div class="sbsd_button">
+					<button th:each="sbsdCodeName:${sbsdCodeNameList}" onclick="cmptUpdate(this)" th:value="${sbsdCodeName.cmcdId}" th:text="${sbsdCodeName.cmcdNm}" class="sbsd_btn"></button>
+					<button onclick="location.href='/manager/subsidy_insert'" class="sbsd_btn">등록하기</button>
 				</div>
 			</div>
 			<!-- End : 테이블 조작 -->
@@ -115,11 +115,12 @@
 						<th>번호</th>
 						<th>이름</th>
 						<th>이메일</th>
+						<th>교육과정</th>
 						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
 						<th>출석일수</th>
 						<th>교육일수</th>
-						<th>출석률<br>(%)</th>
-						<th>지원금<br>(&#8361;)</th>
+						<th>출석률(%)</th>
+						<th>지원금(&#8361;)</th>
 						<th>지급기준일</th>
 						<th>지급일</th>
 						<th>지급상태</th>
@@ -128,11 +129,12 @@
 				<tbody id="subsidy_list_table_tbody" class="subsidy_list_table_tbody">
 					<tr th:each="subsidy:${subsidyList}" class="subsidy_list_table_row">
 						<td class="fixed_length_cell">
-							<input type="checkbox" name="checkedStdt" th:value="${subsidy.monyId}">
+							<input type="checkbox" name="checkedStdt" th:value="${subsidy.sbsdId}">
 						</td>
 						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
+						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
 <!-- 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td> -->
 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
@@ -141,7 +143,7 @@
 						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
 						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
-						<td class="fixed_length_cell" th:text="${subsidy.monyNm}" th:value="${subsidy.monyCd}">지급상태</td>
+						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}" th:value="${subsidy.sbsdCd}">지급상태</td>
 					</tr>
 				</tbody>
 			</table>
