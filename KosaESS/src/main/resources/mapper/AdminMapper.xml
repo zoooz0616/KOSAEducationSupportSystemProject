@@ -305,7 +305,7 @@
 			#{fileId},
 			#{clssEtc}, 
 			#{rgsterId},
-			#{clssSubsidy})		
+			#{clssSubsidy})
 	]]>
 	</insert>
 

@@ -1,3 +1,85 @@
+//인 서 트
+function insertSubsidy() {
+	//대상이 없으면 중지
+	if ($('#result_count').text()== 0) {
+		alertFade("등록 할 기록이 없습니다.","F9DCCB","FF333E")
+		return;
+	}
+	
+	//수정된 상세코드 리스트를 담을 배열 선언
+	
+	//한 행씩 딕셔너리 만들어서 배열에 넣기
+	/*
+	var hiddenInputs = document.querySelectorAll('tr .td_group_check_box .group_update_yn[value=Y]');
+	hiddenInputs.forEach((hiddenInput) => {
+		//수정된 상세코드 객체를 담을 딕셔너리 선언
+		var groupCode = {};
+
+		//updateYn = 'Y'인 인풋의 부모 tr찾기
+		var parentTr = hiddenInput.closest('tr');
+
+		//id와 수정가능한 input의 값들 뽑기
+		var cmcdId = parentTr.querySelector('.td_group_check_box .group_checkbox_item').value;
+		var cmcdNm = parentTr.querySelector('.td_cmcd_nm .group_cmcd_nm').value;
+		var useYn = parentTr.querySelector('.td_use_yn .group_use_yn').value;
+
+		//딕셔너리의 키값에 값 넣기
+		groupCode['cmcdId'] = cmcdId;
+		groupCode['cmcdNm'] = cmcdNm;
+		groupCode['useYn'] = useYn;
+
+		//배열에 push하기
+		updateGroupList.push(groupCode);
+	});
+	*/
+	let subsidyVO = [];
+	let dict;
+	let targetTr;
+	for(let i = 0;i < $('#result_count').text();i++){
+		targetTr = $('tr[name='+i+']');
+		dict = {};
+		dict['clssId']=$('#select_class option:selected').val();
+		dict['stdtId']//안됨=targetTr.children('td[name=chkbox]').children('input').val();
+		dict['sbsdCd']=targetTr.children('td[name=cmptCd]').attr("value");
+		dict['payment']//안됨=targetTr.children('td[name=payment]').children('input').val();
+		dict['subsidyDd']=new Date($('#select_ym_y option:selected')+'-'+$('#select_ym_m option:selected')+'-01');//이거 
+		dict['maxWlogCnt']=$('#max_wlog_cnt option:selected').val();//이거
+		dict['wlogCnt']//안됨=targetTr.children('td[name=wlogCnt]').attr("text");
+		dict['sbsdEtc']//안됨=targetTr.children('td[name=sbsdEtc] input').val();
+		
+		subsidyVO.push(dict);
+	}
+	
+	//객체 배열을 json문자열로 직렬화 하기
+	var jsonData = JSON.stringify(subsidyVO);
+	console.log(jsonData);
+	/*
+	//비동기로 배열 전달하기
+	fetch('/admin/commoncode/update/groupcode', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: jsonData,
+	})
+	.then(response => response.json())
+	.then(data => {
+		console.log(data);
+		if (data.message === "success") {
+			alertFade(length+"건이 검색되었습니다.","CFDEE6","0E5881");
+			//그룹코드리스트 다시 불러오기
+			selectGroupCodeList();
+
+		} else {
+			alert("실패했습니다. 다시 시도해주세요.");
+		}
+	})
+	.catch(error => {
+		// 오류 처리
+	});
+		*/
+}
+
 //연, 월, TF로 월의 첫 또는 마지막 날 반환 
 function getFirstDay(year, month, isFirst) {
 	month = ("0" + month).slice(-2);
@@ -10,39 +92,80 @@ function getFirstDay(year, month, isFirst) {
 	return year + "-" + month + "-" + day;
 }
 
+/*
+//function selectClassFill(year) {
+function selectClassFill() {
+	let targetYear;
+	targetYear = $('#select_year').val();
+	if(year == null){
+		targetYear = $('#select_year').val();
+	}else{
+		targetYear = year;
+	}
+	//교육과정 select 내부의 option을 싹 비우고 지원금을 리셋
+	$('#select_class').empty();
+	//목록을 채우기
+	$('#select_class').append("<option value='' disabled selected>교육과정명을 선택하세요</option>");
+	$.ajax({
+		type: 'get',
+		url: '/manager/get_class_list', // 서버의 엔드포인트 URL
+		data: {
+			year: targetYear
+		},
+		success: function(response) {
+			let classList = response.classList;
+			let newOption;
+			for (let i = 0; i < classList.length; i++) {
+				newOption = $('<option/>');
+				newOption.html(classList[i].clssNm);
+				newOption.attr("value", classList[i].clssId);
+				newOption.attr("name", classList[i].clssSubsidy);
+				$('#select_class').append(newOption);
+			}
+			//총 몇 명인지 체크
+		}
+		, error: function(error) {
+			console.log(error);
+		}
+	})
+}
+*/
 $(document).ready(
 	//교육과정의 연도 select가 바뀌면
-	$('#select_year').change(function() {
-		//교육과정 select 내부의 option을 싹 비우고 지원금을 리셋
-		$('#select_class').empty();
-		$('#subsidy_value').text(0);
-		//목록을 채우기
-		$('#select_class').append("<option value='' disabled selected>교육과정명을 선택하세요</option>");
+	$('#select_year').change(
 		///*
-		$.ajax({
-			type: 'get',
-			url: '/manager/get_class_list', // 서버의 엔드포인트 URL
-			data: {
-				year: $('#select_year').val()
-			},
-			success: function(response) {
-				let classList = response.classList;
-				let newOption;
-				for (let i = 0; i < classList.length; i++) {
-					newOption = $('<option/>');
-					newOption.html(classList[i].clssNm);
-					newOption.attr("value", classList[i].clssId);
-					newOption.attr("name", classList[i].clssSubsidy);
-					$('#select_class').append(newOption);
+		function() {
+			//교육과정 select 내부의 option을 싹 비우고 지원금을 리셋
+			$('#select_class').empty();
+			$('#subsidy_value').text(0);
+			//목록을 채우기
+			$('#select_class').append("<option value='' disabled selected>교육과정명을 선택하세요</option>");
+			$.ajax({
+				type: 'get',
+				url: '/manager/get_class_list', // 서버의 엔드포인트 URL
+				data: {
+					year: $('#select_year').val()
+				},
+				success: function(response) {
+					let classList = response.classList;
+					let newOption;
+					for (let i = 0; i < classList.length; i++) {
+						newOption = $('<option/>');
+						newOption.html(classList[i].clssNm);
+						newOption.attr("value", classList[i].clssId);
+						newOption.attr("name", classList[i].clssSubsidy);
+						$('#select_class').append(newOption);
+					}
+					//총 몇 명인지 체크
 				}
-				//총 몇 명인지 체크
-			}
-			, error: function(error) {
-				console.log(error);
-			}
-		})
+				, error: function(error) {
+					console.log(error);
+				}
+			})
+		}
 		//*/
-	}),
+		//selectClassFill()
+	),
 
 	//교육과정 select가 바뀌면
 	$('#select_class,#select_ym_y,#select_ym_m, #max_wlog_cnt').change(function() {
@@ -51,12 +174,12 @@ $(document).ready(
 		console.log($('#select_class option:selected').val());
 		*/
 
-		//1) 지원금 변경하기
+		//1_ 지원금 변경하기
 		let targetSubsidy = $('#select_class option:selected').attr('name');
 		$('#subsidy_value').text(targetSubsidy);
-		//2) 테이블을 싹 비우고
+		//2_ 테이블을 싹 비우고
 		$('#stdt_list_table_tbody').empty();
-		//3) 학생을 채우기
+		//3_ 학생을 채우기
 		let selectedClass = $('#select_class option:selected').val();
 		let selectYear = $('#select_ym_y option:selected').val();
 		let selectMonth = $('#select_ym_m option:selected').val();
@@ -71,7 +194,8 @@ $(document).ready(
 			success: function(response) {
 				let stdtList = response.stdtList;
 				let sbsdCdList = response.sbsdCdList;
-				$('#result_count').val(stdtList.length);
+				$('#result_count').text(stdtList.length);
+				console.log($('#result_count').text());
 				///*
 				let newCell;
 				let newRow;
@@ -87,48 +211,62 @@ $(document).ready(
 					chkBox = $('<input type="checkbox">')
 					chkBox.attr("value", stdtList[i].stdtId)
 					newCell.append(chkBox);
-					newCell.attr("class","fixed_length_cell");
+					newCell.attr("class", "fixed_length_cell");
+					newCell.attr("name", 'chkbox');
 					newRow.append(newCell);
 					//번호
 					newCell = $('<td>');
 					newCell.html(i + 1);
-					newCell.attr("class","fixed_length_cell");
+					newCell.attr("class", "fixed_length_cell");
 					newRow.append(newCell);
 					//이름
 					newCell = $('<td>');
 					newCell.html(stdtList[i].stdtNm);
-					newCell.attr("class","fixed_length_cell");
+					newCell.attr("class", "fixed_length_cell");
+					newCell.attr("name", 'stdtNm');
 					newRow.append(newCell);
 					//이메일
 					newCell = $('<td>');
 					newCell.html(stdtList[i].userEmail);
+					newCell.attr("name", 'userEmail');
+					newRow.append(newCell);
+					//이수상태
+					newCell = $('<td>');
+					newCell.html(stdtList[i].cmptNm);
+					newCell.attr("value", stdtList[i].cmptCd);
+					newCell.attr("class", "fixed_length_cell");
+					newCell.attr("name", 'cmptCd');
 					newRow.append(newCell);
 					//출석
-					wlogCntList=stdtList[i].wlogCnt.split(",");
-					for(let j = 0;j<wlogCntList.length-1;j++){
+					wlogCntList = stdtList[i].wlogCnt.split(",");
+					for (let j = 0; j < wlogCntList.length - 1; j++) {
 						newCell = $('<td>');
-						newCell.html(wlogCntList[j].substr(10,wlogCntList[j].length));
-						newCell.attr("class","number_cell");
+						newCell.html(wlogCntList[j].substr(10, wlogCntList[j].length));
+						newCell.attr("class", "number_cell");
 						newRow.append(newCell);
-						if(wlogCntList[j].substr(0,10)=='WOK0000001'){
-							wlogCnt = wlogCntList[j].substr(10,wlogCntList[j].length);
+						if (wlogCntList[j].substr(0, 10) == 'WOK0000001') {
+							wlogCnt = wlogCntList[j].substr(10, wlogCntList[j].length);
 						}
 					}
 					//출석일수
 					//ajax
 					newCell = $('<td>');
 					newCell.html(wlogCnt);
-					newCell.attr("class","number_cell");
+					newCell.attr("class", "number_cell");
+					newCell.attr("name", 'wlogCnt');
 					newRow.append(newCell);
 					//출석률
 					newCell = $('<td>');
-					newCell.html(wlogCnt / $('#max_wlog_cnt option:selected').val());
-					newCell.attr("class","number_cell");
+					newCell.html(Number(wlogCnt * 100.0 / $('#max_wlog_cnt option:selected').val()).toFixed(1));
+					newCell.attr("class", "number_cell");
 					newRow.append(newCell);
 					//지급예정액
 					newCell = $('<td>');
-					newCell.html(targetSubsidy * wlogCnt / $('#max_wlog_cnt option:selected').val());
-					newCell.attr("class","number_cell");
+					newOption = $('<input type="number" min="0" max="99999999">');
+					newOption.val(Number(wlogCnt * targetSubsidy / $('#max_wlog_cnt option:selected').val()).toFixed(0));
+					newCell.attr("class", "fixed_length_cell");
+					newCell.attr("name", 'payment');
+					newCell.append(newOption);
 					newRow.append(newCell);
 					//지급상태
 					newCell = $('<td>');
@@ -138,16 +276,27 @@ $(document).ready(
 						newOption.html(sbsdCdList[j].cmcdNm);
 						newOption.attr("value", sbsdCdList[j].cmcdId);
 						//코드값이 지급예정 코드와 일치하면 SELECTED = true
-						if(sbsdCdList[j].cmcdId=='SSD0000001'){
+						if (sbsdCdList[j].cmcdId == 'SSD0000001') {
 							newOption.attr("selected", true);
 						}
 						sbsdCdSelect.append(newOption);
 					}
+					newCell.attr("name", 'sbsdCd');
 					newCell.append(sbsdCdSelect);
-					newCell.attr("class","fixed_length_cell");
+					newCell.attr("class", "fixed_length_cell");
+					newRow.append(newCell);
+					//기타사항
+					newCell = $('<td>');
+					newOption = $('<input type="text">');
+					newOption.attr('type', 'text');
+					newCell.attr("class", "fixed_length_cell");
+					newCell.attr("name", 'sbsdEtc');
+					newCell.append(newOption);
 					newRow.append(newCell);
 
+					//행 추가
 					$('#stdt_list_table_tbody').append(newRow);
+					$('#stdt_list_table_tbody').attr("name", i);
 				}
 				//*/
 			}
@@ -196,7 +345,10 @@ $(document).ready(
 				}
 				break;
 		}
-	})
+	}),
+
+	$('#select_year option:eq(1)').attr('selected', 'selected')
+	//,selectClassFill()
 )
 
 // 등록하기 버튼을 누르면

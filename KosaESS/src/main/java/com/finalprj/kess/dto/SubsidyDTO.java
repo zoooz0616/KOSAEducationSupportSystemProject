@@ -29,6 +29,7 @@ public class SubsidyDTO {
 	private String rgsterId;// 등록자id
 	private Timestamp updtDt;// 수정일시
 	private String updterId;// 수정자id
+	private String sbsdEtc;// 수정자id
 	
 	public void appendWlog(String wlog) {
 		this.wlog = this.wlog.concat(wlog);
