@@ -166,15 +166,41 @@ public class AdminController {
 	 * @parameter : session, model
 	 * @return : String
 	 */
-	@GetMapping("/notice/list")
-	public String noticeList(HttpSession session, Model model) {
+	@GetMapping("/notice/list/{page}")
+	public String noticeList(@PathVariable int page, HttpSession session, Model model) {
+		session.setAttribute("page", page);
+
 		// 공지사항 상태 리스트 전달
 		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
 		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
 
 		// 공지사항 리스트 전달
-		List<PostVO> noticeList = adminService.getNoticeList();
+		List<PostVO> noticeList = adminService.getNoticeList(page);
 		model.addAttribute("noticeList", noticeList);
+
+		int bbsCount = adminService.getNoticeCnt();
+		model.addAttribute("noticeCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+
 		session.setAttribute("searchNoticeList", noticeList);
 
 		return "admin/notice_list";
@@ -446,16 +472,39 @@ public class AdminController {
 	 * @parameter :session, model
 	 * @return : String
 	 */
-	@RequestMapping("/inquiry/list")
-	public String inquiry(HttpSession session, Model model) {
+	@RequestMapping("/inquiry/list/{page}")
+	public String inquiry(@PathVariable int page, HttpSession session, Model model) {
 		// 문의사항 상태 리스트 전달
 		List<CommonCodeVO> classCommonCodeList = adminService.getInquriyCommonCodeList("GRP0000001");
 		model.addAttribute("classCommonCodeList", classCommonCodeList);
 
 		// 문의사항 리스트 전달
-		List<PostVO> inquiryList = adminService.getInquiryList();
+		List<PostVO> inquiryList = adminService.getInquiryList(page);
 		model.addAttribute("inquiryList", inquiryList);
 		session.setAttribute("searchInquiryList", inquiryList);
+
+		int bbsCount = adminService.getInquiryCnt();
+		model.addAttribute("inquiryCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 
 		return "admin/inquiry_list";
 	}
@@ -575,20 +624,45 @@ public class AdminController {
 	 * @parameter : session, model
 	 * @return : String
 	 */
-	@RequestMapping("/class/list")
-	public String classList(HttpSession session, Model model) {
-		// 교육과정 리스트 객체 생성
-		List<ClassVO> classList = adminService.getClassList();
-		model.addAttribute("classList", classList);
-		// 엑셀다운로드를 위해 저장해놓기
-		session.setAttribute("searchClassList", classList);
+	@RequestMapping("/class/list/{page}")
+	public String classList(@PathVariable int page, HttpSession session, Model model) {
+		List<CompanyVO> companyList = adminService.getCompanyList(1);
+		model.addAttribute("companyList", companyList);
 
 		// 교육상태 리스트
 		List<CommonCodeVO> classCommonCodeList = adminService.getCommonCodeList("GRP0000002");
 		model.addAttribute("classCommonCodeList", classCommonCodeList);
 
-		List<CompanyVO> companyList = adminService.getCompanyList();
-		model.addAttribute("companyList", companyList);
+		// 교육과정 리스트 객체 생성
+		List<ClassVO> classList = adminService.getClassList(page);
+		model.addAttribute("classList", classList);
+		// 엑셀다운로드를 위해 저장해놓기
+		session.setAttribute("searchClassList", classList);
+
+		session.setAttribute("page", page);
+
+		int bbsCount = adminService.getClassCnt();
+		model.addAttribute("classCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 
 		return "admin/class_list";
 	}
@@ -670,11 +744,11 @@ public class AdminController {
 		model.addAttribute("classCommonCodeList", classCommonCodeList);
 
 		// 업체 리스트
-		List<CompanyVO> companyList = adminService.getCompanyList();
+		List<CompanyVO> companyList = adminService.getCompanyList(1);
 		model.addAttribute("companyList", companyList);
 
 		// 업무담당자 리스트
-		List<ManagerVO> managerList = adminService.getManagerList();
+		List<ManagerVO> managerList = adminService.getManagerList(1);
 		model.addAttribute("managerList", managerList);
 
 		// 강의 리스트
@@ -881,11 +955,11 @@ public class AdminController {
 		model.addAttribute("classCommonCodeList", classCommonCodeList);
 
 		// 업체 리스트
-		List<CompanyVO> companyList = adminService.getCompanyList();
+		List<CompanyVO> companyList = adminService.getCompanyList(1);
 		model.addAttribute("companyList", companyList);
 
 		// 업무담당자
-		List<ManagerVO> managerList = adminService.getManagerList();
+		List<ManagerVO> managerList = adminService.getManagerList(1);
 		model.addAttribute("managerList", managerList);
 
 		// 강의 리스트
@@ -1536,11 +1610,36 @@ public class AdminController {
 	 * @parameter : model
 	 * @return : String
 	 */
-	@RequestMapping("/company/list")
-	public String companyList(Model model) {
+	@RequestMapping("/company/list/{page}")
+	public String companyList(@PathVariable int page, HttpSession session, Model model) {
 		// 기업 리스트 전달
-		List<CompanyVO> companyList = adminService.getCompanyList();
+		List<CompanyVO> companyList = adminService.getCompanyList(page);
 		model.addAttribute("companyList", companyList);
+
+		session.setAttribute("page", page);
+
+		int bbsCount = adminService.getCompanyCnt();
+		model.addAttribute("companyCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 
 		return "admin/company_list";
 	}
@@ -1621,7 +1720,7 @@ public class AdminController {
 
 		adminService.insertCompanyVO(fileVO, companyVO);
 
-		List<CompanyVO> companyList = adminService.getCompanyList();
+		List<CompanyVO> companyList = adminService.getCompanyList(1);
 		// 파일 업로드 후 파일 아이디 값으로 객체 생성
 
 		return companyList;
@@ -1666,7 +1765,7 @@ public class AdminController {
 
 		adminService.updateCompany(fileVO, companyVO);
 
-		List<CompanyVO> companyList = adminService.getCompanyList();
+		List<CompanyVO> companyList = adminService.getCompanyList(1);
 
 		return companyList;
 	}
@@ -1695,16 +1794,39 @@ public class AdminController {
 	 * @parameter : profNm, profTel, profEmail
 	 * @return : String
 	 */
-	@RequestMapping("/manager/list")
-	public String manager(HttpSession session, Model model) {
-		// 업무담당자 리스트
-		List<ManagerVO> managerList = adminService.getManagerList();
-		model.addAttribute("managerList", managerList);
-		session.setAttribute("searchManagerList", managerList);
-
+	@RequestMapping("/manager/list/{page}")
+	public String manager(@PathVariable int page, HttpSession session, Model model) {
 		// 계정 기준정보 리스트
 		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
 		model.addAttribute("mngrCommonCodeList", mngrCommonCodeList);
+
+		// 업무담당자 리스트
+		List<ManagerVO> managerList = adminService.getManagerList(page);
+		model.addAttribute("managerList", managerList);
+		session.setAttribute("searchManagerList", managerList);
+
+		int bbsCount = adminService.getManagerCnt();
+		model.addAttribute("managerCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 
 		return "admin/manager_list";
 	}
@@ -1827,7 +1949,7 @@ public class AdminController {
 		// 검색부분
 
 		// 교육과정 리스트
-		List<ClassVO> classList = adminService.getClassList();
+		List<ClassVO> classList = adminService.getClassList(1);
 		model.addAttribute("classList", classList);
 
 		// 성별 commoncode
@@ -2167,7 +2289,7 @@ public class AdminController {
 		return groupCodeId;
 
 	}
-	
+
 	/**
 	 * 기준정보 그룹코드 검색
 	 * 
@@ -2178,18 +2300,17 @@ public class AdminController {
 	 */
 	@GetMapping("/commoncode/search/groupcode")
 	@ResponseBody
-	public Map<String, Object> searchGroupCode(@RequestParam(required = false) String tpcdId, @RequestParam(required = false) String cmcdNm,
-			@RequestParam(required = false) String useYn) {
+	public Map<String, Object> searchGroupCode(@RequestParam(required = false) String tpcdId,
+			@RequestParam(required = false) String cmcdNm, @RequestParam(required = false) String useYn) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		List<CommonCodeVO> searchGroupCodeList = adminService.getSearchGroupCodeList(tpcdId.trim(), cmcdNm.trim(), useYn);
+
+		List<CommonCodeVO> searchGroupCodeList = adminService.getSearchGroupCodeList(tpcdId.trim(), cmcdNm.trim(),
+				useYn);
 		map.put("groupCodeList", searchGroupCodeList);
-		
+
 		return map;
 	}
-	
-	
-	
+
 	/**
 	 * 기준정보 상세코드 검색
 	 * 
@@ -2202,15 +2323,12 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> searchDetailCode(@RequestParam String tpcdId, @RequestParam String cmcdNm) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		List<CommonCodeVO> searchDetailCodeList = adminService.getSearchDetailCodeList(tpcdId, cmcdNm.trim());
 		map.put("detailCodeList", searchDetailCodeList);
-		
+
 		return map;
 	}
-	
-	
-	
 
 	/**
 	 * 지원금 목록조회

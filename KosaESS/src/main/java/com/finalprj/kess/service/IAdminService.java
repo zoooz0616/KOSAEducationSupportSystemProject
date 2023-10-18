@@ -43,12 +43,12 @@ public interface IAdminService {
 	List<PostVO> getWaitInquiryList();
 	int getCompleteClassCnt();
 	List<ClassVO> getCompleteClassList();
-	List<ClassVO> getClassList();
+	List<ClassVO> getClassList(int page);
 	List<String> getClassCodeNameList();
 	
 	String getMaxClassId();
-	List<CompanyVO> getCompanyList();
-	List<ManagerVO> getManagerList();
+	List<CompanyVO> getCompanyList(int page);
+	List<ManagerVO> getManagerList(int page);
 	List<LectureVO> getLectureList();
 
 	SubjectVO getSubject(String lectureId);
@@ -94,8 +94,8 @@ public interface IAdminService {
 	void deleteSubject(List<String> selectedSubjectIds);
 	void deleteProfessor(List<String> selectedProfessorIds);
 
-	List<PostVO> getNoticeList();
-	List<PostVO> getInquiryList();
+	List<PostVO> getNoticeList(int page);
+	List<PostVO> getInquiryList(int page);
 	List<CommonCodeVO> getNoticeCommonCodeList(String string);
 	List<CommonCodeVO> getInquriyCommonCodeList(String string);
 	
