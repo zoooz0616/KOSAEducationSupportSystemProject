@@ -25,8 +25,7 @@ import com.finalprj.kess.model.WorklogVO;
 @Repository
 public interface IManagerRepository {
 
-//	public List<ClassVO> getClassListByMngrId(String mngrId);
-	public List<ClassVO> getClassListByMngrId(@Param("mngrId") String mngrId, @Param("sortBy")String sortBy, @Param("order")String order);
+	public List<ClassVO> getClassListByMngrId(@Param("mngrId") String mngrId, @Param("year")Integer year);
 
 	public int getApplyCountByClssId(String clssId);
 
@@ -50,8 +49,7 @@ public interface IManagerRepository {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
-	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString, @Param("searchKeyword") String searchKeyword);
-//	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") String[] filterString);
+	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString, @Param("searchKeyword") String searchKeyword, @Param("year") int year);
 
 	public void updateStdtCmptCd(@Param("mngrId") String mngrId, @Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
 
@@ -80,4 +78,6 @@ public interface IManagerRepository {
 	public void deleteWlog(String wlogId);
 
 	public ClassVO getCodeVO(String resnCd);
+
+	public List<Integer> getYearList(String mngrId);
 }

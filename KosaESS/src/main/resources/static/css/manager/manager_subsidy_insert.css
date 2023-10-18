@@ -206,3 +206,7 @@ button:hover{
 .input_workday{
 	width: 4em;
 }
+
+tbody tr{
+	background-color: #F3F6F8;
+}
