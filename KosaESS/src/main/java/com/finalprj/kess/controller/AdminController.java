@@ -246,6 +246,9 @@ public class AdminController {
 	public String noticeInsert(Model model) {
 		String act = "insert";
 		model.addAttribute("act", act);
+		
+		List<FileVO> fileList = new ArrayList<FileVO>();
+		model.addAttribute("fileList", fileList);
 
 		return "admin/notice_form";
 	}
@@ -302,7 +305,7 @@ public class AdminController {
 
 		adminService.insertNoticeVO(fileList, postVO);
 
-		return "redirect:/admin/notice/list";
+		return "redirect:/admin/notice/list/1";
 	}
 
 	/**
@@ -322,13 +325,16 @@ public class AdminController {
 		model.addAttribute("postVO", postVO);
 
 		// 공지사항 상태 리스트 전달
-		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
+		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeListByInsert();
 		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
 
+		List<FileVO> fileList = new ArrayList<FileVO>();
+		
 		if (postVO.getFileId() != null) {
-			List<FileVO> fileList = uploadFileService.getFileList(postVO.getFileId());
-			model.addAttribute("fileList", fileList);
+			fileList = uploadFileService.getFileList(postVO.getFileId());
 		}
+		
+		model.addAttribute("fileList", fileList);
 
 		return "admin/notice_form";
 	}
@@ -616,7 +622,7 @@ public class AdminController {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 문의사항 리스트 전달
-		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput, postStatusList);
+		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(), postStatusList);
 		session.setAttribute("searchInquiryList", inquiryList);
 
 		response.put("inquiryList", inquiryList);
@@ -1867,6 +1873,19 @@ public class AdminController {
 			return "fail";
 		}
 	}
+	
+	/**
+	 * 업무담당자 등록
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 18.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@RequestMapping("/manager/insert")
+	public String insertManager() {
+		return "admin/insert_manager_popup";
+	}
 
 	/**
 	 * 업무담당자 등록
@@ -1904,7 +1923,7 @@ public class AdminController {
 	@ResponseBody
 	public Map<String, Object> managerSearch(HttpSession session, @RequestParam String searchInputCategory,
 			@RequestParam String searchInput) {
-		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput);
+		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput.trim());
 		session.setAttribute("searchManagerList", managerList);
 
 		Map<String, Object> response = new HashMap<String, Object>();

@@ -63,7 +63,7 @@
 		select count(mngr_id) 
 		from mngr
 		join lgin on lgin.user_email = mngr.user_email
-		where role_cd = 'ROL0000003' and user_cd = 'USR0000001'
+		where role_cd = 'ROL0000003'
 	]]>
 	</select>
 
@@ -645,7 +645,7 @@
 	<![CDATA[		
 	select *
 		from (
-        select row_number() over(order by post_cd,post_id desc) as row_num,
+        select row_number() over(order by post_id desc) as row_num,
         	post_id,
 		    post_title,
 		    post_content,
@@ -673,6 +673,18 @@
 		select * 
 		from cmcd
 		where tpcd_id = #{tpcdId} and cmcd_id in ('PST0000001', 'PST0000002')
+		order by cmcd_order
+	]]>
+	</select>
+	
+	<select id="getNoticeCommonCodeListByInsert"
+		resultType="com.finalprj.kess.model.CommonCodeVO"
+		parameterType="string">
+	<![CDATA[
+		select * 
+		from cmcd
+		where delete_yn='N' and use_yn='Y' and tpcd_id = 'GRP0000001' and cmcd_id in ('PST0000001', 'PST0000002')
+		order by cmcd_order
 	]]>
 	</select>
 
@@ -936,7 +948,7 @@
 				AND mngr.user_email LIKE '%'||#{searchInput}||'%'
 			</when>
 		</choose>
-		order by mngr_id
+		order by mngr.mngr_nm
 	</select>
 
 	<update id="deleteLgin" parameterType="java.util.List">
@@ -1613,7 +1625,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
 		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
 		WHERE post_id LIKE 'INQY%' AND post.delete_yn = 'N'
-		order by post_cd, post_id desc
+		order by post_id desc
 		]]>
 	</select>
 

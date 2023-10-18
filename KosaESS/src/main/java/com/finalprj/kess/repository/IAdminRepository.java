@@ -167,4 +167,6 @@ public interface IAdminRepository {
 	List<StudentVO> getStudentListAll();
 	List<CommonCodeVO> getGroupCodeListAll();
 
+	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
+
 }

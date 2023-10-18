@@ -75,7 +75,6 @@ a:hover{
 	width: 100%;
 	border: 1px solid #CFDEE6;
 	border-top: 2px solid #0E5881;
-	border-bottom: 1px solid #0E5881;
 	border-collapse: collapse;
 }
 
@@ -118,14 +117,8 @@ a:hover{
 	font-size: 20px;
 	color: white;
 	margin: 10px;
-}
-
-.home-section .content_bottom .btn_wrap .cancel_btn {
-	background: #CFDEE6;
-}
-
-.home-section .content_bottom .btn_wrap .insert_btn {
 	background: #0E5881;
+	cursor : pointer;
 }
 
 .add_file {
@@ -159,4 +152,8 @@ a:hover{
 	width:20px;
 	height:20px;
 	margin-right: 5px;
+}
+
+input[type="file"]{
+	display: block;
 }
