@@ -112,10 +112,8 @@ public class CertificateGenerationService {
 		DatePr.setAlignment(Element.ALIGN_CENTER); 
 		DatePr.setSpacingAfter(10f);
 		document.add(DatePr);
-
 		// 이미지 추가
 		document.add(image);
-
 		document.close();
 
 		return os.toByteArray();
