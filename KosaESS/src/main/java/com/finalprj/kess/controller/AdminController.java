@@ -178,10 +178,9 @@ public class AdminController {
 		List<PostVO> noticeList = adminService.getNoticeList(page);
 		model.addAttribute("noticeList", noticeList);
 
-		//공지사항 모든 리스트 전달
+		// 공지사항 모든 리스트 전달
 		List<PostVO> noticeListAll = adminService.getNoticeListAll();
 		session.setAttribute("searchNoticeList", noticeListAll);
-		
 
 		int bbsCount = adminService.getNoticeCnt();
 		model.addAttribute("noticeCnt", bbsCount);
@@ -205,7 +204,6 @@ public class AdminController {
 		model.addAttribute("nowPageBlock", nowPageBlock);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
-
 
 		return "admin/notice_list";
 	}
@@ -246,7 +244,7 @@ public class AdminController {
 	public String noticeInsert(Model model) {
 		String act = "insert";
 		model.addAttribute("act", act);
-		
+
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		model.addAttribute("fileList", fileList);
 
@@ -329,11 +327,11 @@ public class AdminController {
 		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
 
 		List<FileVO> fileList = new ArrayList<FileVO>();
-		
+
 		if (postVO.getFileId() != null) {
 			fileList = uploadFileService.getFileList(postVO.getFileId());
 		}
-		
+
 		model.addAttribute("fileList", fileList);
 
 		return "admin/notice_form";
@@ -467,7 +465,8 @@ public class AdminController {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 공지사항 리스트 전달
-		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(), postStatusList);
+		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(),
+				postStatusList);
 		session.setAttribute("searchNoticeList", noticeList);
 
 		response.put("noticeList", noticeList);
@@ -491,8 +490,8 @@ public class AdminController {
 		// 문의사항 페이지 리스트 전달
 		List<PostVO> inquiryList = adminService.getInquiryList(page);
 		model.addAttribute("inquiryList", inquiryList);
-		
-		//문의사항 전체 리스트 전달
+
+		// 문의사항 전체 리스트 전달
 		List<PostVO> inquiryListAll = adminService.getInquiryListAll();
 		session.setAttribute("searchInquiryList", inquiryListAll);
 
@@ -621,7 +620,8 @@ public class AdminController {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 문의사항 리스트 전달
-		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(), postStatusList);
+		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(),
+				postStatusList);
 		session.setAttribute("searchInquiryList", inquiryList);
 
 		response.put("inquiryList", inquiryList);
@@ -648,8 +648,8 @@ public class AdminController {
 		// 교육과정 페이지 리스트
 		List<ClassVO> classList = adminService.getClassList(page);
 		model.addAttribute("classList", classList);
-		
-		//교육과정 전체 리스트
+
+		// 교육과정 전체 리스트
 		List<ClassVO> classListAll = adminService.getClassListAll();
 		// 엑셀다운로드를 위해 저장해놓기
 		session.setAttribute("searchClassList", classListAll);
@@ -1631,10 +1631,10 @@ public class AdminController {
 		List<CompanyVO> companyList = adminService.getCompanyList(page);
 		model.addAttribute("companyList", companyList);
 
-		//기업 전체 리스트 전달
+		// 기업 전체 리스트 전달
 		List<CompanyVO> companyListAll = adminService.getCompanyListAll();
 		session.setAttribute("searchCompanyList", companyListAll);
-		
+
 		session.setAttribute("page", page);
 
 		int bbsCount = adminService.getCompanyCnt();
@@ -1704,16 +1704,30 @@ public class AdminController {
 	 * 기업 생성
 	 * 
 	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@RequestMapping("/company/insert")
+	public String insertCompany() {
+		return "admin/insert_company_popup";
+	}
+	
+	
+	
+	/**
+	 * 기업 생성
+	 * 
+	 * @author : eunji
 	 * @date : 2023. 9. 19.
 	 * @parameter : file,redirectAttrs,cmpyNm,cmpyTel,cmpyAdr
 	 * @return : String
 	 * @throws IOException
 	 */
 	@PostMapping("/company/insert")
-	@ResponseBody
-	public List<CompanyVO> companyInsert(@RequestParam(name = "file", required = false) MultipartFile file,
-			RedirectAttributes redirectAttrs, @RequestParam("cmpyNm") String cmpyNm,
-			@RequestParam("cmpyTel") String cmpyTel, @RequestParam("cmpyAdr") String cmpyAdr) throws IOException {
+	public String companyInsert(@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs, 
+			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
+			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail", required = false)String cmpyAdrDetail) throws IOException {
 
 		String fileId = null;
 		FileVO fileVO = null;
@@ -1735,14 +1749,12 @@ public class AdminController {
 		companyVO.setCmpyNm(cmpyNm);
 		companyVO.setCmpyTel(cmpyTel);
 		companyVO.setCmpyAdr(cmpyAdr);
+		companyVO.setCmpyAdr(cmpyAdrDetail);
 		companyVO.setFileId(fileId);
 
 		adminService.insertCompanyVO(fileVO, companyVO);
 
-		List<CompanyVO> companyList = adminService.getCompanyListAll();
-		// 파일 업로드 후 파일 아이디 값으로 객체 생성
-
-		return companyList;
+		return "redirect:/admin/company/list/1";
 	}
 
 	/**
@@ -1815,15 +1827,19 @@ public class AdminController {
 	 */
 	@RequestMapping("/manager/list/{page}")
 	public String manager(@PathVariable int page, HttpSession session, Model model) {
-		// 계정 기준정보 리스트
+		// 업무담당자 계정 기준정보 리스트
 		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
 		model.addAttribute("mngrCommonCodeList", mngrCommonCodeList);
+
+		// 교육과정 리스트
+		List<ClassVO> classList = adminService.getClassListAll();
+		model.addAttribute("classList", classList);
 
 		// 업무담당자 페이지 리스트
 		List<ManagerVO> managerList = adminService.getManagerList(page);
 		model.addAttribute("managerList", managerList);
-		
-		//업무담당자 전체 리스트
+
+		// 업무담당자 전체 리스트
 		List<ManagerVO> managerListAll = adminService.getManagerListAll();
 		session.setAttribute("searchManagerList", managerListAll);
 
@@ -1872,7 +1888,7 @@ public class AdminController {
 			return "fail";
 		}
 	}
-	
+
 	/**
 	 * 업무담당자 등록
 	 * 
@@ -1921,12 +1937,19 @@ public class AdminController {
 	@PostMapping("/manager/search")
 	@ResponseBody
 	public Map<String, Object> managerSearch(HttpSession session, @RequestParam String searchInputCategory,
-			@RequestParam String searchInput) {
-		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput.trim());
+			@RequestParam String searchInput, @RequestParam String searchMngrStatus,
+			@RequestParam String searchClassId) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput.trim(),
+				searchMngrStatus, searchClassId);
+		response.put("managerList", managerList);
 		session.setAttribute("searchManagerList", managerList);
 
-		Map<String, Object> response = new HashMap<String, Object>();
-		response.put("managerList", managerList);
+		// 업무담당자 계정 기준정보 리스트
+		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
+		response.put("mngrCommonCodeList", mngrCommonCodeList);
+
 		return response;
 	}
 
@@ -1996,8 +2019,8 @@ public class AdminController {
 		// 교육생 페이지 리스트
 		List<StudentVO> studentList = adminService.getStudentList(page);
 		model.addAttribute("studentList", studentList);
-		
-		//교육생 전체 리스트
+
+		// 교육생 전체 리스트
 		List<StudentVO> studentListAll = adminService.getStudentListAll();
 		session.setAttribute("searchStudentList", studentListAll);
 
@@ -2142,18 +2165,18 @@ public class AdminController {
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList(page);
 		model.addAttribute("groupCodeList", groupCodeList);
 
-		//상세코드 생성 후 전달
+		// 상세코드 생성 후 전달
 		List<CommonCodeVO> detailCodeList = new ArrayList<CommonCodeVO>();
 		model.addAttribute("detailCodeList", detailCodeList);
-		
-		//그룹코드 전체 리스트 전달
+
+		// 그룹코드 전체 리스트 전달
 		List<CommonCodeVO> groupCodeListAll = adminService.getGroupCodeListAll();
 		session.setAttribute("searchGroupCodeList", groupCodeListAll);
-		
+
 		session.setAttribute("page", page);
-		
+
 		int bbsCount = adminService.getGroupCodeCnt();
-		model.addAttribute("noticeCnt", bbsCount);
+		model.addAttribute("groupCodeCnt", bbsCount);
 		int totalPage = 0;
 		if (bbsCount > 0) {
 			totalPage = (int) Math.ceil(bbsCount / 20.0);
@@ -2432,7 +2455,15 @@ public class AdminController {
 	 */
 	@GetMapping("/subsidy/list")
 	public String selectSubsidyList(HttpSession session, Model model) {
-
+		//검색조건 - 교육과정
+		List<ClassVO> classList = adminService.getClassListAll();
+		model.addAttribute("classList", classList);
+		
+		//검색조건 - 지원금지급상태
+		List<CommonCodeVO> subsidyStatusList = adminService.getCommonCodeList("GRP0000014");
+		model.addAttribute("subsidyStatusList", subsidyStatusList);
+		
+		
 		return "admin/subsidy_list";
 	}
 
