@@ -22,7 +22,7 @@
 			<!-- Route -->
 			<div class="route">
 				<a th:href="@{/admin}">대시보드</a> > <a
-					th:href="@{/admin/manager/list}">업무담당자 관리</a>
+					th:href="@{/admin/manager/list/1}">업무담당자 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -31,6 +31,19 @@
 		<div class="content_middle">
 			<!-- Search Filter wrap -->
 			<div class="search_filter_wrap">
+				<!-- 교육과정 -->
+				<div class="filter_box">
+					<div class="filter_box_title">교육과정명</div>
+					<div>
+						<select class="search_class_select">
+							<option value="all">전체</option>
+							<option th:each="class: ${classList}" th:value="${class.clssId}"
+								th:text="${class.clssNm}"></option>
+						</select>
+					</div>
+				</div>
+				<!-- 교육과정-->
+
 				<!-- 업무담당자 명 -->
 				<div class="filter_box">
 					<div class="filter_box_title">
@@ -40,9 +53,26 @@
 						</select>
 					</div>
 					<div>
-						<input class="search_input" type="text" id="search_input" value="">
+						<input class="search_input" type="text" id="search_input" value=""
+							onkeyup="if(window.event.keyCode==13){search();}">
 					</div>
 				</div>
+				<!-- 업무담당자 명 -->
+
+				<!-- 계정상태 -->
+				<div class="filter_box">
+					<div class="filter_box_title">계정상태</div>
+					<div>
+						<select class="search_mngr_status">
+							<option value="all">전체</option>
+							<option th:each="mngrCommonCode: ${mngrCommonCodeList}"
+								th:value="${mngrCommonCode.cmcdId}"
+								th:text="${mngrCommonCode.cmcdNm}"></option>
+						</select>
+					</div>
+				</div>
+				<!-- 계정상태-->
+
 			</div>
 			<!-- Search Filter wrap -->
 
@@ -83,9 +113,9 @@
 						<img style="width: 20px;" th:src="@{/img/plus_white.png}"><span>등록하기</span>
 					</button>
 
-					<!-- 선택삭제 버튼 -->
+					<!-- 탈퇴처리 버튼 -->
 					<button id="delete_btn">
-						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+						<img th:src="@{/img/minus_white.png}"><span>탈퇴처리</span>
 					</button>
 				</div>
 			</div>
@@ -99,11 +129,11 @@
 							<th style="width: 5%;"><input type="checkbox" id="chkAll"
 								name="select_all" onclick="selectAll(this)"></th>
 							<th style="width: 5%;">번호</th>
-							<th style="width: 10%;">업무담당자 이름</th>
+							<th style="width: 12%;">업무담당자 이름</th>
 							<th style="width: 20%;">전화번호</th>
 							<th style="width: 20%;">이메일</th>
 							<th style="width: 10%;">계정상태</th>
-							<th style="width: 20%;">마지막 로그인 일시</th>
+							<th style="width: 18%;">마지막 로그인 일시</th>
 							<th style="width: 10%;">버튼</th>
 						</tr>
 					</thead>
@@ -114,25 +144,32 @@
 								th:value="${manager.mngrId}"></td>
 							<td class="manager_num" th:text="${manager.rowNum}"></td>
 							<td class="manager_name">
-								<div class="update_div" th:text="${manager.mngrNm}"></div> <input
-								type="text" class="update_input mngr_nm_input"
-								style="display: none;" th:value="${manager.mngrNm}">
+								<div class="div_manager_name">
+									<div class="update_div" th:text="${manager.mngrNm}"></div>
+									<input type="text" class="update_input mngr_nm_input" maxlength = "30" placeholder="(한글 최대 10자/영문 최대 30자)"
+										style="display: none;" th:value="${manager.mngrNm}">
+								</div>
 							</td>
 							<td class="manager_tel">
-								<div class="update_div" th:text="${manager.mngrTel}"></div> <input
-								type="text" class="update_input mngr_tel_input"
-								style="display: none;" th:value="${manager.mngrTel}">
+								<div class="div_manager_tel">
+									<div class="update_div" th:text="${manager.mngrTel}"></div>
+									<input oninput="autoHyphen(this)" maxlength="13" type="text"
+										class="update_input mngr_tel_input" style="display: none;"
+										th:value="${manager.mngrTel}">
+								</div>
 							</td>
 							<td th:text="${manager.userEmail}"></td>
 							<td>
-								<div class="update_div mngr_status" th:text="${manager.cmcdNm}"></div>
-								<select class="update_input mngr_status_input"
-								style="display: none;" th:value="${manager.userCd}">
-									<option th:each="mngrCommonCode: ${mngrCommonCodeList}"
-										th:value="${mngrCommonCode.cmcdId}"
-										th:text="${mngrCommonCode.cmcdNm}"
-										th:selected="${mngrCommonCode.cmcdId == manager.userCd}"></option>
-							</select>
+								<div class="div_mngr_status">
+									<div class="update_div mngr_status" th:text="${manager.cmcdNm}"></div>
+									<select class="update_input mngr_status_input"
+										style="display: none;" th:value="${manager.userCd}">
+										<option th:each="mngrCommonCode: ${mngrCommonCodeList}"
+											th:value="${mngrCommonCode.cmcdId}"
+											th:text="${mngrCommonCode.cmcdNm}"
+											th:selected="${mngrCommonCode.cmcdId == manager.userCd}"></option>
+									</select>
+								</div>
 							</td>
 							<td class="last_login_dt"
 								th:text="${#dates.format(manager.lastLoginDt,'yyyy-MM-dd hh:mm:ss')}">
@@ -173,6 +210,10 @@
 		<!-- Paging -->
 	</div>
 	<script>
+	//현재 수정중인 업무담당자
+	var updatingManager = '';
+	
+	
 	//전체선택
 	function selectAll(selectAll){
 		//모든 체크박스들
@@ -202,73 +243,92 @@
 		document.querySelector("#delete_btn").addEventListener(
 				"click",
 				function() {
-					var selectedManagerIds = [];
+					
+						var selectedManagerIds = [];
 
-					// 선택된 체크박스를 모두 선택합니다.
-					var selectedCheckboxes = document
-							.querySelectorAll(".input_check:checked");
+						// 선택된 체크박스를 모두 선택합니다.
+						var selectedCheckboxes = document
+								.querySelectorAll(".input_check:checked");
 
-					// 선택된 체크박스의 값을 배열에 추가합니다.
-					selectedCheckboxes.forEach(function(checkbox) {
-						selectedManagerIds.push(checkbox.value);
-					});
-
-					if(selectedManagerIds.length == 0){
-						alert("삭제할 업무담당자를 선택해주세요.")
-					}else{
-
-						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-						$.ajax({
-							url : '/admin/manager/delete',
-							method : 'POST',
-							data : {
-								selectedManagerIds : selectedManagerIds
-							},
-							success : function(response) {
-								console.log(response);
-								if (response == "success") {
-									alert("선택한 업무담당자가 비활성화되었습니다.");
-									window.location.href = "/admin/manager/list";
-								}
-							}
+						// 선택된 체크박스의 값을 배열에 추가합니다.
+						selectedCheckboxes.forEach(function(checkbox) {
+							selectedManagerIds.push(checkbox.value);
 						});
+
+						if(selectedManagerIds.length == 0){
+							alert("탈퇴할 업무담당자를 선택해주세요.")
+						}else{
+							if(!confirm("탈퇴 처리 하시겠습니까?")){
+								//no
+							}else {
+							// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+							$.ajax({
+								url : '/admin/manager/delete',
+								method : 'POST',
+								data : {
+									selectedManagerIds : selectedManagerIds
+								},
+								success : function(response) {
+									console.log(response);
+									if (response == "success") {
+										alert("탈퇴 처리되었습니다.");
+										window.location.href = "/admin/manager/list/1";
+									}
+								}
+							});
+						}
 					}
 				});
 
 		//초기화 버튼
 		function resetInput() {
-			// 모든 요소를 선택
+			//요소를 선택
 			const inputElement1 = document
 					.querySelector(".search_input_category");
 			inputElement1.value = "mngr_nm";
 
-			// 모든 요소를 선택
+			// 요소를 선택
 			const inputElement2 = document.querySelector(".search_input");
 			inputElement2.value = "";
+			
+			//교육과정 id
+			var searchClassSelect = document.querySelector(".search_class_select");
+			searchClassSelect.value="all";
+			
+			//계정상태
+			var searchMngrStatusSelect = document.querySelector(".search_mngr_status");
+			searchMngrStatusSelect.value="all";
 		}
 
 		
 		
 		//조회
 		function search() {
-			//input값 비어있으면 모두 입력하라고 알리기
+			//교육과정 id
+			var searchClassSelect = document.querySelector(".search_class_select");
+			var searchClassId = searchClassSelect.value;
+			
+			//검색카테고리 값
+			var searchInputCategorySelect = document.querySelector(".search_input_category");
+			var searchInputCategory = searchInputCategorySelect.value;
+			
+			//input값
+			var searchInputText = document.querySelector("#search_input");
 			var searchInput = document.querySelector("#search_input").value;
-			if (searchInput.value === null) {
-				alert("모든 요소를 입력하세요.");
-			} else{
-				var searchInputCategory = document
-				.querySelector(".search_input_category").value;
-				
-				console.log(searchInput + searchInputCategory);
-
-			$
-					.ajax({
+			
+			//계정상태
+			var searchMngrStatusSelect = document.querySelector(".search_mngr_status");
+			var searchMngrStatus = searchMngrStatusSelect.value;
+			
+			$.ajax({
 						url : '/admin/manager/search',
 						async : true,
 						method : 'POST',
 						data : {
 							searchInputCategory : searchInputCategory,
 							searchInput : searchInput,
+							searchMngrStatus : searchMngrStatus,
+							searchClassId : searchClassId
 						},
 						success : function(response) {
 							var managerList = response.managerList;
@@ -277,6 +337,12 @@
 							//건수 초기화
 							var cnt = document.querySelector(".manager_list_cnt");
 							cnt.innerHTML = managerList.length;
+							
+							//검색창 초기화
+							searchClassSelect.value="all";
+							searchInputCategorySelect.value = "mngr_nm";
+							searchInputText.value="";
+							searchMngrStatus.value="all";
 							
 							
 							// tbody 요소 찾기
@@ -303,7 +369,10 @@
 										.createElement("input");
 								inputCheck.className = "input_check";
 								inputCheck.type = "checkbox";
-								inputCheck.name = "chk";
+								inputCheck.name = "select";
+								inputCheck.onclick = function(){
+									checkSelectAll();
+								}
 								inputCheck.value = manager.mngrId;
 								tdCheck.appendChild(inputCheck);
 								tr.appendChild(tdCheck);
@@ -312,11 +381,14 @@
 								var tdNum = document.createElement("td");
 								tdNum.className ="manager_num";
 								tdNum.innerText = i+1;
+								//tdNum.innerText = manager.rowNum;
 								tr.appendChild(tdNum);
 
 								//mngrNm
 								var tdMngrNm = document.createElement("td");
 								tdMngrNm.className="manager_name";
+								var divNm = document.createElement("div");
+								divNm.className = "div_manager_name";
 								var divMngrNm = document.createElement("div");
 								divMngrNm.className = "update_div";
 								divMngrNm.textContent = manager.mngrNm;
@@ -324,28 +396,38 @@
 										.createElement("input");
 								inputMngrNm.type = "text";
 								inputMngrNm.className = "update_input mngr_nm_input";
+								inputMngrNm.maxLength=30;
+								inputMngrNm.placeholder ="(한글 최대 10자/영문 최대 30자)";
 								inputMngrNm.style.display = "none";
 								inputMngrNm.value = manager.mngrNm;
 
-								tdMngrNm.appendChild(divMngrNm);
-								tdMngrNm.appendChild(inputMngrNm);
+								divNm.appendChild(divMngrNm);
+								divNm.appendChild(inputMngrNm);
+								tdMngrNm.appendChild(divNm);
 								tr.appendChild(tdMngrNm);
 
 								//mngrTel
 								var tdMngrTel = document.createElement("td");
 								tdMngrTel.className="manager_tel";
+								var divTel = document.createElement("div");
+								divTel.className = "div_manager_tel";
 								var divMngrTel = document.createElement("div");
 								divMngrTel.className = "update_div";
 								divMngrTel.textContent = manager.mngrTel;
 								var inputMngrTel = document
 										.createElement("input");
+								inputMngrTel.oninput = function(){
+									autoHyphen(this);
+								}
+								inputMngrTel.maxLength = 13;
 								inputMngrTel.type = "text";
 								inputMngrTel.className = "update_input mngr_tel_input";
 								inputMngrTel.style.display = "none";
 								inputMngrTel.value = manager.mngrTel;
 
-								tdMngrTel.appendChild(divMngrTel);
-								tdMngrTel.appendChild(inputMngrTel);
+								divTel.appendChild(divMngrTel);
+								divTel.appendChild(inputMngrTel);
+								tdMngrTel.appendChild(divTel);
 								tr.appendChild(tdMngrTel);
 
 								//mngrEmail
@@ -356,32 +438,39 @@
 								//status
 								var tdStatus = document.createElement("td");
 								var divStatus = document.createElement("div");
-								divStatus.className = "update_div mngr_status";
-								divStatus.textContent = manager.cmcdNm;
+								divStatus.className = "div_mngr_status";
+								var divMngrStatus = document.createElement("div");
+								divMngrStatus.className = "update_div mngr_status";
+								divMngrStatus.textContent = manager.cmcdNm;
 								if(manager.cmcdNm == '휴면'){
 									divStatus.classList.add('blue');
 								}else if(manager.cmcdNm == '탈퇴'){
 									divStatus.classList.add('red');
 								}
 								
-								
-								
 								var selectStatus = document
 										.createElement("select");
 								selectStatus.className = "update_input mngr_status_input";
 								selectStatus.style.display = "none";
-								var option1 = document.createElement("option");
-								option1.value = "USR0000001";
-								option1.text = "활성화";
-								var option2 = document.createElement("option");
-								option2.value = "USR0000002";
-								option2.text = "휴면";
-								selectStatus.appendChild(option1);
-								selectStatus.appendChild(option2);
+								
+								//업무담당자 상태값 리스트 추가
+								var mngrCommonCodeList = response.mngrCommonCodeList;
+								
+								for(var j=0; j< mngrCommonCodeList.length; j++){
+									var mngrCommonCode = mngrCommonCodeList[j];
+									
+									var option = document.createElement("option");
+									option.value = mngrCommonCode.cmcdId;
+									option.text = mngrCommonCode.cmcdNm;
+									
+									selectStatus.appendChild(option);
+								}
+								
 								selectStatus.value = manager.userCd;
 
+								divStatus.appendChild(divMngrStatus);
+								divStatus.appendChild(selectStatus);
 								tdStatus.appendChild(divStatus);
-								tdStatus.appendChild(selectStatus);
 								tr.appendChild(tdStatus);
 
 								//lastLoginDt
@@ -395,7 +484,6 @@
 								//updateBtn
 								var tdButton = document.createElement("td");
 								tdButton.className = "btn_td";
-
 								var divButtonWrap = document.createElement("div");
 								divButtonWrap.className="list_btn_wrap";
 								
@@ -443,8 +531,6 @@
 					});
 			}
 
-		}
-
 		//날짜 형식
 		function formatTimestamp(timestamp) {
 
@@ -465,25 +551,31 @@
 
 		//수정 버튼
 		function editRow(button) {
-			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
-			row.classList.add("editing"); // 수정 중인 행으로 표시
+			if(updatingManager !==''){
+				alert("다른 업무담당자 수정중입니다.");
+			}else{
+				updatingManager = button;
+				
+				var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
+				row.classList.add("editing"); // 수정 중인 행으로 표시
 
-			// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
-			var inputs = row.querySelectorAll(".update_input");
-			var dataElements = row.querySelectorAll(".update_div");
+				// 수정 모드에서 보이는 입력란과 데이터 표시 요소를 토글
+				var inputs = row.querySelectorAll(".update_input");
+				var dataElements = row.querySelectorAll(".update_div");
 
-			for (var i = 0; i < inputs.length; i++) {
-				inputs[i].style.display = "block";
+				for (var i = 0; i < inputs.length; i++) {
+					inputs[i].style.display = "block";
+				}
+
+				for (var i = 0; i < dataElements.length; i++) {
+					dataElements[i].style.display = "none";
+				}
+
+				// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
+				row.querySelector(".update_btn").style.display = "none";
+				row.querySelector(".save_btn").style.display = "block";
+				row.querySelector(".cancel_btn").style.display = "block";
 			}
-
-			for (var i = 0; i < dataElements.length; i++) {
-				dataElements[i].style.display = "none";
-			}
-
-			// 수정 버튼, 저장 버튼, 취소 버튼 표시 제어
-			row.querySelector(".update_btn").style.display = "none";
-			row.querySelector(".save_btn").style.display = "block";
-			row.querySelector(".cancel_btn").style.display = "block";
 		}
 
 		//저장 버튼
@@ -512,7 +604,7 @@
 					console.log(response);
 					if (response == "success") {
 						alert("수정되었습니다.");
-						window.location.href = "/admin/manager/list";
+						window.location.href = "/admin/manager/list/1";
 					}
 				}
 			});
@@ -523,6 +615,8 @@
 
 		//취소버튼
 		function cancelEdit(button) {
+			updatingManager = '';
+			
 			var row = button.closest("tr"); // 클릭한 버튼이 속한 <tr> 요소 선택
 			row.classList.remove("editing"); // 수정 모드 종료
 
@@ -563,6 +657,13 @@
 				"width=500, height=300, left=900, top=500"		
 		);
 	}
+	
+	//수정시 전화번호 입력
+	const autoHyphen = (target) => {
+ target.value = target.value
+   .replace(/[^0-9]/g, '')
+  .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+}
 	
 	</script>
 </body>
