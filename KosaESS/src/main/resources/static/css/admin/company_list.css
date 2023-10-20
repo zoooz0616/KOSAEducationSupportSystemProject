@@ -308,3 +308,22 @@ nav {
 	display: flex;
 	justify-content: space-around;
 }
+
+.company_detail_table tr th{
+	width:10%;
+}
+
+.red{
+	color: red;
+}
+
+#excel_btn {
+	border: 2px solid green;
+	background: white;
+	color: green;
+}
+
+#excel_btn>img {
+	margin-right: 5px;
+	width: 20px;
+}

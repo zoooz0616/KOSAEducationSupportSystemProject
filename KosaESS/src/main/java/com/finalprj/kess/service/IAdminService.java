@@ -173,4 +173,6 @@ public interface IAdminService {
 	List<CommonCodeVO> getGroupCodeListAll();
 
 	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
+
+	List<CompanyVO> getSearchCompanyList(String cmpyNm);
 }

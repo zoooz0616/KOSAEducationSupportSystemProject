@@ -700,4 +700,9 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getNoticeCommonCodeListByInsert() {
 		return adminRepository.getNoticeCommonCodeListByInsert();
 	}
+	
+	@Override
+	public List<CompanyVO> getSearchCompanyList(String cmpyNm) {
+		return adminRepository.getSearchCompanyList(cmpyNm);
+	}
 }

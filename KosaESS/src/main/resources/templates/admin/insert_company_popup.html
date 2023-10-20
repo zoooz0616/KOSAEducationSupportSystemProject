@@ -11,42 +11,43 @@
 </head>
 <body>
 	<h2>기업 등록</h2>
-	<form th:action="@{/admin/company/insert}" method="post">
-		<div class="insert_wrap">
-			<table>
-				<tr class="input_wrap">
-					<th><span class="title">기업명<span class="red">*</span></span></th>
-					<td><input type="text" class="cmpy_nm" name="cmpyNm"
-						maxlength="100" required></td>
-				</tr>
-				<tr class="input_wrap">
-					<th><span class="title">전화번호<span class="red">*</span></span></th>
-					<td><input type="text" class="cmpy_tel" name="cmpyTel"
-						maxlength="13" required></td>
-				</tr>
-				<tr class="input_wrap">
-					<th><span class="title">기업주소<span class="red">*</span></span></th>
-					<td><input type="text" id="streetAdr" name="cmpyAdr"
-						class="form-control" onclick="findAddr()"
-						placeholder="도로명 주소를 입력하세요." readonly required></td>
-				</tr>
-				<tr class="input_wrap">
-					<th><span class="title">상세주소</span></th>
-					<td><input type="text" name="cmpyAdrDetail"
-						placeholder="상세 주소를 입력하세요."></td>
-				</tr>
-				<tr class="input_wrap">
-					<th><span class="title">기업CI</span></th>
-					<td><input type="file" accept="image/*" name="file"></td>
-				</tr>
-			</table>
-		</div>
+	<div class="insert_wrap ">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">기업명<span class="red">*</span></span></th>
+				<td><input type="text" class="cmpy_nm" name="cmpyNm"
+					placeholder="기업명" maxlength="100" required></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">전화번호<span class="red">*</span></span></th>
+				<td><input type="text" class="cmpy_tel" name="cmpyTel"
+					placeholder="전화번호" maxlength="13" oninput="autoHyphen(this)"
+					required></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">기업주소<span class="red">*</span></span></th>
+				<td><input type="text" id="streetAdr" name="cmpyAdr"
+					class="form-control" onclick="findAddr()"
+					placeholder="도로명 주소를 입력하세요." readonly required></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">상세주소</span></th>
+				<td><input type="text" name="cmpyAdrDetail"
+					placeholder="상세 주소를 입력하세요."></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">기업CI</span></th>
+				<td><input type="file" accept="image/*" name="file"></td>
+			</tr>
+		</table>
+	</div>
 
-		<div class="btn_wrap">
-			<button type="button" class="btn" onclick="self.close();">취소</button>
-			<button class="btn">확인</button>
-		</div>
-	</form>
+	<div class="btn_wrap">
+		<button type="button" class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertCompany()">확인</button>
+	</div>
+	
+	
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09ec69ddf5b6f0163e112eee3e0d931f&libraries=services"></script>
 	<script
@@ -91,6 +92,45 @@
 	</script>
 	<script>
 		//전화번호 유효성 검사
+		//전화번호 입력
+	const autoHyphen = (target) => {
+ target.value = target.value
+   .replace(/[^0-9]/g, '')
+  .replace(/^(\d{0,3})(\d{0,4})(\d{4,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+}
+		
+	
+	//기업 등록하기
+	function insertCompany(){		
+		var cmpyNm = document.querySelector('input[name="cmpyNm"]').value;
+		var cmpyTel = document.querySelector('input[name="cmpyTel"]').value;
+		var cmpyAdr = document.querySelector('input[name="cmpyAdr"]').value;
+		var cmpyAdrDetail = document.querySelector('input[name="cmpyAdrDetail"]').value;
+		
+		var formData = new FormData();
+		var fileInput = document.querySelector('input[name="file"]');
+		var file = fileInput.files[0];
+		
+		formData.append("file", file);
+		formData.append("cmpyNm", cmpyNm);
+		formData.append("cmpyTel", cmpyTel);
+		formData.append("cmpyAdr", cmpyAdr);
+		formData.append("cmpyAdrDetail", cmpyAdrDetail);
+		
+		$.ajax({
+			url: '/admin/company/insert',
+			method: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(response){
+				alert("기업이 등록되었습니다.");
+				opener.location.href="/admin/company/list/1";
+				self.close();//팝업창 닫기
+			}
+		});
+		
+	}
 	</script>
 </body>
 </html>

@@ -169,4 +169,6 @@ public interface IAdminRepository {
 
 	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
 
+	List<CompanyVO> getSearchCompanyList(String cmpyNm);
+
 }
