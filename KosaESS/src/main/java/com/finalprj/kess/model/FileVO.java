@@ -1,6 +1,8 @@
 package com.finalprj.kess.model;
 
 
+import java.security.Timestamp;
+
 import lombok.Data;
 
 @Data
@@ -12,6 +14,9 @@ public class FileVO {
 	private long fileSize;//파일크기
 	private String fileType;//파일타입
 	private String deleteYn; //삭제여부
+	private Timestamp rgstDt;
+	private String rgsterId;
+	
 	
 	private String fType;//파일id
 	

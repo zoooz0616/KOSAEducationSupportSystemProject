@@ -11,8 +11,16 @@
 	
 	<insert id="uploadFile" parameterType="com.finalprj.kess.model.FileVO">
 	<![CDATA[
-		insert into flup
-		values(#{fileId}, #{fileSubId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, 'N')
+		insert into flup (
+			file_id, 
+			file_sub_id,
+			file_nm,
+			file_content,
+			file_size,
+			file_type,
+			rgster_id
+		)
+		values(#{fileId}, #{fileSubId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, #{rgsterId})
 	]]>
 	</insert>
 	

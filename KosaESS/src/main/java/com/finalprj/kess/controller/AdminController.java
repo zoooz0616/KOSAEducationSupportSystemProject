@@ -1626,7 +1626,7 @@ public class AdminController {
 	 * @return : String
 	 */
 	@RequestMapping("/company/list/{page}")
-	public String companyList(@PathVariable int page, HttpSession session, Model model) {
+	public String companyList(HttpSession session, @PathVariable int page, Model model) {
 		// 기업 페이지 리스트 전달
 		List<CompanyVO> companyList = adminService.getCompanyList(page);
 		model.addAttribute("companyList", companyList);
@@ -1699,6 +1699,27 @@ public class AdminController {
 		}
 		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
+	
+	/**
+	 * 기업 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 20.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@PostMapping("/company/search")
+	@ResponseBody
+	public Map<String, Object> searchCompany(HttpSession session, @RequestParam(name="cmpyNm", required = false)String cmpyNm) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<CompanyVO> companyList = adminService.getSearchCompanyList(cmpyNm.trim());
+		session.setAttribute("searchCompanyList", companyList);
+		
+		response.put("companyList", companyList);
+		
+		return response;
+	}
 
 	/**
 	 * 기업 생성
@@ -1713,8 +1734,6 @@ public class AdminController {
 		return "admin/insert_company_popup";
 	}
 	
-	
-	
 	/**
 	 * 기업 생성
 	 * 
@@ -1725,6 +1744,7 @@ public class AdminController {
 	 * @throws IOException
 	 */
 	@PostMapping("/company/insert")
+	@ResponseBody
 	public String companyInsert(@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs, 
 			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
 			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail", required = false)String cmpyAdrDetail) throws IOException {
@@ -1742,6 +1762,7 @@ public class AdminController {
 			fileVO.setFileSize(file.getSize());
 			fileVO.setFileType(file.getContentType());
 			fileVO.setFileContent(file.getBytes());
+			fileVO.setRgsterId("MNGR000001");
 		}
 
 		CompanyVO companyVO = new CompanyVO();
@@ -1749,12 +1770,12 @@ public class AdminController {
 		companyVO.setCmpyNm(cmpyNm);
 		companyVO.setCmpyTel(cmpyTel);
 		companyVO.setCmpyAdr(cmpyAdr);
-		companyVO.setCmpyAdr(cmpyAdrDetail);
+		companyVO.setCmpyAdrDetail(cmpyAdrDetail);
 		companyVO.setFileId(fileId);
 
 		adminService.insertCompanyVO(fileVO, companyVO);
 
-		return "redirect:/admin/company/list/1";
+		return "success";
 	}
 
 	/**
@@ -1771,12 +1792,13 @@ public class AdminController {
 	public List<CompanyVO> updateCompany(@PathVariable String cmpyId,
 			@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs,
 			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
-			@RequestParam("cmpyAdr") String cmpyAdr) throws IOException {
+			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail")String cmpyAdrDetail) throws IOException {
 
 		CompanyVO companyVO = adminService.getCompanyVO(cmpyId);
 		companyVO.setCmpyNm(cmpyNm);
 		companyVO.setCmpyTel(cmpyTel);
 		companyVO.setCmpyAdr(cmpyAdr);
+		companyVO.setCmpyAdrDetail(cmpyAdrDetail);
 
 		String fileId = companyVO.getFileId();
 		FileVO fileVO = null;

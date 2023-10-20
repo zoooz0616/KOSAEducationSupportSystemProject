@@ -161,11 +161,12 @@
 	<![CDATA[
 		select *
 		from (
-        select row_number() over(order by cmpy_id) as row_num,
+        select row_number() over(order by cmpy_nm) as row_num,
         cmpy_id,
         cmpy_nm,
         cmpy_tel,
         cmpy_adr,
+        cmpy_adr_detail,
         file_id,
         rgst_dt,
         rgster_id,
@@ -1049,6 +1050,7 @@
 			cmpy_nm,
 			cmpy_tel,
 			cmpy_adr,
+			cmpy_adr_detail,
 			file_id,
 			rgster_id
 		)
@@ -1057,6 +1059,7 @@
 			#{cmpyNm}, 
 			#{cmpyTel}, 
 			#{cmpyAdr}, 
+			#{cmpyAdrDetail},
 			#{fileId},
 			'MNGR000001')
 	]]>
@@ -1271,6 +1274,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	 	cmpy_nm = #{cmpyNm},
 	 	cmpy_tel = #{cmpyTel},
 	 	cmpy_adr = #{cmpyAdr},
+	 	cmpy_adr_detail = #{cmpyAdrDetail},
 	 	file_id = #{fileId},
 	 	updt_dt = systimestamp,
 	 	updter_id = 'MNGR000001'
@@ -1674,6 +1678,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
         cmpy_nm,
         cmpy_tel,
         cmpy_adr,
+        cmpy_adr_detail,
         file_id,
         rgst_dt,
         rgster_id,
@@ -1682,7 +1687,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
         delete_yn
 		from cmpy
 		where delete_yn = 'N' and cmpy_id != 'CMPY000000'
-		order by cmpy_id desc
+		order by cmpy_nm
 	]]>
 	</select>
 
@@ -1764,7 +1769,18 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	]]>
 	</select>
 
-
+	<select id="getSearchCompanyList" parameterType="string" resultType="com.finalprj.kess.model.CompanyVO">
+	<![CDATA[
+		select *
+		from cmpy
+		where delete_yn='N'
+			and (cmpy_nm like '%'||upper(#{cmpyNm})||'%'
+			or cmpy_nm like '%'||lower(#{cmpyNm})||'%'
+			)
+		order by cmpy_nm
+		
+	]]>
+	</select>
 
 
 
