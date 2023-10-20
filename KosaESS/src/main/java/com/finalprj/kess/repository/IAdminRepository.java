@@ -105,7 +105,7 @@ public interface IAdminRepository {
 	String getMaxManagerId();
 	void insertLgin(ManagerVO managerVO);
 	void insertManager(ManagerVO managerVO);
-	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput);
+	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus, String searchClassId);
 	void deleteManagerList(List<String> selectedManagerIds);
 	void deleteLgin(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);

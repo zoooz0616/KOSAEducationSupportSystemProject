@@ -11,7 +11,7 @@
 	<!-- 서브바-->
 	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
 	<!-- 서브바 -->
-	
+
 	<!-- Content Wrap -->
 	<div class="home-section">
 
@@ -26,18 +26,139 @@
 			</div>
 		</div>
 		<!-- Content Top -->
-		
+
 		<!-- Content Middle-->
 		<div class="content_middle">
+			<div class="search_filter_wrap">
+				<!-- 검색 필터 -->
+				<div class="search_filter_table">
+					<div class="search_filter_name">교육과정</div>
+					<div class="search_filter_input">
+						<select id="classId">
+							<option value="" disabled selected>전체</option>
+							<option th:each="class:${classList}" th:text="${class.clssNm}"
+								th:value="${class.clssId}" />
+						</select>
+					</div>
+					<div class="search_filter_name">검색 기간</div>
+					<div class="search_filter_input">
+						<select id="start_date_y">
+							<option value="" disabled selected>연</option>
+							<option
+								th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}"
+								th:text="${yNum}" th:value="${yNum}" />
+						</select> <select id="start_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}"
+								th:text="${monthNum}" th:value="${monthNum}" />
+						</select> <span>&nbsp;~&nbsp;</span> <select id="end_date_y">
+							<option value="" disabled selected>연</option>
+							<option
+								th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}"
+								th:text="${yNum}" th:value="${yNum}" />
+						</select> <select id="end_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}"
+								th:text="${monthNum}" th:value="${monthNum}" />
+						</select>
+					</div>
+					<div class="search_filter_name">검색어</div>
+					<div class="search_filter_input">
+						<input type="text" class="input_keyword" placeholder="이메일 또는 이름">
+					</div>
+					<div class="search_filter_name">지급 상태</div>
+					<div class="search_filter_input">
+						<select id="classId">
+							<option value="" disabled selected>전체</option>
+							<option th:each="sbsdCodeName:${subsidyStatusList}" th:text="${sbsdCodeName.cmcdNm}"
+								th:value="${sbsdCodeName.cmcdId}" />
+						</select>
+					</div>
+				</div>
+				<!-- Search Button wrap -->
+				<div class="search_filter_btn_wrap">
+					<button type="button" class="search_reset_btn"
+						onclick="resetInput()">
+						<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+					</button>
+					<button type="button" id="search_btn" class="search_filter_btn"
+						onclick="search()">
+						<img th:src="@{/img/search_white.png}"> <span>조회</span>
+					</button>
+				</div>
+				<!-- Search Button wrap -->
+			</div>
+			<!-- 검색 필터-->
 		</div>
 		<!-- Content Middle-->
-		
-		
+
 		<!-- Content Bottom-->
 		<div class="content_bottom">
+			<!-- 테이블 조작 -->
+			<div class="table_controller" id="tableController">
+				<div class="result_count">
+					<span>총 </span> <span th:text="${resultCount}"
+						id="result_count">0</span> <span>명</span>
+				</div>
+				<div class="sbsd_button">
+					<button th:each="sbsdCodeName:${subsidyStatusList}"
+						onclick="cmptUpdate(this)" th:value="${sbsdCodeName.cmcdId}"
+						th:text="${sbsdCodeName.cmcdNm}" class="sbsd_btn"></button>
+				</div>
+			</div>
+			<!-- 테이블 조작 -->
+
+			<!--지원금 리스트-->
+			<table id="stdt_list_table">
+				<thead id="stdt_list_table_thead">
+					<tr class="stdt_list_table_head">
+						<th><input type="checkbox" id="chkAllStdt"></th>
+						<th>번호</th>
+						<th>이름</th>
+						<th>이메일</th>
+						<th>교육과정</th>
+						<th th:each="wlogCodeName:${wlogCodeNameList}"
+							th:text="${wlogCodeName.cmcdNm}"></th>
+						<th>출석일수</th>
+						<th>교육일수</th>
+						<th>출석률(%)</th>
+						<th>지원금(&#8361;)</th>
+						<th>지급기준일</th>
+						<th>지급일</th>
+						<th>지급상태</th>
+					</tr>
+				</thead>
+				<tbody id="subsidy_list_table_tbody"
+					class="subsidy_list_table_tbody">
+					<tr th:each="subsidy:${subsidyList}" class="subsidy_list_table_row">
+						<td class="fixed_length_cell"><input type="checkbox"
+							name="checkedStdt" th:value="${subsidy.sbsdId}"></td>
+						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
+						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
+						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
+						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
+						<!-- 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td> -->
+						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}"
+							th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
+						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
+						<td class="number_cell"
+							th:text="${#numbers.formatDecimal(__${subsidy.wlogCnt}__ * 100.0 / __${subsidy.maxWlogCnt}__, 1, 1)}">출석률</td>
+						<td class="number_cell"
+							th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
+						<td class="fixed_length_cell"
+							th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
+						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
+						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}"
+							th:value="${subsidy.sbsdCd}">지급상태</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 지원금 리스트-->
+
 		</div>
 		<!-- Content Bottom-->
-		
+
 	</div>
 	<!-- Content Wrap -->
 </body>

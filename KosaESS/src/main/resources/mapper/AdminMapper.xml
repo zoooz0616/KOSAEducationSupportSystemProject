@@ -259,7 +259,7 @@
 		select * 
 		from cmcd
 		where tpcd_id = #{tpcdId}
-		order by cmcd_id
+		order by cmcd_order
 	]]>
 	</select>
 
@@ -939,8 +939,12 @@
 		from mngr
 		join lgin on lgin.user_email = mngr.user_email
 		join cmcd on cmcd.cmcd_id = lgin.user_cd
-		where lgin.role_cd = 'ROL0000003'
 		]]>
+		<if test="searchClassId != 'all'">
+		join clss on clss.mngr_id = mngr.mngr_id
+		</if>
+		where lgin.role_cd = 'ROL0000003'
+		
 		<choose>
 			<when test="searchInputCategory == 'mngr_nm'">
 				AND mngr_nm LIKE '%'||#{searchInput}||'%'
@@ -949,6 +953,12 @@
 				AND mngr.user_email LIKE '%'||#{searchInput}||'%'
 			</when>
 		</choose>
+		<if test="searchMngrStatus != 'all'">
+			AND lgin.user_cd = #{searchMngrStatus}
+		</if>
+		<if test="searchClassId != 'all'">
+			AND clss.clss_id = #{searchClassId}
+		</if>
 		order by mngr.mngr_nm
 	</select>
 
@@ -1637,7 +1647,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		mngr.mngr_id,
 		mngr.user_email,
 		mngr.mngr_nm,
-		mngr.mngr_tel,
+		REGEXP_REPLACE(mngr.mngr_tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as "mngr_tel",
 		mngr.rgst_dt,
 		mngr.rgster_id,
 		mngr.updt_dt, 

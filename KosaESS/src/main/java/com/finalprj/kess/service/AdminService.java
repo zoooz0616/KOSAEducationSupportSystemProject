@@ -430,8 +430,8 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput) {
-		return adminRepository.getSearchManagerList(searchInputCategory, searchInput);
+	public List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus, String searchClassId) {
+		return adminRepository.getSearchManagerList(searchInputCategory, searchInput, searchMngrStatus, searchClassId);
 	}
 
 	@Override

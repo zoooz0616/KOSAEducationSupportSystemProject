@@ -114,7 +114,7 @@ public interface IAdminService {
 	void updateInquiryStatus(String postId);
 	String getMaxManagerId();
 	void insertManagerVO(ManagerVO managerVO);
-	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput);
+	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus, String searchClassId);
 	void deleteManagerList(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);
 	void updateManager(ManagerVO managerVO);

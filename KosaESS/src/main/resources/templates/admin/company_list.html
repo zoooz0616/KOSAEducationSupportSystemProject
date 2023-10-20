@@ -33,41 +33,53 @@
 			<div class="left_section">
 				<!-- 기업 관리 -->
 				<div style="height: 100%;">
+					<!-- content_search-->
+					<div class="content_search">
+						<!-- Search Filter wrap -->
+						<div class="search_filter_wrap">
+							<!-- 기업명 -->
+							<div class="filter_box">
+								<div class="filter_box_title">기업명</div>
+								<div>
+									<input class="search_input" type="text" id="search_input">
+								</div>
+							</div>
+							<!-- 기업명-->
+						</div>
+						<!-- Search Filter wrap -->
+
+						<!-- Search Button wrap -->
+						<div class="search_filter_btn_wrap">
+							<button type="button" class="search_reset_btn"
+								onclick="resetInput()">
+								<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+							</button>
+							<button type="button" id="search_btn" class="search_filter_btn"
+								onclick="search()">
+								<img th:src="@{/img/search_white.png}"> <span>조회</span>
+							</button>
+						</div>
+						<!-- Search Button wrap -->
+					</div>
+					<!-- content_search-->
 
 					<!-- 총 개수 및 버튼-->
 					<div class="content_info_wrap">
-						<div>
-							총 <span class="cnt" th:text="${companyCnt}"></span>
-							건
+						<div style="padding: 5px;">
+							총 <span class="cnt" th:text="${companyCnt}"></span> 건
 						</div>
-						<button id="delete_btn">
-							<img style="width: 20px;" th:src="@{/img/minus_white.png}">
-							<span>선택삭제</span>
-						</button>
-					</div>
-					<!-- 총 개수 및 버튼-->
-
-					<!-- 기업 등록하기 -->
-					<div class="company_insert" style="padding: 5px;">
-						<div>
-							<span>기업명<span class="red">*</span></span> <input type="text"
-								name="cmpyNm" placeholder="기업명"> <span>전화번호<span
-								class="red">*</span></span> <input type="text" name="cmpyTel"
-								placeholder="전화번호"> <span>주소<span class="red">*</span></span>
-							<input type="text" id="streetAdr" name="cmpyAdr"
-								class="form-control" onclick="findAddr()"
-								placeholder="도로명 주소를 입력하세요" readonly>
-						</div>
-						<div style="display: flex; align-items: center;">
-							<span>기업CI</span> <input id="lecture_tm_input" type="file"
-								accept="image/*" name="file">
+						<div class="content_info_btn_wrap">
 							<button class="insert_btn" type="button"
-								onclick="insertCompany()">
+								onclick="showInsertCompanyPopup()">
 								<img th:src="@{/img/plus_white.png}"><span>등록하기</span>
+							</button>
+							<button id="delete_btn">
+								<img style="width: 20px;" th:src="@{/img/minus_white.png}">
+								<span>선택삭제</span>
 							</button>
 						</div>
 					</div>
-					<!-- 기업 등록하기 -->
+					<!-- 총 개수 및 버튼-->
 
 					<!-- 리스트 -->
 					<div class="table_wrap" style="height: 90%;">
@@ -88,8 +100,7 @@
 									<td class="td_checkbox"><input type="checkbox"
 										class="check_box" name="select" onclick="checkSelectAll()"
 										th:value="${company.cmpyId}"></td>
-									<td class="td_num"
-										th:text="${company.rowNum}"></td>
+									<td class="td_num" th:text="${company.rowNum}"></td>
 									<td><span class="cmpy_nm" th:text="${company.cmpyNm}"
 										onclick="companyDetail(this)"></span></td>
 									<td th:text="${company.cmpyTel}"></td>
@@ -130,7 +141,7 @@
 					<!-- 상세보기 -->
 					<div class="content_info_wrap">
 						<div>기업 상세보기</div>
-						<div style="display: flex;">
+						<div style="display: flex;" class="content_info_btn_wrap">
 							<button class="update_btn" onclick="updateCompany(this)"
 								style="display: none;">
 								<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
@@ -270,43 +281,6 @@
 	<script>
 		//클릭한 기업 저장
 		var selectedCompany="";
-	
-	
-		//insert할 때 도로명 주소 찾기
-		function findAddr() {
-			new daum.Postcode(
-					{
-						oncomplete : function(data) {
-
-							var addr = ''; // 주소 변수
-							var extraAddr = ''; // 참고항목 변수
-
-							if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-								addr = data.roadAddress;
-							} else { // 사용자가 지번 주소를 선택했을 경우(J)
-								addr = data.jibunAddress;
-							}
-
-							if (data.userSelectedType === 'R') {
-								if (data.bname !== ''
-										&& /[동|로|가]$/g.test(data.bname)) {
-									extraAddr += data.bname;
-								}
-								if (data.buildingName !== ''
-										&& data.apartment === 'Y') {
-									extraAddr += (extraAddr !== '' ? ', '
-											+ data.buildingName
-											: data.buildingName);
-								}
-								if (extraAddr !== '') {
-									extraAddr = ' (' + extraAddr + ')';
-								}
-							} else {
-							}
-							document.getElementById("streetAdr").value = addr;
-						}
-					}).open();
-		}
 	</script>
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -368,46 +342,13 @@
 			}
 		}
 	
-	
-	
-		//기업 등록하기
-		function insertCompany(){
-			var insertDiv = document.querySelector(".company_insert");
-			
-			var cmpyNmInput = insertDiv.querySelector('input[name="cmpyNm"]');
-			var cmpyTelInput = insertDiv.querySelector('input[name="cmpyTel"]');
-			var cmpyAdrInput = insertDiv.querySelector('input[name="cmpyAdr"]');
-			var fileInput = insertDiv.querySelector('input[name="file"]');
-			
-			var cmpyNm = cmpyNmInput.value;
-			var cmpyTel = cmpyTelInput.value;
-			var cmpyAdr = cmpyAdrInput.value;
-			
-			var formData = new FormData();
-			var file = fileInput.files[0];
-			formData.append("file", file);
-			formData.append("cmpyNm", cmpyNm);
-			formData.append("cmpyTel", cmpyTel);
-			formData.append("cmpyAdr", cmpyAdr);
-			
-			$.ajax({
-				url: '/admin/company/insert',
-				method: 'POST',
-				data: formData,
-				processData: false,
-				contentType: false,
-				success: function(companyList){
-					//input값 비우기
-					cmpyNmInput.value="";
-					cmpyTelInput.value="";
-					cmpyAdrInput.value="";
-					fileInput.value="";
-					
-					//기업 리스트 새로 불러오기
-					updateCompanyList(companyList);
-				}
-			});
-			
+		
+		//기업 등록하기 버튼
+		function showInsertCompanyPopup(){
+			window.open(
+					"/admin/company/insert", "insertcompany", 
+					"width=500, height=350, left=900, top=500"		
+			);
 		}
 	
 		//기업 누르면 상세보기 발생
