@@ -22,7 +22,7 @@
 			<!-- Route -->
 			<div class="route">
 				<a th:href="@{/admin}">대시보드</a> > <a
-					th:href="@{/admin/subsidy/list}">지원금 관리</a>
+					th:href="@{/admin/subsidy/list/1}">지원금 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -68,9 +68,10 @@
 					</div>
 					<div class="search_filter_name">지급 상태</div>
 					<div class="search_filter_input">
-						<select id="classId">
+						<select id="subsidy_cmcd_id">
 							<option value="" disabled selected>전체</option>
-							<option th:each="sbsdCodeName:${subsidyStatusList}" th:text="${sbsdCodeName.cmcdNm}"
+							<option th:each="sbsdCodeName:${subsidyStatusList}"
+								th:text="${sbsdCodeName.cmcdNm}"
 								th:value="${sbsdCodeName.cmcdId}" />
 						</select>
 					</div>
@@ -97,12 +98,12 @@
 			<!-- 테이블 조작 -->
 			<div class="table_controller" id="tableController">
 				<div class="result_count">
-					<span>총 </span> <span th:text="${resultCount}"
-						id="result_count">0</span> <span>명</span>
+					<span>총 </span> <span th:text="${subsidyCnt}" id="result_count">0</span>
+					<span>명</span>
 				</div>
 				<div class="sbsd_button">
 					<button th:each="sbsdCodeName:${subsidyStatusList}"
-						onclick="cmptUpdate(this)" th:value="${sbsdCodeName.cmcdId}"
+						onclick="updateStatus(this)" th:value="${sbsdCodeName.cmcdId}"
 						th:text="${sbsdCodeName.cmcdNm}" class="sbsd_btn"></button>
 				</div>
 			</div>
@@ -112,13 +113,13 @@
 			<table id="stdt_list_table">
 				<thead id="stdt_list_table_thead">
 					<tr class="stdt_list_table_head">
-						<th><input type="checkbox" id="chkAllStdt"></th>
+						<th><input type="checkbox" id="chkAllStdt" name="select_all"
+							onclick="selectAll(this)"></th>
 						<th>번호</th>
 						<th>이름</th>
 						<th>이메일</th>
 						<th>교육과정</th>
-						<th th:each="wlogCodeName:${wlogCodeNameList}"
-							th:text="${wlogCodeName.cmcdNm}"></th>
+						<th>업무담당자</th>
 						<th>출석일수</th>
 						<th>교육일수</th>
 						<th>출석률(%)</th>
@@ -132,14 +133,13 @@
 					class="subsidy_list_table_tbody">
 					<tr th:each="subsidy:${subsidyList}" class="subsidy_list_table_row">
 						<td class="fixed_length_cell"><input type="checkbox"
-							name="checkedStdt" th:value="${subsidy.sbsdId}"></td>
+							name="select" onclick="checkSelectAll()" class="input_check"
+							th:value="${subsidy.sbsdId}"></td>
 						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
 						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
-						<!-- 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td> -->
-						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}"
-							th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
+						<td class="fixed_length_cell" th:text="${subsidy.mngrNm}"></td>
 						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
 						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
 						<td class="number_cell"
@@ -159,7 +159,117 @@
 		</div>
 		<!-- Content Bottom-->
 
+		<!-- Paging -->
+		<nav class="page_nav" aria-label="Page navigation">
+			<ul class="pagination">
+				<li th:if="${nowPageBlock>1}"><a
+					th:href="@{/admin/subsidy/list/__${startPage-1}__}"
+					aria-label="Previous">이전</a></li>
+
+				<li th:each="i: ${#numbers.sequence(startPage, endPage)}"
+					th:classappend="${i==nowPage}?active"><a
+					th:href="@{/admin/subsidy/list/__${i}__}">[[${i}]]</a></li>
+
+				<li th:if="${nowPageBlock<totalPageBlock}"><a
+					th:href="@{/admin/subsidy/list/__${endPage+1}__}" aria-label="Next">다음</a></li>
+			</ul>
+		</nav>
+		<!-- Paging -->
+
 	</div>
 	<!-- Content Wrap -->
+
+	<script>
+	//전체선택
+	function selectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//개별 선택
+	function checkSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+	
+	
+	//검색어 초기화
+	function resetInput(){
+		var clssIdSelect = document.querySelector("#classId");
+		var startYearSelect = document.querySelector("#start_date_y");
+		var startMonthSelect = document.querySelector("#start_date_m");
+		var endYearSelect = document.querySelector("#end_date_y");
+		var endMonthSelect = document.querySelector("#end_date_m");
+		var keywordInput = document.querySelector(".input_keyword");
+		var subsidyStatusSelect = document.querySelector("#subsidy_cmcd_id");
+		
+		clssIdSelect.value="";
+		startYearSelect.value="";
+		startMonthSelect.value="";
+		endYearSelect.value="";
+		endMonthSelect.value="";
+		keywordInput.value="";
+		subsidyStatusSelect.value="";
+	}
+	
+	//조회
+	function search(){
+		
+	}
+	
+	//지급상태 변경
+	function updateStatus(button){
+		var selectedSubsidyIds = [];
+
+		// 선택된 체크박스를 모두 선택합니다.
+		var selectedCheckboxes = document
+				.querySelectorAll(".input_check:checked");
+		// 선택된 체크박스의 값을 배열에 추가합니다.
+		selectedCheckboxes.forEach(function(checkbox) {
+			selectedSubsidyIds.push(checkbox.value);
+		});
+		//만약 아무것도 선택되어있지 않다면
+        if (selectedCheckboxes.length === 0) {
+            alert("상태변경할 행을 선택해주세요.");
+            
+        }else{
+        	//하나이상 선택 시
+        	cmcdId = button.value;
+    		cmcdNm = button.textContent;
+    		
+    		if(!confirm("선택한 행을 \""+cmcdNm+"\" 처리 하시겠습니까?")){
+    			//no
+    		}else{
+    			//전달해서 값 변경시키기
+    			$.ajax({
+    				url:'/admin/subsidy/update',
+    				method: 'post',
+    				data:{
+    					selectedSubsidyIds : selectedSubsidyIds,
+    					cmcdId : cmcdId
+    				},
+    				success: function(response){
+    					alert("상태가 변경되었습니다.");
+    					location.href='/admin/subsidy/list/1';
+    				}
+    			});
+    		}
+        }
+		
+	}
+	</script>
 </body>
 </html>

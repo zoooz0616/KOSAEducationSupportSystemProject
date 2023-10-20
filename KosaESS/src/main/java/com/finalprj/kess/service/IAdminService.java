@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -175,4 +176,9 @@ public interface IAdminService {
 	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
 
 	List<CompanyVO> getSearchCompanyList(String cmpyNm);
+
+	List<SubsidyDTO> getSubsidyList(int page);
+	List<SubsidyDTO> getSubsidyListAll();
+
+	void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId);
 }

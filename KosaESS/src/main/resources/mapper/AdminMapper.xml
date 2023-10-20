@@ -677,7 +677,7 @@
 		order by cmcd_order
 	]]>
 	</select>
-	
+
 	<select id="getNoticeCommonCodeListByInsert"
 		resultType="com.finalprj.kess.model.CommonCodeVO"
 		parameterType="string">
@@ -840,7 +840,8 @@
 			</when>
 		</choose>
 		and post.post_id not like 'RPLY%'
-		order by post.post_cd, post.post_id desc
+		order by post.post_cd, post.post_id
+		desc
 	</select>
 
 	<select id="getReplyList" parameterType="string"
@@ -942,10 +943,10 @@
 		join cmcd on cmcd.cmcd_id = lgin.user_cd
 		]]>
 		<if test="searchClassId != 'all'">
-		join clss on clss.mngr_id = mngr.mngr_id
+			join clss on clss.mngr_id = mngr.mngr_id
 		</if>
 		where lgin.role_cd = 'ROL0000003'
-		
+
 		<choose>
 			<when test="searchInputCategory == 'mngr_nm'">
 				AND mngr_nm LIKE '%'||#{searchInput}||'%'
@@ -1593,7 +1594,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	]]>
 	</select>
 
-	<select id="getNoticeListAll" 
+	<select id="getNoticeListAll"
 		resultType="com.finalprj.kess.model.PostVO">
 	<![CDATA[
 		select 
@@ -1769,7 +1770,8 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	]]>
 	</select>
 
-	<select id="getSearchCompanyList" parameterType="string" resultType="com.finalprj.kess.model.CompanyVO">
+	<select id="getSearchCompanyList" parameterType="string"
+		resultType="com.finalprj.kess.model.CompanyVO">
 	<![CDATA[
 		select *
 		from cmpy
@@ -1782,7 +1784,91 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	]]>
 	</select>
 
+	<select id="getSubsidyList" parameterType="int"
+		resultType="com.finalprj.kess.dto.SubsidyDTO">
+		<![CDATA[
+			select *
+		from (
+        select 
+        	row_number() over(order by s.stdt_nm) as row_num
+				,sbsd.sbsd_id
+				,sbsd.clss_id
+				,clss_nm
+				,clss_subsidy
+				,sbsd.stdt_id
+				,stdt_nm
+				,s.user_email
+				,sbsd_cd
+				,c1.cmcd_nm as sbsd_nm
+				,paid_dd
+				,payment
+				,subsidy_dd
+				,max_wlog_cnt
+				,wlog_cnt
+				,sbsd.rgst_dt
+				,sbsd.rgster_id
+				,sbsd.updt_dt
+				,sbsd.updter_id
+				,m.mngr_id
+				,m.mngr_nm
+			FROM sbsd 
+				JOIN stdt s ON sbsd.stdt_id=s.stdt_id 
+				JOIN clss c ON sbsd.clss_id=c.clss_id
+				JOIN mngr m ON c.mngr_id=m.mngr_id
+				JOIN cmcd c1 ON sbsd.sbsd_cd=c1.cmcd_id
+		)
+		where row_num between #{start} and #{end}
+		]]>
+	</select>
 
+	<select id="getSubsidyListAll"
+		resultType="com.finalprj.kess.dto.SubsidyDTO">
+	<![CDATA[
+	--getSubsidyListAll
+		select 
+        	row_number() over(order by s.stdt_nm) as row_num
+				,sbsd.sbsd_id
+				,sbsd.clss_id
+				,clss_nm
+				,clss_subsidy
+				,sbsd.stdt_id
+				,stdt_nm
+				,s.user_email
+				,sbsd_cd
+				,c1.cmcd_nm as sbsd_nm
+				,paid_dd
+				,payment
+				,subsidy_dd
+				,max_wlog_cnt
+				,wlog_cnt
+				,sbsd.rgst_dt
+				,sbsd.rgster_id
+				,sbsd.updt_dt
+				,sbsd.updter_id
+				,m.mngr_id
+				,m.mngr_nm
+			FROM sbsd 
+				JOIN stdt s ON sbsd.stdt_id=s.stdt_id 
+				JOIN clss c ON sbsd.clss_id=c.clss_id
+				JOIN mngr m ON c.mngr_id=m.mngr_id
+				JOIN cmcd c1 ON sbsd.sbsd_cd=c1.cmcd_id
+	]]>
+	</select>
+
+	<update id="updateSubsidyStatus" parameterType="java.util.List">
+		<foreach collection="selectedSubsidyIds" item="subsidyId"
+			open="DECLARE BEGIN" separator=";" close="; END;">
+			update sbsd
+			set
+			sbsd_cd = #{cmcdId},
+			updt_dt = SYSTIMESTAMP,
+			updter_id = 'MNGR000001'
+			<if test="cmcdId == 'SSD0000002'">
+				, paid_dd = SYSDATE
+			</if>
+			where sbsd_id=#{subsidyId}
+		</foreach>
+	</update>
 
 
 
