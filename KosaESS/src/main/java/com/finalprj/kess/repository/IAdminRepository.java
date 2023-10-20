@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -170,5 +171,9 @@ public interface IAdminRepository {
 	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
 
 	List<CompanyVO> getSearchCompanyList(String cmpyNm);
+	List<SubsidyDTO> getSubsidyList(@Param("start")int start, @Param("end")int end);
+	List<SubsidyDTO> getSubsidyListAll();
+
+	void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId);
 
 }

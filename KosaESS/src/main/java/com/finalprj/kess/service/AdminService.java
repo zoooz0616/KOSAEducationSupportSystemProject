@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -99,8 +100,8 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<ClassVO> getClassList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getClassList(start,start+19);
+
+		return adminRepository.getClassList(start, start + 19);
 	}
 
 	@Override
@@ -116,15 +117,15 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<CompanyVO> getCompanyList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getCompanyList(start,start+19);
+
+		return adminRepository.getCompanyList(start, start + 19);
 	}
 
 	@Override
 	public List<ManagerVO> getManagerList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getManagerList(start,start+19);
+
+		return adminRepository.getManagerList(start, start + 19);
 	}
 
 	@Override
@@ -319,15 +320,15 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<PostVO> getNoticeList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getNoticeList(start,start+19);
+
+		return adminRepository.getNoticeList(start, start + 19);
 	}
 
 	@Override
 	public List<PostVO> getInquiryList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getInquiryList(start,start+19);
+
+		return adminRepository.getInquiryList(start, start + 19);
 	}
 
 	@Override
@@ -348,8 +349,8 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<CommonCodeVO> getGroupCodeList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getGroupCodeList(start, start+19);
+
+		return adminRepository.getGroupCodeList(start, start + 19);
 	}
 
 	@Override
@@ -430,7 +431,8 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus, String searchClassId) {
+	public List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus,
+			String searchClassId) {
 		return adminRepository.getSearchManagerList(searchInputCategory, searchInput, searchMngrStatus, searchClassId);
 	}
 
@@ -556,8 +558,8 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<StudentVO> getStudentList(int page) {
 		int start = (page - 1) * 20 + 1;
-		
-		return adminRepository.getStudentList(start,start+19);
+
+		return adminRepository.getStudentList(start, start + 19);
 	}
 
 	@Override
@@ -650,27 +652,27 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn) {
 		return adminRepository.getSearchGroupCodeList(tpcdId, cmcdNm, useYn);
 	}
-	
+
 	@Override
 	public int getGroupCodeCnt() {
 		return adminRepository.getGroupCodeCnt();
 	}
-	
+
 	@Override
 	public List<PostVO> getNoticeListAll() {
 		return adminRepository.getNoticeListAll();
 	}
-	
+
 	@Override
 	public List<PostVO> getInquiryListAll() {
 		return adminRepository.getInquiryListAll();
 	}
-	
+
 	@Override
 	public List<ManagerVO> getManagerListAll() {
 		return adminRepository.getManagerListAll();
 	}
-	
+
 	@Override
 	public List<CompanyVO> getCompanyListAll() {
 		return adminRepository.getCompanyListAll();
@@ -680,17 +682,17 @@ public class AdminService implements IAdminService {
 	public List<ClassVO> getClassListAll() {
 		return adminRepository.getClassListAll();
 	}
-	
+
 	@Override
 	public List<StudentVO> getStudentListAll() {
 		return adminRepository.getStudentListAll();
 	}
-	
+
 	@Override
 	public List<CommonCodeVO> getGroupCodeListAll() {
 		return adminRepository.getGroupCodeListAll();
 	}
-	
+
 	@Override
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();
@@ -700,9 +702,25 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getNoticeCommonCodeListByInsert() {
 		return adminRepository.getNoticeCommonCodeListByInsert();
 	}
-	
+
 	@Override
 	public List<CompanyVO> getSearchCompanyList(String cmpyNm) {
 		return adminRepository.getSearchCompanyList(cmpyNm);
+	}
+
+	@Override
+	public List<SubsidyDTO> getSubsidyList(int page) {
+		int start = (page - 1) * 20 + 1;
+		return adminRepository.getSubsidyList(start,start+19);
+	}
+	
+	@Override
+	public List<SubsidyDTO> getSubsidyListAll() {
+		return adminRepository.getSubsidyListAll();
+	}
+	
+	@Override
+	public void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId) {
+		adminRepository.updateSubsidyStatus(selectedSubsidyIds, cmcdId);
 	}
 }

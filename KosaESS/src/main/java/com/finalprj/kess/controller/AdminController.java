@@ -37,6 +37,7 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.LectureListDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -50,6 +51,7 @@ import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IMailService;
 import com.finalprj.kess.service.IManagerService;
@@ -2472,11 +2474,11 @@ public class AdminController {
 	 * 
 	 * @author : eunji
 	 * @date : 2023. 10. 12.
-	 * @parameter : selectedDetailCodeIds
+	 * @parameter : session, page, model
 	 * @return : String
 	 */
-	@GetMapping("/subsidy/list")
-	public String selectSubsidyList(HttpSession session, Model model) {
+	@GetMapping("/subsidy/list/{page}")
+	public String selectSubsidyList(HttpSession session, @PathVariable int page, Model model) {
 		//검색조건 - 교육과정
 		List<ClassVO> classList = adminService.getClassListAll();
 		model.addAttribute("classList", classList);
@@ -2485,8 +2487,60 @@ public class AdminController {
 		List<CommonCodeVO> subsidyStatusList = adminService.getCommonCodeList("GRP0000014");
 		model.addAttribute("subsidyStatusList", subsidyStatusList);
 		
+		//지원금 리스트 페이징
+		List<SubsidyDTO> subsidyList = adminService.getSubsidyList(page);
+		model.addAttribute("subsidyList", subsidyList);
+		
+		//지원금 전체 리스트
+		List<SubsidyDTO> subsidyListAll = adminService.getSubsidyListAll();
+		session.setAttribute("searchSubsidyList", subsidyListAll);
+		
+		//페이징 처리
+		session.setAttribute("page", page);
+		
+		int bbsCount = subsidyListAll.size();
+		model.addAttribute("subsidyCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		
 		return "admin/subsidy_list";
 	}
+	
+	/**
+	 * 지원금 상태 수정
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 12.
+	 * @parameter : selectedDetailCodeIds
+	 * @return : String
+	 */
+	@PostMapping("/subsidy/update")
+	@ResponseBody
+	public String subsidyUpdate(@RequestParam("selectedSubsidyIds[]") List<String> selectedSubsidyIds,
+			@RequestParam String cmcdId) {
+		
+		adminService.updateSubsidyStatus(selectedSubsidyIds, cmcdId);
+		
+		return "success";
+	}
+
 
 }

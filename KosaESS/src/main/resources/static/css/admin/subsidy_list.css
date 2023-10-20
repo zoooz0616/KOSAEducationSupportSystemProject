@@ -117,11 +117,11 @@
 	display: flex;
 	font-weight: bold;
 	justify-content: space-between;
-    align-items: center;
+	align-items: center;
 }
 
 .content_bottom {
-	margin: 40px;
+	margin: 10px 40px 40px 40px;
 }
 
 .table_controller div {
@@ -214,15 +214,60 @@
 	background: #0E5881;
 }
 
-.sbsd_btn{
+.sbsd_btn {
 	background: #0E5881;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    font-weight: bold;
-    display: flex;
-    margin: 2px;
-    padding: 5px;
-    cursor: pointer;
-    align-items: center;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	display: flex;
+	margin: 2px;
+	padding: 5px;
+	cursor: pointer;
+	align-items: center;
+}
+
+.pagination {
+	list-style: none;
+}
+
+.pagination li {
+	color: black;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+}
+
+.pagination li a {
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.pagination li.active {
+	background-color: #0E5881;
+	color: white;
+	border-radius: 5px;
+}
+
+.pagination li.active a {
+	color: white;
+}
+
+.pagination li:hover:not(.active) {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+nav {
+	display: flex;
+	justify-content: space-around;
+}
+
+#result_count {
+	color: #0E5881;
+}
+
+#stdt_list_table{
+    margin-top: 10px;
 }
