@@ -10,6 +10,7 @@ public class CompanyVO {
 	private String cmpyNm;//업체이름
 	private String cmpyTel;//업체연락처
 	private String cmpyAdr;//업체주소
+	private String cmpyAdrDetail;//상세주소
 	private String fileId;//파일 id
 	private Timestamp rgstDt;//등록일시
 	private String rgsterId;//등록자id

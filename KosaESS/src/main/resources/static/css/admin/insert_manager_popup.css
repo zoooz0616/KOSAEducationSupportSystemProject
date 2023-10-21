@@ -65,3 +65,7 @@ th {
 td {
 	width: 50%;
 }
+
+.input_manager_tel:invalid{
+	border: 3px solid red;
+}

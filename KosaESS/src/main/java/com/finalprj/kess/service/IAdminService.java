@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -114,7 +115,7 @@ public interface IAdminService {
 	void updateInquiryStatus(String postId);
 	String getMaxManagerId();
 	void insertManagerVO(ManagerVO managerVO);
-	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput);
+	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus, String searchClassId);
 	void deleteManagerList(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);
 	void updateManager(ManagerVO managerVO);
@@ -173,4 +174,14 @@ public interface IAdminService {
 	List<CommonCodeVO> getGroupCodeListAll();
 
 	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
+
+	List<CompanyVO> getSearchCompanyList(String cmpyNm);
+
+	List<SubsidyDTO> getSubsidyList(int page);
+	List<SubsidyDTO> getSubsidyListAll();
+
+	void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId);
+
+	List<SubsidyDTO> getSearchSubsidyList(String clssId, String startDate, String endDate, String keyword,
+			String subsidyStatus);
 }

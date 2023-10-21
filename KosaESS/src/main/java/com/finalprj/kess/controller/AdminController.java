@@ -37,6 +37,7 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.LectureListDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -50,6 +51,7 @@ import com.finalprj.kess.model.ProfessorVO;
 import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IMailService;
 import com.finalprj.kess.service.IManagerService;
@@ -178,10 +180,9 @@ public class AdminController {
 		List<PostVO> noticeList = adminService.getNoticeList(page);
 		model.addAttribute("noticeList", noticeList);
 
-		//공지사항 모든 리스트 전달
+		// 공지사항 모든 리스트 전달
 		List<PostVO> noticeListAll = adminService.getNoticeListAll();
 		session.setAttribute("searchNoticeList", noticeListAll);
-		
 
 		int bbsCount = adminService.getNoticeCnt();
 		model.addAttribute("noticeCnt", bbsCount);
@@ -205,7 +206,6 @@ public class AdminController {
 		model.addAttribute("nowPageBlock", nowPageBlock);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
-
 
 		return "admin/notice_list";
 	}
@@ -246,7 +246,7 @@ public class AdminController {
 	public String noticeInsert(Model model) {
 		String act = "insert";
 		model.addAttribute("act", act);
-		
+
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		model.addAttribute("fileList", fileList);
 
@@ -329,11 +329,11 @@ public class AdminController {
 		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
 
 		List<FileVO> fileList = new ArrayList<FileVO>();
-		
+
 		if (postVO.getFileId() != null) {
 			fileList = uploadFileService.getFileList(postVO.getFileId());
 		}
-		
+
 		model.addAttribute("fileList", fileList);
 
 		return "admin/notice_form";
@@ -467,7 +467,8 @@ public class AdminController {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 공지사항 리스트 전달
-		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(), postStatusList);
+		List<PostVO> noticeList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(),
+				postStatusList);
 		session.setAttribute("searchNoticeList", noticeList);
 
 		response.put("noticeList", noticeList);
@@ -491,8 +492,8 @@ public class AdminController {
 		// 문의사항 페이지 리스트 전달
 		List<PostVO> inquiryList = adminService.getInquiryList(page);
 		model.addAttribute("inquiryList", inquiryList);
-		
-		//문의사항 전체 리스트 전달
+
+		// 문의사항 전체 리스트 전달
 		List<PostVO> inquiryListAll = adminService.getInquiryListAll();
 		session.setAttribute("searchInquiryList", inquiryListAll);
 
@@ -621,7 +622,8 @@ public class AdminController {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		// 문의사항 리스트 전달
-		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(), postStatusList);
+		List<PostVO> inquiryList = adminService.getSearchPostList(searchInputCategory, searchInput.trim(),
+				postStatusList);
 		session.setAttribute("searchInquiryList", inquiryList);
 
 		response.put("inquiryList", inquiryList);
@@ -648,8 +650,8 @@ public class AdminController {
 		// 교육과정 페이지 리스트
 		List<ClassVO> classList = adminService.getClassList(page);
 		model.addAttribute("classList", classList);
-		
-		//교육과정 전체 리스트
+
+		// 교육과정 전체 리스트
 		List<ClassVO> classListAll = adminService.getClassListAll();
 		// 엑셀다운로드를 위해 저장해놓기
 		session.setAttribute("searchClassList", classListAll);
@@ -1626,15 +1628,15 @@ public class AdminController {
 	 * @return : String
 	 */
 	@RequestMapping("/company/list/{page}")
-	public String companyList(@PathVariable int page, HttpSession session, Model model) {
+	public String companyList(HttpSession session, @PathVariable int page, Model model) {
 		// 기업 페이지 리스트 전달
 		List<CompanyVO> companyList = adminService.getCompanyList(page);
 		model.addAttribute("companyList", companyList);
 
-		//기업 전체 리스트 전달
+		// 기업 전체 리스트 전달
 		List<CompanyVO> companyListAll = adminService.getCompanyListAll();
 		session.setAttribute("searchCompanyList", companyListAll);
-		
+
 		session.setAttribute("page", page);
 
 		int bbsCount = adminService.getCompanyCnt();
@@ -1699,7 +1701,41 @@ public class AdminController {
 		}
 		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
+	
+	/**
+	 * 기업 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 20.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@PostMapping("/company/search")
+	@ResponseBody
+	public Map<String, Object> searchCompany(HttpSession session, @RequestParam(name="cmpyNm", required = false)String cmpyNm) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<CompanyVO> companyList = adminService.getSearchCompanyList(cmpyNm.trim());
+		session.setAttribute("searchCompanyList", companyList);
+		
+		response.put("companyList", companyList);
+		
+		return response;
+	}
 
+	/**
+	 * 기업 생성
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 20.
+	 * @parameter : tpcdId, cmcdNm
+	 * @return : String
+	 */
+	@RequestMapping("/company/insert")
+	public String insertCompany() {
+		return "admin/insert_company_popup";
+	}
+	
 	/**
 	 * 기업 생성
 	 * 
@@ -1711,9 +1747,9 @@ public class AdminController {
 	 */
 	@PostMapping("/company/insert")
 	@ResponseBody
-	public List<CompanyVO> companyInsert(@RequestParam(name = "file", required = false) MultipartFile file,
-			RedirectAttributes redirectAttrs, @RequestParam("cmpyNm") String cmpyNm,
-			@RequestParam("cmpyTel") String cmpyTel, @RequestParam("cmpyAdr") String cmpyAdr) throws IOException {
+	public String companyInsert(@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs, 
+			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
+			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail", required = false)String cmpyAdrDetail) throws IOException {
 
 		String fileId = null;
 		FileVO fileVO = null;
@@ -1728,6 +1764,7 @@ public class AdminController {
 			fileVO.setFileSize(file.getSize());
 			fileVO.setFileType(file.getContentType());
 			fileVO.setFileContent(file.getBytes());
+			fileVO.setRgsterId("MNGR000001");
 		}
 
 		CompanyVO companyVO = new CompanyVO();
@@ -1735,14 +1772,12 @@ public class AdminController {
 		companyVO.setCmpyNm(cmpyNm);
 		companyVO.setCmpyTel(cmpyTel);
 		companyVO.setCmpyAdr(cmpyAdr);
+		companyVO.setCmpyAdrDetail(cmpyAdrDetail);
 		companyVO.setFileId(fileId);
 
 		adminService.insertCompanyVO(fileVO, companyVO);
 
-		List<CompanyVO> companyList = adminService.getCompanyListAll();
-		// 파일 업로드 후 파일 아이디 값으로 객체 생성
-
-		return companyList;
+		return "success";
 	}
 
 	/**
@@ -1759,12 +1794,13 @@ public class AdminController {
 	public List<CompanyVO> updateCompany(@PathVariable String cmpyId,
 			@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs,
 			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
-			@RequestParam("cmpyAdr") String cmpyAdr) throws IOException {
+			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail")String cmpyAdrDetail) throws IOException {
 
 		CompanyVO companyVO = adminService.getCompanyVO(cmpyId);
 		companyVO.setCmpyNm(cmpyNm);
 		companyVO.setCmpyTel(cmpyTel);
 		companyVO.setCmpyAdr(cmpyAdr);
+		companyVO.setCmpyAdrDetail(cmpyAdrDetail);
 
 		String fileId = companyVO.getFileId();
 		FileVO fileVO = null;
@@ -1815,15 +1851,19 @@ public class AdminController {
 	 */
 	@RequestMapping("/manager/list/{page}")
 	public String manager(@PathVariable int page, HttpSession session, Model model) {
-		// 계정 기준정보 리스트
+		// 업무담당자 계정 기준정보 리스트
 		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
 		model.addAttribute("mngrCommonCodeList", mngrCommonCodeList);
+
+		// 교육과정 리스트
+		List<ClassVO> classList = adminService.getClassListAll();
+		model.addAttribute("classList", classList);
 
 		// 업무담당자 페이지 리스트
 		List<ManagerVO> managerList = adminService.getManagerList(page);
 		model.addAttribute("managerList", managerList);
-		
-		//업무담당자 전체 리스트
+
+		// 업무담당자 전체 리스트
 		List<ManagerVO> managerListAll = adminService.getManagerListAll();
 		session.setAttribute("searchManagerList", managerListAll);
 
@@ -1872,7 +1912,7 @@ public class AdminController {
 			return "fail";
 		}
 	}
-	
+
 	/**
 	 * 업무담당자 등록
 	 * 
@@ -1921,12 +1961,19 @@ public class AdminController {
 	@PostMapping("/manager/search")
 	@ResponseBody
 	public Map<String, Object> managerSearch(HttpSession session, @RequestParam String searchInputCategory,
-			@RequestParam String searchInput) {
-		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput.trim());
+			@RequestParam String searchInput, @RequestParam String searchMngrStatus,
+			@RequestParam String searchClassId) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput.trim(),
+				searchMngrStatus, searchClassId);
+		response.put("managerList", managerList);
 		session.setAttribute("searchManagerList", managerList);
 
-		Map<String, Object> response = new HashMap<String, Object>();
-		response.put("managerList", managerList);
+		// 업무담당자 계정 기준정보 리스트
+		List<CommonCodeVO> mngrCommonCodeList = adminService.getCommonCodeList("GRP0000008");
+		response.put("mngrCommonCodeList", mngrCommonCodeList);
+
 		return response;
 	}
 
@@ -1996,8 +2043,8 @@ public class AdminController {
 		// 교육생 페이지 리스트
 		List<StudentVO> studentList = adminService.getStudentList(page);
 		model.addAttribute("studentList", studentList);
-		
-		//교육생 전체 리스트
+
+		// 교육생 전체 리스트
 		List<StudentVO> studentListAll = adminService.getStudentListAll();
 		session.setAttribute("searchStudentList", studentListAll);
 
@@ -2142,18 +2189,18 @@ public class AdminController {
 		List<CommonCodeVO> groupCodeList = adminService.getGroupCodeList(page);
 		model.addAttribute("groupCodeList", groupCodeList);
 
-		//상세코드 생성 후 전달
+		// 상세코드 생성 후 전달
 		List<CommonCodeVO> detailCodeList = new ArrayList<CommonCodeVO>();
 		model.addAttribute("detailCodeList", detailCodeList);
-		
-		//그룹코드 전체 리스트 전달
+
+		// 그룹코드 전체 리스트 전달
 		List<CommonCodeVO> groupCodeListAll = adminService.getGroupCodeListAll();
 		session.setAttribute("searchGroupCodeList", groupCodeListAll);
-		
+
 		session.setAttribute("page", page);
-		
+
 		int bbsCount = adminService.getGroupCodeCnt();
-		model.addAttribute("noticeCnt", bbsCount);
+		model.addAttribute("groupCodeCnt", bbsCount);
 		int totalPage = 0;
 		if (bbsCount > 0) {
 			totalPage = (int) Math.ceil(bbsCount / 20.0);
@@ -2427,13 +2474,100 @@ public class AdminController {
 	 * 
 	 * @author : eunji
 	 * @date : 2023. 10. 12.
+	 * @parameter : session, page, model
+	 * @return : String
+	 */
+	@GetMapping("/subsidy/list/{page}")
+	public String selectSubsidyList(HttpSession session, @PathVariable int page, Model model) {
+		//검색조건 - 교육과정
+		List<ClassVO> classList = adminService.getClassListAll();
+		model.addAttribute("classList", classList);
+		
+		//검색조건 - 지원금지급상태
+		List<CommonCodeVO> subsidyStatusList = adminService.getCommonCodeList("GRP0000014");
+		model.addAttribute("subsidyStatusList", subsidyStatusList);
+		
+		//지원금 리스트 페이징
+		List<SubsidyDTO> subsidyList = adminService.getSubsidyList(page);
+		model.addAttribute("subsidyList", subsidyList);
+		
+		//지원금 전체 리스트
+		List<SubsidyDTO> subsidyListAll = adminService.getSubsidyListAll();
+		session.setAttribute("searchSubsidyList", subsidyListAll);
+		
+		//페이징 처리
+		session.setAttribute("page", page);
+		
+		int bbsCount = subsidyListAll.size();
+		model.addAttribute("subsidyCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		
+		return "admin/subsidy_list";
+	}
+	 
+	/**
+	 * 지원금 조회 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 21.
+	 * @parameter : session, page, model
+	 * @return : String
+	 */
+	@GetMapping("/subsidy/search")
+	@ResponseBody
+	public Map<String, Object> searchSubsidy(HttpSession session, @RequestParam(name="clssId",required = false)String clssId,
+			@RequestParam(name = "startDate", required = false)String startDate,
+			@RequestParam(name = "endDate", required = false)String endDate,
+			@RequestParam(name = "keyword", required = false)String keyword,
+			@RequestParam(name = "subsidyStatus", required = false)String subsidyStatus
+			){
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		//검색 결과 리스트 받기
+		List<SubsidyDTO> subsidyList = adminService.getSearchSubsidyList(clssId, startDate, endDate, keyword.trim(), subsidyStatus);
+		response.put("subsidyList", subsidyList);
+		session.setAttribute("searchSubsidyList", subsidyList);
+		
+		return response;
+	}
+	
+	
+	/**
+	 * 지원금 상태 수정
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 12.
 	 * @parameter : selectedDetailCodeIds
 	 * @return : String
 	 */
-	@GetMapping("/subsidy/list")
-	public String selectSubsidyList(HttpSession session, Model model) {
-
-		return "admin/subsidy_list";
+	@PostMapping("/subsidy/update")
+	@ResponseBody
+	public String subsidyUpdate(@RequestParam("selectedSubsidyIds[]") List<String> selectedSubsidyIds,
+			@RequestParam String cmcdId) {
+		
+		adminService.updateSubsidyStatus(selectedSubsidyIds, cmcdId);
+		
+		return "success";
 	}
+
 
 }

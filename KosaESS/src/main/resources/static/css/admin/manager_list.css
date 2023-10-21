@@ -41,6 +41,7 @@
 	border-bottom: 1px solid #0E5881;
 	padding: 5px;
 	background: #E7EFF3;
+	align-items: center;
 }
 
 .home-section .content_middle .search_filter_wrap {
@@ -101,7 +102,7 @@
 	justify-content: space-between;
 }
 
-.home-section .content_bottom .content_info_wrap .class_list_cnt {
+.home-section .content_bottom .content_info_wrap .manager_list_cnt {
 	color: #0E5881;
 }
 
@@ -204,8 +205,9 @@
 	font-weight: bold;
 	display: flex;
 	margin: 2px;
-	padding: 0 5px;
+	padding: 0 10px;
 	cursor: pointer;
+	font-size: 16px;
 }
 
 .red {
@@ -262,4 +264,9 @@
 nav {
 	display: flex;
 	justify-content: space-around;
+}
+
+.div_mngr_status,.div_manager_tel,.div_manager_name {
+	display: flex;
+    justify-content: space-around;
 }

@@ -31,7 +31,12 @@ public class SubsidyDTO {
 	private String updterId;// 수정자id
 	private String sbsdEtc;// 수정자id
 	
+	private String mngrId;//업무담당자id
+	private String mngrNm;//업무담당자 이름
+	
 	public void appendWlog(String wlog) {
 		this.wlog = this.wlog.concat(wlog);
 	}
+	
+	private String sbsdEtc;//기타사항
 }

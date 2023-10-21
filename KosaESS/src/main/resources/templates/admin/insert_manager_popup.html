@@ -15,7 +15,7 @@
 			<tr class="input_wrap">
 				<th><span class="title">이름<span class="red">*</span></span></th>
 				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertManager()}"
-				class="input_manager_name" placeholder="이름(최대 6자)" maxlength="6"></td>
+				class="input_manager_name" placeholder="이름(한글 최대 10자/영문 최대 30자)" maxlength="30"></td>
 			</tr>
 			<tr class="input_wrap">
 				<th><span class="title">이메일<span class="red">*</span></span></th>
@@ -28,9 +28,10 @@
 				class="input_manager_pwd" placeholder="비밀번호"></td>
 			</tr>
 			<tr class="input_wrap">
-				<th><span class="title">전화번호<span class="red">*</span></span></th>
+				<th><span class="title">연락처<span class="red">*</span></span></th>
 				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertManager()}"
-				class="input_manager_tel" placeholder="전화번호"></td>
+				class="input_manager_tel" placeholder="전화번호" oninput="autoHyphen(this)" maxlength="13" 
+				></td>
 			</tr>
 		</table>
 	</div>
@@ -40,11 +41,6 @@
 		<button class="btn" onclick="insertManager();">확인</button>
 	</div>
 	<script>	
-	
-	//코드구분 영어만 입력하게 하기
-	function handleOnInput(e)  {
-		  e.value = e.value.replace(/[^A-Za-z]/ig, '')
-		}
 	
 	//등록하기
 	function insertManager(){
@@ -98,6 +94,13 @@
         				});
 		}
 	}
+	
+	//전화번호 입력
+	const autoHyphen = (target) => {
+ target.value = target.value
+   .replace(/[^0-9]/g, '')
+  .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+}
 	</script>
 </body>
 </html>

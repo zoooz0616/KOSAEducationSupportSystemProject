@@ -11,7 +11,7 @@
 	<!-- 서브바-->
 	<div th:replace="~{/include/manager_subbar :: subbar}"></div>
 	<!-- 서브바 -->
-	
+
 	<!-- Content Wrap -->
 	<div class="home-section">
 
@@ -22,23 +22,452 @@
 			<!-- Route -->
 			<div class="route">
 				<a th:href="@{/admin}">대시보드</a> > <a
-					th:href="@{/admin/subsidy/list}">지원금 관리</a>
+					th:href="@{/admin/subsidy/list/1}">지원금 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
-		
+
 		<!-- Content Middle-->
 		<div class="content_middle">
+			<div class="search_filter_wrap">
+				<!-- 검색 필터 -->
+				<div class="search_filter_table">
+					<div class="search_filter_name">교육과정</div>
+					<div class="search_filter_input">
+						<select id="classId">
+							<option value="" disabled selected>전체</option>
+							<option th:each="class:${classList}" th:text="${class.clssNm}"
+								th:value="${class.clssId}" />
+						</select>
+					</div>
+					<div class="search_filter_name">검색 기간</div>
+					<div class="search_filter_input">
+						<select id="start_date_y" onchange="changeStartYear(this)">
+							<option value="" selected>연</option>
+							<option
+								th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}"
+								th:text="${yNum}" th:value="${yNum}" />
+						</select> <select id="start_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}"
+								th:text="${monthNum}" th:value="${monthNum}" />
+						</select> <span>&nbsp;~&nbsp;</span> <select id="end_date_y" onchange="changeEndYear(this)">
+							<option value="" selected>연</option>
+							<option
+								th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}"
+								th:text="${yNum}" th:value="${yNum}" />
+						</select> <select id="end_date_m">
+							<option value="" disabled selected>월</option>
+							<option th:each="monthNum:${#numbers.sequence(1,12)}"
+								th:text="${monthNum}" th:value="${monthNum}" />
+						</select>
+					</div>
+					<div class="search_filter_name">검색어</div>
+					<div class="search_filter_input">
+						<input type="text" class="input_keyword" placeholder="이메일 또는 이름"
+							onkeyup="if(window.event.keyCode==13){search();}">
+					</div>
+					<div class="search_filter_name">지급 상태</div>
+					<div class="search_filter_input">
+						<select id="subsidy_cmcd_id">
+							<option value="" disabled selected>전체</option>
+							<option th:each="sbsdCodeName:${subsidyStatusList}"
+								th:text="${sbsdCodeName.cmcdNm}"
+								th:value="${sbsdCodeName.cmcdId}" />
+						</select>
+					</div>
+				</div>
+				<!-- Search Button wrap -->
+				<div class="search_filter_btn_wrap">
+					<button type="button" class="search_reset_btn"
+						onclick="resetInput()">
+						<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+					</button>
+					<button type="button" id="search_btn" class="search_filter_btn"
+						onclick="search()">
+						<img th:src="@{/img/search_white.png}"> <span>조회</span>
+					</button>
+				</div>
+				<!-- Search Button wrap -->
+			</div>
+			<!-- 검색 필터-->
 		</div>
 		<!-- Content Middle-->
-		
-		
+
 		<!-- Content Bottom-->
 		<div class="content_bottom">
+			<!-- 테이블 조작 -->
+			<div class="table_controller" id="tableController">
+				<div class="result_count">
+					<span>총 </span> <span th:text="${subsidyCnt}" id="result_count">0</span>
+					<span>명</span>
+				</div>
+				<div class="sbsd_button">
+					<button th:each="sbsdCodeName:${subsidyStatusList}"
+						onclick="updateStatus(this)" th:value="${sbsdCodeName.cmcdId}"
+						th:text="${sbsdCodeName.cmcdNm}" class="sbsd_btn"></button>
+				</div>
+			</div>
+			<!-- 테이블 조작 -->
+
+			<!--지원금 리스트-->
+			<table id="stdt_list_table">
+				<thead id="stdt_list_table_thead">
+					<tr class="stdt_list_table_head">
+						<th><input type="checkbox" id="chkAllStdt" name="select_all"
+							onclick="selectAll(this)"></th>
+						<th>번호</th>
+						<th>이름</th>
+						<th>이메일</th>
+						<th>교육과정</th>
+						<th>업무담당자</th>
+						<th>출석일수</th>
+						<th>교육일수</th>
+						<th>출석률(%)</th>
+						<th>지원금(&#8361;)</th>
+						<th>지급기준일</th>
+						<th>지급일</th>
+						<th>기타사항</th>
+						<th>지급상태</th>
+					</tr>
+				</thead>
+				<tbody id="subsidy_list_table_tbody"
+					class="subsidy_list_table_tbody">
+					<tr th:each="subsidy:${subsidyList}" class="subsidy_list_table_row">
+						<td class="fixed_length_cell"><input type="checkbox"
+							name="select" onclick="checkSelectAll()" class="input_check"
+							th:value="${subsidy.sbsdId}"></td>
+						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
+						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
+						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
+						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
+						<td class="fixed_length_cell" th:text="${subsidy.mngrNm}"></td>
+						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
+						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
+						<td class="number_cell"
+							th:text="${#numbers.formatDecimal(__${subsidy.wlogCnt}__ * 100.0 / __${subsidy.maxWlogCnt}__, 1, 1)}">출석률</td>
+						<td class="number_cell"
+							th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
+						<td class="fixed_length_cell"
+							th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
+						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
+						<td class="variable_length_cell" th:text="${subsidy.sbsdEtc}">기타사항</td>
+						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}"
+							th:value="${subsidy.sbsdCd}">지급상태</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 지원금 리스트-->
+
 		</div>
 		<!-- Content Bottom-->
-		
+
+		<!-- Paging -->
+		<nav class="page_nav" aria-label="Page navigation">
+			<ul class="pagination">
+				<li th:if="${nowPageBlock>1}"><a
+					th:href="@{/admin/subsidy/list/__${startPage-1}__}"
+					aria-label="Previous">이전</a></li>
+
+				<li th:each="i: ${#numbers.sequence(startPage, endPage)}"
+					th:classappend="${i==nowPage}?active"><a
+					th:href="@{/admin/subsidy/list/__${i}__}">[[${i}]]</a></li>
+
+				<li th:if="${nowPageBlock<totalPageBlock}"><a
+					th:href="@{/admin/subsidy/list/__${endPage+1}__}" aria-label="Next">다음</a></li>
+			</ul>
+		</nav>
+		<!-- Paging -->
+
 	</div>
 	<!-- Content Wrap -->
+
+	<script>
+	//전체선택
+	function selectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//개별 선택
+	function checkSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+	
+	
+	//검색어 초기화
+	function resetInput(){
+		var clssIdSelect = document.querySelector("#classId");
+		var startYearSelect = document.querySelector("#start_date_y");
+		var startMonthSelect = document.querySelector("#start_date_m");
+		var endYearSelect = document.querySelector("#end_date_y");
+		var endMonthSelect = document.querySelector("#end_date_m");
+		var keywordInput = document.querySelector(".input_keyword");
+		var subsidyStatusSelect = document.querySelector("#subsidy_cmcd_id");
+		
+		clssIdSelect.value="";
+		startYearSelect.value="";
+		startMonthSelect.value="";
+		endYearSelect.value="";
+		endMonthSelect.value="";
+		keywordInput.value="";
+		subsidyStatusSelect.value="";
+	}
+	
+	//년도 변경시 월 변경
+	function changeStartYear(startYearSelect){
+		startYearValue = startYearSelect.value;
+		
+		startMonthSelect= document.querySelector("#start_date_m");
+		
+		if(startYearValue ===''){
+			//전체
+			startMonthSelect.value='';
+		}else{
+			//전체 그 이외
+			startMonthSelect.value='1';
+		}
+	}
+	
+	function changeEndYear(endYearSelect){
+		endYearValue =endYearSelect.value;
+		
+		endMonthSelect = document.querySelector("#end_date_m");
+		
+		if(endYearValue ===''){
+			//전체
+			endMonthSelect.value='';
+		}else{
+			//전체 그 이외
+			endMonthSelect.value='1';
+		}
+	}
+	
+	//조회
+	function search(){
+		var clssId = document.querySelector("#classId").value;
+		var startYear = document.querySelector("#start_date_y").value;
+		var startMonth = document.querySelector("#start_date_m").value;
+		var endYear = document.querySelector("#end_date_y").value;
+		var endMonth = document.querySelector("#end_date_m").value;
+		var keyword = document.querySelector(".input_keyword").value;
+		var subsidyStatus = document.querySelector("#subsidy_cmcd_id").value;
+		
+		var startDate = "";
+		var endDate = "";
+		
+		if(startYear !==''){
+			startDate = startYear +'-'+startMonth+'-'+'01';
+		}
+		if(endYear !==''){
+			endDate = endYear +'-'+endMonth+'-'+'30';
+		}
+		
+		console.log(clssId);
+		console.log(startDate);
+		console.log(endDate);
+		console.log(keyword);
+		console.log(subsidyStatus);
+		
+		
+		//검색키워드들 전송
+		$.ajax({
+			url:'/admin/subsidy/search',
+			method:'GET',
+			data:{
+				clssId : clssId,
+				startDate : startDate,
+				endDate : endDate,
+				keyword : keyword,
+				subsidyStatus : subsidyStatus
+			},
+			success:function(response){
+				var subsidyList= response.subsidyList;
+				console.log(subsidyList);
+				
+				//건수 초기화
+				var subsidyCnt = document.querySelector("#result_count");
+				subsidyCnt.innerHTML = subsidyList.length; 
+				
+				//table초기화
+				// tbody 요소 찾기
+				var tbody = document.querySelector("#subsidy_list_table_tbody");
+
+				// tbody 내용 지우기
+				while (tbody.firstChild) {
+					tbody.removeChild(tbody.firstChild);
+				}
+				
+				//table내용 다시 채우기
+				for(var i=0; i <subsidyList.length; i++){
+					var subsidy = subsidyList[i];
+					
+					//tr생성
+					var tr = document.createElement("tr");
+					tr.className = "subsidy_list_table_row";
+					
+					//checkbox
+					var tdCheckbox = document.createElement("td");
+					tdCheckbox.className ="fixed_length_cell";
+					var inputCheckbox = document.createElement("input");
+					inputCheckbox.type = 'checkbox';
+					inputCheckbox.name = 'select';
+					inputCheckbox.onclick = function(){
+						checkSelectAll();
+					}
+					inputCheckbox.className ='input_check';
+					inputCheckbox.value = subsidy.sbsdId;
+					tdCheckbox.appendChild(inputCheckbox);
+					tr.appendChild(tdCheckbox);
+					
+					//num
+					var tdNum = document.createElement("td");
+					tdNum.className ="fixed_length_cell";
+					tdNum.textContent = subsidy.rowNum;
+					tr.appendChild(tdNum);
+					
+					//name
+					var tdStdtNm = document.createElement('td');
+					tdStdtNm.className ='fixed_length_cell';
+					tdStdtNm.textContent = subsidy.stdtNm;
+					tr.appendChild(tdStdtNm);
+					
+					//email
+					var tdEmail = document.createElement('td');
+					tdEmail.className ='variable_length_cell';
+					tdEmail.textContent = subsidy.userEmail;
+					tr.appendChild(tdEmail);
+					
+					//clss
+					var tdClssNm = document.createElement('td');
+					tdClssNm.className = 'variable_length_cell';
+					tdClssNm.textContent =subsidy.clssNm;
+					tr.appendChild(tdClssNm);
+					
+					//mngrNm
+					var tdMngrNm = document.createElement('td');
+					tdMngrNm.className = 'fixed_length_cell';
+					tdMngrNm.textContent = subsidy.mngrNm;
+					tr.appendChild(tdMngrNm);
+					
+					//출석일수
+					var tdWlogCnt = document.createElement('td');
+					tdWlogCnt.className = 'number_cell';
+					tdWlogCnt.textContent = subsidy.wlogCnt;
+					tr.appendChild(tdWlogCnt);
+					
+					//교육일수
+					var tdMaxWlogCnt = document.createElement('td');
+					tdMaxWlogCnt.className = 'number_cell';
+					tdMaxWlogCnt.textContent = subsidy.maxWlogCnt;
+					tr.appendChild(tdMaxWlogCnt);
+					
+					//출석률
+					var tdWlogPer = document.createElement('td');
+					tdWlogPer.className = 'number_cell';
+					tdWlogPer.textContent = (subsidy.wlogCnt * 100.0 / subsidy.maxWlogCnt).toFixed(1);
+					tr.appendChild(tdWlogPer);
+					
+					//지원금
+					var options = {
+							  minimumFractionDigits: 3, // 소수점 이하 최소 3자리까지 표시
+							  useGrouping: true, // 천 단위 구분 기호 사용 (COMMA)
+							};
+					var formatter = new Intl.NumberFormat('en-US', options);
+					
+					var tdSubsidy = document.createElement('td');
+					tdSubsidy.className = 'number_cell';
+					tdSubsidy.textContent = formatter.format(subsidy.clssSubsidy).replace(/,/g, 'POINT');
+					tr.appendChild(tdSubsidy);
+					
+					//지급기준일
+					var tdSubsidyDd = document.createElement('td');
+					tdSubsidyDd.className ='fixed_length_cell';
+					tdSubsidyDd.textContent = subsidy.subsidyDd;
+					tr.appendChild(tdSubsidyDd);
+					
+					//지급일
+					var tdPaidDd = document.createElement('td');
+					tdPaidDd.className ='fixed_length_cell';
+					tdPaidDd.textContent = subsidy.paidDd;
+					tr.appendChild(tdPaidDd);
+					
+					//기타사항
+					var tdEtc = document.createElement('td');
+					tdEtc.className = 'variable_length_cell';
+					tdEtc.textContent = subsidy.sbsdEtc;
+					tr.appendChild(tdEtc);
+					
+					//지급상태
+					var tdStatus = document.createElement('td');
+					tdStatus.className = 'fixed_length_cell';
+					tdStatus.textContent = subsidy.sbsdNm;
+					tdStatus.value = subsidy.sbsdCd;
+					tr.appendChild(tdStatus);
+					
+					
+					tbody.appendChild(tr);
+					
+				}
+				
+			}
+		});
+	}
+	
+	//지급상태 변경
+	function updateStatus(button){
+		var selectedSubsidyIds = [];
+
+		// 선택된 체크박스를 모두 선택합니다.
+		var selectedCheckboxes = document
+				.querySelectorAll(".input_check:checked");
+		// 선택된 체크박스의 값을 배열에 추가합니다.
+		selectedCheckboxes.forEach(function(checkbox) {
+			selectedSubsidyIds.push(checkbox.value);
+		});
+		//만약 아무것도 선택되어있지 않다면
+        if (selectedCheckboxes.length === 0) {
+            alert("상태변경할 행을 선택해주세요.");
+            
+        }else{
+        	//하나이상 선택 시
+        	cmcdId = button.value;
+    		cmcdNm = button.textContent;
+    		
+    		if(!confirm("선택한 행을 \""+cmcdNm+"\" 처리 하시겠습니까?")){
+    			//no
+    		}else{
+    			//전달해서 값 변경시키기
+    			$.ajax({
+    				url:'/admin/subsidy/update',
+    				method: 'post',
+    				data:{
+    					selectedSubsidyIds : selectedSubsidyIds,
+    					cmcdId : cmcdId
+    				},
+    				success: function(response){
+    					alert("상태가 변경되었습니다.");
+    					location.href='/admin/subsidy/list/1';
+    				}
+    			});
+    		}
+        }
+		
+	}
+	</script>
 </body>
 </html>
