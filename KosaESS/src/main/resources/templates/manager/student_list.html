@@ -51,7 +51,9 @@
 					</div>
 					<div class="search_filter_input_date_wrap">
 						<div class="search_filter_input_date">
-							<input type="date" id="startDate" min="1980-01-01"> <span> ~ </span> <input type="date" id="endDate" min="1980-01-01">
+							<input type="date" id="startDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssStartDd:null}">
+							<span> ~ </span>
+							<input type="date" id="endDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssEndDd:null}">
 						</div>
 						<div class="search_filter_input_radio">
 							<span>이번 달</span><input type="radio" name="default_period" id="this_month" value="thisMonth">

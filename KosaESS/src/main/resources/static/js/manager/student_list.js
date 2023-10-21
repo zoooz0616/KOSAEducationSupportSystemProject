@@ -118,16 +118,26 @@ function getCheckedSavedCmpts() {
 //주소의 classId param이 null이 아니라면 hidden targetClassId를 변경
 function changeTargetClassId(){
 	if(thisClassId != null){
-		//$('#class_id_save').val(thisClassId);
+		$('#class_id_save').val(thisClassId);
+		console.log($('#classId option').length);
 		//here
 		//옵션 돌면서 일치할때까지 돌리기
-		for(let i;i < $('#classId option').length;i++){
-			if($('#classId option:eq(i)').val()==thisClassId){
-				$('#classId option:eq(i)').attr("selected","selected")
+		for(let i = 0; i < $('#classId option').length; i++){
+			//console.log($('#classId option:eq(i)').val());
+			let iterId = $('#classId option:eq('+i+')').val();
+			if(iterId !=""){
+				iterId = iterId.split('(')[1];
+				iterId = iterId.split(',')[0];
+				iterId = iterId.split('=')[1];
+			}
+			console.log(iterId);
+			if(iterId==thisClassId){
+				//document.getElementById('classId').selectedIndex = i;
+				$('#classId option:eq('+i+')').prop("selected",true);
 			}
 		}
 		
-		console.log($('#classId option:selected'));
+		console.log($('#classId option:selected').prop('index'));
 	}
 }
 //End
@@ -180,17 +190,17 @@ function reset(){
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 	
-	// startDate가 바뀌면 endDate의 min을 변경
+	// 함수 세팅 : startDate가 바뀌면 endDate의 min을 변경
 	$('#startDate').on("change", function() {
 		$('#endDate').prop("min",$('#startDate').val());
 	}),
 	
-	//라디오버튼으로 검색 기간을 자동 입력
+	// 함수 세팅 : 라디오버튼으로 검색 기간을 자동 입력
 	radioBtns.change( function(){
 		setSearchPeriod();
 	}),
 	
-	//classId 선택을 변경할 경우, 숨겨진 시작/종료 일자를 저장하고 라디오버튼의 체크를 해제
+	// 함수 세팅 : classId 선택을 변경할 경우, 숨겨진 시작/종료 일자를 저장하고 라디오버튼의 체크를 해제
 	selectClassId.change(function(){
 		let targetClassStartDate = ((String)($("#classId").val().split(",")[10])).split("=")[1]
 		let targetClassEndDate = ((String)($("#classId").val().split(",")[11])).split("=")[1]
@@ -199,7 +209,7 @@ $(document).ready(
 		$("input:radio[name=default_period]").prop('checked',false)
 	}),
 	
-	//검색 기간을 직접 변경하면 라디오버튼 해제
+	// 함수 세팅 : 검색 기간을 직접 변경하면 라디오버튼 해제
 	$('#startDate').change(function(){
 		$("input:radio[name=default_period]").prop('checked',false)
 	}),
@@ -207,28 +217,28 @@ $(document).ready(
 		$("input:radio[name=default_period]").prop('checked',false)
 	}),
 	
-	//"전체"(교육생) 체크박스의 상태에 따라 나머지 교육생 체크박스의 상태를 변경
+	// 함수 세팅 : "전체"(교육생) 체크박스의 상태에 따라 나머지 교육생 체크박스의 상태를 변경
 	chkAll.on("change", function () {
 		isChecked = chkAll.prop("checked");
 		chkList.prop("checked", isChecked);
 	}),
 	//End
 	
-	//교육생 체크박스가 변경될 때 "전체"(교육생) 체크박스 상태 업데이트
+	// 함수 세팅 : 교육생 체크박스가 변경될 때 "전체"(교육생) 체크박스 상태 업데이트
 	chkList.on("change", function () {
 		allChecked = chkList.filter(":checked").length === chkList.length;
 		chkAll.prop("checked", allChecked);
 	}),
 	//End
 
-	//"전체"(이수 상태) 체크박스의 상태에 따라 나머지 이수 상태 체크박스의 상태를 변경
+	// 함수 세팅 : "전체"(이수 상태) 체크박스의 상태에 따라 나머지 이수 상태 체크박스의 상태를 변경
 	chkAllcmpt.on("change", function () {
 		chkAllcmptChecked = chkAllcmpt.prop("checked");
 		chkcmptList.prop("checked", chkAllcmptChecked);
 	}),
 	//End
 	
-	//이수 상태 체크박스가 변경될 때 "전체"(이수 상태) 체크박스 상태 업데이트
+	// 함수 세팅 : 이수 상태 체크박스가 변경될 때 "전체"(이수 상태) 체크박스 상태 업데이트
 	chkcmptList.on("change", function () {
 		chkcmptallChecked = chkcmptList.filter(":checked").length === chkcmptList.length;
 		chkAllcmpt.prop("checked", chkcmptallChecked);
@@ -237,13 +247,10 @@ $(document).ready(
 	
 	//주소의 classId Param이 null 아니라면, 해당 id에 해당하는 이름으로 select 박스 값으로 선택하고 검색 결과 출력
 	changeTargetClassId(),
-	function () {
-		if(($('#startDate').val()=="")&&($('#endDate').val()=="")){
-			$('#startDate').val($('#start_date_save').val());
-			$('#endDate').val($('#end_date_save').val());
-		}
-	},
+	console.log($("#startDate").val()),
+	console.log($("#endDate").val()),
 	search(),
+	console.log('heeere'),
 	//End
 	
 	//주소의 classId param이 null이 아니라면 hidden select 박스의 값을 param의 id와 같은 것으로 변경
@@ -263,6 +270,7 @@ $(document).ready(
 		if(($('#startDate').val()=="")&&($('#endDate').val()=="")){
 			$('#startDate').val($('#start_date_save').val());
 			$('#endDate').val($('#end_date_save').val());
+			$('#this_class_period').prop('checked',true);
 		}
 	}),
 	//End
@@ -319,13 +327,15 @@ $(document).ready(
 				$(".title_a").val(stdtListResponse.thisClassVO.clssId);
 				$(".title_a").attr("href", "/manager/class/"+stdtListResponse.thisClassVO.clssId);
 				
-				if(stdtList.length != 0){
+//				if(stdtList.length != 0){
 					document.getElementById("stdtCnt").innerHTML=stdtList.length;
 					$('.stdt_count_unit').css("visibility","visible")
+/*
 				}else{
 					document.getElementById("stdtCnt").innerHTML="검색 결과가 없습니다.";
 					$('.stdt_count_unit').css("visibility","hidden")
 				}
+*/
 				//End
 
 				//입력 시작
