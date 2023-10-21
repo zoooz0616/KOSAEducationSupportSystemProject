@@ -1,0 +1,269 @@
+input {
+	outline: none;
+}
+
+.sidebar.open ~ .home-section {
+	left: 250px;
+	width: calc(100% - 250px);
+}
+
+.home-section {
+	position: relative;
+	background: #fff;
+	min-height: 100vh;
+	top: 0;
+	left: 60px;
+	width: calc(100% - 60px);
+	transition: all 0.5s ease;
+	z-index: 2;
+}
+
+.home-section .content_top {
+	display: flex;
+	margin: 0 40px 40px 40px;
+	padding-top: 40px;
+	justify-content: space-between;
+}
+
+.home-section .content_top .title {
+	font-size: 20px;
+	color: #333333;
+	font-weight: bold;
+}
+
+.home-section .content_top .route a {
+	color: #0E5881;
+	text-decoration-line: none;
+	font-weight: bold;
+}
+
+.home-section .content_middle {
+	margin: 40px;
+	display: flex;
+	border-top: 2px solid #0E5881;
+	
+}
+
+.home-section .content_middle >div{
+	width: 100%;
+}
+
+.col_title, th {
+	color: #0E5881;
+	font-weight: bold;
+}
+
+.class_form_content .row {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+	height: 40px;
+}
+
+.class_form_content .row .col {
+	width: 33%;
+	display: flex;
+}
+
+.class_form_content .row .col .col_title {
+	text-align: center;
+	width: 100px;
+	background: #E7EFF3;
+	padding: 5px;
+}
+
+.class_form_content .row .col .col_content {
+	padding-left: 5px;
+	margin-top: 7px;
+	height: 100%;
+	width: 80%;
+}
+
+.class_form_content .row2 {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+}
+
+.class_form_content .row2 .col2 {
+	display: flex;
+}
+
+.class_form_content .row2 .col2 .col_title {
+	width: 100px;
+	background: #E7EFF3;
+	padding: 5px;
+	text-align: center;
+}
+
+.class_form_content .row2 .col2 .col_content {
+	padding: 5px;
+}
+
+.class_form_content .row2 .col2 .col_content div input {
+	width: 100%;
+}
+
+.class_form_content .row3 {
+	display: flex;
+	border-bottom: 1px solid #0E5881;
+}
+
+.class_form_content .row3 .col3 {
+	width: 100%;
+	margin: 0 5px 0 0;
+	display: flex;
+}
+
+.class_form_content .row3 .col3 .col_title {
+	width: 100px;
+	background: #E7EFF3;
+	padding: 5px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 250px;
+}
+
+.class_form_content .row3 .col3 .col_content {
+	padding: 5px;
+}
+
+.content_info_btn_wrap img {
+	width: 20px;
+}
+
+.col3 .col_content .content_info_btn_wrap {
+	display: flex;
+}
+
+.col3 .col_content .content_info_btn_wrap div {
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	display: flex;
+	margin: 2px;
+	padding: 5px;
+}
+
+.lecture_table {
+	border: 1px solid #E7EFF3;
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10px 0 10px 0;
+	border-top: 2px solid #0E5881;
+}
+
+th {
+	background: #E7EFF3;
+}
+
+.lecture_table tr td, th {
+	border: 1px solid #E7EFF3;
+}
+
+.lecture_table tr td * {
+	width: 100%;
+}
+
+.lecture_table tr td span {
+	margin-left: 5px;
+}
+
+.submit_btn {
+	font-size: 20px;
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	width: 150px;
+	height: 40px;
+	margin: 10px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.file_table {
+	border: 1px solid #E7EFF3;
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10px 0 10px 0;
+}
+
+.file_table tr td, th {
+	border: 1px solid #E7EFF3;
+}
+
+.file_table tr td {
+	padding-left: 10px;
+}
+
+.file_list .file_wrap {
+	display: flex;
+}
+
+.file_list div .btns {
+	border: 2px solid #0E5881;
+	background: white;
+	border-radius: 3px;
+	margin: 3px 5px 3px 5px;
+	text-align: center;
+	display: flex;
+	font-weight: bold;
+	color: #0E5881;
+	padding: 0 3px 0 3px;
+	height: 25px;
+}
+
+.file_list div .btns img {
+	width: 20px;
+}
+
+.file_input {
+	margin: 3px 5px 3px 0;
+	display: flex;
+}
+
+.file_input label {
+	background: #0E5881;
+	color: white;
+	padding: 1px 5px 1px 5px;
+	font-size: 15px;
+}
+
+.file_input input[type="file"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+.star {
+	color: red;
+	vertical-align: middle;
+}
+
+.td_check {
+	text-align: center;
+	padding: 0px;
+}
+
+a {
+	font-weight: bold;
+	text-decoration-line: none;
+	color: #0E5881;
+}
+
+a:hover {
+	font-weight: bold;
+	border-bottom: 2px solid #0E5881;
+	color: #0E5881;
+}

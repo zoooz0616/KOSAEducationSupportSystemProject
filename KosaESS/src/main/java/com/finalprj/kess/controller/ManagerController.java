@@ -3,6 +3,7 @@ package com.finalprj.kess.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
@@ -35,6 +36,7 @@ import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
@@ -43,6 +45,7 @@ import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
+import com.finalprj.kess.service.UploadFileService;
 
 import jakarta.mail.Session;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,6 +64,8 @@ public class ManagerController {
 	IStudentService studentService;
 	@Autowired
 	IAdminService adminService;
+	@Autowired
+	UploadFileService uploadFileService;
 
 	//	메인 페이지
 	@GetMapping("")
@@ -116,6 +121,7 @@ public class ManagerController {
 	}
 
 	//	교육 상세 조회
+	/*
 	@GetMapping("/class/{classId}")
 	public String getClassDetail(Model model, @PathVariable String classId, HttpSession session) {
 		//유저 필터링
@@ -145,6 +151,41 @@ public class ManagerController {
 		
 		model.addAttribute("title", "교육 과정 상세");
 		
+		return "manager/class_detail";
+	}
+	*/
+	@RequestMapping("/class/{classId}")
+	public String classDetail(@PathVariable String classId, HttpSession session, Model model) {
+		// title
+		String title = "교육과정 상세";
+		model.addAttribute("title", title);
+
+		// 해당 교육과정 객체 가져오기
+		ClassVO classVO = adminService.getClass(classId);
+		DecimalFormat formatter = new DecimalFormat("##,###,###");
+		classVO.setSSubsidy(formatter.format(classVO.getClssSubsidy()));
+		model.addAttribute("classVO", classVO);
+
+		// 파일 가져오기
+		List<FileVO> fileList = null;
+		if (classVO.getFileId() != null) {
+			fileList = uploadFileService.getFileList(classVO.getFileId());
+		}
+		model.addAttribute("fileList", fileList);
+
+		// 강의 가져오기
+		List<CurriculumVO> curriculumList = adminService.getCurriculumList(classVO.getClssId());
+		List<CurriculumDetailDTO> curriculumDetailList = null;
+
+		if (curriculumList != null) {
+			curriculumDetailList = new ArrayList<CurriculumDetailDTO>();
+			for (CurriculumVO curriculumVO : curriculumList) {
+				CurriculumDetailDTO curriculumDetailDTO = adminService.getCurriculumDetail(curriculumVO.getLctrId());
+				curriculumDetailList.add(curriculumDetailDTO);
+			}
+		}
+		model.addAttribute("curriculumDetailList", curriculumDetailList);
+
 		return "manager/class_detail";
 	}
 

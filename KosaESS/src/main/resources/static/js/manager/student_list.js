@@ -118,7 +118,16 @@ function getCheckedSavedCmpts() {
 //주소의 classId param이 null이 아니라면 hidden targetClassId를 변경
 function changeTargetClassId(){
 	if(thisClassId != null){
-		$('#class_id_save').val(thisClassId);
+		//$('#class_id_save').val(thisClassId);
+		//here
+		//옵션 돌면서 일치할때까지 돌리기
+		for(let i;i < $('#classId option').length;i++){
+			if($('#classId option:eq(i)').val()==thisClassId){
+				$('#classId option:eq(i)').attr("selected","selected")
+			}
+		}
+		
+		console.log($('#classId option:selected'));
 	}
 }
 //End
@@ -226,8 +235,15 @@ $(document).ready(
 	}),
 	//End
 	
-	//주소의 classId Param이 null 아니라면, 해당 id에 해당하는 이름으로 select 박스 값으로 선택하기
+	//주소의 classId Param이 null 아니라면, 해당 id에 해당하는 이름으로 select 박스 값으로 선택하고 검색 결과 출력
 	changeTargetClassId(),
+	function () {
+		if(($('#startDate').val()=="")&&($('#endDate').val()=="")){
+			$('#startDate').val($('#start_date_save').val());
+			$('#endDate').val($('#end_date_save').val());
+		}
+	},
+	search(),
 	//End
 	
 	//주소의 classId param이 null이 아니라면 hidden select 박스의 값을 param의 id와 같은 것으로 변경
