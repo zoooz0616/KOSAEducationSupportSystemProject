@@ -49,7 +49,7 @@
 			<div class="title">교육과정 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list}">교육과정
+				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list/1}">교육과정
 					관리</a>
 			</div>
 		</div>
@@ -135,19 +135,19 @@
 
 		<!-- Content Bottom-->
 		<div class="content_bottom">
-			<form th:action="@{/admin/cls/delete}" method="post">
+			<form th:action="@{/admin/cls/delete}" method="post" onsubmit="return beforeSubmit();">
 				<!-- 컨텐츠 개수와 버튼 wrap -->
 				<div class="content_info_wrap">
 					<div class="content_info">
-						<span>총 <span class="class_list_cnt"
-							th:text="${classCnt}">classListCnt</span> 건
+						<span>총 <span class="class_list_cnt" th:text="${classCnt}">classListCnt</span>
+							건
 						</span>
 					</div>
 					<div class="content_info_btn_wrap">
 						<!-- 엑셀 다운로드 버튼 -->
-						<button type="button" id="excel_btn" 
-							onclick="location.href='/excel/admin/class'">						
-							<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+						<button type="button" id="excel_btn"
+							onclick="location.href='/excel/admin/class'">
+							<img th:src="@{/img/excel.png}"><span>엑셀</span>
 						</button>
 
 						<!-- 선택삭제 버튼 -->
@@ -180,9 +180,10 @@
 								<th style="width: 15%;">지원기간</th>
 								<th style="width: 10%;">교육기간</th>
 								<th style="width: 5%;">교육시간</th>
-								<th style="width: 17%;">교육장소</th>
-								<th style="width: 5%;">수강가능인원</th>
+								<th style="width: 15%;">교육장소</th>
+								<th style="width: 2%;">수강가능인원</th>
 								<th style="width: 5%;">업무담당자</th>
+								<th style="width: 8%;">지원금(&#8361;)</th>
 							</tr>
 						</thead>
 						<tbody id="class_list_tbody">
@@ -210,6 +211,8 @@
 										th:text="${class.limitCnt}"></span></a></td>
 								<td class="manager_name"
 									th:text="${class.mngrNm} ? ${class.mngrNm} :'-'"></td>
+								<td class="class_subsidy"
+									th:text="${#numbers.formatDecimal(class.clssSubsidy,3,'COMMA',0,'POINT')}"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -218,7 +221,7 @@
 			</form>
 		</div>
 		<!-- Content Bottom-->
-		
+
 		<!-- Paging -->
 		<nav class="page_nav" aria-label="Page navigation">
 			<ul class="pagination">
@@ -231,8 +234,7 @@
 					th:href="@{/admin/class/list/__${i}__}">[[${i}]]</a></li>
 
 				<li th:if="${nowPageBlock<totalPageBlock}"><a
-					th:href="@{/admin/class/list/__${endPage+1}__}"
-					aria-label="Next">다음</a></li>
+					th:href="@{/admin/class/list/__${endPage+1}__}" aria-label="Next">다음</a></li>
 			</ul>
 		</nav>
 		<!-- Paging -->
@@ -265,22 +267,22 @@
 	}
 		
 		//form submit버튼 클릭시 선택한 값이 있는지 확인
-		document.addEventListener("DOMContentLoaded", function () {
-		    const form = document.querySelector('form');//form
-
-		    form.addEventListener("submit", function (event) {
-		    	//checked되어 있는 input들 선택
-		        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="select"]:checked');
-		        
-		    	//만약 아무것도 선택되어있지 않다면
-		        if (checkboxes.length === 0) {
-		            alert("삭제할 강의를 선택해주세요.");
-		            event.preventDefault();//submit취소
-		        }else{
-		        	alert("선택한 강의가 삭제되었습니다.");
-		        }
-		    });
-		});
+		function beforeSubmit(){
+			//checked되어 있는 input들 선택
+	        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="select"]:checked');
+	        
+	    	//만약 아무것도 선택되어있지 않다면
+	        if (checkboxes.length === 0) {
+	            alert("삭제할 강의를 선택해주세요.");
+	            event.preventDefault();//submit취소
+	        }else{
+	        	if(!confirm("삭제하시겠습니까?")){
+	        		return false;
+	        	}else{
+	        		alert("선택한 강의가 삭제되었습니다.");
+	        	}
+	        }
+		}
 		
 		//날짜 형식
 		function formatTimestamp(timestamp) {
@@ -405,7 +407,7 @@
 	          			
 	          			//업체명
 	          			var tdCmpyNm = document.createElement("td");
-	          			if(clss.cmpyNm ===''){
+	          			if(clss.cmpyNm === null){
 	          				tdCmpyNm.textContent = '-';
 	          			}else {
 	          				tdCmpyNm.textContent = clss.cmpyNm;
@@ -444,7 +446,7 @@
 	          			
 	          			//교육장소
 	          			var tdAdr = document.createElement("td");
-	          			if(clss.clssAdr ===''){
+	          			if(clss.clssAdr === null){
 	          				tdAdr.textContent = '-';
 	          			}else{
 	          				tdAdr.textContent = clss.clssAdr;
@@ -463,14 +465,25 @@
 	          			//업무담당자
 	          			var tdMngrNm = document.createElement("td");
 	          			tdMngrNm.className="manager_name";
-	          			if(clss.mngrNm===''){
+	          			if(clss.mngrNm=== null){
 	          				tdMngrNm.textContent = '-';
 	          			}else{
 	          				tdMngrNm.textContent = clss.mngrNm;
 	          			}
 	          			tr.appendChild(tdMngrNm);
+	          			
+	          			//지원금
+						var options = {
+								  minimumFractionDigits: 0, // 소수점 이하 최소 3자리까지 표시
+								  useGrouping: true, // 천 단위 구분 기호 사용 (COMMA)
+								};
+						var formatter = new Intl.NumberFormat('en-US', options);
+						
+						var tdSubsidy = document.createElement('td');
+						tdSubsidy.className = 'class_subsidy';
+						tdSubsidy.textContent = formatter.format(clss.clssSubsidy).replace(/,/g, ',');
+						tr.appendChild(tdSubsidy);
 
-	          			console.log(tr);
 	                    classListTbody.appendChild(tr);
 	                }
                 },

@@ -95,6 +95,9 @@ public class ExcelController {
 		cell = row.createCell(8);
 		cell.setCellStyle(headStyle);
 		cell.setCellValue("업무담당자");
+		cell = row.createCell(9);
+		cell.setCellStyle(headStyle);
+		cell.setCellValue("지원금");
 
 		// 데이터 부분 생성
 		for (ClassVO vo : list) {
@@ -107,7 +110,7 @@ public class ExcelController {
 			cell.setCellValue(vo.getCmpyNm());
 			cell = row.createCell(2);
 			cell.setCellStyle(bodyStyle);
-			cell.setCellValue(vo.getClssCdNm());
+			cell.setCellValue(vo.getCmcdNm());
 			cell = row.createCell(3);
 			cell.setCellStyle(bodyStyle);
 			cell.setCellValue(vo.getAplyStartDt() + "~" + vo.getAplyEndDt());
@@ -126,6 +129,9 @@ public class ExcelController {
 			cell = row.createCell(8);
 			cell.setCellStyle(bodyStyle);
 			cell.setCellValue(vo.getMngrNm());
+			cell = row.createCell(9);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(vo.getClssSubsidy());
 		}
 
 		// 엑셀 파일이름

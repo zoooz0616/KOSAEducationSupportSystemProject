@@ -774,6 +774,23 @@ public class AdminController {
 
 		return "admin/class_form";
 	}
+	
+	/**
+	 * 교육과정 생성 시 기업 선택 팝업 띄우기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 21.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@RequestMapping("/class/select/company")
+	public String selectCompanyByInsertClass(Model model) {
+		//insert때 사용가능한 기업리스트만 보내기
+		List<CompanyVO> companyList = adminService.getCompanyListAll();
+		model.addAttribute("companyList", companyList);
+		
+		return "admin/select_company_popup";
+	}
 
 	/**
 	 * 교육과정 생성 POST

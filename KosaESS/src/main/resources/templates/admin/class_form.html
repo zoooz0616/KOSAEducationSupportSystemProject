@@ -29,8 +29,9 @@
 			<div class="title" th:text="${title}">title</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list}">교육과정
-					관리</a> > <a th:href="@{/admin/class/__${act}__}" th:text="${title}">title</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/class/list/1}">교육과정 관리</a> > <a
+					th:href="@{/admin/class/__${act}__}" th:text="${title}">title</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -189,16 +190,26 @@
 						<div class="col">
 							<div class="col_title">기업</div>
 							<div class="col_content">
-								<select th:if="${act}=='insert'" th:name="cmpyId">
-									<option value="">미정</option>
-									<option th:each="company: ${companyList}"
-										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"></option>
-								</select> <select th:if="${act}=='update'" th:name="cmpyId">
-									<option value="">미정</option>
-									<option th:each="company: ${companyList}"
-										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"
-										th:selected="${company.cmpyId == classVO.cmpyId}"></option>
-								</select> <span th:if="${act}=='select'"
+								<div class="col_content_wrap" th:if="${act}=='insert'">
+									<input type="hidden" th:name="cmpyId"> <input
+										type="text" readonly value='미정'>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectCompanyPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<div class="col_content_wrap" th:if="${act}=='update'">
+									<input type="hidden" th:name="cmpyId"
+										th:value="${classVO.cmpyId}"> <input type="text"
+										th:value="${classVO.cmpyNm}" readonly>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectCompanyPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<span th:if="${act}=='select'"
 									th:text="${classVO.cmpyNm} ? ${classVO.cmpyNm} : '미정'"></span>
 							</div>
 						</div>
@@ -254,8 +265,8 @@
 								<div>
 									<input th:if="${act}=='insert'" class="subsidy" type="text"
 										style="width: 100%;" th:name="clssSubsidy"
-										placeholder="최대 99,999,999원" maxlength="10"> <input
-										th:if="${act}=='update'" class="subsidy" type="text"
+										placeholder="최대 99,999,999원" maxlength="10" value="0">
+									<input th:if="${act}=='update'" class="subsidy" type="text"
 										style="width: 100%;" th:name="clssSubsidy"
 										th:value="${classVO.sSubsidy}" maxlength="10"> <span
 										class="span_subsidy" th:if="${act}=='select'"
@@ -361,7 +372,8 @@
 						<div class="col3">
 							<div class="col_title">첨부 파일</div>
 							<div class="col_content">
-								<div th:if="${act=='insert' or (act=='update' and #lists.size(fileList)==0)}">
+								<div
+									th:if="${act=='insert' or (act=='update' and #lists.size(fileList)==0)}">
 									<div class="file_list">
 										<div class="file_wrap">
 											<div class="file_input">
@@ -913,6 +925,33 @@
 	    		alert("새로운 강의가 등록되었습니다.")
 				return true;	    		
 	    	}
+	    }
+	    
+	    function showSelectCompanyPopuup(button){
+	    	var divParent = button.closest('div');
+	    	
+	    	// 팝업 창을 열기
+            var popup = window.open("/admin/class/select/company", "기업 선택", 
+            		"width=500, height=800, left=800, top=300");
+
+            // 팝업에서 값이 전달되었을 때 처리
+            window.addEventListener("message", function(event) {
+            	 if (event.data) {
+            	        var cmpyId = event.data.cmpyId;
+            	        var cmpyNm = event.data.cmpyNm;
+            	        
+            	        if(cmpyNm==='미정'){
+            	        	cmpyId='';
+            	        }
+            	        
+            	        var hiddenInput = divParent.querySelector("input[type='hidden']");
+            	        var textInput = divParent.querySelector("input[type='text']");
+            	        
+            	        hiddenInput.value = cmpyId;
+            	        textInput.value = cmpyNm;
+            	        
+            	    }
+            });
 	    }
 	</script>
 </body>
