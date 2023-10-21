@@ -181,4 +181,7 @@ public interface IAdminService {
 	List<SubsidyDTO> getSubsidyListAll();
 
 	void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId);
+
+	List<SubsidyDTO> getSearchSubsidyList(String clssId, String startDate, String endDate, String keyword,
+			String subsidyStatus);
 }

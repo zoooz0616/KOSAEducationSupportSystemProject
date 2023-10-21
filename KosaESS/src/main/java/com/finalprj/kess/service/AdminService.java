@@ -723,4 +723,10 @@ public class AdminService implements IAdminService {
 	public void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId) {
 		adminRepository.updateSubsidyStatus(selectedSubsidyIds, cmcdId);
 	}
+	
+	@Override
+	public List<SubsidyDTO> getSearchSubsidyList(String clssId, String startDate, String endDate, String keyword,
+			String subsidyStatus) {
+		return adminRepository.getSearchSubsidyList(clssId, startDate, endDate, keyword, subsidyStatus);
+	}
 }

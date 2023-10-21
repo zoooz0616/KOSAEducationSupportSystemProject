@@ -2523,6 +2523,33 @@ public class AdminController {
 		
 		return "admin/subsidy_list";
 	}
+	 
+	/**
+	 * 지원금 조회 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 21.
+	 * @parameter : session, page, model
+	 * @return : String
+	 */
+	@GetMapping("/subsidy/search")
+	@ResponseBody
+	public Map<String, Object> searchSubsidy(HttpSession session, @RequestParam(name="clssId",required = false)String clssId,
+			@RequestParam(name = "startDate", required = false)String startDate,
+			@RequestParam(name = "endDate", required = false)String endDate,
+			@RequestParam(name = "keyword", required = false)String keyword,
+			@RequestParam(name = "subsidyStatus", required = false)String subsidyStatus
+			){
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		//검색 결과 리스트 받기
+		List<SubsidyDTO> subsidyList = adminService.getSearchSubsidyList(clssId, startDate, endDate, keyword.trim(), subsidyStatus);
+		response.put("subsidyList", subsidyList);
+		session.setAttribute("searchSubsidyList", subsidyList);
+		
+		return response;
+	}
+	
 	
 	/**
 	 * 지원금 상태 수정
