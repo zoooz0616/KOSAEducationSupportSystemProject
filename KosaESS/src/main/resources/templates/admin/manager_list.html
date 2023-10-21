@@ -59,53 +59,6 @@
 			</div>
 			<!-- Search Button wrap -->
 		</div>
-
-		<!-- 업무담당자 등록하기 -->
-		<div class="insert_manager" style="padding: 5px;">
-			<div class="input_wrap" style="display: flex;">
-				<div class="filter_box">
-					<div class="filter_box_title">
-						이름<span class="red">*</span>
-					</div>
-					<div>
-						<input class="input_manager_name" type="text" placeholder="이름">
-					</div>
-				</div>
-				<div class="filter_box">
-					<div class="filter_box_title">
-						이메일<span class="red">*</span>
-					</div>
-					<div>
-						<input class="input_manager_email" type="text" placeholder="이메일">
-					</div>
-				</div>
-				<div class="filter_box">
-					<div class="filter_box_title">
-						비밀번호<span class="red">*</span>
-					</div>
-					<div>
-						<input class="input_manager_pwd" type="text" placeholder="비밀번호">
-					</div>
-				</div>
-				<div class="filter_box">
-					<div class="filter_box_title">
-						전화번호<span class="red">*</span>
-					</div>
-					<div>
-						<input class="input_manager_tel" type="text" placeholder="전화번호">
-					</div>
-				</div>
-			</div>
-			<div>
-				<!-- 등록하기 버튼 -->
-				<button class="insert_btn" type="submit" onclick="insertManager()">
-					<img style="width: 20px;" th:src="@{/img/plus_white.png}"><span>등록하기</span>
-				</button>
-			</div>
-		</div>
-		<!-- 업무담당자 등록하기 -->
-
-
 		<!-- Content Middle-->
 
 		<!-- Content Bottom-->
@@ -119,10 +72,17 @@
 				</div>
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
-					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/manager'">
+					<button type="button" id="excel_btn"
+						onclick="location.href='/excel/admin/manager'">
 						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
 					</button>
-				
+
+					<!-- 등록하기 버튼 -->
+					<button class="insert_btn" type="button"
+						onclick="showInsertManagerPopup()">
+						<img style="width: 20px;" th:src="@{/img/plus_white.png}"><span>등록하기</span>
+					</button>
+
 					<!-- 선택삭제 버튼 -->
 					<button id="delete_btn">
 						<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
@@ -178,11 +138,14 @@
 								th:text="${#dates.format(manager.lastLoginDt,'yyyy-MM-dd hh:mm:ss')}">
 							</td>
 							<td class="btn_td">
-								<button class="update_btn" type="button" onclick="editRow(this)">수정</button>
-								<button class="save_btn" type="button" style="display: none;"
-									onclick="saveRow(this)">저장</button>
-								<button class="cancel_btn" type="button" style="display: none;"
-									onclick="cancelEdit(this)">취소</button>
+								<div class="list_btn_wrap">
+									<button class="update_btn" type="button"
+										onclick="editRow(this)">수정</button>
+									<button class="save_btn" type="button" style="display: none;"
+										onclick="saveRow(this)">저장</button>
+									<button class="cancel_btn" type="button" style="display: none;"
+										onclick="cancelEdit(this)">취소</button>
+								</div>
 							</td>
 						</tr>
 					</tbody>
@@ -191,7 +154,7 @@
 			<!-- 컨텐츠 리스트 부분 -->
 		</div>
 		<!-- Content Bottom-->
-		
+
 		<!-- Paging -->
 		<nav class="page_nav" aria-label="Page navigation">
 			<ul class="pagination">
@@ -204,8 +167,7 @@
 					th:href="@{/admin/manager/list/__${i}__}">[[${i}]]</a></li>
 
 				<li th:if="${nowPageBlock<totalPageBlock}"><a
-					th:href="@{/admin/manager/list/__${endPage+1}__}"
-					aria-label="Next">다음</a></li>
+					th:href="@{/admin/manager/list/__${endPage+1}__}" aria-label="Next">다음</a></li>
 			</ul>
 		</nav>
 		<!-- Paging -->
@@ -285,57 +247,7 @@
 			inputElement2.value = "";
 		}
 
-		//등록하기
-		function insertManager(){
-			var managerNm = document.querySelector(".input_manager_name").value;
-			var managerEmail = document.querySelector(".input_manager_email").value;
-			var managerPwd = document.querySelector(".input_manager_pwd").value;
-			var managerTel = document.querySelector(".input_manager_tel").value;
-			
-			// 이메일 형식 검사
-			var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-			
-			//모두 입력했는지 확인
-			if (managerNm === "" || managerEmail === "" || managerPwd === "" || managerTel === "") {
-    			alert("입력 필드를 모두 채워주세요.");
-			} else if (!emailPattern.test(managerEmail)) {
-			    alert("올바른 이메일 형식을 입력하세요.");
-			} else {
-				//이메일 유효성 검사
-				$.ajax({
-            					url: '/admin/manager/check_email',
-            					async:true,
-            					method: 'POST',
-            					data: {
-            						managerEmail : managerEmail
-            					},
-            					success : function(response){
-            						if(response == 'fail'){
-            							alert("이미 존재하는 이메일 주소입니다.");
-            						}else if(response == 'success'){
-            							//모두 완벽하다면
-                        				$.ajax({
-                        					url: '/admin/manager/insert',
-                        					async:true,
-                        					method: 'POST',
-                        					data: {
-                        						managerNm : managerNm,
-                        						managerEmail : managerEmail,
-                        						managerPwd : managerPwd,
-                        						managerTel : managerTel
-                        					},
-                        					success : function(response){
-                        						if(response == 'success'){
-                        							alert("업무담당자가 등록되었습니다.");
-                        							window.location.href = "/admin/manager/list";
-                        						}
-                        					}
-                        				});
-            						}
-            					}
-            				});
-			}
-		}
+		
 		
 		//조회
 		function search() {
@@ -399,7 +311,7 @@
 								//Num
 								var tdNum = document.createElement("td");
 								tdNum.className ="manager_num";
-								tdNum.innerText = managerList.length - i;
+								tdNum.innerText = i+1;
 								tr.appendChild(tdNum);
 
 								//mngrNm
@@ -484,6 +396,9 @@
 								var tdButton = document.createElement("td");
 								tdButton.className = "btn_td";
 
+								var divButtonWrap = document.createElement("div");
+								divButtonWrap.className="list_btn_wrap";
+								
 								//수정 버튼 생성
 								var updateBtn = document
 										.createElement("button");
@@ -493,7 +408,6 @@
 								updateBtn.onclick = function() {
 									editRow(this);
 								};
-
 								// 저장 버튼 생성
 								var saveButton = document
 										.createElement("button");
@@ -504,7 +418,6 @@
 								saveButton.onclick = function() {
 									saveRow(this);
 								};
-
 								// 취소 버튼 생성
 								var cancelButton = document
 										.createElement("button");
@@ -516,9 +429,11 @@
 									cancelEdit(this);
 								};
 
-								tdButton.appendChild(updateBtn);
-								tdButton.appendChild(saveButton);
-								tdButton.appendChild(cancelButton);
+								
+								divButtonWrap.appendChild(updateBtn);
+								divButtonWrap.appendChild(saveButton);
+								divButtonWrap.appendChild(cancelButton);
+								tdButton.appendChild(divButtonWrap);
 								tr.appendChild(tdButton);
 
 								tbody.appendChild(tr);
@@ -638,6 +553,17 @@
   		statusNm.classList.add('red');
   	}
 	});
+	
+
+	//업무담당자 등록하기 버튼
+	var popup;
+	function showInsertManagerPopup(){
+		popup = window.open(
+				"/admin/manager/insert", "insertmanager", 
+				"width=500, height=300, left=900, top=500"		
+		);
+	}
+	
 	</script>
 </body>
 </html>

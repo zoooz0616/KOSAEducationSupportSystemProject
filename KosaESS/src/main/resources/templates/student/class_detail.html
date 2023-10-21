@@ -66,9 +66,9 @@
 							th:if="${classDetail.clssAdr!= null}"
 							th:text="${classDetail.clssAdr}"></span></td>
 						<th>지원금</th>
-						<td><span th:if="${classDetail.clssSubsidy == null}"
-							style="color: lightslategray;">미정</span> <span
-							th:if="${classDetail.clssSubsidy != null}"
+						<td><span th:if="${classDetail.clssSubsidy == 0}"
+							style="color: lightslategray;">미지급</span> <span
+							th:if="${classDetail.clssSubsidy != 0}"
 							th:text="${#numbers.formatInteger(classDetail.clssSubsidy, 3, 'COMMA') + '원'}"></span>
 						</td>
 
@@ -136,7 +136,7 @@
 									<th colspan="3">총 이수 시간</th>
 									<!-- <td class="lctrTotalTm"></td> -->
 									<td th:text="${classDetail.clssTotalTm}"></td>
-									
+
 								</tr>
 							</tfoot>
 						</table>
@@ -168,12 +168,16 @@
 				<ul style="padding: 0;">
 					<li th:if="${class2 != null}">
 						<div class="veiwClass1">
-							<span th:if="${class2.clssCd} == 'CLS0000002'"
+							<span th:if="${class2.clssCd} == 'CLS0000001'"
 								th:text="${class2.cmcdNm}"
 								style="font-weight: bold; color: blue;"></span> <span
+								th:if="${class2.clssCd} == 'CLS0000002'"
+								th:text="${class2.cmcdNm}"
+								style="font-weight: bold; color: red;"></span> <span
 								th:if="${class2.clssCd} == 'CLS0000008'"
-								th:text="${class2.cmcdNm}" style="font-weight: bold;"></span> <span
-								th:if="${class2.clssCd != 'CLS0000002' and class2.clssCd != 'CLS0000008'}"
+								th:text="${class2.cmcdNm}"
+								style="font-weight: bold; color: lightslategray;"></span> <span
+								th:if="${class2.clssCd != 'CLS0000001' and class2.clssCd != 'CLS0000002' and class2.clssCd != 'CLS0000008'}"
 								th:text="${class2.cmcdNm}" style="color: black;"></span>
 							<h2 th:text="${class2.clssNm}"></h2>
 							<div th:if="${class2.fileId!=null}">
@@ -189,12 +193,16 @@
 					</li>
 					<li th:if="${class1 != null}">
 						<div class="veiwclass2">
-							<span th:if="${class1.clssCd} == 'CLS0000002'"
+							<span th:if="${class1.clssCd} == 'CLS0000001'"
 								th:text="${class1.cmcdNm}"
 								style="font-weight: bold; color: blue;"></span> <span
-								th:if="${class1.clssCd}== 'CLS0000008'"
-								th:text="${class1.cmcdNm}" style="font-weight: bold;"></span> <span
-								th:if="${class1.clssCd != 'CLS0000002' and class1.clssCd != 'CLS0000008'}"
+								th:if="${class1.clssCd} == 'CLS0000002'"
+								th:text="${class1.cmcdNm}"
+								style="font-weight: bold; color: red;"></span> <span
+								th:if="${class1.clssCd} == 'CLS0000008'"
+								th:text="${class1.cmcdNm}"
+								style="font-weight: bold; color: lightslategray;"></span> <span
+								th:if="${class1.clssCd != 'CLS0000001' and class1.clssCd != 'CLS0000002' and class1.clssCd != 'CLS0000008'}"
 								th:text="${class1.cmcdNm}" style="color: black;"></span>
 							<h2 th:text="${class1.clssNm}"></h2>
 							<div th:if="${class1.fileNm!=null}">

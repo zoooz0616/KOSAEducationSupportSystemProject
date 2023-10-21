@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -48,6 +49,7 @@ import com.finalprj.kess.model.RegistrationVO;
 import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.model.WorklogVO;
+import com.finalprj.kess.service.CertificateGenerationService;
 import com.finalprj.kess.service.IStudentService;
 import com.finalprj.kess.service.IUploadFileService;
 import com.itextpdf.text.DocumentException;
@@ -63,6 +65,8 @@ public class StudentController {
 	IStudentService studentService;
 	@Autowired
 	IUploadFileService uploadFileService;
+	@Autowired
+	CertificateGenerationService certificateGenerationService;
 	StudentVO student = null;
 	LoginVO login = null;
 
@@ -1082,14 +1086,6 @@ public class StudentController {
 		model.addAttribute("wlogList", wlogList);
 		return wlogList;
 	}
-//	@GetMapping("/mypage/wlogList")
-//	public String searchWlogList(HttpSession session, Model model,
-//			@RequestParam("selectedClssNm") String selectedClssNm) {
-//		String stdtId = (String) session.getAttribute("stdtId");
-//		List<WorklogVO> wlogList = studentService.searchWlogList(stdtId, selectedClssNm);
-//		model.addAttribute("wlogList", wlogList);
-//		return "/student/mypage?select=4";
-//	}
 
 	// 마이페이지 이수 내역 조회
 	/**
@@ -1101,10 +1097,39 @@ public class StudentController {
 
 	@PostMapping("/mypage/rgstList")
 	@ResponseBody
-	public List<RegistrationVO> searchRgstList(HttpSession session, Model model) {
+	public List<RegistrationDTO> searchRgstList(HttpSession session, Model model) {
 		String stdtId = (String) session.getAttribute("stdtId");
-		List<RegistrationVO> rgstList = studentService.searchRgstList(stdtId);
+		List<RegistrationDTO> rgstList = studentService.searchRgstList(stdtId);
+
+		for (int i = 0; i < rgstList.size(); i++) {
+			String clssIdRgst = rgstList.get(i).getClssId(); // 배열 요소에 대한 접근 수정
+			double stdtTmSum = studentService.getStudentTmSumByIds(clssIdRgst, stdtId);
+			stdtTmSum = Math.round(stdtTmSum * 10.0) / 10.0;
+
+			if (Double.isNaN(stdtTmSum)) {
+				stdtTmSum = 0;
+			}
+
+			Double classTm = studentService.getClassTm(clssIdRgst); // classId 변수에 대한 정의 누락
+
+			if (classTm != null) { // null 체크
+				if (classTm == 0) {
+					rgstList.get(i).setCmptRate(0.0);
+				} else if (stdtTmSum / classTm > 1) {
+					rgstList.get(i).setCmptRate(100.0);
+					rgstList.get(i).setStdtTmSum(stdtTmSum);
+				} else if (stdtTmSum / classTm < 0) {
+					rgstList.get(i).setCmptRate(0.0);
+					rgstList.get(i).setStdtTmSum(stdtTmSum);
+				} else {
+					rgstList.get(i).setCmptRate(Math.round((100.0 * stdtTmSum / classTm)* 10.0) / 10.0);
+					rgstList.get(i).setStdtTmSum(stdtTmSum);
+				}
+			}
+		}
+
 		model.addAttribute("rgstList", rgstList);
+
 		return rgstList;
 	}
 
@@ -1255,8 +1280,6 @@ public class StudentController {
 			@RequestParam("resnText") String resnText, HttpSession session) throws IOException {
 		String stdtId = (String) session.getAttribute("stdtId");
 
-		
-
 		if (files[0] != null && !files[0].isEmpty()) {
 			String maxFileId = uploadFileService.getMaxFileId();
 			int subFileId = 1;
@@ -1348,13 +1371,22 @@ public class StudentController {
 		return sbsdList;
 	}
 
-	/*
-	 * @PostMapping("/generate-pdf") public ResponseEntity<?>
-	 * generatePdfCertificate(@RequestBody CertificateModel model) throws
-	 * IOException, DocumentException { byte[] bytes =
-	 * studentService.generatePdfCertificate(model); return
-	 * ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
-	 * .header(HttpHeaders.CONTENT_DISPOSITION,
-	 * "attachment; filename=certificate.pdf").body(bytes); }
-	 */
+	@PostMapping("/getAplyVO")
+	public ResponseEntity<?> generatePdfCertificate(HttpSession session, @RequestParam("clssId") String clssId)
+			throws IOException, DocumentException {
+		try {
+			String stdtId = (String) session.getAttribute("stdtId");
+
+			RegistrationDTO rgst = new RegistrationDTO();
+			rgst = studentService.getRgstVO(stdtId, clssId);
+			byte[] certificateBytes = certificateGenerationService.generatePdfCertificate(rgst);
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
+			headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=certificate.pdf");
+			return ResponseEntity.ok().headers(headers).body(certificateBytes);
+		} catch (Exception e) {
+			// 에러 핸들링 로직 추가
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("PDF 생성 중 오류가 발생했습니다.");
+		}
+	}
 }

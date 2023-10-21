@@ -3,9 +3,11 @@ package com.finalprj.kess.service;
 import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -71,7 +73,7 @@ public interface IStudentService {
 
 	void updateAplydt(String aplyId, String stdtId);
 
-	List<RegistrationVO> searchRgstList(String stdtId);
+	List<RegistrationDTO> searchRgstList(String stdtId);
 
 	int getRgstIngCnt(String stdtId);
 
@@ -171,4 +173,9 @@ public interface IStudentService {
 
 	List<SubsidyDTO> searchSbsdList(String stdtId);
 
+	RegistrationDTO getRgstVO(String stdtId, String clssId);
+
+	double getStudentTmSumByIds(String clssIdRgst, String stdtId);
+
+	Double getClassTm(String clssIdRgst);
 }

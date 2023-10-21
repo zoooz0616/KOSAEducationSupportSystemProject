@@ -30,4 +30,6 @@ public class StudentVO {
 	private String jobNm;//교육생 직업
 	private Timestamp lastLoginDt;//마지막 로그인 일시
 	private String birthday;//생년월일
+	
+	private int rowNum;
 }

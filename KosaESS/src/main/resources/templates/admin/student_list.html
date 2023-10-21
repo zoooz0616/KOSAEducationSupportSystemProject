@@ -109,7 +109,7 @@
 			<div class="content_info_wrap">
 				<div class="content_info">
 					<span>총 <span class="student_list_cnt"
-						th:text="${#lists.size(studentList)}"></span> 명
+						th:text="${studentCnt}"></span> 명
 					</span>
 				</div>
 				<div class="content_info_btn_wrap">
@@ -149,7 +149,7 @@
 							<td class="student_check"><input class="input_check"
 								type="checkbox" name="select" onclick="checkSelectAll()"
 								th:value="${student.stdtId}"></td>
-							<td class="student_num" th:text="${#lists.size(studentList)-iterStat.index}"></td>
+							<td class="student_num" th:text="${student.rowNum}"></td>
 							<td class="student_name"><a
 								th:href="@{/admin/student/view/__${student.stdtId}__}"
 								th:text="${student.stdtNm}"></a></td>
@@ -169,6 +169,24 @@
 			<!-- 컨텐츠 리스트 부분 -->
 		</div>
 		<!-- Content Bottom-->
+		
+		<!-- Paging -->
+		<nav class="page_nav" aria-label="Page navigation">
+			<ul class="pagination">
+				<li th:if="${nowPageBlock>1}"><a
+					th:href="@{/admin/student/list/__${startPage-1}__}"
+					aria-label="Previous">이전</a></li>
+
+				<li th:each="i: ${#numbers.sequence(startPage, endPage)}"
+					th:classappend="${i==nowPage}?active"><a
+					th:href="@{/admin/student/list/__${i}__}">[[${i}]]</a></li>
+
+				<li th:if="${nowPageBlock<totalPageBlock}"><a
+					th:href="@{/admin/student/list/__${endPage+1}__}"
+					aria-label="Next">다음</a></li>
+			</ul>
+		</nav>
+		<!-- Paging -->
 	</div>
 
 	<script>

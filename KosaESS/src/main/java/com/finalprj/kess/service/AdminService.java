@@ -25,6 +25,7 @@ import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.model.SubjectVO;
 import com.finalprj.kess.repository.IAdminRepository;
 import com.finalprj.kess.repository.IUploadFileRepository;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 @Service
 public class AdminService implements IAdminService {
@@ -345,8 +346,10 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<CommonCodeVO> getGroupCodeList() {
-		return adminRepository.getGroupCodeList();
+	public List<CommonCodeVO> getGroupCodeList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getGroupCodeList(start, start+19);
 	}
 
 	@Override
@@ -551,8 +554,10 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<StudentVO> getStudentList() {
-		return adminRepository.getStudentList();
+	public List<StudentVO> getStudentList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getStudentList(start,start+19);
 	}
 
 	@Override
@@ -645,9 +650,54 @@ public class AdminService implements IAdminService {
 	public List<CommonCodeVO> getSearchGroupCodeList(String tpcdId, String cmcdNm, String useYn) {
 		return adminRepository.getSearchGroupCodeList(tpcdId, cmcdNm, useYn);
 	}
+	
+	@Override
+	public int getGroupCodeCnt() {
+		return adminRepository.getGroupCodeCnt();
+	}
+	
+	@Override
+	public List<PostVO> getNoticeListAll() {
+		return adminRepository.getNoticeListAll();
+	}
+	
+	@Override
+	public List<PostVO> getInquiryListAll() {
+		return adminRepository.getInquiryListAll();
+	}
+	
+	@Override
+	public List<ManagerVO> getManagerListAll() {
+		return adminRepository.getManagerListAll();
+	}
+	
+	@Override
+	public List<CompanyVO> getCompanyListAll() {
+		return adminRepository.getCompanyListAll();
+	}
 
+	@Override
+	public List<ClassVO> getClassListAll() {
+		return adminRepository.getClassListAll();
+	}
+	
+	@Override
+	public List<StudentVO> getStudentListAll() {
+		return adminRepository.getStudentListAll();
+	}
+	
+	@Override
+	public List<CommonCodeVO> getGroupCodeListAll() {
+		return adminRepository.getGroupCodeListAll();
+	}
+	
 	@Override
 	public int getWaitClassCnt() {
 		return adminRepository.getWaitClassCnt();
+	}
+
+	@Override
+	public List<CommonCodeVO> getNoticeCommonCodeListByInsert() {
+		return adminRepository.getNoticeCommonCodeListByInsert();
 	}
 }
