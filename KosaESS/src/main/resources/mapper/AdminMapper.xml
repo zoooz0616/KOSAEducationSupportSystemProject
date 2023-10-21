@@ -1811,6 +1811,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 				,sbsd.updter_id
 				,m.mngr_id
 				,m.mngr_nm
+				,sbsd_etc
 			FROM sbsd 
 				JOIN stdt s ON sbsd.stdt_id=s.stdt_id 
 				JOIN clss c ON sbsd.clss_id=c.clss_id
@@ -1824,7 +1825,6 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	<select id="getSubsidyListAll"
 		resultType="com.finalprj.kess.dto.SubsidyDTO">
 	<![CDATA[
-	--getSubsidyListAll
 		select 
         	row_number() over(order by s.stdt_nm) as row_num
 				,sbsd.sbsd_id
@@ -1847,6 +1847,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 				,sbsd.updter_id
 				,m.mngr_id
 				,m.mngr_nm
+				,sbsd_etc
 			FROM sbsd 
 				JOIN stdt s ON sbsd.stdt_id=s.stdt_id 
 				JOIN clss c ON sbsd.clss_id=c.clss_id
@@ -1862,7 +1863,8 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			set
 			sbsd_cd = #{cmcdId},
 			updt_dt = SYSTIMESTAMP,
-			updter_id = 'MNGR000001'
+			updter_id =
+			'MNGR000001'
 			<if test="cmcdId == 'SSD0000002'">
 				, paid_dd = SYSDATE
 			</if>
@@ -1870,7 +1872,60 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		</foreach>
 	</update>
 
+	<select id="getSearchSubsidyList"
+		resultType="com.finalprj.kess.dto.SubsidyDTO">
+	<![CDATA[
+		select 
+        	row_number() over(order by s.stdt_nm) as row_num
+				,sbsd.sbsd_id
+				,sbsd.clss_id
+				,clss_nm
+				,clss_subsidy
+				,sbsd.stdt_id
+				,stdt_nm
+				,s.user_email
+				,sbsd_cd
+				,c1.cmcd_nm as sbsd_nm
+				,paid_dd
+				,payment
+				,subsidy_dd
+				,max_wlog_cnt
+				,wlog_cnt
+				,sbsd.rgst_dt
+				,sbsd.rgster_id
+				,sbsd.updt_dt
+				,sbsd.updter_id
+				,m.mngr_id
+				,m.mngr_nm
+				,sbsd_etc
+			FROM sbsd 
+				JOIN stdt s ON sbsd.stdt_id=s.stdt_id 
+				JOIN clss c ON sbsd.clss_id=c.clss_id
+				JOIN mngr m ON c.mngr_id=m.mngr_id
+				JOIN cmcd c1 ON sbsd.sbsd_cd=c1.cmcd_id
+	]]>
+		<if test='clssId!=""'>
+			AND sbsd.clss_id = #{clssId}
+		</if>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND subsidy_dd >= to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='endDate!=""'>
+			<![CDATA[
+				AND subsidy_dd <= to_date(#{endDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='keyword!=""'>
+			AND sbsd.stdt_id in (SELECT stdt_id FROM stdt WHERE ((stdt_nm like
+			'%'||#{keyword}||'%' ) OR (user_email like '%'||#{keyword}||'%')))
+		</if>
+		<if test='subsidyStatus!=""'>
+			AND sbsd_cd = #{subsidyStatus}
+		</if>
 
+	</select>
 
 
 

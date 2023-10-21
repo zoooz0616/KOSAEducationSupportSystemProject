@@ -36,4 +36,6 @@ public class SubsidyDTO {
 	public void appendWlog(String wlog) {
 		this.wlog = this.wlog.concat(wlog);
 	}
+	
+	private String sbsdEtc;//기타사항
 }

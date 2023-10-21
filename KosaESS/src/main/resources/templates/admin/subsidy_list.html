@@ -42,8 +42,8 @@
 					</div>
 					<div class="search_filter_name">검색 기간</div>
 					<div class="search_filter_input">
-						<select id="start_date_y">
-							<option value="" disabled selected>연</option>
+						<select id="start_date_y" onchange="changeStartYear(this)">
+							<option value="" selected>연</option>
 							<option
 								th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}"
 								th:text="${yNum}" th:value="${yNum}" />
@@ -51,8 +51,8 @@
 							<option value="" disabled selected>월</option>
 							<option th:each="monthNum:${#numbers.sequence(1,12)}"
 								th:text="${monthNum}" th:value="${monthNum}" />
-						</select> <span>&nbsp;~&nbsp;</span> <select id="end_date_y">
-							<option value="" disabled selected>연</option>
+						</select> <span>&nbsp;~&nbsp;</span> <select id="end_date_y" onchange="changeEndYear(this)">
+							<option value="" selected>연</option>
 							<option
 								th:each="yNum:${#numbers.sequence(__${#calendars.format(#calendars.createNow(), 'yyyy')}__,1980)}"
 								th:text="${yNum}" th:value="${yNum}" />
@@ -64,7 +64,8 @@
 					</div>
 					<div class="search_filter_name">검색어</div>
 					<div class="search_filter_input">
-						<input type="text" class="input_keyword" placeholder="이메일 또는 이름">
+						<input type="text" class="input_keyword" placeholder="이메일 또는 이름"
+							onkeyup="if(window.event.keyCode==13){search();}">
 					</div>
 					<div class="search_filter_name">지급 상태</div>
 					<div class="search_filter_input">
@@ -126,6 +127,7 @@
 						<th>지원금(&#8361;)</th>
 						<th>지급기준일</th>
 						<th>지급일</th>
+						<th>기타사항</th>
 						<th>지급상태</th>
 					</tr>
 				</thead>
@@ -149,6 +151,7 @@
 						<td class="fixed_length_cell"
 							th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
+						<td class="variable_length_cell" th:text="${subsidy.sbsdEtc}">기타사항</td>
 						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}"
 							th:value="${subsidy.sbsdCd}">지급상태</td>
 					</tr>
@@ -225,9 +228,204 @@
 		subsidyStatusSelect.value="";
 	}
 	
+	//년도 변경시 월 변경
+	function changeStartYear(startYearSelect){
+		startYearValue = startYearSelect.value;
+		
+		startMonthSelect= document.querySelector("#start_date_m");
+		
+		if(startYearValue ===''){
+			//전체
+			startMonthSelect.value='';
+		}else{
+			//전체 그 이외
+			startMonthSelect.value='1';
+		}
+	}
+	
+	function changeEndYear(endYearSelect){
+		endYearValue =endYearSelect.value;
+		
+		endMonthSelect = document.querySelector("#end_date_m");
+		
+		if(endYearValue ===''){
+			//전체
+			endMonthSelect.value='';
+		}else{
+			//전체 그 이외
+			endMonthSelect.value='1';
+		}
+	}
+	
 	//조회
 	function search(){
+		var clssId = document.querySelector("#classId").value;
+		var startYear = document.querySelector("#start_date_y").value;
+		var startMonth = document.querySelector("#start_date_m").value;
+		var endYear = document.querySelector("#end_date_y").value;
+		var endMonth = document.querySelector("#end_date_m").value;
+		var keyword = document.querySelector(".input_keyword").value;
+		var subsidyStatus = document.querySelector("#subsidy_cmcd_id").value;
 		
+		var startDate = "";
+		var endDate = "";
+		
+		if(startYear !==''){
+			startDate = startYear +'-'+startMonth+'-'+'01';
+		}
+		if(endYear !==''){
+			endDate = endYear +'-'+endMonth+'-'+'30';
+		}
+		
+		console.log(clssId);
+		console.log(startDate);
+		console.log(endDate);
+		console.log(keyword);
+		console.log(subsidyStatus);
+		
+		
+		//검색키워드들 전송
+		$.ajax({
+			url:'/admin/subsidy/search',
+			method:'GET',
+			data:{
+				clssId : clssId,
+				startDate : startDate,
+				endDate : endDate,
+				keyword : keyword,
+				subsidyStatus : subsidyStatus
+			},
+			success:function(response){
+				var subsidyList= response.subsidyList;
+				console.log(subsidyList);
+				
+				//건수 초기화
+				var subsidyCnt = document.querySelector("#result_count");
+				subsidyCnt.innerHTML = subsidyList.length; 
+				
+				//table초기화
+				// tbody 요소 찾기
+				var tbody = document.querySelector("#subsidy_list_table_tbody");
+
+				// tbody 내용 지우기
+				while (tbody.firstChild) {
+					tbody.removeChild(tbody.firstChild);
+				}
+				
+				//table내용 다시 채우기
+				for(var i=0; i <subsidyList.length; i++){
+					var subsidy = subsidyList[i];
+					
+					//tr생성
+					var tr = document.createElement("tr");
+					tr.className = "subsidy_list_table_row";
+					
+					//checkbox
+					var tdCheckbox = document.createElement("td");
+					tdCheckbox.className ="fixed_length_cell";
+					var inputCheckbox = document.createElement("input");
+					inputCheckbox.type = 'checkbox';
+					inputCheckbox.name = 'select';
+					inputCheckbox.onclick = function(){
+						checkSelectAll();
+					}
+					inputCheckbox.className ='input_check';
+					inputCheckbox.value = subsidy.sbsdId;
+					tdCheckbox.appendChild(inputCheckbox);
+					tr.appendChild(tdCheckbox);
+					
+					//num
+					var tdNum = document.createElement("td");
+					tdNum.className ="fixed_length_cell";
+					tdNum.textContent = subsidy.rowNum;
+					tr.appendChild(tdNum);
+					
+					//name
+					var tdStdtNm = document.createElement('td');
+					tdStdtNm.className ='fixed_length_cell';
+					tdStdtNm.textContent = subsidy.stdtNm;
+					tr.appendChild(tdStdtNm);
+					
+					//email
+					var tdEmail = document.createElement('td');
+					tdEmail.className ='variable_length_cell';
+					tdEmail.textContent = subsidy.userEmail;
+					tr.appendChild(tdEmail);
+					
+					//clss
+					var tdClssNm = document.createElement('td');
+					tdClssNm.className = 'variable_length_cell';
+					tdClssNm.textContent =subsidy.clssNm;
+					tr.appendChild(tdClssNm);
+					
+					//mngrNm
+					var tdMngrNm = document.createElement('td');
+					tdMngrNm.className = 'fixed_length_cell';
+					tdMngrNm.textContent = subsidy.mngrNm;
+					tr.appendChild(tdMngrNm);
+					
+					//출석일수
+					var tdWlogCnt = document.createElement('td');
+					tdWlogCnt.className = 'number_cell';
+					tdWlogCnt.textContent = subsidy.wlogCnt;
+					tr.appendChild(tdWlogCnt);
+					
+					//교육일수
+					var tdMaxWlogCnt = document.createElement('td');
+					tdMaxWlogCnt.className = 'number_cell';
+					tdMaxWlogCnt.textContent = subsidy.maxWlogCnt;
+					tr.appendChild(tdMaxWlogCnt);
+					
+					//출석률
+					var tdWlogPer = document.createElement('td');
+					tdWlogPer.className = 'number_cell';
+					tdWlogPer.textContent = (subsidy.wlogCnt * 100.0 / subsidy.maxWlogCnt).toFixed(1);
+					tr.appendChild(tdWlogPer);
+					
+					//지원금
+					var options = {
+							  minimumFractionDigits: 3, // 소수점 이하 최소 3자리까지 표시
+							  useGrouping: true, // 천 단위 구분 기호 사용 (COMMA)
+							};
+					var formatter = new Intl.NumberFormat('en-US', options);
+					
+					var tdSubsidy = document.createElement('td');
+					tdSubsidy.className = 'number_cell';
+					tdSubsidy.textContent = formatter.format(subsidy.clssSubsidy).replace(/,/g, 'POINT');
+					tr.appendChild(tdSubsidy);
+					
+					//지급기준일
+					var tdSubsidyDd = document.createElement('td');
+					tdSubsidyDd.className ='fixed_length_cell';
+					tdSubsidyDd.textContent = subsidy.subsidyDd;
+					tr.appendChild(tdSubsidyDd);
+					
+					//지급일
+					var tdPaidDd = document.createElement('td');
+					tdPaidDd.className ='fixed_length_cell';
+					tdPaidDd.textContent = subsidy.paidDd;
+					tr.appendChild(tdPaidDd);
+					
+					//기타사항
+					var tdEtc = document.createElement('td');
+					tdEtc.className = 'variable_length_cell';
+					tdEtc.textContent = subsidy.sbsdEtc;
+					tr.appendChild(tdEtc);
+					
+					//지급상태
+					var tdStatus = document.createElement('td');
+					tdStatus.className = 'fixed_length_cell';
+					tdStatus.textContent = subsidy.sbsdNm;
+					tdStatus.value = subsidy.sbsdCd;
+					tr.appendChild(tdStatus);
+					
+					
+					tbody.appendChild(tr);
+					
+				}
+				
+			}
+		});
 	}
 	
 	//지급상태 변경
