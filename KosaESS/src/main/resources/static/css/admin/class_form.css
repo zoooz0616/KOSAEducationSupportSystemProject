@@ -72,9 +72,9 @@ input {
 
 .class_form_content .row .col .col_content {
 	padding-left: 5px;
-	margin-top: 7px;
-	height: 100%;
 	width: 80%;
+	display: flex;
+	align-items: center;
 }
 
 .class_form_content .row2 {
@@ -144,6 +144,7 @@ input {
 	display: flex;
 	margin: 2px;
 	padding: 5px;
+	cursor: pointer;
 }
 
 .lecture_table {
@@ -281,4 +282,25 @@ a:hover {
 	font-weight: bold;
 	border-bottom: 2px solid #0E5881;
 	color: #0E5881;
+}
+
+.col_content_wrap {
+	display: flex;
+	align-items: center;
+}
+
+.search_btn {
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	display: flex;
+	margin: 2px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+.search_btn img {
+	width: 20px;
 }

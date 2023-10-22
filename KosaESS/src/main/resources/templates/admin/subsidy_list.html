@@ -384,21 +384,39 @@
 					
 					//지원금
 					var options = {
-							  minimumFractionDigits: 3, // 소수점 이하 최소 3자리까지 표시
+							  minimumFractionDigits: 0, // 소수점 이하 최소 3자리까지 표시
 							  useGrouping: true, // 천 단위 구분 기호 사용 (COMMA)
 							};
 					var formatter = new Intl.NumberFormat('en-US', options);
 					
 					var tdSubsidy = document.createElement('td');
 					tdSubsidy.className = 'number_cell';
-					tdSubsidy.textContent = formatter.format(subsidy.clssSubsidy).replace(/,/g, 'POINT');
+					tdSubsidy.textContent = formatter.format(subsidy.clssSubsidy).replace(/,/g, ',');
 					tr.appendChild(tdSubsidy);
 					
 					//지급기준일
 					var tdSubsidyDd = document.createElement('td');
 					tdSubsidyDd.className ='fixed_length_cell';
-					tdSubsidyDd.textContent = subsidy.subsidyDd;
+					
+					var subsidyDd = new Date(subsidy.subsidyDd);
+					var year = subsidyDd.getFullYear();
+					var month = subsidyDd.getMonth() + 1;
+
+					// 월을 두 자리 숫자로 포맷팅
+					if (month < 10) {
+					  month = "0" + month;
+					}
+
+					var formattedDate = year + "-" + month;
+					
+					tdSubsidyDd.textContent = formattedDate;
 					tr.appendChild(tdSubsidyDd);
+					
+					
+					
+					
+					
+					
 					
 					//지급일
 					var tdPaidDd = document.createElement('td');
