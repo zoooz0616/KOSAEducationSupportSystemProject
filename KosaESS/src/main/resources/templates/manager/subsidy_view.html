@@ -40,6 +40,12 @@
 						교육과정
 					</div>
 					<div class="search_filter_input">
+						<select id="select_year">
+							<option th:text="전체" th:value=null/>
+							<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
+						</select>
+					</div>
+					<div class="search_filter_input">
 						<select id="classId">
 							<option value="" disabled selected>교육과정명을 선택하세요</option>
 							<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />

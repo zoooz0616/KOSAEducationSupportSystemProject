@@ -6,7 +6,7 @@ select option[value=""][disabled] {
 	display: none;
 }
 
-button:hover{
+button:hover, select:hover, input:hover {
 	cursor: pointer;
 }
 
@@ -31,7 +31,7 @@ button:hover{
 	font-size: 1.7em;
 	color: #333333;
 	font-weight: bold;
-	margin : 40px;
+	margin: 40px;
 	display: inline-block;
 }
 
@@ -54,13 +54,13 @@ button:hover{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-/* 	margin: auto; */
+	/* 	margin: auto; */
 }
 
-.search_filter_name{
+.search_filter_name {
 	font-weight: bold;
-	font-size:1.1em;
-	margin: 20px; 
+	font-size: 1.1em;
+	margin: 20px;
 }
 
 .search_filter_table input {
@@ -73,42 +73,62 @@ button:hover{
 	border-radius: 0.3em;
 }
 
-.search_filter_btn_wrap {
-	text-align: center;
+.search_filter_btn_wrap img {
+	height: 1.2em;
 }
 
-.search_filter_btn_wrap button {
+.search_filter_btn_wrap .search_reset_btn {
+	background: #6E9BB3;
+}
+.search_filter_btn_wrap .search_filter_btn {
 	background: #0E5881;
+}
+.search_filter_btn_wrap {
+/* 	text-align: center; */
+	display: flex;
+	justify-content: center;
+}
+
+.search_filter_btn_wrap button span{
+/* 	border: 2px solid RED; */
+	margin: auto 0;
+}
+.search_filter_btn_wrap button img{
+	margin: auto 0;
+}
+.search_filter_btn_wrap button {
+	display:flex;
+	justify-content:center;
 	color: white;
-	border: none;
-	border-radius: 0.3em;
 	font-weight: bold;
-	width : 5em;
-	margin-left : 0.3em;
-	margin: 10px;
+	border: none;
 	text-align: center;
 	font-size: 1.1em;
+	border-radius: 0.3em;
+	width: 5em;
+	margin-left: 0.3em;
+	margin: 10px;
 	height: 2em;
 }
 
-#stdt_list_table_thead th{
-	background-color:#E7EFF3;
+#stdt_list_table_thead th {
+	background-color: #E7EFF3;
 }
 
-.search_filter_table .input_keyword{
+.search_filter_table .input_keyword {
 	width: 15em;
 	height: 1.8em;
 }
 
-#stdt_list_table{
-	width : 100%;
+#stdt_list_table {
+	width: 100%;
 }
 
-#stdt_list_table_tbody .fixed_length_cell{
+#stdt_list_table_tbody .fixed_length_cell {
 	text-align: center;
 }
 
-#stdt_list_table_tbody .number_cell{
+#stdt_list_table_tbody .number_cell {
 	text-align: right;
 	padding-right: 1em;
 }
@@ -118,30 +138,30 @@ button:hover{
 	vertical-align: middle;
 }
 
-#stdt_list_table{
+#stdt_list_table {
 	border-collapse: collapse;
 }
 
-#stdt_list_table th{
-	border : 1px solid #CFDEE6;
+#stdt_list_table th {
+	border: 1px solid #CFDEE6;
 	border-top: 2px solid #0E5881;
 	color: #0E5881;
 }
 
-#stdt_list_table td{
-	padding : 0.2em;
+#stdt_list_table td {
+	padding: 0.2em;
 	border: 1px solid #CFDEE6;
 }
 
 .table_controller {
-	display :flex;
-	margin : 0.5em;
+	display: flex;
+/* 	margin: 0.5em 0; */
 	font-weight: bold;
 	padding-left: 1em;
 	padding-right: 1em;
 }
 
-.table_controller div{
+.table_controller div {
 	display: flex;
 	align-items: center;
 }
@@ -150,56 +170,68 @@ button:hover{
 	width: 50%;
 }
 
-.stdt_count_unit{
+.stdt_count_unit {
 	margin-left: 1em;
 }
 
-.cmpt_button{
+.cmpt_button {
 	display: flex;
 	margin-left: auto;
 }
-.cmpt_button button{
+
+.cmpt_button button {
 	background: #0E5881;
 	color: white;
 	border: none;
 	border-radius: 0.3em;
 	font-weight: bold;
-/* 	width: 150px; */
-	width : 5em;
-	margin-left : 0.3em;
+	/* 	width: 150px; */
+	width: 5em;
+	margin-left: 0.3em;
 	margin: 10px;
 	text-align: center;
 	font-size: 1.1em;
 	height: 2em;
 }
 
-.search_filter_table{
+.search_filter_table {
 	display: flex;
 }
 
-.search_filter_input_wrap{
-	display:flex;
+.search_filter_input_wrap {
+	display: flex;
 	align-items: center;
 }
 
-.search_filter_input_wrap span{
-	margin-left: 0.6em; 
+.search_filter_input_wrap span {
+	margin-left: 0.6em;
 	margin-right: 0.3em;
 }
 
-.search_filter_input{
-	display:flex;
-	align-items: center;
-	justify-content: center;
-}
-.search_filter_input_date{
-	display:flex;
+.search_filter_input {
+	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.search_filter_input_radio{
-	display:flex;
+.search_filter_input_date {
+	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.search_filter_input_radio {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.search_filter_input_date_wrap{
+	display: flex;
+	flex-direction:column;
+	justify-content: center;
+}
+
+#classId option[disabled] {
+	display: none;
 }

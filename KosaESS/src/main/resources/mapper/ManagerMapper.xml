@@ -22,6 +22,9 @@
 			]]>
 		</if>
 		</if>
+		<![CDATA[
+			ORDER BY clss_id
+		]]>
 	</select>
 
 	<select id="getApplyCountByClssId" parameterType="string" resultType="int">
