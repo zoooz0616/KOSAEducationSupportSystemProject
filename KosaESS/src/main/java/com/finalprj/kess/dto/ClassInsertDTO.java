@@ -1,6 +1,5 @@
 package com.finalprj.kess.dto;
 
-import java.sql.Date;
 import lombok.Data;
 
 @Data
@@ -21,6 +20,10 @@ public class ClassInsertDTO {
 	private String setOutTm;//교육종료시간
 
 	private String clssAdr;//교육장소
+	
+	private String cmpyId;//기업id
+	private String mngrId;//업무담당자 id	
+	
 	private int clssTotalTm;//교육과정 이수시간
 	private String clssEtc;//기타사항
 }

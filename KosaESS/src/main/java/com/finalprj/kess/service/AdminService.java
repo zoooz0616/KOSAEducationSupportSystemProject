@@ -729,4 +729,9 @@ public class AdminService implements IAdminService {
 			String subsidyStatus) {
 		return adminRepository.getSearchSubsidyList(clssId, startDate, endDate, keyword, subsidyStatus);
 	}
+	
+	@Override
+	public List<ManagerVO> getManagerListAllByInsert() {
+		return adminRepository.getManagerListAllByInsert();
+	}
 }

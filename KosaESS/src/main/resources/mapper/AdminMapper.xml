@@ -1653,7 +1653,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		mngr.mngr_id,
 		mngr.user_email,
 		mngr.mngr_nm,
-		REGEXP_REPLACE(mngr.mngr_tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as "mngr_tel",
+		mngr.mngr_tel,
 		mngr.rgst_dt,
 		mngr.rgster_id,
 		mngr.updt_dt, 
@@ -1929,6 +1929,30 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 
 	</select>
 
+	<select id="getManagerListAllByInsert" resultType="com.finalprj.kess.model.ManagerVO">
+	<![CDATA[
+		select 
+		mngr.mngr_id,
+		mngr.user_email,
+		mngr.mngr_nm,
+		mngr.mngr_tel,
+		mngr.rgst_dt,
+		mngr.rgster_id,
+		mngr.updt_dt, 
+		mngr.updter_id,
+		cmcd.cmcd_id,
+		cmcd.cmcd_nm,
+		lgin.role_cd,
+		lgin.user_pwd,
+		lgin.user_cd,
+		lgin.last_login_dt
+		from mngr
+		join lgin on lgin.user_email = mngr.user_email
+		join cmcd on cmcd.cmcd_id = lgin.user_cd
+		where role_cd = 'ROL0000003' and user_cd = 'USR0000001'
+		order by mngr_nm
+	]]>
+	</select>
 
 
 

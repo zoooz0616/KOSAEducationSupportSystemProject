@@ -184,4 +184,6 @@ public interface IAdminService {
 
 	List<SubsidyDTO> getSearchSubsidyList(String clssId, String startDate, String endDate, String keyword,
 			String subsidyStatus);
+
+	List<ManagerVO> getManagerListAllByInsert();
 }

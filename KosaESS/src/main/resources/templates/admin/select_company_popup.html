@@ -42,7 +42,7 @@
 				cmpyId : cmpyId,
 				cmpyNm : cmpyNm
 			};
-			window.opener.postMessage(values, "*");
+			window.opener.postMessage({ event: 'companySelected', cmpyId: cmpyId, cmpyNm: cmpyNm }, "*");
 			window.close(); // 팝업 창 닫기
 		}
 	</script>

@@ -43,7 +43,6 @@
 			<form th:action="@{/admin/class/__${act}__}" method="post"
 				onsubmit="insertClass(event)" enctype="multipart/form-data"
 				autocomplete=off>
-				<input id="clssId" type="hidden" th:value="${classVO.clssId}">
 				<div class="class_form_content">
 
 					<!-- 첫번째 줄 -->
@@ -191,8 +190,8 @@
 							<div class="col_title">기업</div>
 							<div class="col_content">
 								<div class="col_content_wrap" th:if="${act}=='insert'">
-									<input type="hidden" th:name="cmpyId"> <input
-										type="text" readonly value='미정'>
+									<input type="hidden" name="cmpyId"> <input type="text"
+										readonly value='미정'>
 									<button type="button" class="search_btn search_company_btn"
 										onclick="showSelectCompanyPopuup(this)">
 										<img th:src="@{/img/search_white.png}"> <span>조회</span>
@@ -200,9 +199,8 @@
 								</div>
 
 								<div class="col_content_wrap" th:if="${act}=='update'">
-									<input type="hidden" th:name="cmpyId"
-										th:value="${classVO.cmpyId}"> <input type="text"
-										th:value="${classVO.cmpyNm}" readonly>
+									<input type="hidden" name="cmpyId" th:value="${classVO.cmpyId}">
+									<input type="text" th:value="${classVO.cmpyNm}" readonly>
 									<button type="button" class="search_btn search_company_btn"
 										onclick="showSelectCompanyPopuup(this)">
 										<img th:src="@{/img/search_white.png}"> <span>조회</span>
@@ -229,18 +227,25 @@
 						<div class="col">
 							<div class="col_title">업무 담당자</div>
 							<div class="col_content">
-								<select th:if="${act}=='insert'" th:name="mngrId">
-									<option value="">미정</option>
-									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}"
-										th:text="|${manager.mngrNm}(${manager.userEmail})|"></option>
-								</select> <select th:if="${act}=='update'" th:name="mngrId">
-									<option value="">미정</option>
-									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}"
-										th:text="|${manager.mngrNm}(${manager.userEmail})|"
-										th:selected="${manager.mngrId == classVO.mngrId}"></option>
-								</select> <span th:if="${act}=='select'"
+								<div class="col_content_wrap" th:if="${act}=='insert'">
+									<input type="hidden" name="mngrId"> <input type="text"
+										readonly value='미정'>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectManagerPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<div class="col_content_wrap" th:if="${act}=='update'">
+									<input type="hidden" name="mngrId" th:value="${classVO.mngrId}">
+									<input type="text" th:value="${classVO.mngrNm}" readonly>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectManagerPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<span th:if="${act}=='select'"
 									th:text="${classVO.mngrNm} ? ${classVO.mngrNm} : '미정' "></span>
 							</div>
 						</div>
@@ -927,20 +932,21 @@
 	    	}
 	    }
 	    
+	    //기업 선택하기
 	    function showSelectCompanyPopuup(button){
 	    	var divParent = button.closest('div');
 	    	
 	    	// 팝업 창을 열기
             var popup = window.open("/admin/class/select/company", "기업 선택", 
             		"width=500, height=800, left=800, top=300");
-
-            // 팝업에서 값이 전달되었을 때 처리
             window.addEventListener("message", function(event) {
-            	 if (event.data) {
-            	        var cmpyId = event.data.cmpyId;
-            	        var cmpyNm = event.data.cmpyNm;
-            	        
-            	        if(cmpyNm==='미정'){
+    	        if (event.data && event.data.event) {
+    	            if (event.data.event === 'companySelected') {
+    	                var cmpyId = event.data.cmpyId;
+    	                var cmpyNm = event.data.cmpyNm;
+    	                
+    	                // 기업 선택 팝업에서의 처리
+    	                if(cmpyNm==='미정'){
             	        	cmpyId='';
             	        }
             	        
@@ -950,9 +956,41 @@
             	        hiddenInput.value = cmpyId;
             	        textInput.value = cmpyNm;
             	        
-            	    }
-            });
+    	            }
+    	        }
+    	    });
 	    }
+	    
+	  //업무담당자 선택하기
+	    function showSelectManagerPopuup(button){
+	    	var divParent = button.closest('div');
+	    	
+	    	// 팝업 창을 열기
+            var popup = window.open("/admin/class/select/manager", "업무담당자 선택", 
+            		"width=500, height=800, left=800, top=300");
+	    	
+            window.addEventListener("message", function(event) {
+    	        if (event.data && event.data.event) {
+    	            if (event.data.event === 'managerSelected') {
+    	                var mngrId = event.data.mngrId;
+    	                var mngrNm = event.data.mngrNm;
+    	                
+    	                // 업무담당자 선택 팝업에서의 처리
+    	                if(mngrNm==='미정'){
+            	        	mngrId='';
+            	        }
+            	        
+            	        var hiddenInput = divParent.querySelector("input[type='hidden']");
+            	        var textInput = divParent.querySelector("input[type='text']");
+            	        
+            	        hiddenInput.value = mngrId;
+            	        textInput.value = mngrNm;
+    	            }
+    	        }
+    	    });
+	    }
+	  
+	    
 	</script>
 </body>
 </html>

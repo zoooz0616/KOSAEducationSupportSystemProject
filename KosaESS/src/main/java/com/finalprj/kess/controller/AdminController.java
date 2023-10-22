@@ -791,6 +791,25 @@ public class AdminController {
 		
 		return "admin/select_company_popup";
 	}
+	
+	/**
+	 * 교육과정 생성 시 업무담당자 선택 팝업 띄우기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@RequestMapping("/class/select/manager")
+	public String selectManagerByInsertClass(Model model) {
+		//insert때 사용가능한 기업리스트만 보내기
+		List<ManagerVO> managerList = adminService.getManagerListAllByInsert();
+		model.addAttribute("managerList", managerList);
+		
+		return "admin/select_manager_popup";
+	}
+	
+	
 
 	/**
 	 * 교육과정 생성 POST
@@ -804,7 +823,6 @@ public class AdminController {
 	@PostMapping("/class/insert")
 	public String insertClass(HttpSession session, @RequestParam("files") MultipartFile[] files,
 			RedirectAttributes redirectAttrs, ClassInsertDTO classInsertDTO, @RequestParam String clssCd,
-			@RequestParam(required = false) String cmpyId, @RequestParam(required = false) String mngrId,
 			@RequestParam(name = "lctrId", required = false) List<String> lctrIds) {
 
 		if (session.getAttribute("mngrId") == null) {
@@ -843,8 +861,8 @@ public class AdminController {
 		// 교육과정 생성하기
 		ClassVO classVO = new ClassVO();
 		classVO.setClssId(classInsertDTO.getClssId());
-		classVO.setMngrId(mngrId);
-		classVO.setCmpyId(cmpyId);
+		classVO.setMngrId(classInsertDTO.getMngrId());
+		classVO.setCmpyId(classInsertDTO.getCmpyId());
 		classVO.setClssNm(classInsertDTO.getClssNm());
 		classVO.setClssContent(classInsertDTO.getClssContent());
 
@@ -933,7 +951,7 @@ public class AdminController {
 
 		adminService.createClass(fileList, classVO, curriculumList);
 
-		return "redirect:/admin/class/list";
+		return "redirect:/admin/class/list/1";
 	}
 
 	/**
