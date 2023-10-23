@@ -749,6 +749,9 @@ public class AdminController {
 		// insert or select or update
 		String act = "insert";
 		model.addAttribute("act", act);
+		
+		List<FileVO> fileList = new ArrayList<FileVO>();
+		model.addAttribute("fileList", fileList);
 
 		// 클래스 하나 생성하고 classId값 지정해서 넘기기
 		ClassVO classVO = new ClassVO();
@@ -774,6 +777,42 @@ public class AdminController {
 
 		return "admin/class_form";
 	}
+	
+	/**
+	 * 교육과정 생성 시 기업 선택 팝업 띄우기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 21.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@RequestMapping("/class/select/company")
+	public String selectCompanyByInsertClass(Model model) {
+		//insert때 사용가능한 기업리스트만 보내기
+		List<CompanyVO> companyList = adminService.getCompanyListAll();
+		model.addAttribute("companyList", companyList);
+		
+		return "admin/select_company_popup";
+	}
+	
+	/**
+	 * 교육과정 생성 시 업무담당자 선택 팝업 띄우기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@RequestMapping("/class/select/manager")
+	public String selectManagerByInsertClass(Model model) {
+		//insert때 사용가능한 기업리스트만 보내기
+		List<ManagerVO> managerList = adminService.getManagerListAllByInsert();
+		model.addAttribute("managerList", managerList);
+		
+		return "admin/select_manager_popup";
+	}
+	
+	
 
 	/**
 	 * 교육과정 생성 POST
@@ -787,7 +826,6 @@ public class AdminController {
 	@PostMapping("/class/insert")
 	public String insertClass(HttpSession session, @RequestParam("files") MultipartFile[] files,
 			RedirectAttributes redirectAttrs, ClassInsertDTO classInsertDTO, @RequestParam String clssCd,
-			@RequestParam(required = false) String cmpyId, @RequestParam(required = false) String mngrId,
 			@RequestParam(name = "lctrId", required = false) List<String> lctrIds) {
 
 		if (session.getAttribute("mngrId") == null) {
@@ -826,8 +864,8 @@ public class AdminController {
 		// 교육과정 생성하기
 		ClassVO classVO = new ClassVO();
 		classVO.setClssId(classInsertDTO.getClssId());
-		classVO.setMngrId(mngrId);
-		classVO.setCmpyId(cmpyId);
+		classVO.setMngrId(classInsertDTO.getMngrId());
+		classVO.setCmpyId(classInsertDTO.getCmpyId());
 		classVO.setClssNm(classInsertDTO.getClssNm());
 		classVO.setClssContent(classInsertDTO.getClssContent());
 
@@ -916,7 +954,7 @@ public class AdminController {
 
 		adminService.createClass(fileList, classVO, curriculumList);
 
-		return "redirect:/admin/class/list";
+		return "redirect:/admin/class/list/1";
 	}
 
 	/**
@@ -1365,6 +1403,52 @@ public class AdminController {
 		model.addAttribute("professorList", professorList);
 
 		return "admin/lecture_list";
+	}
+	
+	/**
+	 * 강의 생성 팝업페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/lecture/insert")
+	public String lectureInsert() {
+		
+		return "admin/insert_lecture_popup";
+	}
+	
+	/**
+	 * 강의 생성 - 과목 선택 팝업 페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/lecture/select/subject")
+	public String selectSubject(Model model) {
+		List<SubjectVO> subjectList = adminService.getSubjectList();
+		model.addAttribute("subjectList", subjectList);
+		
+		return "admin/select_subject_popup";
+	}
+	
+	/**
+	 * 강의 생성 - 강사 선택 팝업 페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/lecture/select/professor")
+	public String selectProfessor(Model model) {
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+		model.addAttribute("professorList", professorList);
+		
+		return "admin/select_subject_popup";
 	}
 
 	/**

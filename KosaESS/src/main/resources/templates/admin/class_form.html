@@ -29,8 +29,9 @@
 			<div class="title" th:text="${title}">title</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list}">교육과정
-					관리</a> > <a th:href="@{/admin/class/__${act}__}" th:text="${title}">title</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/class/list/1}">교육과정 관리</a> > <a
+					th:href="@{/admin/class/__${act}__}" th:text="${title}">title</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -42,7 +43,6 @@
 			<form th:action="@{/admin/class/__${act}__}" method="post"
 				onsubmit="insertClass(event)" enctype="multipart/form-data"
 				autocomplete=off>
-				<input id="clssId" type="hidden" th:value="${classVO.clssId}">
 				<div class="class_form_content">
 
 					<!-- 첫번째 줄 -->
@@ -189,16 +189,25 @@
 						<div class="col">
 							<div class="col_title">기업</div>
 							<div class="col_content">
-								<select th:if="${act}=='insert'" th:name="cmpyId">
-									<option value="">미정</option>
-									<option th:each="company: ${companyList}"
-										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"></option>
-								</select> <select th:if="${act}=='update'" th:name="cmpyId">
-									<option value="">미정</option>
-									<option th:each="company: ${companyList}"
-										th:value="${company.cmpyId}" th:text="${company.cmpyNm}"
-										th:selected="${company.cmpyId == classVO.cmpyId}"></option>
-								</select> <span th:if="${act}=='select'"
+								<div class="col_content_wrap" th:if="${act}=='insert'">
+									<input type="hidden" name="cmpyId"> <input type="text"
+										readonly value='미정'>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectCompanyPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<div class="col_content_wrap" th:if="${act}=='update'">
+									<input type="hidden" name="cmpyId" th:value="${classVO.cmpyId}">
+									<input type="text" th:value="${classVO.cmpyNm}" readonly>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectCompanyPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<span th:if="${act}=='select'"
 									th:text="${classVO.cmpyNm} ? ${classVO.cmpyNm} : '미정'"></span>
 							</div>
 						</div>
@@ -218,18 +227,25 @@
 						<div class="col">
 							<div class="col_title">업무 담당자</div>
 							<div class="col_content">
-								<select th:if="${act}=='insert'" th:name="mngrId">
-									<option value="">미정</option>
-									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}"
-										th:text="|${manager.mngrNm}(${manager.userEmail})|"></option>
-								</select> <select th:if="${act}=='update'" th:name="mngrId">
-									<option value="">미정</option>
-									<option th:each="manager: ${managerList}"
-										th:value="${manager.mngrId}"
-										th:text="|${manager.mngrNm}(${manager.userEmail})|"
-										th:selected="${manager.mngrId == classVO.mngrId}"></option>
-								</select> <span th:if="${act}=='select'"
+								<div class="col_content_wrap" th:if="${act}=='insert'">
+									<input type="hidden" name="mngrId"> <input type="text"
+										readonly value='미정'>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectManagerPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<div class="col_content_wrap" th:if="${act}=='update'">
+									<input type="hidden" name="mngrId" th:value="${classVO.mngrId}">
+									<input type="text" th:value="${classVO.mngrNm}" readonly>
+									<button type="button" class="search_btn search_company_btn"
+										onclick="showSelectManagerPopuup(this)">
+										<img th:src="@{/img/search_white.png}"> <span>조회</span>
+									</button>
+								</div>
+
+								<span th:if="${act}=='select'"
 									th:text="${classVO.mngrNm} ? ${classVO.mngrNm} : '미정' "></span>
 							</div>
 						</div>
@@ -254,8 +270,8 @@
 								<div>
 									<input th:if="${act}=='insert'" class="subsidy" type="text"
 										style="width: 100%;" th:name="clssSubsidy"
-										placeholder="최대 99,999,999원" maxlength="10"> <input
-										th:if="${act}=='update'" class="subsidy" type="text"
+										placeholder="최대 99,999,999원" maxlength="10" value="0">
+									<input th:if="${act}=='update'" class="subsidy" type="text"
 										style="width: 100%;" th:name="clssSubsidy"
 										th:value="${classVO.sSubsidy}" maxlength="10"> <span
 										class="span_subsidy" th:if="${act}=='select'"
@@ -361,67 +377,33 @@
 						<div class="col3">
 							<div class="col_title">첨부 파일</div>
 							<div class="col_content">
-								<div th:if="${act=='insert' or (act=='update' and #lists.size(fileList)==0)}">
-									<div class="file_list">
-										<div class="file_wrap">
-											<div class="file_input">
-												<input type="text" readonly /> <label> 첨부파일 <input
-													id="file" type="file" name="files"
-													onchange="selectFile(this);" />
-												</label>
-											</div>
-											<button type="button" onclick="removeFile(this);"
-												class="btns del_btn">
-												<span>삭제</span>
-											</button>
-											<button type="button" onclick="addFile();"
-												class="btns fn_add_btn">
-												<span>파일 추가</span>
-											</button>
-										</div>
-									</div>
-								</div>
-								<div th:if="${act}=='update'">
-									<div class="file_list">
-										<div class="file_wrap" th:each="file, iterStat : ${fileList}">
-											<div class="file_input">
-												<input type="text" th:name="fileId"
-													th:value="${file.fileNm}" onchange="fileChange(this)"
-													readonly /> <input type="hidden"
-													th:value="${file.fileSubId}"> <label> 첨부파일
-													<input id="file" type="file" name="files"
-													onchange="selectFile(this);" />
-
-
-												</label>
-											</div>
-											<button type="button" onclick="removeFile(this);"
-												class="btns del_btn">
-												<span>삭제</span>
-											</button>
-											<div th:if="${iterStat.index<1}">
-												<button type="button" onclick="addFile();"
-													class="btns fn_add_btn">
-													<span>파일 추가</span>
-												</button>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div th:if="${act}=='select'" class="file_detail" id="file_drag">
-									<div th:if="${fileList ==null}">첨부파일 없음</div>
-									<div th:each="file: ${fileList}"
-										style="display: flex; align-items: center;">
-										<img style="width: 15px; height: 15px; margin-right: 5px;"
-											th:src="@{/img/file.png}">
-										<div>
-											<a
-												th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
-												th:text="${file.fileNm}"></a>
-										</div>
+								<div th:if="${act=='select'}">
+									<div th:if="${classVO.fileId} == null">첨부파일 없음</div>
+									<div class="file_wrap" th:each="file: ${fileList}">
+										<img class="file_img" th:src="@{/img/file.png}"> <a
+											th:href="@{/download/file/__${file.fileId}__/__${file.fileSubId}__}"
+											th:text="${file.fileNm}"></a>
 									</div>
 								</div>
 
+								<div th:if="${act=='update' or act=='insert'}">
+									<button class="add_file" onclick="addFile(this)" type="button">
+										<img class="add_file_img" th:src="@{/img/plus_navy.png}">
+										파일추가
+									</button>
+									<input type="hidden" class="upload_file_cnt"
+										th:value="${#lists.size(fileList)}">
+									<div>
+										<div th:each="file: ${fileList}" class="file_wrap">
+											<input type="hidden" th:value="${file.fileSubId}"> <img
+												class="file_img" th:src="@{/img/file.png}"> <span
+												th:text="${file.fileNm}"></span>
+											<button class="delete_file" type="button"
+												onclick="deleteFile(this)">삭제</button>
+										</div>
+									</div>
+									<input type="file" name="files">
+								</div>
 							</div>
 						</div>
 						<div class="col3">
@@ -444,7 +426,8 @@
 				<!-- create / update일 때 -->
 				<div th:if="${act=='insert' or act=='update'}"
 					style="display: flex; justify-content: center;">
-					<input class="submit_btn" type="submit" value="저장하기">
+					<button class="cancel_btn" type="button" th:onclick="'location.href=\'' + @{/admin/class/list/1} + '\''">취소</button>
+					<input class="submit_btn" type="submit" value="저장">
 				</div>
 				<!-- select일 때 -->
 				<div th:if="${act}=='select'"
@@ -453,7 +436,7 @@
 					<div class="submit_btn"
 						th:onclick="'location.href=\'' + @{/admin/class/update/__${classVO.clssId}__} + '\''">수정</div>
 					<div class="submit_btn"
-						th:onclick="'location.href=\'' + @{/admin/class/list} + '\''">목록</div>
+						th:onclick="'location.href=\'' + @{/admin/class/list/1} + '\''">목록</div>
 				</div>
 			</form>
 		</div>
@@ -461,6 +444,11 @@
 	</div>
 	<!-- Content Wrap -->
 	<script>
+	//추가된 파일 개수
+	var fileCnt = Number(document.querySelector(".upload_file_cnt").value);
+	
+	
+	
 		aplyEndDt = '';
 		classTotalTm = 0; //교육과정 총 이수시간
 		
@@ -808,82 +796,30 @@
 			$("#clss_total_tm").val(clssTotalTm);
 		}
 		
-		// 파일 선택
-	    function selectFile(element) {
-
-	        const file = element.files[0];
-	        const filename = element.closest('.file_input').firstElementChild;
-
-	        // 1. 파일 선택 창에서 취소 버튼이 클릭된 경우
-	        if ( !file ) {
-	            filename.value = '';
-	            return false;
-	        }
-
-	        // 2. 파일 크기가 10MB를 초과하는 경우
-	        const fileSize = Math.floor(file.size / 1024 / 1024);
-	        if (fileSize > 10) {
-	            alert('10MB 이하의 파일로 업로드해 주세요.');
-	            filename.value = '';
-	            element.value = '';
-	            return false;
-	        }
-
-	        // 3. 파일명 지정
-	        filename.value = file.name;
-	        fileChange(filename);
-	    }
-
-
-	    // 파일 추가
-	    function addFile() {
-	        const fileDiv = document.createElement('div');
-	        fileDiv.className = 'file_wrap';
-	        fileDiv.innerHTML =`
-	            <div class="file_input">
-	                <input type="text" readonly />
-	                <label> 첨부파일
-	                    <input type="file" name="files" onchange="selectFile(this);" />
-	                </label>
-	            </div>
-	            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-	        `;
-	        document.querySelector('.file_list').appendChild(fileDiv);
-	    }
-
-
-	    // 파일 삭제
-	    function removeFile(element) {
-	        const fileAddBtn = element.nextElementSibling;
-            var deleteFileInput = element.previousElementSibling.querySelectorAll('input[type="hidden"]');
-            deleteFileInput.forEach (
-	            	function(inputElement) {
-	            		// 각 input 요소의 name 속성을 "fileSubId"로 설정
-	            		inputElement.setAttribute('name', 'fileSubId');	
-	            		console.log(inputElement.value);
-	            	}
-	            );
-	        if (fileAddBtn) {
-	            const inputs = element.previousElementSibling.querySelectorAll('input[type="text"]');
-	            inputs.forEach(input => input.value = '')
-	            return false;
-	        }
-	        element.parentElement.remove();
-	    }
-	    
-	    //파일 수정
-	    function fileChange(inputElement) {
-	    	console.log("파일수정함");
-	    	
-    		// 이후 형제 노드를 찾음
-    		var nextInput = inputElement.nextElementSibling;
-
-    		// 이전 형제 노드가 <input type="hidden"> 태그인 경우에만 작업 수행
-    		if (nextInput && nextInput.tagName === 'INPUT' && nextInput.type === 'hidden') {
-        		// 이전 <input type="hidden"> 태그에 name 속성을 추가
-        		nextInput.setAttribute('name', 'fileSubId');
-        		console.log(nextInput.value);
-    		}
+		//update일 때 '파일추가'버튼 클릭하면 파일 추가하기
+		function addFile(button){
+			console.log(fileCnt);
+			if(fileCnt < 4){
+				var divParent = button.closest('div');
+				var inputFile = document.createElement('input');
+				inputFile.type = 'file';
+				inputFile.name = 'files';
+				divParent.appendChild(inputFile);
+				fileCnt =  fileCnt + 1;
+			}else{
+				alert("파일은 최대 5개까지만 등록 가능합니다.");
+			}
+			
+		}
+		
+		//update일 때 파일 '삭제'버튼 클릭하면 input type="hidden"에 name 추가
+		function deleteFile(button){
+			var divParent = button.closest('div');
+			var inputHidden = divParent.querySelector('input');
+			inputHidden.name='deleteFiles';
+			console.log(inputHidden.value);
+			divParent.style.display = 'none';
+			fileCnt =  fileCnt - 1;
 		}
 	    
 	    //삭제하기
@@ -914,6 +850,66 @@
 				return true;	    		
 	    	}
 	    }
+	    
+	    //기업 선택하기
+	    function showSelectCompanyPopuup(button){
+	    	var divParent = button.closest('div');
+	    	
+	    	// 팝업 창을 열기
+            var popup = window.open("/admin/class/select/company", "기업 선택", 
+            		"width=500, height=800, left=800, top=300");
+            window.addEventListener("message", function(event) {
+    	        if (event.data && event.data.event) {
+    	            if (event.data.event === 'companySelected') {
+    	                var cmpyId = event.data.cmpyId;
+    	                var cmpyNm = event.data.cmpyNm;
+    	                
+    	                // 기업 선택 팝업에서의 처리
+    	                if(cmpyNm==='미정'){
+            	        	cmpyId='';
+            	        }
+            	        
+            	        var hiddenInput = divParent.querySelector("input[type='hidden']");
+            	        var textInput = divParent.querySelector("input[type='text']");
+            	        
+            	        hiddenInput.value = cmpyId;
+            	        textInput.value = cmpyNm;
+            	        
+    	            }
+    	        }
+    	    });
+	    }
+	    
+	  //업무담당자 선택하기
+	    function showSelectManagerPopuup(button){
+	    	var divParent = button.closest('div');
+	    	
+	    	// 팝업 창을 열기
+            var popup = window.open("/admin/class/select/manager", "업무담당자 선택", 
+            		"width=500, height=800, left=800, top=300");
+	    	
+            window.addEventListener("message", function(event) {
+    	        if (event.data && event.data.event) {
+    	            if (event.data.event === 'managerSelected') {
+    	                var mngrId = event.data.mngrId;
+    	                var mngrNm = event.data.mngrNm;
+    	                
+    	                // 업무담당자 선택 팝업에서의 처리
+    	                if(mngrNm==='미정'){
+            	        	mngrId='';
+            	        }
+            	        
+            	        var hiddenInput = divParent.querySelector("input[type='hidden']");
+            	        var textInput = divParent.querySelector("input[type='text']");
+            	        
+            	        hiddenInput.value = mngrId;
+            	        textInput.value = mngrNm;
+    	            }
+    	        }
+    	    });
+	    }
+	  
+	    
 	</script>
 </body>
 </html>

@@ -27,6 +27,7 @@
 }
 
 .home-section .content_top .route a {
+	width: 12%;
 	color: #0E5881;
 	text-decoration-line: none;
 	font-weight: bold;
@@ -38,8 +39,15 @@
 	margin: 40px 40px 0 40px;
 }
 
-.content_middle .lecture_wrap {
-	width: 100%;
+.content_middle .left_section {
+	width: 55%;
+	height: 100%;
+	margin-right: 20px;
+}
+
+.content_middle .right_section {
+	width: 45%;
+	height: 100%;
 }
 
 .content_middle div div table {
@@ -75,7 +83,7 @@
 	display: flex;
 }
 
-.insert div>span {
+.insert div >span {
 	color: #0E5881;
 	font-weight: bold;
 }
@@ -86,17 +94,15 @@
 
 .content_info_wrap {
 	display: flex;
-	justify-content: space-between;
+    justify-content: space-between;
 	font-weight: bold;
-	margin: 10px 0;
 }
 
 .content_info_wrap .cnt {
 	color: #0E5881;
 }
-
 .content_info_button_wrap {
-	display: flex;
+	display:flex;
 }
 
 .content_info_wrap button {
@@ -110,14 +116,13 @@
 	padding: 5px;
 	height: 30px;
 	display: flex;
-	align-items: center;
 }
 
-.content_info_button_wrap>button>img {
-	width: 20px;
+.content_info_button_wrap > button > img{
+	width:20px;
 }
 
-.insert_professor div>span {
+.insert_professor div >span {
 	color: #0E5881;
 	font-weight: bold;
 }
@@ -130,11 +135,11 @@
 	font-weight: bold;
 	padding: 5px;
 	margin-left: 5px;
-	display: flex;
+	display:flex;
 }
 
-.insert_btn>img {
-	width: 20px;
+.insert_btn > img{
+	width:20px;
 }
 
 .table_wrap table tr td button {
@@ -151,28 +156,29 @@
 	overflow-y: scroll;
 }
 
-.red {
-	color: red;
+.lecture_table {
+	height: 85%;
+	border: 1px solid #CFDEE6;
+	overflow-y: scroll;
+}
+
+.red{
+	color:red;
 	vertical-align: middle;
 }
 
-.td_lecture_check_box, .td_lecture_num, .td_lecture_professor {
-	text-align: center;
+.td_lecture_check_box, .td_lecture_num, .td_lecture_professor{
+	text-align:center;
 }
 
-.td_lecture_tm {
+.td_lecture_tm{
 	text-align: right;
 }
 
-.td_professor_check_box, .td_professor_num, .td_professor_nm,
-	.td_professor_tel {
+.td_professor_check_box, .td_professor_num, .td_professor_nm, .td_professor_tel {
 	text-align: center;
 }
 
-.td_subject_check_box, .td_subject_num {
+.td_subject_check_box, .td_subject_num{
 	text-align: center;
-}
-
-button{
-	cursor: pointer;
 }

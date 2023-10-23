@@ -33,7 +33,7 @@
 }
 
 .home-section .content_middle {
-	margin: 40px;
+	margin: 40px 40px 10px 40px;
 	display: flex;
 	justify-content: space-between;
 	border-top: 2px solid #0E5881;
@@ -88,7 +88,7 @@
 }
 
 .home-section .content_bottom {
-	margin: 40px;
+	margin: 10px 40px 40px 40px;
 }
 
 .home-section .content_bottom .content_info_wrap {
@@ -180,7 +180,7 @@
 	text-align: center;
 }
 
-.limit_cnt {
+.limit_cnt, .class_subsidy {
 	text-align: right;
 }
 

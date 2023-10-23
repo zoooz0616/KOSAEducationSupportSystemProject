@@ -29,7 +29,6 @@ public class SubsidyDTO {
 	private String rgsterId;// 등록자id
 	private Timestamp updtDt;// 수정일시
 	private String updterId;// 수정자id
-	private String sbsdEtc;// 기타사항
 	
 	private String mngrId;//업무담당자id
 	private String mngrNm;//업무담당자 이름
@@ -37,4 +36,6 @@ public class SubsidyDTO {
 	public void appendWlog(String wlog) {
 		this.wlog = this.wlog.concat(wlog);
 	}
+	
+	private String sbsdEtc;//기타사항
 }

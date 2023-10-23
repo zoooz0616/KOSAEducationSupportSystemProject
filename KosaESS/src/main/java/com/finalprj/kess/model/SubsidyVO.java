@@ -17,10 +17,11 @@ public class SubsidyVO {
 	private Date subsidyDd;//지원금 해당 연월
 	private int maxWlogCnt;//교육일수(최대값)
 	private int wlogCnt;//출석일수
-	private String sbsdEtc;//기타사항
 	
 	private Timestamp rgstDt;// 등록일시
 	private String rgsterId;// 등록자id
 	private Timestamp updtDt;// 수정일시
 	private String updterId;// 수정자id
+	
+	private String sbsdEtc;//기타사항
 }
