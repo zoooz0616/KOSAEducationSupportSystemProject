@@ -563,9 +563,9 @@
 		parameterType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
 	insert into lctr (
-		lctr_id, sbjt_id, prof_id, lctr_nm, lctr_tm, rgst_etc, rgster_id
+		lctr_id, sbjt_id, prof_id, lctr_nm, lctr_tm, lctr_etc, rgster_id
 	)
-	values (#{lctrId}, #{sbjtId}, #{profId}, #{lctrNm}, #{lctrTm}, null, 'MNGR000001')
+	values (#{lctrId}, #{sbjtId}, #{profId}, #{lctrNm}, #{lctrTm}, #{lctrEtc}, 'MNGR000001')
 	]]>
 	</insert>
 
