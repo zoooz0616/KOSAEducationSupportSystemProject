@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
@@ -105,7 +106,7 @@ public interface IAdminRepository {
 	String getMaxManagerId();
 	void insertLgin(ManagerVO managerVO);
 	void insertManager(ManagerVO managerVO);
-	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput);
+	List<ManagerVO> getSearchManagerList(String searchInputCategory, String searchInput, String searchMngrStatus, String searchClassId);
 	void deleteManagerList(List<String> selectedManagerIds);
 	void deleteLgin(List<String> selectedManagerIds);
 	ManagerVO getManager(String mngrId);
@@ -168,5 +169,14 @@ public interface IAdminRepository {
 	List<CommonCodeVO> getGroupCodeListAll();
 
 	List<CommonCodeVO> getNoticeCommonCodeListByInsert();
+
+	List<CompanyVO> getSearchCompanyList(String cmpyNm);
+	List<SubsidyDTO> getSubsidyList(@Param("start")int start, @Param("end")int end);
+	List<SubsidyDTO> getSubsidyListAll();
+
+	void updateSubsidyStatus(List<String> selectedSubsidyIds, String cmcdId);
+	List<SubsidyDTO> getSearchSubsidyList(String clssId, String startDate, String endDate, String keyword, String subsidyStatus);
+
+	List<ManagerVO> getManagerListAllByInsert();
 
 }

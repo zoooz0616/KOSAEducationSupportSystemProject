@@ -40,7 +40,8 @@
 						</select>
 					</div>
 					<div>
-						<input class="search_input" type="text" id="search_input" value="">
+						<input class="search_input" type="text" id="search_input" value=""
+						onkeyup="if(window.event.keyCode==13){search();}">
 					</div>
 				</div>
 
@@ -85,7 +86,7 @@
 				<div class="content_info_btn_wrap">
 					<!-- 엑셀 다운로드 버튼 -->
 					<button type="button" id="excel_btn" onclick="location.href='/excel/admin/inquiry'">
-						<img th:src="@{/img/excel.png}"><span>엑셀 다운로드</span>
+						<img th:src="@{/img/excel.png}"><span>엑셀</span>
 					</button>
 				
 					<!-- 선택삭제 버튼 -->
@@ -107,7 +108,7 @@
 							<th style="width: 62%;">제목</th>
 							<th style="width: 5%;">첨부파일</th>
 							<th style="width: 5%;">작성자</th>
-							<th style="width: 10%;">등록일시</th>
+							<th style="width: 10%;">등록일자</th>
 							<th style="width: 5%;">조회수</th>
 							<th style="width: 5%;">답변상태</th>
 						</tr>

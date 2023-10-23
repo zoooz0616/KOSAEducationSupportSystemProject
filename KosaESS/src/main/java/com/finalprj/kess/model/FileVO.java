@@ -16,6 +16,7 @@ public class FileVO {
 	private String deleteYn; //삭제여부
 	private Timestamp rgstDt;//등록일시
 	private String rgsterId;//등록자id
+
 	
 	private String fType;//파일id
 	

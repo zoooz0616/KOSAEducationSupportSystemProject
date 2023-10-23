@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>KOSA 교육지원시스템</title>
+</head>
+<head>
+<link th:href="@{/css/admin/insert_group_code_popup.css}"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>기업 등록</h2>
+	<div class="insert_wrap ">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">기업명<span class="red">*</span></span></th>
+				<td><input type="text" class="cmpy_nm" name="cmpyNm"
+					placeholder="기업명" maxlength="100" required></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">전화번호<span class="red">*</span></span></th>
+				<td><input type="text" class="cmpy_tel" name="cmpyTel"
+					placeholder="전화번호" maxlength="13" oninput="autoHyphen(this)"
+					required></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">기업주소<span class="red">*</span></span></th>
+				<td><input type="text" id="streetAdr" name="cmpyAdr"
+					class="form-control" onclick="findAddr()"
+					placeholder="도로명 주소를 입력하세요." readonly required></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">상세주소</span></th>
+				<td><input type="text" name="cmpyAdrDetail"
+					placeholder="상세 주소를 입력하세요."></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">기업CI</span></th>
+				<td><input type="file" accept="image/*" name="file"></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="btn_wrap">
+		<button type="button" class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertCompany()">확인</button>
+	</div>
+	
+	
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09ec69ddf5b6f0163e112eee3e0d931f&libraries=services"></script>
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+	<script>
+		//insert할 때 도로명 주소 찾기
+		function findAddr() {
+			new daum.Postcode(
+					{
+						oncomplete : function(data) {
+
+							var addr = ''; // 주소 변수
+							var extraAddr = ''; // 참고항목 변수
+
+							if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+								addr = data.roadAddress;
+							} else { // 사용자가 지번 주소를 선택했을 경우(J)
+								addr = data.jibunAddress;
+							}
+
+							if (data.userSelectedType === 'R') {
+								if (data.bname !== ''
+										&& /[동|로|가]$/g.test(data.bname)) {
+									extraAddr += data.bname;
+								}
+								if (data.buildingName !== ''
+										&& data.apartment === 'Y') {
+									extraAddr += (extraAddr !== '' ? ', '
+											+ data.buildingName
+											: data.buildingName);
+								}
+								if (extraAddr !== '') {
+									extraAddr = ' (' + extraAddr + ')';
+								}
+							} else {
+							}
+							document.getElementById("streetAdr").value = addr;
+						}
+					}).open();
+		}
+	</script>
+	<script>
+		//전화번호 유효성 검사
+		//전화번호 입력
+	const autoHyphen = (target) => {
+ target.value = target.value
+   .replace(/[^0-9]/g, '')
+  .replace(/^(\d{0,3})(\d{0,4})(\d{4,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+}
+		
+	
+	//기업 등록하기
+	function insertCompany(){		
+		var cmpyNm = document.querySelector('input[name="cmpyNm"]').value;
+		var cmpyTel = document.querySelector('input[name="cmpyTel"]').value;
+		var cmpyAdr = document.querySelector('input[name="cmpyAdr"]').value;
+		var cmpyAdrDetail = document.querySelector('input[name="cmpyAdrDetail"]').value;
+		
+		var formData = new FormData();
+		var fileInput = document.querySelector('input[name="file"]');
+		var file = fileInput.files[0];
+		
+		formData.append("file", file);
+		formData.append("cmpyNm", cmpyNm);
+		formData.append("cmpyTel", cmpyTel);
+		formData.append("cmpyAdr", cmpyAdr);
+		formData.append("cmpyAdrDetail", cmpyAdrDetail);
+		
+		$.ajax({
+			url: '/admin/company/insert',
+			method: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(response){
+				alert("기업이 등록되었습니다.");
+				opener.location.href="/admin/company/list/1";
+				self.close();//팝업창 닫기
+			}
+		});
+		
+	}
+	</script>
+</body>
+</html>

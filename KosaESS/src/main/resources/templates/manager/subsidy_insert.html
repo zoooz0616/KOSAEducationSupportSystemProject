@@ -59,7 +59,6 @@
 						<select id="max_wlog_cnt">
 							<option th:each="monthNum:${#numbers.sequence(1,__${monthLength}__)}" th:text="${monthNum}" th:value="${monthNum}"/>
 						</select>
-						<input type="button" class="batch_input" value="일괄적용" onclick="batchInput(this)">
 					</div>
 					<div class="insert_name">지원금</div>
 					<div class="insert_input"><span id="subsidy_value">0</span><span>&nbsp;&#8361;</span></div>
@@ -67,7 +66,7 @@
 				</div>
 				<!-- 검색 버튼 -->
 				<div class="insert_btn_wrap">
-					<button class="insert_btn" id="insert_btn" onclick="insert()">등록</button>
+					<button class="insert_btn" id="insert_btn" onclick="insertSubsidy()">등록</button>
 				</div>
 				<!-- End : 검색 버튼 -->
 			</div>
@@ -80,7 +79,7 @@
 					<span>&nbsp;명</span>
 				</div>
 				<div class="sbsd_button">
-					<button onclick="location.href='/manager/subsidy_insert'" class="sbsd_btn">삭제하기</button>
+					<button onclick="location.href='/manager/subsidy_insert'" class="sbsd_btn">선택 삭제</button>
 				</div>
 			</div>
 			<!-- End : 테이블 조작 -->
@@ -93,11 +92,13 @@
 						<th>번호</th>
 						<th>이름</th>
 						<th>이메일</th>
+						<th>이수상태</th>
 						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
 						<th>출석일수</th>
 						<th>출석률(%)</th>
 						<th>지급예정액(&#8361;)</th>
 						<th>지급상태</th>
+						<th>기타사항</th>
 					</tr>
 				</thead>
 				<tbody id="stdt_list_table_tbody">
@@ -108,11 +109,13 @@
 						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
+						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이수상태</td>
 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
 						<td class="number_cell">출석률</td>
 						<td class="fixed_length_cell">지급예정액</td>
 						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}" th:value="${subsidy.sbsdCd}">지급상태</td>
+						<td class="fixed_length_cell"><input type="text"></input></td>
 					</tr>
 				</tbody>
 			</table>

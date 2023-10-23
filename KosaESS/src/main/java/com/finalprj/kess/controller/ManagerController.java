@@ -474,8 +474,12 @@ public class ManagerController {
 		model.addAttribute("nowYear", nowYear);
 		model.addAttribute("nowMonth", nowMonth);
 		
+		//교육과정이 존재하는 연도 목록 추가
+		List<Integer> yearList = managerService.getYearList(mngrId);
+		model.addAttribute("yearList", yearList);
+		
 		//교육과정 목록 추가
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, yearList.get(0));
 //		List<String> classIdList = new ArrayList<>();
 //		List<String> classNameList = new ArrayList<>();
 //		List<Integer> classSubsidyList = new ArrayList<>();
@@ -488,9 +492,6 @@ public class ManagerController {
 //		model.addAttribute("classNameList", classNameList);
 //		model.addAttribute("classSubsidyList", classSubsidyList);
 		model.addAttribute("classList", classList);
-		//교육과정이 존재하는 연도 목록 추가
-		List<Integer> yearList = managerService.getYearList(mngrId);
-		model.addAttribute("yearList", yearList);
 		
 		//출석 종류 추가
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");

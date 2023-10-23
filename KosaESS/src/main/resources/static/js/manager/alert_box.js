@@ -5,11 +5,13 @@
 	</div>
 <!-- End : 얼럴트 -->
 
+alertFade(string_message, background_color, font_color);
+
 경고창은 
 alertFade("교육과정을 선택하세요.","F9DCCB","FF333E")
 
 성공창은 
-alertFade(wlogList+"건이 검색되었습니다.","CFDEE6","0E5881");
+alertFade(length+"건이 검색되었습니다.","CFDEE6","0E5881");
 
  */
 

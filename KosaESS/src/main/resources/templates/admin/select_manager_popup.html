@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/select_manager_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>업무담당자를 선택하세요.</h2>
+
+	<div class="select_wrap">
+		<div class="search_wrap">
+			<input type="text" placeholder="(어름/이메일)을 입력하세요.">
+			<button class="search_btn">조회</button>
+		</div>
+		<div class="manager_list_wrap">
+			<div class="manager_nm" onclick="selectManager(this)">
+				<input type="hidden" value=""> <span>미정</span>
+			</div>
+			<div class="manager_nm" onclick="selectManager(this)"
+				th:each="manager: ${managerList}">
+				<input type="hidden" th:value="${manager.mngrId}"> <span
+					class="mngr_nm" th:text="${manager.mngrNm}"></span> <span>(<span
+					th:text="${manager.userEmail}"></span>)
+				</span>
+			</div>
+		</div>
+
+		<div class="btn_wrap">
+			<button type="button" class="btn" onclick="self.close();">취소</button>
+		</div>
+	</div>
+	<script>
+		function selectManager(manager) {
+			var mngrId = manager.querySelector('input').value;
+			var mngrNm = manager.querySelector('.mngr_nm').textContent;
+
+			// 값을 부모 창으로 JSON 객체로 전달
+			var values = {
+				mngrId : mngrId,
+				mngrNm : mngrNm
+			};
+			window.opener.postMessage({ event: 'managerSelected', mngrId: mngrId, mngrNm: mngrNm }, "*");
+			window.close(); // 팝업 창 닫기
+		}
+	</script>
+</body>
+</html>
