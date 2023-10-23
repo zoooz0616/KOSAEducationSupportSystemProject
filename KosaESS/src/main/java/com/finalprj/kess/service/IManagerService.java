@@ -71,4 +71,6 @@ public interface IManagerService {
 	public ClassVO getCodeVO(String resnCd);
 
 	public List<Integer> getYearList(String mngrId);
+	
+	public void insertSubsidy(SubsidyVO subsidyVO);
 }

@@ -202,3 +202,13 @@ button:hover{
 	align-items: center;
 	justify-content: center;
 }
+
+.subsidy_list_table_row td img{
+	height:1.6em;
+}
+.subsidy_list_table_row td img:hover{
+	cursor: pointer;
+}
+input:hover, select:hover{
+	cursor: pointer;
+}

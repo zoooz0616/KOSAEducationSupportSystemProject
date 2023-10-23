@@ -120,8 +120,8 @@
 						<th><input type="checkbox" id="chkAllStdt"></th>
 						<th>번호</th>
 						<th>이름</th>
-						<th>이메일</th>
 						<th>교육과정</th>
+						<th>이메일</th>
 						<th th:each="wlogCodeName:${wlogCodeNameList}" th:text="${wlogCodeName.cmcdNm}"></th>
 						<th>출석일수</th>
 						<th>교육일수</th>
@@ -129,6 +129,7 @@
 						<th>지원금(&#8361;)</th>
 						<th>지급기준일</th>
 						<th>지급일</th>
+						<th>기타사항</th>
 						<th>지급상태</th>
 					</tr>
 				</thead>
@@ -139,9 +140,8 @@
 						</td>
 						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
-						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
 						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
-<!-- 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td> -->
+						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
 						<td class="number_cell" th:each="wlogCodeName:${wlogCodeNameList}" th:text="${#strings.substring(#strings.setSplit(subsidy.wlog,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
 						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
@@ -149,6 +149,7 @@
 						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
 						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
+						<td class="fixed_length_cell etc"><img src="/img/memo_closed.png"></td>
 						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}" th:value="${subsidy.sbsdCd}">지급상태</td>
 					</tr>
 				</tbody>

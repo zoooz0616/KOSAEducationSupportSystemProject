@@ -13,6 +13,7 @@ import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
+import com.finalprj.kess.model.SubsidyVO;
 import com.finalprj.kess.repository.IManagerRepository;
 
 @Service
@@ -149,5 +150,10 @@ public class ManagerService implements IManagerService {
 	@Override
 	public List<Integer> getYearList(String mngrId) {
 		return managerRepository.getYearList(mngrId);
+	}
+
+	@Override
+	public void insertSubsidy(SubsidyVO subsidyVO) {
+		managerRepository.insertSubsidy(subsidyVO);
 	}
 }

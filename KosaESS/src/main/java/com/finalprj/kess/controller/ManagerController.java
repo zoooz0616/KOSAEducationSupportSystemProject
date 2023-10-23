@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -1039,6 +1040,25 @@ public class ManagerController {
 		Map<String, Object> response = new HashMap<>();
 		response.put("stdtList", stdtList);
 		response.put("sbsdCdList", sbsdCdList);
+		return response;
+	}
+	//지원금 관리(입력)의 데이터 입력
+	@PostMapping("/subsidy/insert")
+	@ResponseBody
+	public Map<String, Object> insertSubsidyList(
+			HttpSession session
+			, @RequestBody SubsidyVO[] subsidyList
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		for (SubsidyVO vo : subsidyList) {
+			managerService.insertSubsidy(vo);
+		}
+		//response 생성 및 목록 추가
+		Map<String, Object> response = new HashMap<>();
+		response.put("result", Boolean.TRUE);
 		return response;
 	}
 }
