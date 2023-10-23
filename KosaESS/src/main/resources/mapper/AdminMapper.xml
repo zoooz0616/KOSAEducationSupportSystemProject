@@ -350,7 +350,7 @@
 	<select id="getCurriculumDetail" parameterType="string"
 		resultType="com.finalprj.kess.dto.CurriculumDetailDTO">
 	<![CDATA[
-		select lctr.lctr_id, lctr.lctr_nm, lctr.lctr_tm, sbjt.sbjt_id, sbjt.sbjt_nm, prof.prof_id, prof.prof_nm
+		select lctr.lctr_id, lctr.lctr_nm, lctr.lctr_tm, sbjt.sbjt_id, sbjt.sbjt_nm, prof.prof_id, prof.prof_nm, lctr.lctr_etc
 		from lctr
 		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
 		join prof on prof.prof_id = lctr.prof_id

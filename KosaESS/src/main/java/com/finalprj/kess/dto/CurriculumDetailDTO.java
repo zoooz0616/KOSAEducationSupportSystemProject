@@ -8,6 +8,7 @@ public class CurriculumDetailDTO {
 	private String lctrId;
 	private String lctrNm;
 	private String lctrTm;
+	private String lctrEtc;
 	private String sbjtId;
 	private String sbjtNm;
 	private String profId;
