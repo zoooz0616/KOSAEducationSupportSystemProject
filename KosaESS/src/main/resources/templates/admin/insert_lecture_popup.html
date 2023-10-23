@@ -33,22 +33,22 @@
 			</tr>
 			<tr class="input_wrap">
 				<th><span class="title">이수시간<span class="red">*</span></span></th>
-				<td><input type="number"
+				<td><input type="number" id="lecture_tm_input" 
 					onkeyup="if(window.event.keyCode==13){insertLecture()}"
-					id="lecture_tm_input" placeholder="최대 500시간" min="0" max="500"></td>
+					placeholder="최대 500시간" min="0" max="500"></td>
 			</tr>
 			<tr class="input_wrap">
 				<th><span class="title">기타사항</span></th>
-				<td><input type="text"
+				<td><input type="text" id="lecture_etc_input"
 					onkeyup="if(window.event.keyCode==13){insertLecture()}"
-					id="lecture_etc_input" placeholder="기타사항"></td>
+					placeholder="기타사항"></td>
 			</tr>
 		</table>
 	</div>
 
 	<div class="btn_wrap">
 		<button class="btn" onclick="self.close();">취소</button>
-		<button class="btn" onclick="insertManager();">확인</button>
+		<button class="btn" onclick="insertLecture();">확인</button>
 	</div>
 	<script>
 		//과목 팝업 띄우기
@@ -103,61 +103,44 @@
 					}
 				}
 			});
-		}
+		}	
 
 		//등록하기
 		function insertLecture() {
-			var managerNm = document.querySelector(".input_manager_name").value;
-			var managerEmail = document.querySelector(".input_manager_email").value;
-			var managerPwd = document.querySelector(".input_manager_pwd").value;
-			var managerTel = document.querySelector(".input_manager_tel").value;
-
-			// 이메일 형식 검사
-			var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+			var lectureNm = document.querySelector("#lecture_nm_input").value;
+			var subjectId = document.querySelector("#subject_id_input").value;
+			var professorId = document.querySelector("#professor_id_input").value;
+			var lectureTm = document.querySelector("#lecture_tm_input").value;
+			var lectureEtc = document.querySelector("#lecture_etc_input").value;			
 
 			//모두 입력했는지 확인
-			if (managerNm === "" || managerEmail === "" || managerPwd === ""
-					|| managerTel === "") {
-				alert("입력 필드를 모두 채워주세요.");
-			} else if (!emailPattern.test(managerEmail)) {
-				alert("올바른 이메일 형식을 입력하세요.");
+			if (lectureNm === "" || subjectId === "" || professorId === ""
+					|| lectureTm === "") {
+				alert("필수 입력값을 모두 입력해주세요.");
 			} else {
-				//이메일 유효성 검사
-				$
-						.ajax({
-							url : '/admin/manager/check_email',
-							async : true,
-							method : 'POST',
-							data : {
-								managerEmail : managerEmail
-							},
-							success : function(response) {
-								if (response == 'fail') {
-									alert("이미 존재하는 이메일 주소입니다.");
-								} else if (response == 'success') {
-									//모두 완벽하다면
-									$
-											.ajax({
-												url : '/admin/manager/insert',
-												async : true,
-												method : 'POST',
-												data : {
-													managerNm : managerNm,
-													managerEmail : managerEmail,
-													managerPwd : managerPwd,
-													managerTel : managerTel
-												},
-												success : function(response) {
-													if (response == 'success') {
-														alert("업무담당자가 등록되었습니다.");
-														opener.location.href = "/admin/manager/list/1";
-														self.close();//팝업창 닫기
-													}
-												}
-											});
-								}
-							}
-						});
+				//값을 모두 보내고 lectureNm으로 중복확인
+				$.ajax({
+					url : '/admin/lecture/insert',
+					method : 'POST',
+					data : {
+						lectureNm: lectureNm,
+						subjectId : subjectId,
+						professorId : professorId,
+						lectureTm : lectureTm,
+						lectureEtc : lectureEtc
+					},
+					success : function(response) {
+						//실패면 alert(중복)띄우기
+						if (response == "fail") {
+							alert("이미 존재하는 강의입니다.");
+						} else if (response == "success") {
+							//성공하면 강의가 추가되었습니다. alert띄우고 location여기로 다시 이동
+							alert("강의가 등록되었습니다.");
+							opener.location.href = "/admin/lecture/list";
+							self.close();//팝업창 닫기
+						}
+					}
+				});
 			}
 		}
 	</script>

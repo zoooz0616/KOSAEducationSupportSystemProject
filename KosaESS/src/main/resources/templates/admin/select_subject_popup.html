@@ -95,7 +95,7 @@
 		function selectSubject(subject) {
 			var trParnet = subject.closest('tr');
 			
-			var sbjtId = trParnet.querySelector(".td_subject_check_box input[type='hidden']").value;
+			var sbjtId = trParnet.querySelector(".td_subject_check_box input[name='subject_select']").value;
 			var sbjtNm = trParnet.querySelector('.td_subject_nm span').textContent;
 
 			// 값을 부모 창으로 JSON 객체로 전달

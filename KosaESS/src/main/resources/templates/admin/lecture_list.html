@@ -221,10 +221,7 @@
 				"width=500, height=350, left=800, top=400"		
 		);
 	}
-		
-	/*
-	*	선택삭제 이벤트
-	*/
+	
 	// 강의 선택삭제 버튼 이벤트
 	document
 			.querySelector("#lecture_delete_btn")
@@ -260,14 +257,6 @@
 								});
 					});
 
-	
-
-	
-	
-	
-	/*
-	*	등록하기 이벤트
-	*/
 		//과목 등록하기
 		function insertSubject() {
 			//input에 과목명 입력했는지 확인
@@ -331,40 +320,7 @@
 			}
 		}
 
-		//강의 등록
-		function insertLecture() {
-			//강의명과 이수시간을 모두 등록했는지 확인
-			var subjectIdInput = document.querySelector("#subject_id_input").value;
-			var profIdInput = document.querySelector("#professor_id_input").value;
-			var lecturNmInput = document.querySelector("#lecture_nm_input").value;
-			var lectureTmInput = document.querySelector("#lecture_tm_input").value;
-
-			if (lecturNmInput === "" || lectureTmInput === "0") {
-				alert("모든 필드를 입력해주세요");
-			} else {
-				//값을 모두 보내고 lectureNm으로 중복확인
-				$.ajax({
-					url : '/admin/lecture/insert',
-					method : 'POST',
-					data : {
-						subjectIdInput : subjectIdInput,
-						profIdInput : profIdInput,
-						lecturNmInput : lecturNmInput,
-						lectureTmInput : lectureTmInput
-					},
-					success : function(response) {
-						//실패면 alert(중복)띄우기
-						if (response == "fail") {
-							alert("이미 존재하는 강의입니다.");
-						} else if (response == "success") {
-							//성공하면 강의가 추가되었습니다. alert띄우고 location여기로 다시 이동
-							alert("강의가 추가되었습니다.");
-							window.location.href = "/admin/lecture/list";
-						}
-					}
-				});
-			}
-		}
+		
 
 		/*
 		*	수정하기 접속 및 취소 이벤트

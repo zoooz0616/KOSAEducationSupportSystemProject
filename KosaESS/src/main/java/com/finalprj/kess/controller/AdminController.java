@@ -1461,21 +1461,26 @@ public class AdminController {
 	 */
 	@PostMapping("/lecture/insert")
 	@ResponseBody
-	public String insertLecture(@RequestParam("subjectIdInput") String sbjtId,
-			@RequestParam("profIdInput") String profId, @RequestParam("lecturNmInput") String lctrNm,
-			@RequestParam("lectureTmInput") int lctrTm) {
+	public String insertLecture( 
+			@RequestParam("lectureNm") String lectureNm,
+			@RequestParam("subjectId") String subjectId,
+			@RequestParam("professorId") String professorId,
+			@RequestParam("lectureTm") int lectureTm,
+			@RequestParam("lectureEtc") String lectureEtc) {
+		
 		// 강의명이 중복되는지 확인 후 중복 시 fail 리턴
-		Integer lctrNmCnt = adminService.getLctrNmCnt(lctrNm);
+		Integer lctrNmCnt = adminService.getLctrNmCnt(lectureNm);
 
 		if (lctrNmCnt != 0) {
 			return "fail";
 		} else {
 			LectureVO lectureVO = new LectureVO();
 			lectureVO.setLctrId(adminService.getMaxLectureId());
-			lectureVO.setSbjtId(sbjtId);
-			lectureVO.setProfId(profId);
-			lectureVO.setLctrNm(lctrNm);
-			lectureVO.setLctrTm(lctrTm);
+			lectureVO.setLctrNm(lectureNm);
+			lectureVO.setSbjtId(subjectId);
+			lectureVO.setProfId(professorId);
+			lectureVO.setLctrTm(lectureTm);
+			lectureVO.setLctrEtc(lectureEtc);
 
 			adminService.insertLectureVO(lectureVO);
 
