@@ -478,22 +478,33 @@
 	</select>
 	<insert id="insertSubsidy" parameterType="com.finalprj.kess.model.SubsidyVO">
 		<![CDATA[
-			INSERT INTO sbsd
+			INSERT INTO sbsd (
+				sbsd_Id,
+				clss_Id,
+				stdt_Id,
+				sbsd_Cd,
+				payment,
+				subsidy_Dd,
+				max_Wlog_Cnt,
+				wlog_Cnt,
+				sbsd_Etc,
+				rgst_Dt,
+				rgster_Id
+			)
 			VALUES (
 				#{sbsdId},
 				#{clssId},
 				#{stdtId},
+				
 				#{sbsdCd},
-				#{paidDd},
 				#{payment},
 				#{subsidyDd},
 				#{maxWlogCnt},
 				#{wlogCnt},
 				#{sbsdEtc},
+				
 				#{rgstDt},
-				#{rgsterId},
-				#{updtDt},
-				#{updterId}
+				#{rgsterId}
 			)
 		]]>
 	</insert>
@@ -509,6 +520,17 @@
 		WHERE
 			mngr_id = #{mngrId}
 			order by 1 desc
+		]]>
+	</select>
+	<select id="getMaxId">
+		<![CDATA[
+		SELECT
+			to_number(
+				substr(
+					max(${columnName}),5
+				)
+			)
+		FROM ${tableName}
 		]]>
 	</select>
 </mapper>

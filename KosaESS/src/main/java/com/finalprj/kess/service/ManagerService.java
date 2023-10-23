@@ -156,4 +156,9 @@ public class ManagerService implements IManagerService {
 	public void insertSubsidy(SubsidyVO subsidyVO) {
 		managerRepository.insertSubsidy(subsidyVO);
 	}
+
+	@Override
+	public int getMaxId(String tableName, String columnName) {
+		return managerRepository.getMaxId(tableName, columnName);
+	}
 }

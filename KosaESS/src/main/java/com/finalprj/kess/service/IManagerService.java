@@ -73,4 +73,6 @@ public interface IManagerService {
 	public List<Integer> getYearList(String mngrId);
 	
 	public void insertSubsidy(SubsidyVO subsidyVO);
+
+	public int getMaxId(String tableName, String columnName);
 }

@@ -3,6 +3,7 @@ package com.finalprj.kess.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -1047,13 +1048,31 @@ public class ManagerController {
 	@ResponseBody
 	public Map<String, Object> insertSubsidyList(
 			HttpSession session
-			, @RequestBody SubsidyVO[] subsidyList
+			//, @RequestBody SubsidyVO[] subsidyList
+			, @RequestBody List<Map<String, Object>> subsidyList
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
 			return null;
 		}
-		for (SubsidyVO vo : subsidyList) {
+		
+		//JSON 맵에서 데이터 가져와서 하나하나 VO로 만들고 insert 해주기
+		SubsidyVO vo;
+		for (Map<String,Object> sbsd : subsidyList) {
+			vo = new SubsidyVO();
+			vo.setSbsdId("SBSD"+String.format("%06d",managerService.getMaxId("sbsd", "sbsd_id")+1));//수정하기
+			vo.setClssId((String)sbsd.get("clssId"));
+			vo.setStdtId((String)sbsd.get("stdtId"));
+			
+			vo.setSbsdCd((String)sbsd.get("sbsdCd"));
+			vo.setSubsidyDd(Date.valueOf(((String)sbsd.get("subsidyDd")).split("T")[0]));
+			vo.setPayment(Integer.parseInt((String)sbsd.get("payment")));
+			vo.setMaxWlogCnt(Integer.parseInt((String)sbsd.get("maxWlogCnt")));
+			vo.setWlogCnt(Integer.parseInt((String)sbsd.get("wlogCnt")));
+			vo.setSbsdEtc((String)sbsd.get("sbsdEtc"));
+			
+			vo.setRgstDt(new Timestamp(System.currentTimeMillis()));
+			vo.setRgsterId((String)session.getAttribute("mngrId"));
 			managerService.insertSubsidy(vo);
 		}
 		//response 생성 및 목록 추가

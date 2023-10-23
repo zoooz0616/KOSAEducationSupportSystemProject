@@ -16,24 +16,23 @@ function insertSubsidy() {
 		dict['sbsdCd']=targetTr.children('td[name=sbsdCd]').children("select").val();
 		dict['payment']=targetTr.children('td[name=payment]').children('input').val();
 		dict['subsidyDd']=new Date($('#select_ym_y option:selected').val(),$('#select_ym_m option:selected').val()-1); 
-		dict['maxWlogCnt']="maxWlogCnt >>> "+$('#max_wlog_cnt option:selected').val();
+		dict['maxWlogCnt']=$('#max_wlog_cnt option:selected').val();
 		dict['wlogCnt']=targetTr.children('td[name=wlogCnt]').text();
 		dict['sbsdEtc']=targetTr.children('td[name=sbsdEtc]').children('input[type=text]').val();
 		subsidyVO.push(dict);
-		
 	}
 	
 	//객체 배열을 json문자열로 직렬화 하기
-	var jsonData = JSON.stringify(subsidyVO);
-	console.log(jsonData);
+	//var jsonData = JSON.stringify(subsidyVO);
+	//var jsonData = JSON.stringify(subsidyVO);
+	//console.log(jsonData);
 	$.ajax({
 		url : "/manager/subsidy/insert", // 컨트롤러 엔드포인트
 		type : "post"
-		//,dataType:"json"
-		//,contentType : 'application/json'
-		,data : {
-			subsidyList: jsonData
-		}
+		,dataType:"json"
+		,contentType : 'application/json'
+		//,data : {subsidyList: jsonData}
+		,data : JSON.stringify(subsidyVO)
 		,success : function(response) {
 			if(response.result){
 				alert("총 "+$('#result_count').text()+"건이 등록되었습니다.");
