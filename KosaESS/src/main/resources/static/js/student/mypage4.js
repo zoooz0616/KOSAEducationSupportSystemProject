@@ -36,7 +36,6 @@ $(document).ready(function() {
 	$(document).on('click', '.paging4>i', function() {
 		const totalPage = Math.floor(todoData4.length / countPerPage4) + (todoData4.length % countPerPage4 == 0 ? 0 : 1);
 		const id = $(this).attr('id');
-		//console.log(id);
 
 		if (id == 'first_page') {
 			setTable(1);
@@ -163,7 +162,6 @@ function toggleReply(button) {
 				postId: postId
 			},
 			success: function(data) {
-				console.log(data)
 				var ul = $('<td colspan="5" style="padding:0;"></td>');
 				for (var i = 0; i < data.length; i++) {
 					var reply = data[i];

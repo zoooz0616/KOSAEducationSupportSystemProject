@@ -594,10 +594,18 @@ public class StudentController {
 			Model model) throws IOException {
 
 		String stdtId = (String) session.getAttribute("stdtId");
-		String maxFileId = uploadFileService.getMaxFileId();
+		String maxPostId = studentService.getMaxPostId();
+		PostVO post = new PostVO();
+		post.setPostId(maxPostId);
+		post.setPostTitle(title);
+		post.setPostContent(content);
+		post.setPostCd("PST0000003");
+		post.setRgsterId(stdtId);
+
 		// 업로드하기
 
-		if (files[0] != null && !files[0].isEmpty()) {
+		if (files != null && !files[0].isEmpty()) {
+			String maxFileId = uploadFileService.getMaxFileId();
 			int subFileId = 1;
 			try {
 				for (MultipartFile file : files) {
@@ -609,6 +617,7 @@ public class StudentController {
 						fileVO.setFileSize(file.getSize());
 						fileVO.setFileType(file.getContentType());
 						fileVO.setFileContent(file.getBytes());
+						fileVO.setRgsterId(stdtId);
 						uploadFileService.uploadFile(fileVO);
 						subFileId++;
 					}
@@ -616,16 +625,9 @@ public class StudentController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			post.setFileId(maxFileId);
 		}
 
-		String maxPostId = studentService.getMaxPostId();
-		PostVO post = new PostVO();
-		post.setPostId(maxPostId);
-		post.setPostTitle(title);
-		post.setPostContent(content);
-		post.setPostCd("PST0000003");
-		post.setFileId(maxFileId);
-		post.setRgsterId(stdtId);
 		studentService.uploadInquiry(post);
 
 	}
@@ -709,6 +711,7 @@ public class StudentController {
 						fileVO.setFileSize(file.getSize());
 						fileVO.setFileType(file.getContentType());
 						fileVO.setFileContent(file.getBytes());
+						fileVO.setRgsterId(stdtId);
 						uploadFileService.uploadFile(fileVO);
 						subFileId++;
 					}
@@ -716,8 +719,8 @@ public class StudentController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			postVO.setFileId(maxFileId);
 		}
-		postVO.setFileId(maxFileId);
 
 		studentService.updatePostVO(postVO);
 
@@ -942,6 +945,8 @@ public class StudentController {
 	@GetMapping("/mypage")
 	public String mypageMain(Model model, HttpSession session) {
 		String stdtId = (String) session.getAttribute("stdtId");
+		String stdtNm = (String) session.getAttribute("stdtNm");
+		model.addAttribute("stdtNm",stdtNm);
 
 		List<CommonCodeVO> genderList = studentService.getCommonCodeList("GRP0000006");
 		model.addAttribute("genderList", genderList);
@@ -1122,7 +1127,7 @@ public class StudentController {
 					rgstList.get(i).setCmptRate(0.0);
 					rgstList.get(i).setStdtTmSum(stdtTmSum);
 				} else {
-					rgstList.get(i).setCmptRate(Math.round((100.0 * stdtTmSum / classTm)* 10.0) / 10.0);
+					rgstList.get(i).setCmptRate(Math.round((100.0 * stdtTmSum / classTm) * 10.0) / 10.0);
 					rgstList.get(i).setStdtTmSum(stdtTmSum);
 				}
 			}
@@ -1254,20 +1259,21 @@ public class StudentController {
 							fileVO.setFileSize(file.getSize());
 							fileVO.setFileType(file.getContentType());
 							fileVO.setFileContent(file.getBytes());
+							fileVO.setRgsterId(stdtId);
 							uploadFileService.uploadFile(fileVO);
 							subFileId++;
 						}
-						resn.setFileId(maxFileId);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-
+			resn.setFileId(maxFileId);
 		}
 
 		// 이력서 내역 추가하기
 		resn.setRgsterId(stdtId);
+		System.out.println(resn.getFileId());
 		studentService.uploadResnFile(resn);
 
 		return "redirect:/student/mypage";
@@ -1293,16 +1299,18 @@ public class StudentController {
 						fileVO.setFileSize(file.getSize());
 						fileVO.setFileType(file.getContentType());
 						fileVO.setFileContent(file.getBytes());
+						fileVO.setRgsterId(stdtId);
 						uploadFileService.uploadFile(fileVO);
 						subFileId++;
 					}
-					studentService.updateResndt(resnId, stdtId, resnText, maxFileId);
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		studentService.updateResndt(resnId, stdtId, resnText, null);
+			studentService.updateResndt(resnId, stdtId, resnText, maxFileId);
+		} else
+			studentService.updateResndt(resnId, stdtId, resnText, null);
 
 		return "redirect:/student/mypage";
 	}

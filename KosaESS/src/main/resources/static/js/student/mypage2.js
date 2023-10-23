@@ -36,7 +36,6 @@ $(document).ready(function() {
 	$(document).on('click', '.paging2>i', function() {
 		const totalPage = Math.floor(todoData2.length / countPerPage2) + (todoData2.length % countPerPage2 == 0 ? 0 : 1);
 		const id = $(this).attr('id');
-		//console.log(id);
 
 		if (id == 'first_page') {
 			setTable(1);
@@ -93,7 +92,6 @@ $(document).ready(function() {
 			row.append('<td>' + RegistrationVO.rgstNm + '</td>');
 			row.append('<td>' + RegistrationVO.clssTotalTm + '</td>');
 			row.append('<td>' + RegistrationVO.stdtTmSum + '</td>');
-			console.log(RegistrationVO.cmptRate);
 			if (RegistrationVO.cmptRate >= 80.0) {
 				row.append('<td style="color:blue;">' + RegistrationVO.cmptRate + '(%)</td>');
 			} else {
@@ -110,7 +108,7 @@ $(document).ready(function() {
 			}
 			if (RegistrationVO.cmptCd === 'CMP0000002') {
 				/*row.append('<td class="rgstPrint" style="display: revert;"><a href="/download/file/' + RegistrationVO.fileId + '/' + RegistrationVO.fileSubId + '"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></a></td>');*/
-				row.append('<td class="rgstPrint" style="display: revert;"><img style="height: 25px;" src="/img/file_icon.png" alt="file 아이콘"></td>');
+				row.append('<td class="rgstPrint" style="display: revert;"><img style="height: 25px;cursor: pointer;" src="/img/file_icon.png" alt="file 아이콘"></td>');
 			} else {
 				row.append('<td class="rgstPrint" style="display: none;"></td >');
 			}
@@ -157,11 +155,9 @@ $(document).ready(function() {
 
 var rgstRow = "";
 var clssId = "";
-
 $(document).on('click', '.rgstPrint', function() {
 	rgstRow = $(this).closest('tr');
 	clssId = rgstRow.find('td.clssId').text();
-	console.log(clssId);
 	$.ajax({
 		type: 'POST',
 		url: '/student/getAplyVO',
@@ -174,7 +170,7 @@ $(document).on('click', '.rgstPrint', function() {
 			var a = document.createElement('a');
 			var url = window.URL.createObjectURL(data);
 			a.href = url;
-			a.download = 'certificate.pdf'; // 파일 이름 지정
+			a.download = stdtNm + '교육생_인증서.pdf'; // 파일 이름 지정
 			document.body.appendChild(a);
 			a.click();
 			window.URL.revokeObjectURL(url); // 사용 후 URL을 해제합니다.

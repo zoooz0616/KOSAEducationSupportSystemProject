@@ -13,7 +13,6 @@ $(document).ready(function() {
 	});
 
 	function updateWlogTable() {
-		console.log("updateWlogTable")
 		$.ajax({
 			type: 'POST',
 			url: '/student/mypage/wlogList',

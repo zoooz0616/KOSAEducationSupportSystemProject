@@ -10,7 +10,6 @@ $(document).ready(function() {
 			type: 'POST',
 			url: '/student/mypage/sbsdList',
 			success: function(data) {
-				console.log(data);
 				todoData5 = data;
 				$('.sbsdCnt').text(todoData5.length);
 				setTable(1);
