@@ -1448,7 +1448,7 @@ public class AdminController {
 		List<ProfessorVO> professorList = adminService.getProfessorList();
 		model.addAttribute("professorList", professorList);
 		
-		return "admin/select_subject_popup";
+		return "admin/select_professor_popup";
 	}
 
 	/**

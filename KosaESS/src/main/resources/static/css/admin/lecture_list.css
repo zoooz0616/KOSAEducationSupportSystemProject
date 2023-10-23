@@ -68,11 +68,12 @@
 	color: #0E5881;
 }
 
-.insert {
+.search_wrap {
 	border-top: 2px solid #0E5881;
 	border-bottom: 1px solid #CFDEE6;
 	background: #E7EFF3;
 	display: flex;
+	padding: 5px;
 }
 
 .insert div>span {
@@ -173,6 +174,57 @@
 	text-align: center;
 }
 
-button{
+button {
 	cursor: pointer;
+}
+
+.search_filter_wrap {
+	display: flex;
+}
+
+.filter_box {
+	display: flex;
+	margin: 3px 20px 3px 20px;
+	color: #0E5881;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.filter_box_title {
+	margin-right: 20px;
+}
+
+.search_filter_btn_wrap {
+	display: flex;
+	align-items: center;
+}
+
+.search_filter_btn_wrap button {
+	text-align: center;
+	color: white;
+	font-weight: bold;
+	border: none;
+	margin: 2px;
+	border-radius: 3px;
+	padding: 5px;
+	display: flex;
+	cursor: pointer;
+}
+
+.search_filter_btn_wrap button img {
+	width: 20px;
+}
+
+.search_filter_btn_wrap .search_reset_btn {
+	background: #9FBCCD;
+}
+
+.search_filter_btn_wrap .search_filter_btn {
+	background: #0E5881;
+}
+
+.search_wrap {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }

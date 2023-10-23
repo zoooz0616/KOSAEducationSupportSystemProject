@@ -1,5 +1,5 @@
 a {
-	text-decoration-line: none;	
+	text-decoration-line: none;
 	color: #0E5881;
 }
 
@@ -38,10 +38,9 @@ a {
 	font-weight: bold;
 }
 
-
 .content_middle .class_summary {
 	border-top: 2px solid #0E5881;
-	margin: 40px;
+	margin: 40px 40px 10px 40px;
 }
 
 .content_middle .class_summary .row {
@@ -58,7 +57,6 @@ a {
 	background: #E7EFF3;
 	text-align: center;
 	width: 100px;
-	
 	font-weight: bold;
 	color: #0E5881;
 }
@@ -66,7 +64,6 @@ a {
 .content_middle .class_summary .row .col .col_content {
 	padding-left: 10px;
 }
-
 
 .content_middle .class_summary .row .col .col_content a {
 	text-decoration: none;
@@ -81,14 +78,14 @@ a {
 }
 
 .home-section .content_bottom {
-	margin: 40px;
+	margin: 10px 40px 40px 40px;
 }
 
 .home-section .content_bottom .content_info_wrap {
 	color: #333333;
 	font-size: 15px;
 	font-weight: bold;
-	display:flex;
+	display: flex;
 	justify-content: space-between;
 }
 
@@ -102,7 +99,7 @@ a {
 
 .content_info_wrap .content_info_btn_wrap {
 	display: flex;
-	float:right;
+	float: right;
 }
 
 .content_info_wrap .content_info_btn_wrap input {
@@ -111,19 +108,19 @@ a {
 	border: none;
 	border-radius: 3px;
 	font-weight: bold;
-	display:flex;
+	display: flex;
 	margin: 2px;
 	padding: 5px;
 	cursor: pointer;
 	align-items: center;
-    justify-content: space-around;
+	justify-content: space-around;
 }
 
 .content_list {
 	width: 100%;
 	background: #ffffff;
 	border-radius: 3px;
-	margin-top:10px;
+	margin-top: 10px;
 	border-top: 2px solid #0E5881;
 }
 
@@ -144,8 +141,9 @@ a {
 
 .content_list_table tr td {
 	border: 1px solid #CFDEE6;
-	padding:5px;
+	padding: 5px;
 }
+
 .content_list_table tr td a {
 	text-decoration: none;
 	color: #0E5881;
@@ -158,9 +156,9 @@ a {
 	text-decoration: underline;
 }
 
-.td_check, .td_num, .td_apply_id, .td_stdt_id, .td_stdt_nm, .td_status{
+.td_check, .td_num, .td_apply_id, .td_stdt_id, .td_stdt_nm, .td_status {
 	text-align: center;
-} 
+}
 
 #excel_btn {
 	border: 2px solid green;
@@ -174,7 +172,7 @@ a {
 	cursor: pointer;
 }
 
-#excel_btn > img{
+#excel_btn>img {
 	margin-right: 5px;
 	width: 20px;
 }

@@ -57,7 +57,7 @@
 
 			// 팝업 창을 열기
 			var popup = window.open("/admin/lecture/select/subject", "과목 선택",
-					"width=500, height=800, left=800, top=300");
+					"width=800, height=720, left=800, top=300");
 
 			window.addEventListener("message", function(event) {
 				if (event.data && event.data.event) {
@@ -84,21 +84,21 @@
 
 			// 팝업 창을 열기
 			var popup = window.open("/admin/lecture/select/professor", "강사 선택",
-					"width=500, height=800, left=800, top=300");
+					"width=800, height=720, left=800, top=300");
 
 			window.addEventListener("message", function(event) {
 				if (event.data && event.data.event) {
-					if (event.data.event === 'subjectSelected') {
-						var sbjtId = event.data.sbjtId;
-						var sbjtNm = event.data.sbjtNm;
+					if (event.data.event === 'professorSelected') {
+						var profId = event.data.profId;
+						var profNm = event.data.profNm;
 
 						var hiddenInput = tdParent
 								.querySelector("input[type='hidden']");
 						var textInput = tdParent
 								.querySelector("input[type='text']");
 
-						hiddenInput.value = sbjtId;
-						textInput.value = sbjtNm;
+						hiddenInput.value = profId;
+						textInput.value = profNm;
 
 					}
 				}
