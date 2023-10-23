@@ -31,48 +31,77 @@
 		<div class="content_middle">
 			<!-- 강의 관리 -->
 			<div class="lecture_wrap">
-				<!-- 강의 검색하기 -->
-				<div class="insert_lecture insert" style="padding: 5px;">
-					<div>
-						<span>과목명<span class="red">*</span></span> <select
-							id="subject_id_input">
-							<option th:each="subject: ${subjectList}"
-								th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}">
-						</select> <span>강사명<span class="red">*</span></span> <select
-							id="professor_id_input">
-							<option th:each="professor: ${professorList}"
-								th:value="${professor.profId}" th:text="${professor.profNm}">
-						</select> <span>강의명<span class="red">*</span></span> <input
-							id="lecture_nm_input" value="" type="text" placeholder="강의명"
-							style="width: 150px;"> <span>이수시간<span class="red">*</span></span>
-						<input id="lecture_tm_input" type="number" value="0"
-							style="width: 100px;">
+				<!-- search -->
+				<div class="search_wrap">
+					<!-- Search Filter wrap -->
+					<div class="search_filter_wrap">
+						<!-- 강의명 -->
+						<div class="filter_box">
+							<div class="filter_box_title">강의명</div>
+							<div>
+								<input class="search_input" type="text" id="search_input"
+									value="" onkeyup="if(window.event.keyCode==13){search();}">
+							</div>
+						</div>
+						<!-- 강의명 -->
+
+						<!-- 교육과정 -->
+						<div class="filter_box">
+							<div class="filter_box_title">과목명</div>
+							<div>
+								<select class="search_class_select">
+									<option value="all">전체</option>
+									<option th:each="subject: ${subjectList}"
+										th:value="${subject.sbjtId}" th:text="${subject.sbjtNm}"></option>
+								</select>
+							</div>
+						</div>
+						<!-- 교육과정-->
+
+						<!-- 계정상태 -->
+						<div class="filter_box">
+							<div class="filter_box_title">강사명</div>
+							<div>
+								<select class="search_mngr_status">
+									<option value="all">전체</option>
+									<option th:each="professor: ${professorList}"
+										th:value="${professor.profId}" th:text="${professor.profNm}"></option>
+								</select>
+							</div>
+						</div>
+						<!-- 계정상태-->
 					</div>
-					<div>
-						<button class="insert_btn" type="button" onclick="insertLecture()"
-							style="display: flex;">
-							<img th:src="@{/img/plus_white.png}" style="width: 20px;">
-							등록하기
+					<!-- Search Filter wrap -->
+
+					<!-- Search Button wrap -->
+					<div class="search_filter_btn_wrap">
+						<button type="button" class="search_reset_btn"
+							onclick="resetInput()">
+							<img th:src="@{/img/reset_white.png}"> <span>초기화</span>
+						</button>
+						<button type="button" id="search_btn" class="search_filter_btn"
+							onclick="search()">
+							<img th:src="@{/img/search_white.png}"> <span>조회</span>
 						</button>
 					</div>
+					<!-- Search Button wrap -->
 				</div>
-				<!-- 강의 검색하기 -->
-
+				<!-- search -->
 
 				<!-- 총 개수 및 버튼-->
 				<div class="content_info_wrap">
-					<div style="display: flex;align-items:center;">
+					<div style="display: flex; align-items: center;">
 						<span>총 <span class="lecture_cnt cnt"
-							th:text="${#lists.size(lectureList)}"></span>
-							 건</span>
+							th:text="${#lists.size(lectureList)}"></span> 건
+						</span>
 					</div>
 					<div class="content_info_button_wrap">
-						<button class="insert_btn" type="button" onclick="showInsertLecturePopup()"
-							style="display: flex;">
+						<button class="insert_btn" type="button"
+							onclick="showInsertLecturePopup()" style="display: flex;">
 							<img th:src="@{/img/plus_white.png}" style="width: 20px;">
 							등록하기
 						</button>
-					
+
 						<button id="lecture_delete_btn">
 							<img th:src="@{/img/minus_white.png}" style="width: 20px;">
 							<span>선택삭제</span>
@@ -105,11 +134,12 @@
 								<th style="width: 5%;"><input type="checkbox"
 									name="lecture_select_all" onclick="lectureSelectAll(this)"
 									class="lecture_checkbox_all"></th>
-								<th style="width: 10%;">번호</th>
-								<th style="width: 40%;">강의명</th>
-								<th style="width: 25%;">과목명</th>
+								<th style="width: 5%;">번호</th>
+								<th style="width: 30%;">강의명</th>
+								<th style="width: 20%;">과목명</th>
 								<th style="width: 10%;">강사명</th>
-								<th style="width: 10%;">이수시간</th>
+								<th style="width: 5%;">이수시간</th>
+								<th style="width: 25%;">기타사항</th>
 							</tr>
 						</thead>
 						<tbody class="lecture_tbody">
@@ -119,8 +149,7 @@
 									th:value="${lecture.lctrId}" class="lecture_checkbox_item">
 									<input type="hidden" class="lecture_update_yn" value="N">
 								</td>
-								<td class="td_lecture_num"
-									th:text="${#lists.size(lectureList)-iterStat.index}"></td>
+								<td class="td_lecture_num" th:text="${iterStat.index+1}"></td>
 								<td class="td_lecture_nm"><span class="lecture_span"
 									th:text="${lecture.lctrNm}"></span> <input
 									style="display: none;" class="lecture_input lecture_nm"
@@ -192,61 +221,7 @@
 				"width=500, height=350, left=800, top=400"		
 		);
 	}
-	
-	
-	
-	
-	
-	//과목 전체선택
-	function subjectSelectAll(selectAll){
-		//모든 체크박스들
-		const checkboxes = document.querySelectorAll('input[name="subject_select"]');
-		checkboxes.forEach((checkbox) => {
-			checkbox.checked = selectAll.checked;
-		});
-	}
-	
-	//과목 개별 선택
-	function subjectCheckSelectAll(){
-		//전체선택 체크박스
-		const selectAll = document.querySelector('input[name="subject_select_all"]');
-		//모든 체크박스
-		const checkboxes = document.querySelectorAll('input[name="subject_select"]');
-		//선택된 체크박스
-		const checked = document.querySelectorAll('input[name="subject_select"]:checked');
 		
-		if(checkboxes.length == checked.length){
-			selectAll.checked = true;
-		}else{
-			selectAll.checked = false;
-		}
-	}
-	
-	//강사 전체선택
-	function professorSelectAll(selectAll){
-		//모든 체크박스들
-		const checkboxes = document.querySelectorAll('input[name="professor_select"]');
-		checkboxes.forEach((checkbox) => {
-			checkbox.checked = selectAll.checked;
-		});
-	}
-	
-	//강사 개별 선택
-	function professorCheckSelectAll(){
-		//전체선택 체크박스
-		const selectAll = document.querySelector('input[name="professor_select_all"]');
-		//모든 체크박스
-		const checkboxes = document.querySelectorAll('input[name="professor_select"]');
-		//선택된 체크박스
-		const checked = document.querySelectorAll('input[name="professor_select"]:checked');
-		
-		if(checkboxes.length == checked.length){
-			selectAll.checked = true;
-		}else{
-			selectAll.checked = false;
-		}
-	}
-	
 	/*
 	*	선택삭제 이벤트
 	*/
@@ -285,75 +260,8 @@
 								});
 					});
 
-	//과목 선택삭제 버튼 이벤트
-	document
-			.querySelector("#subject_delete_btn")
-			.addEventListener(
-					"click",
-					function() {
-						var selectedSubjectIds = [];
+	
 
-						// 선택된 체크박스를 모두 선택합니다.
-						var selectedCheckboxes = document
-								.querySelectorAll(".subject_checkbox_item:checked");
-
-						// 선택된 체크박스의 값을 배열에 추가합니다.
-						selectedCheckboxes.forEach(function(checkbox) {
-							selectedSubjectIds.push(checkbox.value);
-						});
-
-						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-						$
-								.ajax({
-									url : '/admin/lecture/subject/deleteall',
-									method : 'POST',
-									data : {
-										selectedSubjectIds : selectedSubjectIds
-									},
-									success : function(response) {
-										console.log(response);
-										if (response == "success") {
-											alert("선택한 과목이 삭제되었습니다.");
-											window.location.href = "/admin/lecture/list";
-										}
-									}
-								});
-					});
-
-	//강사 선택삭제 버튼 이벤트
-	document
-			.querySelector("#professor_delete_btn")
-			.addEventListener(
-					"click",
-					function() {
-						var selectedProfessorIds = [];
-
-						// 선택된 체크박스를 모두 선택합니다.
-						var selectedCheckboxes = document
-								.querySelectorAll(".professor_checkbox_item:checked");
-
-						// 선택된 체크박스의 값을 배열에 추가합니다.
-						selectedCheckboxes.forEach(function(checkbox) {
-							selectedProfessorIds.push(checkbox.value);
-						});
-
-						// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
-						$
-								.ajax({
-									url : '/admin/lecture/professor/deleteall',
-									method : 'POST',
-									data : {
-										selectedProfessorIds : selectedProfessorIds
-									},
-									success : function(response) {
-										console.log(response);
-										if (response == "success") {
-											alert("선택한 강사가 삭제되었습니다.");
-											window.location.href = "/admin/lecture/list";
-										}
-									}
-								});
-					});
 	
 	
 	
@@ -515,110 +423,9 @@
         });
     }
 
-  	//과목 수정하기 모드
-	function enterSubjectEditMode(){
-		const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
-        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
-        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
-        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
-
-        //버튼 display 수정
-        deleteBtn.style.display = 'none';
-        updateBtn.style.display = 'none';
-        cancelBtn.style.display = 'flex';
-        saveBtn.style.display = 'flex';
-        
-        //본래의 span 숨기기
-        const subjectSpans = document.querySelectorAll('.subject_span');
-        subjectSpans.forEach((subjectSpan)=>{
-        	subjectSpan.style.display = 'none';
-        });
-        
-        //editInput 보이게 하기
-        const subjectEdits = document.querySelectorAll('.subject_input');
-        subjectEdits.forEach((subjectEdit)=>{
-        	subjectEdit.style.display = 'block';
-        });
-	}	
-	
-	//과목 수정하기 취소
-	function cancelSubjectEditMode(){
-		const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
-        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
-        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
-        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
-
-      	//버튼 display 수정
-        deleteBtn.style.display = 'flex';
-        updateBtn.style.display = 'flex';
-        cancelBtn.style.display = 'none';
-        saveBtn.style.display = 'none';
-        
-      	//본래의 span 보이기
-        const subjectSpans = document.querySelectorAll('.subject_span');
-        subjectSpans.forEach((subjectSpan)=>{
-        	subjectSpan.style.display = 'block';
-        });
-        
-        //editInput숨기기
-        const subjectEdits = document.querySelectorAll('.subject_input');
-        subjectEdits.forEach((subjectEdit)=>{
-        	subjectEdit.style.display = 'none';
-        });
-	}
+  	
 	
 	
-	//강사 수정하기 모드
-	function enterProfessorEditMode(){
-		const deleteBtn = document.querySelector('#professor_delete_btn');//강사 선택삭제 버튼
-        const updateBtn = document.querySelector('#professor_update_btn');//강사 수정하기 버튼
-        const cancelBtn = document.querySelector('#professor_cancel_btn');//강사 수정취소 버튼
-        const saveBtn = document.querySelector('#professor_save_btn');//강사 저장하기 버튼
-
-        //버튼 display 수정
-        deleteBtn.style.display = 'none';
-        updateBtn.style.display = 'none';
-        cancelBtn.style.display = 'flex';
-        saveBtn.style.display = 'flex';
-        
-        //본래의 span 숨기기
-        const professorSpans = document.querySelectorAll('.professor_span');
-        professorSpans.forEach((professorSpan)=>{
-        	professorSpan.style.display = 'none';
-        });
-        
-        //editInput 보이게 하기
-        const professorEdits = document.querySelectorAll('.professor_input');
-        	professorEdits.forEach((professorEdit)=>{
-        	professorEdit.style.display = 'block';
-        });
-	}	
-	
-	//강사 수정하기 취소
-	function cancelProfessorEditMode(){
-		const deleteBtn = document.querySelector('#professor_delete_btn');//강사 선택삭제 버튼
-        const updateBtn = document.querySelector('#professor_update_btn');//강사 수정하기 버튼
-        const cancelBtn = document.querySelector('#professor_cancel_btn');//강사 수정취소 버튼
-        const saveBtn = document.querySelector('#professor_save_btn');//강사 저장하기 버튼
-
-      	//버튼 display 수정
-        deleteBtn.style.display = 'flex';
-        updateBtn.style.display = 'flex';
-        cancelBtn.style.display = 'none';
-        saveBtn.style.display = 'none';
-        
-      	//본래의 span 보이기
-        const professorSpans = document.querySelectorAll('.professor_span');
-        professorSpans.forEach((professorSpan)=>{
-        	professorSpan.style.display = 'block';
-        });
-        
-        //editInput숨기기
-        const professorEdits = document.querySelectorAll('.professor_input');
-    	professorEdits.forEach((professorEdit)=>{
-    	professorEdit.style.display = 'none';
-    	});
-	}
 	
 	/*
 	*	수정모드에서 input 및 select 값 변경 시
@@ -646,16 +453,7 @@
 	    });
 	});
 	
-	//과목 input에 수정 발생시 해당 tr update_yn = Y로 변경
-	var subjectInputs = document.querySelectorAll(".subject_input");
-	subjectInputs.forEach(function(subjectInput) {
-	    // onchange 이벤트를 추가합니다.
-	    subjectInput.addEventListener("change", function() {
-	    	const parentTr = subjectInput.closest('tr');
-	    	var updateYnInput = parentTr.querySelector(".td_subject_check_box .subject_update_yn");
-	    	updateYnInput.value = "Y";
-	    });
-	});
+	
 	
 	//강사 input에 수정 발생시 해당 tr update_yn = Y로 변경
 	var professorInputs = document.querySelectorAll(".professor_input");
@@ -750,140 +548,9 @@
 	}
 	
 	
-	//과목 저장하기 버튼 클릭
-	function saveSubject(){
-		//수정된 강의리스트를 담을 배열 선언
-		var updateSubjectList = [];
-		
-		//tr .td_lecture_check_box .lecture_update_yn인 input의 값이 Y인 것의 tr들을 가져오기 
-		//한 행씩 딕셔너리 만들어서 배열에 넣기
-		var hiddenInputs = document.querySelectorAll('tr .td_subject_check_box .subject_update_yn[value=Y]');
-		hiddenInputs.forEach((input)=>{
-			//수정된 강의객체를 담을 딕셔너리 선언
-			var subject = {};
-			
-			//updateYn = 'Y'인 인풋의 부모 tr찾기
-			var parentTr = input.closest('tr');
-			
-			//id와 수정가능한 input의 값들 뽑기
-			var sbjtId = parentTr.querySelector('.td_subject_check_box .subject_checkbox_item').value;
-			var sbjtNm = parentTr.querySelector('.td_subject_nm .subject_nm').value;
-						
-			//딕셔너리의 키값에 값 넣기
-			subject['sbjtId'] = sbjtId;
-			subject['sbjtNm'] = sbjtNm;
-			
-			//배열에 push하기
-			updateSubjectList.push(subject);
-		});
-		
-		//객체 배열을 json문자열로 직렬화 하기
-		var jsonData = JSON.stringify(updateSubjectList);
-		
-		//비동기로 배열 전달하기
-		fetch('/admin/lecture/subject/update', {
-    		method: 'POST',
-    		headers: {
-        		'Content-Type': 'application/json',
-    		},
-    		body: jsonData,
-		})
-		.then(response =>response.json())
-		.then(data => {
-			console.log(data);
-			if (data.message === "success") {
-		        alert("과목이 수정되었습니다.");
-		        //과목 리스트 다시 불러오기
-		        getSubjectList();
-		        
-		        const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
-		        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
-		        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
-		        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
-
-		        //버튼 display 수정
-		        deleteBtn.style.display = 'flex';
-		        updateBtn.style.display = 'flex';
-		        cancelBtn.style.display = 'none';
-		        saveBtn.style.display = 'none';
-		    } else {
-		    	alert("실패했습니다. 다시 시도해주세요.");
-		    }
-		})
-		.catch(error => {
-    		// 오류 처리
-		});
-		
-	}
 	
-	//강사 저장하기 버튼 클릭
-	function saveProfessor(){
-		//수정된 강의리스트를 담을 배열 선언
-		var updateProfessorList = [];
-		
-		//한 행씩 딕셔너리 만들어서 배열에 넣기
-		var hiddenInputs = document.querySelectorAll('tr .td_professor_check_box .professor_update_yn[value=Y]');
-		hiddenInputs.forEach((input)=>{
-			//수정된 강사객체를 담을 딕셔너리 선언
-			var professor = {};
-			
-			//updateYn = 'Y'인 인풋의 부모 tr찾기
-			var parentTr = input.closest('tr');
-			
-			//id와 수정가능한 input의 값들 뽑기
-			var profId = parentTr.querySelector('.td_professor_check_box .professor_checkbox_item').value;
-			var profNm = parentTr.querySelector('.td_professor_nm .professor_nm').value;
-			var profTel = parentTr.querySelector('.td_professor_tel .professor_tel').value;
-			var profEmail = parentTr.querySelector('.td_professor_email .professor_email').value;
-						
-			//딕셔너리의 키값에 값 넣기
-			professor['profId'] = profId;
-			professor['profNm'] = profNm;
-			professor['profTel'] = profTel;
-			professor['profEmail'] = profEmail;
-			
-			//배열에 push하기
-			updateProfessorList.push(professor);
-		});
-		
-		//객체 배열을 json문자열로 직렬화 하기
-		var jsonData = JSON.stringify(updateProfessorList);
-		
-		//비동기로 배열 전달하기
-		fetch('/admin/lecture/professor/update', {
-    		method: 'POST',
-    		headers: {
-        		'Content-Type': 'application/json',
-    		},
-    		body: jsonData,
-		})
-		.then(response =>response.json())
-		.then(data => {
-			console.log(data);
-			if (data.message === "success") {
-		        alert("강사가 수정되었습니다.");
-		        //강사 리스트 다시 불러오기
-		        getProfessorList();
-		        
-		        const deleteBtn = document.querySelector('#professor_delete_btn');//강사 선택삭제 버튼
-		        const updateBtn = document.querySelector('#professor_update_btn');//강사 수정하기 버튼
-		        const cancelBtn = document.querySelector('#professor_cancel_btn');//강사 수정취소 버튼
-		        const saveBtn = document.querySelector('#professor_save_btn');//강사 저장하기 버튼
-
-		        //버튼 display 수정
-		        deleteBtn.style.display = 'flex';
-		        updateBtn.style.display = 'flex';
-		        cancelBtn.style.display = 'none';
-		        saveBtn.style.display = 'none';
-		    } else {
-		    	alert("실패했습니다. 다시 시도해주세요.");
-		    }
-		})
-		.catch(error => {
-    		// 오류 처리
-		});
-		
-	}
+	
+	
 	
 	/*
 	*리스트 새로 불러오기
