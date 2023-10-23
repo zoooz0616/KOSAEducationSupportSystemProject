@@ -41,7 +41,7 @@
 
 			<!-- 컨텐츠 내용 부분 -->
 			<form th:action="@{/admin/class/__${act}__}" method="post"
-				onsubmit="insertClass(event)" enctype="multipart/form-data"
+				onsubmit="return insertClass(event);" enctype="multipart/form-data"
 				autocomplete=off>
 				<div class="class_form_content">
 
@@ -287,86 +287,87 @@
 								강의 내용<span th:if="${act=='insert' or act=='update'}"
 									class="star">*</span>
 							</div>
-							<div class="col_content" style="width: 90%;">
-								<div th:if="${act=='insert' or act=='update'}"
-									class="content_info_btn_wrap">
-									<!-- 선택삭제 버튼 -->
-									<div onclick="deleteSelectedRows()">
-										<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
-									</div>
+							<div class="col_content col_lecture">
+								<div>
+									<div th:if="${act=='insert' or act=='update'}"
+										class="content_info_btn_wrap" style="font-size: 14px;">
+										<!-- 선택삭제 버튼 -->
+										<div onclick="deleteSelectedRows()">
+											<img th:src="@{/img/minus_white.png}"><span>선택삭제</span>
+										</div>
 
-									<!-- 추가하기 버튼 -->
-									<div onclick="addLecture()">
-										<img th:src="@{/img/plus_white.png}"><span>추가하기</span>
+										<!-- 추가하기 버튼 -->
+										<div onclick="showSelectLecturePopup()">
+											<img th:src="@{/img/plus_white.png}"><span>추가하기</span>
+										</div>
+									</div>
+									<div>
+										<table class="lecture_table">
+											<thead>
+												<tr class="content_list_th">
+													<th style="width: 5%;"><input type="checkbox"
+														name="lecture_select_all" onclick="lectureSelectAll(this)"
+														class="lecture_checkbox_all"></th>
+													<th style="width: 35%;">강의명</th>
+													<th style="width: 20%;">과목명</th>
+													<th style="width: 10%;">강사명</th>
+													<th style="width: 5%;">이수시간</th>
+													<th style="width: 25%;">기타사항</th>
+												</tr>
+											</thead>
+											<tbody class="lecture_tbody">
+												<!-- update시 등록된 강의 -->
+												<tr th:if="${act}=='update'" class="lecture_row" th:each="lecture, iterStat : ${curriculumDetailList}">
+													<td class="td_lecture_check_box"><input
+														type="checkbox" name="lecture_select"
+														onclick="lectureCheckSelectAll()"
+														th:value="${lecture.lctrId}" class="lecture_checkbox_item">
+														<input type="hidden" class="lecture_update_yn" value="N">
+													</td>
+													<td class="td_lecture_nm"><span class="lecture_span"
+														th:text="${lecture.lctrNm}"></span></td>
+													<td class="td_lecture_subject"><span
+														class="lecture_span" th:text="${lecture.sbjtNm}"></span></td>
+													<td class="td_lecture_professor"><span
+														class="lecture_span" th:text="${lecture.profNm}"></span></td>
+													<td class="td_lecture_tm"><span class="lecture_span"
+														th:text="${lecture.lctrTm}"></span></td>
+													<td class="td_lecture_etc"><span class="lecture_span"
+														th:text="${lecture.lctrEtc}"></span></td>
+												</tr>
+
+												<!-- select시 등록된 강의 -->
+												<tr th:if="${act}=='select'" class="lecture_row"
+													th:each="lecture : ${curriculumDetailList}">
+													<td class="td_lecture_check_box"><input
+														type="checkbox" name="lecture_select"
+														onclick="lectureCheckSelectAll()"
+														th:value="${lecture.lctrId}" class="lecture_checkbox_item">
+														<input type="hidden" class="lecture_update_yn" value="N">
+													</td>
+													<td class="td_lecture_nm"><span class="lecture_span"
+														th:text="${lecture.lctrNm}"></span></td>
+													<td class="td_lecture_subject"><span
+														class="lecture_span" th:text="${lecture.sbjtNm}"></span></td>
+													<td class="td_lecture_professor"><span
+														class="lecture_span" th:text="${lecture.profNm}"></span></td>
+													<td class="td_lecture_tm"><span class="lecture_span"
+														th:text="${lecture.lctrTm}"></span></td>
+													<td class="td_lecture_etc"><span class="lecture_span"
+														th:text="${lecture.lctrEtc}"></span></td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
 								<div>
-									<table class="lecture_table">
-										<tr>
-											<th><input type="checkbox"
-												onclick="toggleCheckboxes(this)"></th>
-											<th><div>강의명(이수시간)</div></th>
-											<th><div>과목명</div></th>
-											<th><div>강사이름</div></th>
-										</tr>
-										<tr
-											th:if="${act=='insert' or (act=='update' and #lists.size(curriculumDetailList)==0)}"
-											class="lecture_row">
-											<td class="td_check"><input type="checkbox"> <input
-												class="lecture_time" type="hidden" value="0"></td>
-											<td><select id="lecture_select" class="essential_input"
-												onchange="lectureSelect(this.value)" name="lctrId">
-													<option value="">=== 강의를 선택하세요. ===</option>
-													<option th:each="lecture: ${lectureList}"
-														th:value="${lecture.lctrId}"
-														th:text="${lecture.lctrNm}+' ('+${lecture.lctrTm}+')'"></option>
-											</select></td>
-											<td><input id="subject_name" name="" type="text"
-												value="" disabled></td>
-											<td><input id="professor_name" name="" type="text"
-												value="" disabled></td>
-										</tr>
-
-										<tr th:if="${act}=='update'" class="lecture_row"
-											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td class="td_check"><input type="checkbox"><input
-												class="lecture_time" type="hidden"
-												th:value="${curriculumDetail.lctrTm}"></td>
-											<td><select id="lecture_select"
-												onchange="lectureSelect(this.value)" name="lctrId">
-													<option value="">=== 강의를 선택하세요. ===</option>
-													<option th:each="lecture: ${lectureList}"
-														th:value="${lecture.lctrId}"
-														th:text="${lecture.lctrNm}+' ('+${lecture.lctrTm}+')'"
-														th:selected="${lecture.lctrId == curriculumDetail.lctrId}"></option>
-											</select></td>
-											<td><input id="subject_name" name="sbjtId" type="text"
-												th:value="${curriculumDetail.sbjtNm}" disabled></td>
-											<td><input id="professor_name" name="profId" type="text"
-												th:value="${curriculumDetail.profNm}" disabled></td>
-										</tr>
-
-										<tr th:if="${act}=='select'" class="lecture_row"
-											th:each="curriculumDetail: ${curriculumDetailList}">
-											<td class="td_check"><input type="checkbox" disabled><input
-												class="lecture_time" type="hidden" value="0"></td>
-											<td><span
-												th:text="${curriculumDetail.lctrNm}+' ('+${curriculumDetail.lctrTm}+')'"></span></td>
-											<td><span th:text="${curriculumDetail.sbjtNm}"></span></td>
-											<td><span th:text="${curriculumDetail.profNm}"></span></td>
-										</tr>
-									</table>
-									<div>
-										<!-- 총 이수시간을 저장할 숨겨진 입력 필드 -->
-										<input type="hidden" id="clss_total_tm" th:name="clssTotalTm"
-											th:value="${classVO.clssTotalTm}">
-										<div style="font-weight: bold;">
-											총 이수시간 : <span th:if="${act}=='insert'"
-												class="class_total_tm">0</span> <span
-												th:if="${act}=='update'" class="class_total_tm"
-												th:text="${classVO.clssTotalTm}"></span> <span
-												th:if="${act}=='select'" th:text="${classVO.clssTotalTm}"></span>
-										</div>
+									<!-- 총 이수시간을 저장할 숨겨진 입력 필드 -->
+									<input type="hidden" id="clss_total_tm" th:name="clssTotalTm"
+										th:value="${classVO.clssTotalTm}">
+									<div style="font-weight: bold;">
+										총 이수시간 : <span th:if="${act}=='insert'" class="class_total_tm">0</span>
+										<span th:if="${act=='update' or act=='select'}"
+											class="class_total_tm" th:text="${classVO.clssTotalTm}"></span>
 									</div>
 								</div>
 							</div>
@@ -426,7 +427,8 @@
 				<!-- create / update일 때 -->
 				<div th:if="${act=='insert' or act=='update'}"
 					style="display: flex; justify-content: center;">
-					<button class="cancel_btn" type="button" th:onclick="'location.href=\'' + @{/admin/class/list/1} + '\''">취소</button>
+					<button class="cancel_btn" type="button"
+						th:onclick="'location.href=\'' + @{/admin/class/list/1} + '\''">취소</button>
 					<input class="submit_btn" type="submit" value="저장">
 				</div>
 				<!-- select일 때 -->
@@ -444,31 +446,27 @@
 	</div>
 	<!-- Content Wrap -->
 	<script>
-	//추가된 파일 개수
-	var fileCnt = Number(document.querySelector(".upload_file_cnt").value);
-	
-	
-	
+		//추가된 파일 개수
+		var fileCnt = Number(document.querySelector(".upload_file_cnt").value);
+
 		aplyEndDt = '';
-		classTotalTm = 0; //교육과정 총 이수시간
-		
+
 		//지원시작날짜 설정 시 지원마감날짜 min추가
 		$('.aply_start_dt').on("change", function() {
-		      $('.aply_end_dt').prop("min",$('.aply_start_dt').val());
+			$('.aply_end_dt').prop("min", $('.aply_start_dt').val());
 		});
-		
+
 		//지원마감날짜 설정 시 교육시작날짜에 min 추가
-   		$('.aply_end_dt').on("change", function() {
-   			console.log("변경");
-   			console.log($('.aply_end_dt').val());
-   			aplyEndDt = new Date($('.aply_end_dt').val().split('T')[0]);
-   			console.log(aplyEndDt);
-   			datePickerSet($("#datepicker1"), $("#datepicker2"), true);
-   		});
+		$('.aply_end_dt').on("change", function() {
+			console.log("변경");
+			console.log($('.aply_end_dt').val());
+			aplyEndDt = new Date($('.aply_end_dt').val().split('T')[0]);
+			console.log(aplyEndDt);
+			datePickerSet($("#datepicker1"), $("#datepicker2"), true);
+		});
 
 		//달력생성기
 		datePickerSet($("#datepicker1"), $("#datepicker2"), true); //다중은 시작하는 달력 먼저, 끝달력 2번째
-		
 		function datePickerSet(sDate, eDate, flag) {
 
 			//시작 ~ 종료 2개 짜리 달력 datepicker	
@@ -492,7 +490,7 @@
 					});
 				}
 				sDate.datepicker({
-					minDate: new Date(aplyEndDt), // 최소 날짜 설정
+					minDate : new Date(aplyEndDt), // 최소 날짜 설정
 					language : 'ko',
 					autoClose : true,
 					onSelect : function() {
@@ -506,7 +504,7 @@
 						minDate : new Date(sDay.replace(/-/g, "/"))
 					});
 				}
-								
+
 				eDate.datepicker({
 					language : 'ko',
 					autoClose : true,
@@ -515,7 +513,7 @@
 					}
 				});
 
-			} 
+			}
 
 			function isValidStr(str) {
 				if (str == null || str == undefined || str == "")
@@ -524,248 +522,43 @@
 					return false;
 			}
 		}
-		
+
 		//금액 입력 시 , 추가
 		const input = document.querySelector('.subsidy');
 		input.addEventListener('keyup', function(e) {
-  			let value = e.target.value;
-  			value = Number(value.replaceAll(',', ''));
-  			if(isNaN(value)) {
-    			input.value = 0;
-  			}else {
-    			const formatValue = value.toLocaleString('ko-KR');
-    			input.value = formatValue;
-  			}
+			let value = e.target.value;
+			value = Number(value.replaceAll(',', ''));
+			if (isNaN(value)) {
+				input.value = 0;
+			} else {
+				const formatValue = value.toLocaleString('ko-KR');
+				input.value = formatValue;
+			}
 		});
 		
-		/*
-		 * 추가하기 버튼 클릭시
-		 * 강의 한 줄 더 추가
-		 *
-		 */
-
-		var lectureCnt = 0;
-		function addLecture() {
-			console.log(lectureCnt)
-			if (lectureCnt < 4) {
-				$.ajax({
-					url : "/admin/class/insert/getlecturelist", // 컨트롤러 엔드포인트
-					type : "POST",
-					data : {},
-					success : function(response) {
-						//서버에서 받은 응답 파싱하여 객체로 생성
-						var lectureList = response.lectureList;
-		
-						//tr을 새로 생성하고 안의 내용 복제
-						// 새로운 행을 생성
-						var newRow = document.createElement('tr');
-						newRow.className = 'lecture_row'; // class 설정
-		
-						// 첫 번째 셀 (checkbox) 추가
-						var checkboxCell = document.createElement('td');
-						var inputCheck = document.createElement('input');
-						inputCheck.type="checkbox";
-						var inputHidden = document.createElement('input');
-						inputHidden.className ="lecture_time";
-						inputHidden.type="hidden";
-						inputHidden.value="0"
-						checkboxCell.appendChild(inputCheck);
-						checkboxCell.appendChild(inputHidden);
-						newRow.appendChild(checkboxCell);
-		
-						// 두 번째 셀 (강의 선택) 추가
-						var lectureCell = document.createElement('td');
-						// 새로운 select 요소 생성
-						var select = document.createElement('select');
-		
-						// 옵션 요소 동적으로 생성
-						var defaultOption = document.createElement('option');
-						defaultOption.value = 'none';
-						defaultOption.text = '=== 강의를 선택하세요. ===';
-						select.appendChild(defaultOption);
-						select.setAttribute("name", "lctrId");
-		
-						for (var i = 0; i < lectureList.length; i++) {
-							var lecture = lectureList[i];
-							var option = document.createElement('option');
-							option.value = lecture.lctrId;
-							option.text = lecture.lctrNm + ' ('+ lecture.lctrTm + ')';
-							select.appendChild(option);
-						}
-		
-						lectureCell.appendChild(select);
-						newRow.appendChild(lectureCell);
-		
-						// 세 번째 셀 (과목명) 추가
-						var subjectCell = document.createElement('td');
-						subjectCell.innerHTML = '<input name="" type="text" value="subjectName" disabled>';
-						newRow.appendChild(subjectCell);
-		
-						// 네 번째 셀 (강사 이름) 추가
-						var professorCell = document
-								.createElement('td');
-						professorCell.innerHTML = '<input name="" type="text" value="professorName" disabled>';
-						newRow.appendChild(professorCell);
-		
-						select.onchange = function() {
-							var selectedLectureId = this.value;
-		
-							// select 요소의 부모 td 요소 찾기
-							var tdElement = this.parentElement;
-							var thirdTdElement = tdElement.nextElementSibling;
-							var fourthTdElement = thirdTdElement.nextElementSibling;
-							var fifthTdElement = fourthTdElement.nextElementSibling;
-		
-							var thirdInputElement = thirdTdElement.firstElementChild;
-							var fourthInputElement = fourthTdElement.firstElementChild;
-							var fifthInputElement = fifthTdElement.firstElementChild;
-		
-							// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
-							$.ajax({
-								url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
-								type : "POST",
-								data : {
-									lectureId : selectedLectureId
-								}, // 선택한 강의 ID를 전달
-								success : function(response) {
-									//서버에서 받은 응답 파싱하여 객체로 생성
-
-									var subject = response.subject;
-									var professor = response.professor;
-									var lecture = response.lecture;
-
-									var subjectId = subject.sbjtId;
-									var subjectNm = subject.sbjtNm;
-									var professorId = professor.profId;
-									var professorNm = professor.profNm;
-
-									var lctrTm = lecture.lctrTm;
-
-									// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
-									thirdInputElement.value = subjectNm;
-									thirdInputElement.setAttribute("name",subjectId);
-									fourthInputElement.value = professorNm;
-									fourthInputElement.setAttribute("name",professorId);
-
-									fifthInputElement.value = lctrTm;
-
-									//한 row안에 input hidden 애들만 가져와서 더하기
-									var lctrTmInputList = document.querySelectorAll('.lecture_row input[type="hidden"]');
-									var clssTotalTm = 0; // 초기값 설정
-
-									lctrTmInputList
-											.forEach(function(
-													lctrTmInput) {
-												var lctrTmValue = parseInt(lctrTmInput.value); // 문자열을 정수로 변환
-												clssTotalTm += lctrTmValue;
-											});
-
-									console.log('총 이수시간: '+ clssTotalTm);
-
-									$(".class_total_tm").text(clssTotalTm);
-									//clss_total_tm값 변경하면서 input의 value값 변경
-									$("#clss_total_tm").val(clssTotalTm);
-									classTotalTm = clssTotalTm;
-								},
-								error : function() {
-									// 오류 처리 로직을 추가할 수 있습니다.
-								}
-							});
-						};
-	
-					// 테이블에 새로운 행 추가
-					var table = document
-							.querySelector('.lecture_table');
-	
-					table.appendChild(newRow);
-	
-					//select의 option을 lectureList로 추가.
-				},
-				error : function() {
-					// 오류 처리 로직을 추가할 수 있습니다.
-				}
+		//강의 전체선택
+		function lectureSelectAll(selectAll){
+			//모든 체크박스들
+			const checkboxes = document.querySelectorAll('input[name="lecture_select"]');
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = selectAll.checked;
 			});
-				lectureCnt = lectureCnt + 1;
+		}
+		
+		//강의 개별 선택
+		function lectureCheckSelectAll(){
+			//전체선택 체크박스
+			const selectAll = document.querySelector('input[name="lecture_select_all"]');
+			//모든 체크박스
+			const checkboxes = document.querySelectorAll('input[name="lecture_select"]');
+			//선택된 체크박스
+			const checked = document.querySelectorAll('input[name="lecture_select"]:checked');
+			
+			if(checkboxes.length == checked.length){
+				selectAll.checked = true;
 			}else{
-				console.log(lectureCnt);
-				alert("강의는 최대 5개까지만 가능합니다.");
+				selectAll.checked = false;
 			}
-		}
-
-		/*
-		 * 커리큘럼 선택시 과목/강사명 자동입력
-		 * 선택한 강의를 이용하여 비동기요청을 보내고 해당 과목명, 강사명을 받아옴. 
-		 * total시간 변경
-		 */
-		function lectureSelect(lectureId) {
-			var selectedLectureId = lectureId;
-			console.log(selectedLectureId);
-
-			// 선택한 강의 ID를 이용하여 비동기 요청을 보냅니다.
-			$
-					.ajax({
-						url : "/admin/class/insert/lectureselect", // 컨트롤러 엔드포인트
-						type : "POST",
-						data : {
-							lectureId : selectedLectureId
-						}, // 선택한 강의 ID를 전달
-						success : function(response) {
-							//서버에서 받은 응답 파싱하여 객체로 생성
-							var subject = response.subject;
-							var professor = response.professor;
-							var lecture = response.lecture;
-
-							var subjectId = subject.sbjtId;
-							var subjectNm = subject.sbjtNm;
-							var professorId = professor.profId;
-							var professorNm = professor.profNm;
-
-							var lctrTm = lecture.lctrTm;
-
-							// 서버에서 받은 데이터를 사용하여 subjectName과 professorName을 업데이트합니다.
-							$("#subject_name").val(subjectNm);
-							$("#subject_name").attr("name", subjectId);
-							$("#professor_name").val(professorNm);
-							$("#professor_name").attr("name", professorId);
-							$(".lecture_time").val(lctrTm);
-
-							//시간계산					
-							//한 row안에 input hidden 애들만 가져와서 더하기
-							
-							var lctrTmInputList = document
-									.querySelectorAll('.lecture_row input[type="hidden"]');
-							var clssTotalTm = 0; // 초기값 설정
-
-							lctrTmInputList.forEach(function(lctrTmInput) {
-								var lctrTmValue = parseInt(lctrTmInput.value); // 문자열을 정수로 변환
-								clssTotalTm += lctrTmValue;
-							});
-
-							console.log('총 이수시간: ' + clssTotalTm);
-
-							$(".class_total_tm").text(clssTotalTm);
-							//clss_total_tm값 변경하면서 input의 value값 변경
-							$("#clss_total_tm").val(clssTotalTm);
-							
-							classTotalTm = clssTotalTm;
-						},
-						error : function() {
-							// 오류 처리 로직을 추가할 수 있습니다.
-						}
-					});
-		}
-
-		//강의 전체선택 이벤트
-		function toggleCheckboxes(checkbox) {
-			// 현재 checkbox의 상태(체크 여부) 가져오기
-			var isChecked = checkbox.checked;
-
-			// 모든 강의 행(tr)의 checkbox들에 대해 반복
-			var checkboxes = document
-					.querySelectorAll('.lecture_row input[type="checkbox"]');
-			checkboxes.forEach(function(checkbox) {
-				checkbox.checked = isChecked;
-			});
 		}
 
 		//선택삭제 버튼 이벤트
@@ -795,7 +588,7 @@
 			//clss_total_tm값 변경하면서 input의 value값 변경
 			$("#clss_total_tm").val(clssTotalTm);
 		}
-		
+
 		//update일 때 '파일추가'버튼 클릭하면 파일 추가하기
 		function addFile(button){
 			console.log(fileCnt);
@@ -813,103 +606,220 @@
 		}
 		
 		//update일 때 파일 '삭제'버튼 클릭하면 input type="hidden"에 name 추가
-		function deleteFile(button){
+		function deleteFile(button) {
 			var divParent = button.closest('div');
 			var inputHidden = divParent.querySelector('input');
-			inputHidden.name='deleteFiles';
+			inputHidden.name = 'deleteFiles';
 			console.log(inputHidden.value);
 			divParent.style.display = 'none';
-			fileCnt =  fileCnt - 1;
+			fileCnt = fileCnt - 1;
 		}
-	    
-	    //삭제하기
-	  function deleteClass(){
-	    	var classId = document.querySelector("#clssId").value;
-	    	console.log(classId);
-	    	$.ajax({
-				url : "/admin/class/delete/"+classId, // 컨트롤러 엔드포인트
-				type : "POST",
-				success : function(response) {
-					alert("삭제되었습니다.");
-					location.href = "/admin/class/list";
-				},
-				error : {
+
+		//삭제하기
+		function deleteClass() {
+			var classId = document.querySelector("#clssId").value;
+			
+			if(!confirm("삭제하시겠습니까?")){
+				//아니오
+			}else{
+				$.ajax({
+					url : "/admin/class/delete/" + classId, // 컨트롤러 엔드포인트
+					type : "POST",
+					success : function(response) {
+						alert("삭제되었습니다.");
+						location.href = "/admin/class/list";
+					},
+					error : {}
+				});
+			}
+		}
+
+		//제출 전 확인
+		function insertClass(event) {
+			var trLecture = document.querySelectorAll(".lecture_tbody tr");
+			
+			if (trLecture.length < 1) {
+				//강의 개수 불충분
+				event.preventDefault();
+				alert("강의를 최소 1개 선택해주세요.");
+				return false;
+			} else {
+				alert("강의가 저장되었습니다.")
+				return true;
+			}
+		}
+
+		//기업 선택하기
+		function showSelectCompanyPopuup(button) {
+			var divParent = button.closest('div');
+
+			// 팝업 창을 열기
+			var popup = window.open("/admin/class/select/company", "기업 선택",
+					"width=500, height=800, left=800, top=300");
+			window.addEventListener("message", function(event) {
+				if (event.data && event.data.event) {
+					if (event.data.event === 'companySelected') {
+
+						var cmpyId = event.data.cmpyId;
+						var cmpyNm = event.data.cmpyNm;
+
+						// 업무담당자 선택 팝업에서의 처리
+						if (cmpyNm === '미정') {
+							cmpyId = '';
+						}
+						
+						var hiddenInput = divParent
+								.querySelector("input[type='hidden']");
+						var textInput = divParent
+								.querySelector("input[type='text']");
+
+						hiddenInput.value = cmpyId;
+						textInput.value = cmpyNm;
+
+					}
 				}
-	    	});
-	    }
-	    
-	    //제출 전 확인
-	    function insertClass(){
-	    	if(classTotalTm === 0){
-	    		//필수 값 입력 못함
-	    		event.preventDefault();
-	    		alert("강의를 최소 1개 선택해주세요.");
-		    	return false;
-	    	}else{
-	    		alert("새로운 강의가 등록되었습니다.")
-				return true;	    		
-	    	}
-	    }
-	    
-	    //기업 선택하기
-	    function showSelectCompanyPopuup(button){
-	    	var divParent = button.closest('div');
-	    	
-	    	// 팝업 창을 열기
-            var popup = window.open("/admin/class/select/company", "기업 선택", 
-            		"width=500, height=800, left=800, top=300");
-            window.addEventListener("message", function(event) {
-    	        if (event.data && event.data.event) {
-    	            if (event.data.event === 'companySelected') {
-    	                var cmpyId = event.data.cmpyId;
-    	                var cmpyNm = event.data.cmpyNm;
-    	                
-    	                // 기업 선택 팝업에서의 처리
-    	                if(cmpyNm==='미정'){
-            	        	cmpyId='';
-            	        }
-            	        
-            	        var hiddenInput = divParent.querySelector("input[type='hidden']");
-            	        var textInput = divParent.querySelector("input[type='text']");
-            	        
-            	        hiddenInput.value = cmpyId;
-            	        textInput.value = cmpyNm;
-            	        
-    	            }
-    	        }
-    	    });
-	    }
-	    
-	  //업무담당자 선택하기
-	    function showSelectManagerPopuup(button){
-	    	var divParent = button.closest('div');
-	    	
-	    	// 팝업 창을 열기
-            var popup = window.open("/admin/class/select/manager", "업무담당자 선택", 
-            		"width=500, height=800, left=800, top=300");
-	    	
-            window.addEventListener("message", function(event) {
-    	        if (event.data && event.data.event) {
-    	            if (event.data.event === 'managerSelected') {
-    	                var mngrId = event.data.mngrId;
-    	                var mngrNm = event.data.mngrNm;
-    	                
-    	                // 업무담당자 선택 팝업에서의 처리
-    	                if(mngrNm==='미정'){
-            	        	mngrId='';
-            	        }
-            	        
-            	        var hiddenInput = divParent.querySelector("input[type='hidden']");
-            	        var textInput = divParent.querySelector("input[type='text']");
-            	        
-            	        hiddenInput.value = mngrId;
-            	        textInput.value = mngrNm;
-    	            }
-    	        }
-    	    });
-	    }
-	  
-	    
+			});
+		}
+
+		//업무담당자 선택하기
+		function showSelectManagerPopuup(button) {
+			var divParent = button.closest('div');
+
+			// 팝업 창을 열기
+			var popup = window.open("/admin/class/select/manager", "업무담당자 선택",
+					"width=500, height=800, left=800, top=300");
+
+			window.addEventListener("message", function(event) {
+				if (event.data && event.data.event) {
+					if (event.data.event === 'managerSelected') {
+						var mngrId = event.data.mngrId;
+						var mngrNm = event.data.mngrNm;
+
+						// 업무담당자 선택 팝업에서의 처리
+						if (mngrNm === '미정') {
+							mngrId = '';
+						}
+
+						var hiddenInput = divParent
+								.querySelector("input[type='hidden']");
+						var textInput = divParent
+								.querySelector("input[type='text']");
+
+						hiddenInput.value = mngrId;
+						textInput.value = mngrNm;
+					}
+				}
+			});
+		}
+
+		var lectureCnt = 0;
+		//강의 선택하기
+		function showSelectLecturePopup() {
+			if (lectureCnt > 4) {
+				//강의 5개 모두 채움
+				alert("강의는 최대 5개까지만 가능합니다.");
+			}else{
+				//강의 개수 0~5개
+				var popup = window.open("/admin/class/select/lecture", "강의 선택",
+				"width=800, height=720, left=800, top=300");
+		
+				lectureCnt += 1;
+			}
+		}
+		
+		window.addEventListener("message", function(event) {
+			if (event.data && event.data.event) {
+				if (event.data.event === 'lectureSelected') {
+					//선택한 강의의 데이터
+					var lctrId = event.data.lctrId;
+					var lctrNm = event.data.lctrNm;
+					var sbjtNm = event.data.sbjtNm;
+					var profNm = event.data.profNm;
+					var lctrTm = event.data.lctrTm;
+					var lctrEtc = event.data.lctrEtc;
+
+					//tr한 줄 추가하기
+					var tbody = document.querySelector(".lecture_tbody");
+					
+					var tr = '';
+					tr=document.createElement('tr');
+					
+					//checkbox
+					var tdCheckbox = document.createElement('td');
+					var hiddenCheckbox = document.createElement('input');
+					hiddenCheckbox.type="hidden";
+					hiddenCheckbox.name = "lctrId";
+					hiddenCheckbox.value = lctrId;
+					var inputCheckbox = document.createElement('input');
+					inputCheckbox.type="checkbox";
+					inputCheckbox.name="lecture_select";
+					inputCheckbox.onclick = function(){
+						lectureCheckSelectAll();
+					}
+					inputCheckbox.value = lctrId;
+					inputCheckbox.className = "lecture_checkbox_item";
+					tdCheckbox.appendChild(hiddenCheckbox);
+					tdCheckbox.appendChild(inputCheckbox);
+					tr.appendChild(tdCheckbox);
+					
+					//lctrNm
+					var tdLctrNm = document.createElement('td');
+					tdLctrNm.className ='td_lecture_nm';
+					var spanLctrNm = document.createElement('span');
+					spanLctrNm.className ='lecture_span';
+					spanLctrNm.textContent = lctrNm;
+					tdLctrNm.appendChild(spanLctrNm);
+					tr.appendChild(tdLctrNm);
+					
+					//sbjtNm
+					var tdSbjtNm = document.createElement('td');
+					tdSbjtNm.className = 'td_lecture_subject';
+					var spanSbjtNm = document.createElement('span');
+					spanSbjtNm.className = 'lecture_span';
+					spanSbjtNm.textContent = sbjtNm;
+					tdSbjtNm.appendChild(spanSbjtNm);
+					tr.appendChild(tdSbjtNm);
+					
+					//profNm
+					var tdProfNm = document.createElement('td');
+					tdProfNm.className = 'td_lecture_professor';
+					var spanProfNm = document.createElement('span');
+					spanProfNm.className = 'lecture_span';
+					spanProfNm.textContent = profNm;
+					tdProfNm.appendChild(spanProfNm);
+					tr.appendChild(tdProfNm);
+					
+					//lctrTm
+					var tdLctrTm = document.createElement('td');
+					tdLctrTm.className = 'td_lecture_tm';
+					var spanLctrTm = document.createElement('span');
+					spanLctrTm.className ='lecture_span';
+					spanLctrTm.textContent = lctrTm;
+					tdLctrTm.appendChild(spanLctrTm);
+					tr.appendChild(tdLctrTm);
+					
+					//lctrEtc
+					var tdLctrEtc = document.createElement('td');
+					tdLctrEtc.className = 'td_lecture_etc';
+					var spanLctrEtc = document.createElement('span');
+					spanLctrEtc.className = 'lecture_span';
+					spanLctrEtc.textContent = lctrEtc;
+					tdLctrEtc.appendChild(spanLctrEtc);
+					tr.appendChild(tdLctrEtc);
+					
+					tbody.appendChild(tr);
+					
+					//총 이수시간 계산
+					var spanTotalTm = document.querySelector(".class_total_tm");
+					var hiddenTotalTm = document.querySelector("#clss_total_tm");
+					var totalTm = spanTotalTm.innerHTML;
+					
+					var afterTotalTm = Number(totalTm)+Number(lctrTm);
+					spanTotalTm.textContent = afterTotalTm;
+					hiddenTotalTm.value = afterTotalTm;
+				}
+			}
+		});
 	</script>
 </body>
 </html>

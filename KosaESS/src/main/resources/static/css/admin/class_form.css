@@ -109,7 +109,6 @@ input {
 
 .class_form_content .row3 .col3 {
 	width: 100%;
-	margin: 0 5px 0 0;
 	display: flex;
 }
 
@@ -156,12 +155,12 @@ input {
 	border-top: 2px solid #0E5881;
 }
 
-th {
-	background: #E7EFF3;
+.lecture_table thead tr{
+	background: #F3F6F8;
 }
 
 .lecture_table tr td, th {
-	border: 1px solid #E7EFF3;
+	border: 1px solid #CFDEE6;
 }
 
 .lecture_table tr td * {
@@ -300,6 +299,7 @@ a:hover {
 	margin: 2px;
 	padding: 5px;
 	cursor: pointer;
+	font-size: 14px;
 }
 
 .search_btn img {
@@ -346,4 +346,19 @@ input[type="file"]{
 
 .submit_btn, button {
 	cursor: pointer;
+}
+
+.col_lecture{
+	width: calc(100% - 100px);
+	display:flex;
+	flex-direction: column;
+    justify-content: space-between;
+}
+
+.td_lecture_professor{
+	text-align: center;
+}
+
+.td_lecture_tm{
+	text-align: right;
 }
