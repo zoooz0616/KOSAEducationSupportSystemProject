@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			success: function(eventsData) {
 				var rgstList = eventsData.rgst;
 				var aplyList = eventsData.aply;
-				console.log(eventsData);
 				var transformedEvents = [];
 				for (var i = 0; i < rgstList.length; i++) {
 					var event = {

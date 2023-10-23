@@ -67,7 +67,7 @@
 									readonly></td>
 							</tr>
 							<tr>
-								<th>휴대전화 <span> *</span></th>
+								<th>연락처 <span> *</span></th>
 								<td class="infoInput"><select id="phonePrefix">
 										<option value="010">010</option>
 										<option value="011">011</option>
@@ -345,8 +345,6 @@
 								<th>수령날짜</th>
 								<th>수령금액</th>
 								<th>수령상태</th>
-
-
 							</tr>
 						</thead>
 						<tbody>
@@ -451,6 +449,10 @@
 			</div>
 		</div>
 	</div>
+	<script th:inline="javascript">
+		/* 스크립트 내에서 Thymeleaf 변수를 선언하고 값 할당 */
+		var stdtNm = /*[[${stdtNm}]]*/'';
+	</script>
 	<script>
 		$('#passwordInput').on('keyup', function(event) {
 			if (event.key === "Enter") {
@@ -567,7 +569,6 @@
 						if (data.success) {
 							// 비밀번호가 일치하는 경우
 							displayUserInfo(data.user);
-							console.log(data.user);
 							$("#userInfo").show();
 							$(".passwordForm").hide();
 						} else {

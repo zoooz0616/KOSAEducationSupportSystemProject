@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.finalprj.kess.repository.IMainRepository">
-	<select id="getRole" parameterType="string" resultType="com.finalprj.kess.model.LoginVO">
+	<select id="getRole" parameterType="string"
+		resultType="com.finalprj.kess.model.LoginVO">
 	<![CDATA[
 	select
 		*
@@ -9,8 +10,9 @@
 	where user_email=#{email} and user_pwd =#{pwd}
 	]]>
 	</select>
-	
-	<select id="getMember" parameterType="string" resultType="string">
+
+	<select id="getMember" parameterType="string"
+		resultType="string">
 	<![CDATA[
 	select
 		count(user_email)
@@ -18,8 +20,9 @@
 	where user_email=#{email} and (user_cd ='USR0000001' or user_cd ='USR0000002')
 	]]>
 	</select>
-	
-	<select id="getManagerVO" parameterType="string" resultType="com.finalprj.kess.model.ManagerVO">
+
+	<select id="getManagerVO" parameterType="string"
+		resultType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 	select *
 	from mngr
@@ -27,8 +30,9 @@
 	where mngr.user_email=#{email}
 	]]>
 	</select>
-	
-	<select id="getStudentVO" parameterType="string" resultType="com.finalprj.kess.model.StudentVO">
+
+	<select id="getStudentVO" parameterType="string"
+		resultType="com.finalprj.kess.model.StudentVO">
 	<![CDATA[
 	select *
 	from stdt
@@ -36,7 +40,7 @@
 	where stdt.user_email=#{email}
 	]]>
 	</select>
-	
+
 	<update id="updateLastLoginDt" parameterType="string">
 	<![CDATA[
 	update lgin
@@ -44,7 +48,7 @@
 	where user_email=#{userEmail}
 	]]>
 	</update>
-	
+
 	<select id="getEmailCnt" parameterType="string" resultType="int">
 	<![CDATA[
 		select count(user_email) 
@@ -52,25 +56,61 @@
 		where user_email=#{email}
 	]]>
 	</select>
-	
-	<insert id="insertLgin" parameterType="com.finalprj.kess.model.StudentVO">
+
+	<insert id="insertLgin"
+		parameterType="com.finalprj.kess.model.StudentVO">
 	<![CDATA[
 	insert into lgin (user_email, user_pwd, role_cd, user_cd)
 	values(#{userEmail}, #{userPwd},'ROL0000001', 'USR0000001')
 	]]>
 	</insert>
-	
-	<insert id="insertStudent" parameterType="com.finalprj.kess.model.StudentVO">
+
+	<insert id="insertStudent"
+		parameterType="com.finalprj.kess.model.StudentVO">
 	<![CDATA[
 	insert into stdt (stdt_id, user_email, stdt_nm, gender_cd, birth_dd, stdt_tel, job_cd, rgst_dt, rgster_id, receive_mail)
 	values(#{stdtId}, #{userEmail}, #{stdtNm}, #{genderCd}, to_date(#{birthday}, 'YYYY/MM/DD'), #{stdtTel}, #{jobCd}, systimestamp, #{stdtId}, #{receiveMail})
 	]]>
 	</insert>
-	
+
 	<select id="getMaxStdtId" resultType="string">
 	<![CDATA[
 	select 'STDT'||LPAD((max(cast(substr(stdt_id,5) as number(6)))+1),6,'0')
 	from STDT
 	]]>
 	</select>
+
+	<select id="getMemberId" resultType="string">
+	<![CDATA[
+	select user_email
+	from STDT
+	where stdt_nm =#{name} and stdt_tel =#{phone}
+	]]>
+	</select>
+
+	<select id="checkMemberCd" resultType="string">
+	<![CDATA[
+	select user_email
+	from lgin
+	where user_email=#{email} AND (user_cd = 'USR0000001' OR user_cd = 'USR0000002')
+	]]>
+	</select>
+
+
+	<select id="getMemberPwd" resultType="string">
+	<![CDATA[
+	select user_email
+	from STDT
+	where stdt_nm =#{name} and user_email =#{email} and stdt_tel =#{phone}
+	]]>
+	</select>
+
+
+	<update id="changePwd" parameterType="string">
+	<![CDATA[
+		update lgin
+		set  user_pwd = #{randomCode}
+		where user_email=#{email}
+	]]>
+	</update>
 </mapper>

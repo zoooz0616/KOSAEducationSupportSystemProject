@@ -10,7 +10,7 @@ import com.finalprj.kess.model.StudentVO;
 import com.finalprj.kess.repository.IMainRepository;
 
 @Service
-public class MainService implements IMainService{
+public class MainService implements IMainService {
 	@Autowired
 	IMainRepository mainRepository;
 
@@ -54,5 +54,25 @@ public class MainService implements IMainService{
 	@Override
 	public String getMember(String email) {
 		return mainRepository.getMember(email);
+	}
+
+	@Override
+	public String getMemberId(String name, String phone) {
+		return mainRepository.getMemberId(name, phone);
+	}
+
+	@Override
+	public String getMemberPwd(String name, String email, String phone) {
+		return mainRepository.getMemberPwd(name, email, phone);
+	}
+
+	@Override
+	public void changePwd(String email, String randomCode) {
+		mainRepository.changePwd(email, randomCode);
+	}
+
+	@Override
+	public String checkMemberCd(String userId) {
+		return mainRepository.checkMemberCd(userId) ;
 	}
 }

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:href="@{/css/student/header.css}" rel="stylesheet">
+<link th:href="@{/css/student/main.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<meta charset="UTF-8">
+</head>
+<body>
+	<div th:replace="~{/include/student_header :: header}"
+		style="width: 100%;"></div>
+	<div class="container">
+		<div class="maintext">
+			<h1 style="color: #0E5881; margin-top: 3%;">아이디 비밀번호 찾기</h1>
+		</div>
+		<div class="content" style="height: 60vh; align-items: center;">
+			<div class="con" id="find" style="width: 30%">
+				<div style="display: flex; justify-content: space-around;">
+					<div>
+						<span>아이디 찾기</span> <input type="radio" value="ID"
+							name="findOption" checked>
+					</div>
+					<div>
+						<span>비밀번호 찾기</span> <input type="radio" value="PWD"
+							name="findOption">
+					</div>
+				</div>
+
+				<div class="findId" style="display: flex; flex-direction: column;">
+					<div class="findBox">
+						<span>이름</span><input type="text" id="nameI">
+					</div>
+					<div class="findBox">
+						<span>연락처</span><input type="text" id="phoneI">
+					</div>
+					<input type="button" id="fId" value="아이디 찾기">
+					<div style="color: red;" id="resultId"></div>
+				</div>
+
+				<div class="findPwd" style="flex-direction: column;">
+					<div class="findBox">
+						<span>이름</span><input type="text" id="nameP">
+					</div>
+					<div class="findBox">
+						<span>이메일(아이디)</span><input type="text" id="emailP">
+					</div>
+					<div class="findBox">
+						<span>연락처</span><input type="text" id="phoneP">
+					</div>
+					<input type="submit" id="fPwd" value="비밀번호 찾기">
+					<div style="color: red;" id="resultPwd"></div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="/js/student/find.js"></script>
+</body>
+</html>
