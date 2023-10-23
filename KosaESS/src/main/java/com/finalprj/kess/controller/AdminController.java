@@ -749,6 +749,9 @@ public class AdminController {
 		// insert or select or update
 		String act = "insert";
 		model.addAttribute("act", act);
+		
+		List<FileVO> fileList = new ArrayList<FileVO>();
+		model.addAttribute("fileList", fileList);
 
 		// 클래스 하나 생성하고 classId값 지정해서 넘기기
 		ClassVO classVO = new ClassVO();
@@ -1400,6 +1403,52 @@ public class AdminController {
 		model.addAttribute("professorList", professorList);
 
 		return "admin/lecture_list";
+	}
+	
+	/**
+	 * 강의 생성 팝업페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/lecture/insert")
+	public String lectureInsert() {
+		
+		return "admin/insert_lecture_popup";
+	}
+	
+	/**
+	 * 강의 생성 - 과목 선택 팝업 페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/lecture/select/subject")
+	public String selectSubject(Model model) {
+		List<SubjectVO> subjectList = adminService.getSubjectList();
+		model.addAttribute("subjectList", subjectList);
+		
+		return "admin/select_subject_popup";
+	}
+	
+	/**
+	 * 강의 생성 - 강사 선택 팝업 페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 22.
+	 * @parameter : model
+	 * @return : String
+	 */
+	@RequestMapping("/lecture/select/professor")
+	public String selectProfessor(Model model) {
+		List<ProfessorVO> professorList = adminService.getProfessorList();
+		model.addAttribute("professorList", professorList);
+		
+		return "admin/select_subject_popup";
 	}
 
 	/**

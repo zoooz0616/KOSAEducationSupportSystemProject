@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/select_company_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>강사를 선택하세요.</h2>
+
+	<div class="select_wrap">
+		<div class="search_wrap">
+			<input type="text" placeholder="강사명을 입력하세요.">
+			<button class="search_btn">조회</button>
+		</div>
+		<div class="company_list_wrap">
+			<div class="company_nm" onclick="selectSubject(this)"
+				th:each="professor: ${professorList}">
+				<input type="hidden" th:value="${subject.sbjtId}"> <span
+					th:text="${subject.sbjtNm}"></span>
+			</div>
+		</div>
+
+		<div class="btn_wrap">
+			<button type="button" class="btn" onclick="self.close();">취소</button>
+		</div>
+	</div>
+	<script>
+		function selectSubject(subject) {
+			var sbjtId = subject.querySelector('input').value;
+			var sbjtNm = subject.querySelector('span').textContent;
+
+			// 값을 부모 창으로 JSON 객체로 전달
+			var values = {
+				sbjtId : sbjtId,
+				sbjtNm : sbjtNm
+			};
+			window.opener.postMessage({
+				event : 'subjectSelected',
+				sbjtId : sbjtId,
+				sbjtNm : sbjtNm
+			}, "*");
+			window.close(); // 팝업 창 닫기
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/insert_manager_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>강의 등록</h2>
+	<div class="insert_wrap">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">강의명<span class="red">*</span></span></th>
+				<td><input type="text"
+					onkeyup="if(window.event.keyCode==13){insertLecture()}"
+					id="lecture_nm_input" placeholder="강의명(최대 30자)" maxlength="30"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">과목명<span class="red">*</span></span></th>
+				<td><input type="hidden" id="subject_id_input"> <input
+					type="text" onkeyup="if(window.event.keyCode==13){insertLecture()}"
+					id="subject_nm_input" placeholder="과목을 선택해주세요." readonly
+					onclick="showSelectSubjectPopup(this)"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">강사명<span class="red">*</span></span></th>
+				<td><input type="hidden" id="professor_id_input"> <input
+					type="text" onkeyup="if(window.event.keyCode==13){insertLecture()}"
+					id="professor_nm_input" placeholder="강사를 선택해주세요." readonly
+					onclick="showSelectProfessorPopup(this)"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">이수시간<span class="red">*</span></span></th>
+				<td><input type="number"
+					onkeyup="if(window.event.keyCode==13){insertLecture()}"
+					id="lecture_tm_input" placeholder="최대 500시간" min="0" max="500"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">기타사항</span></th>
+				<td><input type="text"
+					onkeyup="if(window.event.keyCode==13){insertLecture()}"
+					id="lecture_etc_input" placeholder="기타사항"></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="btn_wrap">
+		<button class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertManager();">확인</button>
+	</div>
+	<script>
+		//과목 팝업 띄우기
+		function showSelectSubjectPopup(input) {
+			var tdParent = input.closest('td');
+
+			// 팝업 창을 열기
+			var popup = window.open("/admin/lecture/select/subject", "과목 선택",
+					"width=500, height=800, left=800, top=300");
+
+			window.addEventListener("message", function(event) {
+				if (event.data && event.data.event) {
+					if (event.data.event === 'subjectSelected') {
+						var sbjtId = event.data.sbjtId;
+						var sbjtNm = event.data.sbjtNm;
+
+						var hiddenInput = tdParent
+								.querySelector("input[type='hidden']");
+						var textInput = tdParent
+								.querySelector("input[type='text']");
+
+						hiddenInput.value = sbjtId;
+						textInput.value = sbjtNm;
+
+					}
+				}
+			});
+		}
+
+		//강사 팝업 띄우기
+		function showSelectProfessorPopup(input) {
+			var tdParent = input.closest('td');
+
+			// 팝업 창을 열기
+			var popup = window.open("/admin/lecture/select/professor", "강사 선택",
+					"width=500, height=800, left=800, top=300");
+
+			window.addEventListener("message", function(event) {
+				if (event.data && event.data.event) {
+					if (event.data.event === 'subjectSelected') {
+						var sbjtId = event.data.sbjtId;
+						var sbjtNm = event.data.sbjtNm;
+
+						var hiddenInput = tdParent
+								.querySelector("input[type='hidden']");
+						var textInput = tdParent
+								.querySelector("input[type='text']");
+
+						hiddenInput.value = sbjtId;
+						textInput.value = sbjtNm;
+
+					}
+				}
+			});
+		}
+
+		//등록하기
+		function insertLecture() {
+			var managerNm = document.querySelector(".input_manager_name").value;
+			var managerEmail = document.querySelector(".input_manager_email").value;
+			var managerPwd = document.querySelector(".input_manager_pwd").value;
+			var managerTel = document.querySelector(".input_manager_tel").value;
+
+			// 이메일 형식 검사
+			var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+			//모두 입력했는지 확인
+			if (managerNm === "" || managerEmail === "" || managerPwd === ""
+					|| managerTel === "") {
+				alert("입력 필드를 모두 채워주세요.");
+			} else if (!emailPattern.test(managerEmail)) {
+				alert("올바른 이메일 형식을 입력하세요.");
+			} else {
+				//이메일 유효성 검사
+				$
+						.ajax({
+							url : '/admin/manager/check_email',
+							async : true,
+							method : 'POST',
+							data : {
+								managerEmail : managerEmail
+							},
+							success : function(response) {
+								if (response == 'fail') {
+									alert("이미 존재하는 이메일 주소입니다.");
+								} else if (response == 'success') {
+									//모두 완벽하다면
+									$
+											.ajax({
+												url : '/admin/manager/insert',
+												async : true,
+												method : 'POST',
+												data : {
+													managerNm : managerNm,
+													managerEmail : managerEmail,
+													managerPwd : managerPwd,
+													managerTel : managerTel
+												},
+												success : function(response) {
+													if (response == 'success') {
+														alert("업무담당자가 등록되었습니다.");
+														opener.location.href = "/admin/manager/list/1";
+														self.close();//팝업창 닫기
+													}
+												}
+											});
+								}
+							}
+						});
+			}
+		}
+	</script>
+</body>
+</html>
