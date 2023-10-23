@@ -17,12 +17,15 @@ function getCheckedItems() {
 function fetchClassList() {
 	var filterString = getCheckedItems();
 	var searchKeyword = $("#search_by_name").val();
+	var year = $("#select_year option:selected").val();
+	console.log(year);
 	$.ajax({
 		url : "/manager/class/search", // 컨트롤러 엔드포인트
 		type : "GET",
 		data : {
 			searchKeyword : searchKeyword
 			,filterString : filterString
+			,year : year
 		},
 		success : function(classListResponse) {
 			//서버에서 받은 응답 파싱하여 객체로 생성
@@ -30,6 +33,8 @@ function fetchClassList() {
 			var tbody =$("tbody");
 			tbody.addClass('class_list_table_tbody');
 			tbody.empty();
+			
+			$('#result_count').text(filteredClassList.length);
 			
 			alertFade(filteredClassList.length+"건이 검색되었습니다.","CFDEE6","0E5881");
 			

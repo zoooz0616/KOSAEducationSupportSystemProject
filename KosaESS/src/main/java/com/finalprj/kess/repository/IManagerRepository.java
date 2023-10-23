@@ -49,7 +49,7 @@ public interface IManagerRepository {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
-	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString, @Param("searchKeyword") String searchKeyword, @Param("year") int year);
+	public List<ClassVO> getFilteredClassListByMngrId(@Param("mngrId") String mngrId, @Param("filterString") List<String> filterString, @Param("searchKeyword") String searchKeyword, @Param("year") Integer year);
 
 	public void updateStdtCmptCd(@Param("mngrId") String mngrId, @Param("stdtId") String stdtId, @Param("clssId") String clssId, @Param("targetCmptId") String targetCmptId);
 

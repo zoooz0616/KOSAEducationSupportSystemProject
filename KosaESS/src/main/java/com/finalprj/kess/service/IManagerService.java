@@ -44,7 +44,7 @@ public interface IManagerService {
 
 	public String getLatestClassIdByMngrId(String mngrId);
 
-	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword, int year);
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword, Integer year);
 
 	public void updateStdtCmptCd(String mngrId, String stdtId, String clssId, String targetCmptId);
 

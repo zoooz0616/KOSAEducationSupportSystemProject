@@ -40,6 +40,10 @@
 						교육과정<span class="star">*</span>
 					</div>
 					<div class="search_filter_input">
+						<select id="select_year">
+							<option th:text="전체" th:value=null/>
+							<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
+						</select>
 						<select id="classId">
 							<option value="" disabled selected>교육과정을 선택하세요</option>
 							<option th:each="class:${classList}" th:text="${class.clssNm}"
@@ -51,7 +55,9 @@
 					</div>
 					<div class="search_filter_input_date_wrap">
 						<div class="search_filter_input_date">
-							<input type="date" id="startDate" min="1980-01-01"> <span> ~ </span> <input type="date" id="endDate" min="1980-01-01">
+							<input type="date" id="startDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssStartDd:null}">
+							<span> ~ </span>
+							<input type="date" id="endDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssEndDd:null}">
 						</div>
 						<div class="search_filter_input_radio">
 							<span>이번 달</span><input type="radio" name="default_period" id="this_month" value="thisMonth">
@@ -75,10 +81,8 @@
 				</div>
 				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
-					<button class="search_reset_btn" th:id="resetButton"
-						onclick="reset()">초기화</button>
-					<button class="search_filter_btn" th:id="searchButton"
-						onclick="search()">검색</button>
+					<button class="search_reset_btn" th:id="resetButton" onclick="reset()"><img th:src="@{/img/reset_white.png}"><span>초기화</span></button>
+					<button class="search_filter_btn" th:id="searchButton" onclick="search()"><img th:src="@{/img/search_white.png}"><span>검색</span></button>
 				</div>
 				<!-- End : 검색 버튼 -->
 			</div>

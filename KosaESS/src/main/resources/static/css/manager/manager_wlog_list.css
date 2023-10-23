@@ -71,13 +71,24 @@ button{
 	display: flex;
 }
 
-.search_btn_wrap input {
+#search_reset_btn{
+	background: #6E9BB3;
+}
+#search_by_name_btn{
 	background: #0E5881;
+}
+.search_btn_wrap img{
+	height: 1.2em;
+}
+.search_btn_wrap button{
+	display:flex;
+	justify-content:center;
+	align-items:center;
 	color: white;
 	border: none;
 	border-radius: 0.3em;
 	font-weight: bold;
-	width : 4em;
+	width : 5em;
 	margin-left : 0.3em;
 	margin: 10px;
 	text-align: center;
@@ -170,7 +181,6 @@ button{
 	background-color:#E7EFF3;
 }
 #wlog_list_table td {
-/* 	text-align: center; */
 	padding: 0.2em 1em;
 	border : 1px solid #CFDEE6;
 }
@@ -184,11 +194,6 @@ button{
 .number_cell {
 	text-align: right;
 }
-/* .wlog_list_tbody_row .file_cell .resn_icon { */
-/* 	width: 15px; */
-/* 	height: 15px; */
-/* } */
-
 .resn_icon {
 	width: 15px;
 	height: 15px;
@@ -200,8 +205,4 @@ button{
 
 .wlog_list_tbody_row .file_cell_active:hover {
 	cursor: pointer;
-}
-
-select option[value=""][disabled] {
-	display: none;
 }

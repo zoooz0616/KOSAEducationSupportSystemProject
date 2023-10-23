@@ -26,6 +26,42 @@ function clearTable() {
 	wlogListTable.empty();
 }
 
+function selectClassFill() {
+	//교육과정 select 내부의 option을 제거
+	$('#class_selector').empty();
+	//목록을 채우기
+	$('#class_selector').append('<option value="" disabled selected>교육과정을 선택하세요</option>');
+	$.ajax({
+		type: 'get',
+		url: '/manager/get_class_list', // 서버의 엔드포인트 URL
+		data: {
+			//here
+			year: $('#select_year').val()
+		},
+		success: function(response) {
+			let classList = response.classList;
+			let newOption;
+			for (let i = 0; i < classList.length; i++) {
+				newOption = $('<option/>');
+				newOption.html(classList[i].clssNm);
+				newOption.attr("value", classList[i].clssId);
+				newOption.attr("clssId", classList[i].clssId);
+				newOption.attr("startDd", classList[i].clssStartDd);
+				newOption.attr("endDd", classList[i].clssEndDd);
+				newOption.attr("value", classList[i].clssId);
+				newOption.attr("name", classList[i].clssSubsidy);
+				$('#class_selector').append(newOption);
+				//console.log("classList[" + i + "] >>> " + classList[i]);
+				//console.log("classList[" + i + "].clssStartDd >>> " + classList[i].clssStartDd);
+			}
+			//총 몇 명인지 체크
+		}
+		, error: function(error) {
+			console.log(error);
+		}
+	})
+}
+
 //오늘 기준 이번 주의 월요일, 일요일을 각각 반환
 function getThisWeek() {
 	var currentDay = new Date();
@@ -261,6 +297,11 @@ function updateResnCode(button) {
 $(document).ready(
 	//document.getElementById('classId').value = document.getElementById('classId').options[document.getElementById('classId').selectedIndex];
 
+	//교육과정의 연도가 바뀌면 교육과정 목록을 다시 채우기
+	$('#select_year').on("change",function(){
+		selectClassFill()
+	}),
+
 	//modal 외부를 클릭 시 닫히는 이벤트
 	$(document).mouseup(function(e) {
 		let container = $('.resn_modal_wrap');
@@ -326,7 +367,6 @@ function closeModal() {
 		reload();
 	}else{
 		let prcsCd = $('#modal_prcs_name').val();
-		console.log(prcsCd);
 		//미확인이라면 보류로 변경
 		if(prcsCd == 'RES0000001'){
 			//$('#modal_prcs_name').removeAttr("value")

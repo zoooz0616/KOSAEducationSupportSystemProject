@@ -3,6 +3,7 @@ package com.finalprj.kess.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
@@ -35,6 +36,7 @@ import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.dto.WorklogDTO;
 import com.finalprj.kess.model.ClassVO;
 import com.finalprj.kess.model.CommonCodeVO;
+import com.finalprj.kess.model.CurriculumVO;
 import com.finalprj.kess.model.FileVO;
 import com.finalprj.kess.model.ManagerVO;
 import com.finalprj.kess.model.ReasonVO;
@@ -43,6 +45,7 @@ import com.finalprj.kess.model.WorklogVO;
 import com.finalprj.kess.service.IAdminService;
 import com.finalprj.kess.service.IManagerService;
 import com.finalprj.kess.service.IStudentService;
+import com.finalprj.kess.service.UploadFileService;
 
 import jakarta.mail.Session;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,6 +64,8 @@ public class ManagerController {
 	IStudentService studentService;
 	@Autowired
 	IAdminService adminService;
+	@Autowired
+	UploadFileService uploadFileService;
 
 	//	메인 페이지
 	@GetMapping("")
@@ -85,37 +90,37 @@ public class ManagerController {
 	//	담당 교육 목록 조회
 	@GetMapping("/class")
 	public String getClassList(Model model, HttpSession session) {
-		String roleCd = (String) session.getAttribute("roleCd");
-		if (roleCd != null && roleCd.equals("ROL0000003")) {
-			model.addAttribute("title", "교육과정 관리");
-			List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), null);
-			// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
-			for (ClassVO vo : classList) {
-				vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
-			}
-			model.addAttribute("classList", classList);
-			List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
-			List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CLS");
-			model.addAttribute("classCodeNameList", classCodeNameList);
-			model.addAttribute("cmptCodeNameList", cmptCodeNameList);
-			return "manager/class_list";
-		} else {
-			if(roleCd == null) {
-			return "login";
-			} else {
-				switch(roleCd) {
-				case "ROL0000001":
-					return "redirect:/student";
-				case "ROL0000002":
-					return "redirect:/admin";
-				default :
-					return "redirect:/logout";
-				}
-			}
+		//로그인 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
 		}
+		//end
+		String mngrId = (String)session.getAttribute("mngrId");
+		model.addAttribute("title", "교육과정 관리");
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
+		// session의 key-value를 설정 할 때 value가 object로 업캐스팅 된다. get 할 때 다운캐스팅 할 것
+		for (ClassVO vo : classList) {
+			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
+		}
+		model.addAttribute("classList", classList);
+		model.addAttribute("resultCount", classList.size());
+		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");
+		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CLS");
+		model.addAttribute("classCodeNameList", classCodeNameList);
+		model.addAttribute("cmptCodeNameList", cmptCodeNameList);
+		//교육과정이 존재하는 연도 목록 추가
+		List<Integer> yearList = managerService.getYearList(mngrId);
+		model.addAttribute("yearList", yearList);
+		return "manager/class_list";
+
 	}
 
 	//	교육 상세 조회
+	/*
 	@GetMapping("/class/{classId}")
 	public String getClassDetail(Model model, @PathVariable String classId, HttpSession session) {
 		//유저 필터링
@@ -145,6 +150,51 @@ public class ManagerController {
 		
 		model.addAttribute("title", "교육 과정 상세");
 		
+		return "manager/class_detail";
+	}
+	*/
+	@RequestMapping("/class/{classId}")
+	public String classDetail(@PathVariable String classId, HttpSession session, Model model) {
+		//로그인 필터링
+		if(session.getAttribute("roleCd")== null) {
+			return "redirect:/login";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000001")){
+			return "redirect:/student";
+		}else if(((String)session.getAttribute("roleCd")).equals("ROL0000002")){
+			return "redirect:/admin";
+		}
+		//end
+		
+		// title
+		String title = "교육과정 상세";
+		model.addAttribute("title", title);
+
+		// 해당 교육과정 객체 가져오기
+		ClassVO classVO = adminService.getClass(classId);
+		DecimalFormat formatter = new DecimalFormat("##,###,###");
+		classVO.setSSubsidy(formatter.format(classVO.getClssSubsidy()));
+		model.addAttribute("classVO", classVO);
+
+		// 파일 가져오기
+		List<FileVO> fileList = null;
+		if (classVO.getFileId() != null) {
+			fileList = uploadFileService.getFileList(classVO.getFileId());
+		}
+		model.addAttribute("fileList", fileList);
+
+		// 강의 가져오기
+		List<CurriculumVO> curriculumList = adminService.getCurriculumList(classVO.getClssId());
+		List<CurriculumDetailDTO> curriculumDetailList = null;
+
+		if (curriculumList != null) {
+			curriculumDetailList = new ArrayList<CurriculumDetailDTO>();
+			for (CurriculumVO curriculumVO : curriculumList) {
+				CurriculumDetailDTO curriculumDetailDTO = adminService.getCurriculumDetail(curriculumVO.getLctrId());
+				curriculumDetailList.add(curriculumDetailDTO);
+			}
+		}
+		model.addAttribute("curriculumDetailList", curriculumDetailList);
+
 		return "manager/class_detail";
 	}
 
@@ -198,6 +248,10 @@ public class ManagerController {
 		emptyClassVO.setClssNm("교육과정명을 선택하세요");
 		classList.add(emptyClassVO);
 		
+		//교육과정이 존재하는 연도 목록 추가
+		List<Integer> yearList = managerService.getYearList((String)session.getAttribute("mngrId"));
+		model.addAttribute("yearList", yearList);
+		
 		if(classId!=null) {
 //			//Param으로 시작/종료 날짜가 null일 경우 시작/종료 날짜에 교육과정 시작/종료 일자를 대입
 			if (startDate == null) {
@@ -213,7 +267,8 @@ public class ManagerController {
 		}
 
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByOnlyClssId(classId);//학생 이름 목록
-		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), null);//수업 목록
+		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), yearList.get(0));
+		
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
 		List<CommonCodeVO> cmptCodeNameList = managerService.getCodeNameList("CMP");
@@ -351,12 +406,16 @@ public class ManagerController {
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "출퇴근 관리";
-
+		
+		//교육과정이 존재하는 연도 목록 추가
+		List<Integer> yearList = managerService.getYearList((String)session.getAttribute("mngrId"));
+		model.addAttribute("yearList", yearList);
+		
 		//------------------------------------------------------------------------------------
 		List<CommonCodeVO> wlogCdList = managerService.getCodeNameList("WOK");
 		model.addAttribute("wlogCdList", wlogCdList);
 		
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, LocalDate.now().getYear());
 		
 		if(clssId != null) {
 			List<String> isManagerIdList = new ArrayList<String>();
@@ -428,6 +487,10 @@ public class ManagerController {
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
 		List<CommonCodeVO> sbsdCodeNameList = managerService.getCodeNameList("SSD");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
+		
+		//교육과정이 존재하는 연도 목록 추가
+		List<Integer> yearList = managerService.getYearList((String)session.getAttribute("mngrId"));
+		model.addAttribute("yearList", yearList);
 		
 		for (SubsidyDTO dto : subsidyList) {
 			dto.setWlog("");
@@ -585,12 +648,22 @@ public class ManagerController {
 	@ResponseBody
 	public Map<String, Object> fetchClassList(
 			HttpSession session
-			,@RequestParam(name="searchKeyword", required=false) String searchKeyword
-			,@RequestParam(value = "filterString[]", required=false) List<String> filterString
-			,@RequestParam(value = "year", required=false) int year
+			,@RequestParam(name="searchKeyword") String searchKeyword
+			,@RequestParam(value = "filterString[]") List<String> filterString
+			,@RequestParam(value = "year") String year
 			) {
+		
+		System.out.println("year : "+year);
+		for (String string : filterString) {
+			System.out.println("filterString : " + string);
+		}
+		List<ClassVO> classList;
 		String mngrId = (String) session.getAttribute("mngrId");
-		List<ClassVO> classList = managerService.getFilteredClassListByMngrId(mngrId, filterString, searchKeyword, year);
+		if(!year.equals("")) {
+			classList = managerService.getFilteredClassListByMngrId(mngrId, filterString, searchKeyword, Integer.parseInt(year));
+		}else {
+			classList = managerService.getFilteredClassListByMngrId(mngrId, filterString, searchKeyword, null);
+		}
 		for (ClassVO vo : classList) {
 			vo.setRgstCnt(managerService.getRgstCountByClssId(vo.getClssId()));
 		}

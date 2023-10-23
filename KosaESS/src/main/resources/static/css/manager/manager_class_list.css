@@ -26,7 +26,7 @@ input, progress {
 	font-size: 1.7em;
 	color: #333333;
 	font-weight: bold;
-	margin : 40px;
+	margin: 40px;
 	display: inline-block;
 }
 
@@ -35,18 +35,44 @@ input, progress {
 	width: calc(100% - 80px);
 }
 
-.search_filter_wrap input[type="button"]{
+.search_btn_wrap img {
+	height: 1.2em;
+	margin:auto 0;
+}
+
+#search_reset_btn {
+	font-size: 1.1em;
+	background: #6E9BB3;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	width: 190px;
+	margin: 10px;
+	text-align: center;
+	align-items:center;
+	display:flex;
+	height: 40px;
+	justify-content: center;
+}
+
+#search_by_name_btn {
 	font-size: 1.1em;
 	background: #0E5881;
 	color: white;
 	border: none;
 	border-radius: 0.3em;
 	font-weight: bold;
-	width: 150px;
+	width: 170px;
 	margin: 10px;
 	text-align: center;
+	align-items:center;
+	display:flex;
 	height: 40px;
+	justify-content: center;
 }
+
+
 
 .search_filter_wrap {
 	width: 100%;
@@ -63,19 +89,19 @@ input, progress {
 /* 여기까지는 공통 */
 .search_filter_wrap .search_filter_table_wrap {
 	width: 98%;
-	display : flex;
+	display: flex;
 	margin: auto;
 	justify-content: center;
 }
 
 .search_filter_list {
 	width: 100%;
-	list-style:none;
+	list-style: none;
 	display: flex;
 	font-size: 1.1em;
 }
 
-.search_filter_list input{
+.search_filter_list input {
 	margin-left: 0.1em;
 	margin-right: 0.8em;
 }
@@ -105,21 +131,22 @@ input, progress {
 	background: #ffffff;
 	border-radius: 3px;
 	box-shadow: 1px 1px 3px lightgray;
-	margin-top: 30px;
+	/* 	margin-top: 30px; */
 }
 
 .content_list .content_list_table {
 	width: 100%;
-	border-collapse:collapse;
-	border-spacing:0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 .content_list .content_list_table tbody tr {
-	height:50px;
+	height: 50px;
 }
 
-
 -------------------------------------------------------------------------
+
+
 
 .gridlist {
 	display: flex;
@@ -137,11 +164,13 @@ input, progress {
 }
 
 --------------------------------------------------------
+
+
 .content_list {
 	width: 100%;
 	background: #ffffff;
 	border-radius: 3px;
-	margin-top:10px;
+	margin-top: 10px;
 	border-top: 2px solid #0E5881;
 }
 
@@ -151,7 +180,7 @@ input, progress {
 	border-spacing: 0;
 }
 
-#class_list_table{
+#class_list_table {
 	border-top: 2px solid #0E5881;
 }
 
@@ -166,7 +195,7 @@ input, progress {
 
 .content_list_table .class_list_table_tbody tr td {
 	border: 1px solid #CFDEE6;
-	padding:5px;
+	padding: 5px;
 }
 
 .content_list_table tr td a {
@@ -181,25 +210,16 @@ input, progress {
 	text-decoration: underline;
 }
 
-.content_list_th{
+.content_list_th {
 	background: #F3F6F8;
 	color: #0E5881;
 }
 /*------------------------------------------------------------*/
-
-.search_btn_wrap{
+.search_btn_wrap {
 	display: flex;
 	justify-content: space-between;
-	width : 10%;
+	width: 10%;
 	align-items: center;
-}
-
-.search_btn_wrap #search_by_name_btn {
-	background-color: #0E5881;
-	
-}
-.search_btn_wrap #search_reset_btn {
-	background-color: #9FBCCD;
 }
 
 .search_filter_inner_wrap {
@@ -207,47 +227,65 @@ input, progress {
 	justify-content: space-between;
 }
 
-.search_filter_contents_wrap{
+.search_filter_contents_wrap {
 	display: flex;
 	width: 100%;
 }
 
-#search_by_status_wrap .search_filter_list .chk_all_span .chk_all_label {
+#search_by_status_wrap .search_filter_list .chk_all_span .chk_all_label
+	{
 	font-weight: bold;
 }
 
-#search_by_status_wrap{
-	width:50%;
+#search_by_status_wrap {
+	width: 50%;
 	display: flex;
 	align-items: center;
 }
 
-#search_by_name_wrap{
+#search_by_name_wrap {
 	display: flex;
 	align-items: center;
 }
 
-#search_by_name{
+#search_by_year_wrap {
+	display: flex;
+	align-items: center;
+}
+
+#search_by_name {
 	width: 30em;
 }
 
-.class_list_table_tbody .variable_length_cell{
+.class_list_table_tbody .variable_length_cell {
 	text-align: left;
 }
 
-.search_condition_name{
+.search_condition_name {
 	font-weight: bold;
 	font-size: 1.3em;
-	display:inline-block;
+	display: inline-block;
 	margin-left: 2em;
 	margin-right: 1em;
 }
 
-#search_by_status_wrap .search_condition_name{
+#search_by_status_wrap .search_condition_name {
 	font-weight: bold;
 	font-size: 1.3em;
-	display:inline-block;
+	display: inline-block;
 	margin-left: 2em;
 	margin-right: 1em;
 	width: 7.8em;
+}
+
+.table_controller {
+	display: flex;
+	margin: 0.5em;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+input[type="checkbox"]:hover, select:hover, button:hover{
+	cursor: pointer;
 }

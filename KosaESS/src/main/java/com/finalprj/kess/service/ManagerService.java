@@ -81,7 +81,7 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword, int year) {
+	public List<ClassVO> getFilteredClassListByMngrId(String mngrId, List<String> filterString, String searchKeyword, Integer year) {
 		return managerRepository.getFilteredClassListByMngrId(mngrId, filterString,  searchKeyword, year);
 	}
 

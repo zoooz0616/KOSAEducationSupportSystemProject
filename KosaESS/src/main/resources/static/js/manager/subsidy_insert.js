@@ -139,7 +139,7 @@ $(document).ready(
 			$('#select_class').empty();
 			$('#subsidy_value').text(0);
 			//목록을 채우기
-			$('#select_class').append("<option value='' disabled selected>교육과정명을 선택하세요</option>");
+			$('#select_class').append("<option value='' selected>교육과정명을 선택하세요</option>");
 			$.ajax({
 				type: 'get',
 				url: '/manager/get_class_list', // 서버의 엔드포인트 URL

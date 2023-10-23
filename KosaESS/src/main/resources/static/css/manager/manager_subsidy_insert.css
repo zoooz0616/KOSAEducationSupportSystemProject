@@ -2,9 +2,6 @@
 /* class="" */
 
 /*-------------------------------------------------------*/
-select option[value=""][disabled] {
-	display: none;
-}
 
 button:hover{
 	cursor: pointer;
