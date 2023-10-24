@@ -1039,7 +1039,7 @@
 
 	<select id="getMaxCompanyId" resultType="string">
 	<![CDATA[
-		select 'CMPY'||LPAD((max(cast(substr(cmpy_id,5) as number(6)))+1),6,'0')
+		select 'CMPY'||LPAD((nvl(max(cast(substr(cmpy_id,5) as number(6))),0)+1),6,'0')
 		from cmpy
 	]]>
 	</select>
