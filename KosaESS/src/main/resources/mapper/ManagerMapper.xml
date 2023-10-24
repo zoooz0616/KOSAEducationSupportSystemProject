@@ -525,10 +525,12 @@
 	<select id="getMaxId">
 		<![CDATA[
 		SELECT
+			NVL(
 			to_number(
 				substr(
 					max(${columnName}),5
 				)
+			)
 			)
 		FROM ${tableName}
 		]]>
