@@ -80,4 +80,6 @@ public interface IManagerRepository {
 	public ClassVO getCodeVO(String resnCd);
 
 	public List<Integer> getYearList(String mngrId);
+
+	public int getMaxId(@Param("tableName") String tableName, @Param("columnName") String columnName);
 }

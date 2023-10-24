@@ -5,54 +5,47 @@ function insertSubsidy() {
 		alertFade("등록 할 기록이 없습니다.","F9DCCB","FF333E")
 		return;
 	}
-	
-	//수정된 상세코드 리스트를 담을 배열 선언
-	
-	//한 행씩 딕셔너리 만들어서 배열에 넣기
-	/*
-	var hiddenInputs = document.querySelectorAll('tr .td_group_check_box .group_update_yn[value=Y]');
-	hiddenInputs.forEach((hiddenInput) => {
-		//수정된 상세코드 객체를 담을 딕셔너리 선언
-		var groupCode = {};
-
-		//updateYn = 'Y'인 인풋의 부모 tr찾기
-		var parentTr = hiddenInput.closest('tr');
-
-		//id와 수정가능한 input의 값들 뽑기
-		var cmcdId = parentTr.querySelector('.td_group_check_box .group_checkbox_item').value;
-		var cmcdNm = parentTr.querySelector('.td_cmcd_nm .group_cmcd_nm').value;
-		var useYn = parentTr.querySelector('.td_use_yn .group_use_yn').value;
-
-		//딕셔너리의 키값에 값 넣기
-		groupCode['cmcdId'] = cmcdId;
-		groupCode['cmcdNm'] = cmcdNm;
-		groupCode['useYn'] = useYn;
-
-		//배열에 push하기
-		updateGroupList.push(groupCode);
-	});
-	*/
 	let subsidyVO = [];
 	let dict;
 	let targetTr;
 	for(let i = 0;i < $('#result_count').text();i++){
-		targetTr = $('tr[name='+i+']');
+		targetTr = $('#stdt_list_table_tbody tr[name=tr'+i+']');
 		dict = {};
-		dict['clssId']=$('#select_class option:selected').val();
-		dict['stdtId']//안됨=targetTr.children('td[name=chkbox]').children('input').val();
-		dict['sbsdCd']=targetTr.children('td[name=cmptCd]').attr("value");
-		dict['payment']//안됨=targetTr.children('td[name=payment]').children('input').val();
-		dict['subsidyDd']=new Date($('#select_ym_y option:selected')+'-'+$('#select_ym_m option:selected')+'-01');//이거 
-		dict['maxWlogCnt']=$('#max_wlog_cnt option:selected').val();//이거
-		dict['wlogCnt']//안됨=targetTr.children('td[name=wlogCnt]').attr("text");
-		dict['sbsdEtc']//안됨=targetTr.children('td[name=sbsdEtc] input').val();
-		
+		dict['clssId']=$('#select_class option:selected').val()
+		dict['stdtId']=targetTr.children('td[name="chkbox"]').children('input[type=checkbox]').val();
+		dict['sbsdCd']=targetTr.children('td[name=sbsdCd]').children("select").val();
+		dict['payment']=targetTr.children('td[name=payment]').children('input').val();
+		dict['subsidyDd']=new Date($('#select_ym_y option:selected').val(),$('#select_ym_m option:selected').val()-1); 
+		dict['maxWlogCnt']=$('#max_wlog_cnt option:selected').val();
+		dict['wlogCnt']=targetTr.children('td[name=wlogCnt]').text();
+		dict['sbsdEtc']=targetTr.children('td[name=sbsdEtc]').children('input[type=text]').val();
 		subsidyVO.push(dict);
 	}
 	
 	//객체 배열을 json문자열로 직렬화 하기
-	var jsonData = JSON.stringify(subsidyVO);
-	console.log(jsonData);
+	//var jsonData = JSON.stringify(subsidyVO);
+	//var jsonData = JSON.stringify(subsidyVO);
+	//console.log(jsonData);
+	$.ajax({
+		url : "/manager/subsidy/insert", // 컨트롤러 엔드포인트
+		type : "post"
+		,dataType:"json"
+		,contentType : 'application/json'
+		//,data : {subsidyList: jsonData}
+		,data : JSON.stringify(subsidyVO)
+		,success : function(response) {
+			if(response.result){
+				alert("총 "+$('#result_count').text()+"건이 등록되었습니다.");
+				location.href('/manager/subsidy');
+			} else{
+				alertFade("등록에 실패하였습니다.(asd)","F9DCCB","FF333E");
+			}
+		},
+		error : function(error) {
+			console.log("Error : ",error)
+			alertFade("등록에 실패하였습니다.","F9DCCB","FF333E");
+		}
+	})
 	/*
 	//비동기로 배열 전달하기
 	fetch('/admin/commoncode/update/groupcode', {
@@ -195,7 +188,7 @@ $(document).ready(
 				let stdtList = response.stdtList;
 				let sbsdCdList = response.sbsdCdList;
 				$('#result_count').text(stdtList.length);
-				console.log($('#result_count').text());
+				//console.log($('#result_count').text());
 				///*
 				let newCell;
 				let newRow;
@@ -212,7 +205,7 @@ $(document).ready(
 					chkBox.attr("value", stdtList[i].stdtId)
 					newCell.append(chkBox);
 					newCell.attr("class", "fixed_length_cell");
-					newCell.attr("name", 'chkbox');
+					newCell.attr("name", "chkbox");
 					newRow.append(newCell);
 					//번호
 					newCell = $('<td>');
@@ -246,6 +239,7 @@ $(document).ready(
 						newRow.append(newCell);
 						if (wlogCntList[j].substr(0, 10) == 'WOK0000001') {
 							wlogCnt = wlogCntList[j].substr(10, wlogCntList[j].length);
+							newCell.attr("name",wlogCnt);
 						}
 					}
 					//출석일수
@@ -293,10 +287,10 @@ $(document).ready(
 					newCell.attr("name", 'sbsdEtc');
 					newCell.append(newOption);
 					newRow.append(newCell);
+					newRow.attr("name",'tr'+i);
 
 					//행 추가
 					$('#stdt_list_table_tbody').append(newRow);
-					$('#stdt_list_table_tbody').attr("name", i);
 				}
 				//*/
 			}

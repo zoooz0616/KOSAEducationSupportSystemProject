@@ -97,8 +97,8 @@
 						<th>출석일수</th>
 						<th>출석률(%)</th>
 						<th>지급예정액(&#8361;)</th>
-						<th>지급상태</th>
 						<th>기타사항</th>
+						<th>지급상태</th>
 					</tr>
 				</thead>
 				<tbody id="stdt_list_table_tbody">
@@ -115,6 +115,7 @@
 						<td class="number_cell">출석률</td>
 						<td class="fixed_length_cell">지급예정액</td>
 						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}" th:value="${subsidy.sbsdCd}">지급상태</td>
+						<td class="fixed_length_cell"><input type="text"></input></td>
 						<td class="fixed_length_cell"><input type="text"></input></td>
 					</tr>
 				</tbody>
