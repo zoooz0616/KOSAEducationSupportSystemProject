@@ -152,7 +152,7 @@
 
 	<select id="getMaxClassId" resultType="string">
 	<![CDATA[
-		select 'CLSS'||LPAD((max(cast(substr(clss_id,5) as number(6)))+1),6,'0')
+		select 'CLSS'||LPAD((nvl(max(cast(substr(clss_id,5) as number(6))),0)+1),6,'0')
 		from clss
 	]]>
 	</select>
@@ -554,7 +554,7 @@
 
 	<select id="getMaxLectureId" resultType="string">
 	<![CDATA[
-		select 'LCTR'||LPAD((max(cast(substr(lctr_id,5) as number(6)))+1),6,'0')
+		select 'LCTR'||LPAD((nvl(max(cast(substr(lctr_id,5) as number(6))),0)+1),6,'0')
 		from lctr
 	]]>
 	</select>
@@ -1039,7 +1039,7 @@
 
 	<select id="getMaxCompanyId" resultType="string">
 	<![CDATA[
-		select 'CMPY'||LPAD((max(cast(substr(cmpy_id,5) as number(6)))+1),6,'0')
+		select 'CMPY'||LPAD((nvl(max(cast(substr(cmpy_id,5) as number(6))),0)+1),6,'0')
 		from cmpy
 	]]>
 	</select>

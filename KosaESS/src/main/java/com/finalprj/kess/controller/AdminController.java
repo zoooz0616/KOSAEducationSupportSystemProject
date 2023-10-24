@@ -1222,7 +1222,7 @@ public class AdminController {
 		// 선택한 교육과정 모두 update deleteYn='Y', updt
 		adminService.deleteClass(clssIds);
 
-		return "redirect:/admin/class/list";
+		return "redirect:/admin/class/list/1";
 	}
 
 	/**

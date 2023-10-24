@@ -3,6 +3,7 @@ package com.finalprj.kess.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -25,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -1039,6 +1041,43 @@ public class ManagerController {
 		Map<String, Object> response = new HashMap<>();
 		response.put("stdtList", stdtList);
 		response.put("sbsdCdList", sbsdCdList);
+		return response;
+	}
+	//지원금 관리(입력)의 데이터 입력
+	@PostMapping("/subsidy/insert")
+	@ResponseBody
+	public Map<String, Object> insertSubsidyList(
+			HttpSession session
+			//, @RequestBody SubsidyVO[] subsidyList
+			, @RequestBody List<Map<String, Object>> subsidyList
+			) {
+		//유저 필터링
+		if(session.getAttribute("roleCd")== null || (!((String)session.getAttribute("roleCd")).equals("ROL0000003"))) {
+			return null;
+		}
+		
+		//JSON 맵에서 데이터 가져와서 하나하나 VO로 만들고 insert 해주기
+		SubsidyVO vo;
+		for (Map<String,Object> sbsd : subsidyList) {
+			vo = new SubsidyVO();
+			vo.setSbsdId("SBSD"+String.format("%06d",managerService.getMaxId("sbsd", "sbsd_id")+1));//수정하기
+			vo.setClssId((String)sbsd.get("clssId"));
+			vo.setStdtId((String)sbsd.get("stdtId"));
+			
+			vo.setSbsdCd((String)sbsd.get("sbsdCd"));
+			vo.setSubsidyDd(Date.valueOf(((String)sbsd.get("subsidyDd")).split("T")[0]));
+			vo.setPayment(Integer.parseInt((String)sbsd.get("payment")));
+			vo.setMaxWlogCnt(Integer.parseInt((String)sbsd.get("maxWlogCnt")));
+			vo.setWlogCnt(Integer.parseInt((String)sbsd.get("wlogCnt")));
+			vo.setSbsdEtc((String)sbsd.get("sbsdEtc"));
+			
+			vo.setRgstDt(new Timestamp(System.currentTimeMillis()));
+			vo.setRgsterId((String)session.getAttribute("mngrId"));
+			managerService.insertSubsidy(vo);
+		}
+		//response 생성 및 목록 추가
+		Map<String, Object> response = new HashMap<>();
+		response.put("result", Boolean.TRUE);
 		return response;
 	}
 }
