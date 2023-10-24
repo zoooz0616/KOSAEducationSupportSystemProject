@@ -4,7 +4,7 @@
 	
 	<select id="getMaxFileId" resultType="string">
 	<![CDATA[
-		select 'FILE'||LPAD((max(cast(substr(file_id,5) as number(6)))+1),6,'0')
+		select 'FILE'||LPAD((nvl(max(cast(substr(file_id,5) as number(6))),0)+1),6,'0')
 		from flup
 	]]>
 	</select>
