@@ -135,7 +135,7 @@
 								<input th:if="${act}=='update'" class="essential_input"
 									type="time" th:name="setInTm"
 									th:value="${#dates.format(classVO.setInTm, 'HH:mm:ss')}"
-									required> <span style="width: 300px;"
+									required> <span
 									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.setInTm, 'HH:mm')}"></span> ~
 
@@ -144,7 +144,7 @@
 								<input th:if="${act}=='update'" class="essential_input"
 									type="time" th:name="setOutTm"
 									th:value="${#dates.format(classVO.setOutTm, 'HH:mm:ss')}"
-									required> <span style="width: 300px;"
+									required> <span
 									th:if="${act}=='select'"
 									th:text="${#dates.format(classVO.setOutTm, 'HH:mm')}"></span>
 							</div>
