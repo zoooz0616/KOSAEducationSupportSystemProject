@@ -19,4 +19,8 @@ public interface IMainRepository {
 	void insertStudent(StudentVO student);
 	String getMaxStdtId();
 	String getMember(String email);
+	String getMemberId(String name, String phone);
+	String getMemberPwd(String name, String email, String phone);
+	void changePwd(String email, String randomCode);
+	String checkMemberCd(String userId);
 }

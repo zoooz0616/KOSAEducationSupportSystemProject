@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 </head>
 <head>
-<link th:href="@{/css/admin/select_company_popup.css}" rel="stylesheet">
+<link th:href="@{/css/admin/select_subject_popup.css}" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -12,15 +12,78 @@
 
 	<div class="select_wrap">
 		<div class="search_wrap">
-			<input type="text" placeholder="과목명을 입력하세요.">
+			<input class="search_input" type="text" placeholder="과목명을 입력하세요.">
 			<button class="search_btn">조회</button>
 		</div>
 		<div class="company_list_wrap">
-			<div class="company_nm" onclick="selectSubject(this)"
-				th:each="subject: ${subjectList}">
-				<input type="hidden" th:value="${subject.sbjtId}"> <span
-					th:text="${subject.sbjtNm}"></span>
+
+			<!-- 과목 관리 -->
+			<div class="subject_wrap" style="height: 50%;">
+				<!-- 총 개수 및 버튼-->
+				<div class="content_info_wrap">
+					<div style="margin-left: 5px;">
+						총 <span class="cnt subject_cnt"
+							th:text="${#lists.size(subjectList)}"></span> 건
+					</div>
+					<div class="content_info_button_wrap">
+						<button class="insert_btn" type="button" onclick="insertSubject()">
+							<img th:src="@{/img/plus_white.png}">등록하기
+						</button>
+						<button id="subject_delete_btn">
+							<img th:src="@{/img/minus_white.png}"> <span>선택삭제</span>
+						</button>
+
+						<button id="subject_update_btn" onclick="enterSubjectEditMode()">
+							<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
+						</button>
+
+						<button id="subject_cancel_btn" onclick="cancelSubjectEditMode()"
+							style="display: none;">
+							<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
+						</button>
+
+						<button id="subject_save_btn" onclick="saveSubject()"
+							style="display: none;">
+							<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
+						</button>
+					</div>
+				</div>
+				<!-- 총 개수 및 버튼-->
+
+				<!-- 리스트 -->
+				<div class="table_wrap subject_table">
+					<table>
+						<thead>
+							<tr class="content_list_th">
+								<th style="width: 10%;"><input type="checkbox"
+									name="subject_select_all" onclick="subjectSelectAll(this)"
+									class="subject_checkbox_all"></th>
+								<th style="width: 10%;">번호</th>
+								<th style="width: 80%;">과목명</th>
+							</tr>
+						</thead>
+						<tbody class="subject_tbody">
+							<tr class="tr_subject" 
+								th:each="subject, iterStat : ${subjectList}">
+								<td class="td_subject_check_box"><input type="checkbox"
+									name="subject_select" onclick="subjectCheckSelectAll()"
+									class="subject_checkbox_item" th:value="${subject.sbjtId}">
+									<input type="hidden" class="subject_update_yn" value="N">
+								</td>
+								<td class="td_subject_num"
+									th:text="${iterStat.index+1}"></td>
+								<td class="td_subject_nm"><span class="subject_span"  onclick="selectSubject(this)"
+									th:text="${subject.sbjtNm}"></span> <input
+									style="display: none;" type="text"
+									class="subject_input subject_nm" th:value="${subject.sbjtNm}">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 리스트 -->
 			</div>
+			<!-- 과목 관리 -->
 		</div>
 
 		<div class="btn_wrap">
@@ -28,9 +91,12 @@
 		</div>
 	</div>
 	<script>
+		//과목명 선택 이벤트
 		function selectSubject(subject) {
-			var sbjtId = subject.querySelector('input').value;
-			var sbjtNm = subject.querySelector('span').textContent;
+			var trParnet = subject.closest('tr');
+			
+			var sbjtId = trParnet.querySelector(".td_subject_check_box input[name='subject_select']").value;
+			var sbjtNm = trParnet.querySelector('.td_subject_nm span').textContent;
 
 			// 값을 부모 창으로 JSON 객체로 전달
 			var values = {
@@ -43,6 +109,205 @@
 				sbjtNm : sbjtNm
 			}, "*");
 			window.close(); // 팝업 창 닫기
+		}
+		
+		//과목 전체선택
+		function subjectSelectAll(selectAll){
+			//모든 체크박스들
+			const checkboxes = document.querySelectorAll('input[name="subject_select"]');
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = selectAll.checked;
+			});
+		}
+		
+		//과목 개별 선택
+		function subjectCheckSelectAll(){
+			//전체선택 체크박스
+			const selectAll = document.querySelector('input[name="subject_select_all"]');
+			//모든 체크박스
+			const checkboxes = document.querySelectorAll('input[name="subject_select"]');
+			//선택된 체크박스
+			const checked = document.querySelectorAll('input[name="subject_select"]:checked');
+			
+			if(checkboxes.length == checked.length){
+				selectAll.checked = true;
+			}else{
+				selectAll.checked = false;
+			}
+		}
+		
+		//과목 선택삭제 버튼 이벤트
+		document
+				.querySelector("#subject_delete_btn")
+				.addEventListener(
+						"click",
+						function() {
+							var selectedSubjectIds = [];
+
+							// 선택된 체크박스를 모두 선택합니다.
+							var selectedCheckboxes = document
+									.querySelectorAll(".subject_checkbox_item:checked");
+
+							// 선택된 체크박스의 값을 배열에 추가합니다.
+							selectedCheckboxes.forEach(function(checkbox) {
+								selectedSubjectIds.push(checkbox.value);
+							});
+							
+							if(selectedSubjectIds.length == 0){
+								alert("삭제할 과목을 선택해주세요.");
+							}else{
+								if(!confirm("삭제하시겠습니까?")){
+									//아니요
+								}else{
+									// Ajax 요청에서 selectedLectureIds를 배열로 전송합니다.
+									$
+											.ajax({
+												url : '/admin/lecture/subject/deleteall',
+												method : 'POST',
+												data : {
+													selectedSubjectIds : selectedSubjectIds
+												},
+												success : function(response) {
+													console.log(response);
+													if (response == "success") {
+														alert("선택한 과목이 삭제되었습니다.");
+														window.location.href = "/admin/lecture/select/subject";
+													}
+												}
+											});
+								}
+							}
+						});
+		
+		//과목 수정하기 모드
+		function enterSubjectEditMode(){
+			const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
+	        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
+	        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
+	        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
+
+	        //버튼 display 수정
+	        deleteBtn.style.display = 'none';
+	        updateBtn.style.display = 'none';
+	        cancelBtn.style.display = 'flex';
+	        saveBtn.style.display = 'flex';
+	        
+	        //본래의 span 숨기기
+	        const subjectSpans = document.querySelectorAll('.subject_span');
+	        subjectSpans.forEach((subjectSpan)=>{
+	        	subjectSpan.style.display = 'none';
+	        });
+	        
+	        //editInput 보이게 하기
+	        const subjectEdits = document.querySelectorAll('.subject_input');
+	        subjectEdits.forEach((subjectEdit)=>{
+	        	subjectEdit.style.display = 'block';
+	        });
+		}	
+		
+		//과목 수정하기 취소
+		function cancelSubjectEditMode(){
+			const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
+	        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
+	        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
+	        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
+
+	      	//버튼 display 수정
+	        deleteBtn.style.display = 'flex';
+	        updateBtn.style.display = 'flex';
+	        cancelBtn.style.display = 'none';
+	        saveBtn.style.display = 'none';
+	        
+	      	//본래의 span 보이기
+	        const subjectSpans = document.querySelectorAll('.subject_span');
+	        subjectSpans.forEach((subjectSpan)=>{
+	        	subjectSpan.style.display = 'block';
+	        });
+	        
+	        //editInput숨기기
+	        const subjectEdits = document.querySelectorAll('.subject_input');
+	        subjectEdits.forEach((subjectEdit)=>{
+	        	subjectEdit.style.display = 'none';
+	        });
+		}
+		
+		//과목 input에 수정 발생시 해당 tr update_yn = Y로 변경
+		var subjectInputs = document.querySelectorAll(".subject_input");
+		subjectInputs.forEach(function(subjectInput) {
+		    // onchange 이벤트를 추가합니다.
+		    subjectInput.addEventListener("change", function() {
+		    	const parentTr = subjectInput.closest('tr');
+		    	var updateYnInput = parentTr.querySelector(".td_subject_check_box .subject_update_yn");
+		    	updateYnInput.value = "Y";
+		    });
+		});
+		
+		//과목 저장하기 버튼 클릭
+		function saveSubject(){
+			//수정된 강의리스트를 담을 배열 선언
+			var updateSubjectList = [];
+			
+			//tr .td_lecture_check_box .lecture_update_yn인 input의 값이 Y인 것의 tr들을 가져오기 
+			//한 행씩 딕셔너리 만들어서 배열에 넣기
+			var hiddenInputs = document.querySelectorAll('tr .td_subject_check_box .subject_update_yn[value=Y]');
+			hiddenInputs.forEach((input)=>{
+				//수정된 강의객체를 담을 딕셔너리 선언
+				var subject = {};
+				
+				//updateYn = 'Y'인 인풋의 부모 tr찾기
+				var parentTr = input.closest('tr');
+				
+				//id와 수정가능한 input의 값들 뽑기
+				var sbjtId = parentTr.querySelector('.td_subject_check_box .subject_checkbox_item').value;
+				var sbjtNm = parentTr.querySelector('.td_subject_nm .subject_nm').value;
+							
+				//딕셔너리의 키값에 값 넣기
+				subject['sbjtId'] = sbjtId;
+				subject['sbjtNm'] = sbjtNm;
+				
+				//배열에 push하기
+				updateSubjectList.push(subject);
+			});
+			
+			//객체 배열을 json문자열로 직렬화 하기
+			var jsonData = JSON.stringify(updateSubjectList);
+			
+			//비동기로 배열 전달하기
+			fetch('/admin/lecture/subject/update', {
+	    		method: 'POST',
+	    		headers: {
+	        		'Content-Type': 'application/json',
+	    		},
+	    		body: jsonData,
+			})
+			.then(response =>response.json())
+			.then(data => {
+				console.log(data);
+				if (data.message === "success") {
+			        alert("과목이 수정되었습니다.");
+			        //과목 리스트 다시 불러오기
+			        //getSubjectList();
+			        
+			        const deleteBtn = document.querySelector('#subject_delete_btn');//과목 선택삭제 버튼
+			        const updateBtn = document.querySelector('#subject_update_btn');//과목 수정하기 버튼
+			        const cancelBtn = document.querySelector('#subject_cancel_btn');//과목 수정취소 버튼
+			        const saveBtn = document.querySelector('#subject_save_btn');//과목 저장하기 버튼
+
+			        //버튼 display 수정
+			        deleteBtn.style.display = 'flex';
+			        updateBtn.style.display = 'flex';
+			        cancelBtn.style.display = 'none';
+			        saveBtn.style.display = 'none';
+			        
+			        window.location.href = "/admin/lecture/select/subject";
+			    } else {
+			    	alert("실패했습니다. 다시 시도해주세요.");
+			    }
+			})
+			.catch(error => {
+	    		// 오류 처리
+			});
+			
 		}
 	</script>
 </body>

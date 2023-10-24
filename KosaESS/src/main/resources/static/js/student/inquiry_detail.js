@@ -19,7 +19,6 @@ const parts = currentPageURL.split('/');
 const postId = parts[parts.length - 1];
 
 // 추출한 Post ID 사용하기
-console.log("Post ID:", postId);
 
 const updateBtn = document.querySelector(".update");
 

@@ -726,6 +726,10 @@ public class AdminController {
 				curriculumDetailList.add(curriculumDetailDTO);
 			}
 		}
+		
+		System.out.println("##############################");
+		System.out.println(curriculumDetailList);
+		
 		model.addAttribute("curriculumDetailList", curriculumDetailList);
 
 		return "admin/class_form";
@@ -749,7 +753,7 @@ public class AdminController {
 		// insert or select or update
 		String act = "insert";
 		model.addAttribute("act", act);
-		
+
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		model.addAttribute("fileList", fileList);
 
@@ -777,7 +781,7 @@ public class AdminController {
 
 		return "admin/class_form";
 	}
-	
+
 	/**
 	 * 교육과정 생성 시 기업 선택 팝업 띄우기
 	 * 
@@ -788,13 +792,13 @@ public class AdminController {
 	 */
 	@RequestMapping("/class/select/company")
 	public String selectCompanyByInsertClass(Model model) {
-		//insert때 사용가능한 기업리스트만 보내기
+		// insert때 사용가능한 기업리스트만 보내기
 		List<CompanyVO> companyList = adminService.getCompanyListAll();
 		model.addAttribute("companyList", companyList);
-		
+
 		return "admin/select_company_popup";
 	}
-	
+
 	/**
 	 * 교육과정 생성 시 업무담당자 선택 팝업 띄우기
 	 * 
@@ -805,14 +809,30 @@ public class AdminController {
 	 */
 	@RequestMapping("/class/select/manager")
 	public String selectManagerByInsertClass(Model model) {
-		//insert때 사용가능한 기업리스트만 보내기
+		// insert때 사용가능한 기업리스트만 보내기
 		List<ManagerVO> managerList = adminService.getManagerListAllByInsert();
 		model.addAttribute("managerList", managerList);
-		
+
 		return "admin/select_manager_popup";
 	}
-	
-	
+
+	/**
+	 * 교육과정 생성 시 강의 선택 팝업 띄우기
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 23.
+	 * @parameter : session, model
+	 * @return : String
+	 */
+	@RequestMapping("/class/select/lecture")
+	public String selectLectureByInsertClass(Model model) {
+		// insert때 사용가능한 강의만 보내기
+		// 강의 리스트
+		List<LectureVO> lectureList = adminService.getLectureList();
+		model.addAttribute("lectureList", lectureList);
+
+		return "admin/select_lecture_popup";
+	}
 
 	/**
 	 * 교육과정 생성 POST
@@ -982,7 +1002,7 @@ public class AdminController {
 		model.addAttribute("classVO", classVO);
 
 		// 파일 가져오기
-		List<FileVO> fileList = null;
+		List<FileVO> fileList = new ArrayList<FileVO>();
 		if (classVO.getFileId() != null) {
 			fileList = uploadFileService.getFileList(classVO.getFileId());
 		}
@@ -1283,51 +1303,6 @@ public class AdminController {
 	}
 
 	/**
-	 * 교육과정 생성시 강의정보
-	 * 
-	 * @author : eunji
-	 * @date : 2023. 9. 27.
-	 * @parameter : lectureId
-	 * @return : Map<String, Object>
-	 */
-	@PostMapping("/class/insert/lectureselect")
-	@ResponseBody
-	public Map<String, Object> fetchLectureSelect(@RequestParam("lectureId") String lectureId) {
-		SubjectVO subjectVO = adminService.getSubject(lectureId);
-		ProfessorVO professorVO = adminService.getProfessor(lectureId);
-		LectureVO lectureVO = adminService.getLecture(lectureId);
-
-		Map<String, Object> response = new HashMap<>();
-		// subjectName과 professorName을 설정합니다.
-		response.put("subject", subjectVO);
-		response.put("professor", professorVO);
-		response.put("lecture", lectureVO);
-
-		return response;
-	}
-
-	/**
-	 * 교육과정 생성시 강의목록
-	 * 
-	 * @author : eunji
-	 * @date : 2023. 9. 27.
-	 * @parameter :
-	 * @return : Map<String, Object>
-	 */
-	@PostMapping("/class/insert/getlecturelist")
-	@ResponseBody
-	public Map<String, Object> fetchLectureSelect() {
-		// 강의 리스트
-		List<LectureVO> lectureList = adminService.getLectureList();
-
-		Map<String, Object> response = new HashMap<>();
-		// lectureList담기
-		response.put("lectureList", lectureList);
-
-		return response;
-	}
-
-	/**
 	 * 교육과정 지원자 목록조회
 	 * 
 	 * @author : eunji
@@ -1404,7 +1379,7 @@ public class AdminController {
 
 		return "admin/lecture_list";
 	}
-	
+
 	/**
 	 * 강의 생성 팝업페이지
 	 * 
@@ -1415,10 +1390,10 @@ public class AdminController {
 	 */
 	@RequestMapping("/lecture/insert")
 	public String lectureInsert() {
-		
+
 		return "admin/insert_lecture_popup";
 	}
-	
+
 	/**
 	 * 강의 생성 - 과목 선택 팝업 페이지
 	 * 
@@ -1431,10 +1406,10 @@ public class AdminController {
 	public String selectSubject(Model model) {
 		List<SubjectVO> subjectList = adminService.getSubjectList();
 		model.addAttribute("subjectList", subjectList);
-		
+
 		return "admin/select_subject_popup";
 	}
-	
+
 	/**
 	 * 강의 생성 - 강사 선택 팝업 페이지
 	 * 
@@ -1447,8 +1422,8 @@ public class AdminController {
 	public String selectProfessor(Model model) {
 		List<ProfessorVO> professorList = adminService.getProfessorList();
 		model.addAttribute("professorList", professorList);
-		
-		return "admin/select_subject_popup";
+
+		return "admin/select_professor_popup";
 	}
 
 	/**
@@ -1461,21 +1436,23 @@ public class AdminController {
 	 */
 	@PostMapping("/lecture/insert")
 	@ResponseBody
-	public String insertLecture(@RequestParam("subjectIdInput") String sbjtId,
-			@RequestParam("profIdInput") String profId, @RequestParam("lecturNmInput") String lctrNm,
-			@RequestParam("lectureTmInput") int lctrTm) {
+	public String insertLecture(@RequestParam("lectureNm") String lectureNm,
+			@RequestParam("subjectId") String subjectId, @RequestParam("professorId") String professorId,
+			@RequestParam("lectureTm") int lectureTm, @RequestParam("lectureEtc") String lectureEtc) {
+
 		// 강의명이 중복되는지 확인 후 중복 시 fail 리턴
-		Integer lctrNmCnt = adminService.getLctrNmCnt(lctrNm);
+		Integer lctrNmCnt = adminService.getLctrNmCnt(lectureNm);
 
 		if (lctrNmCnt != 0) {
 			return "fail";
 		} else {
 			LectureVO lectureVO = new LectureVO();
 			lectureVO.setLctrId(adminService.getMaxLectureId());
-			lectureVO.setSbjtId(sbjtId);
-			lectureVO.setProfId(profId);
-			lectureVO.setLctrNm(lctrNm);
-			lectureVO.setLctrTm(lctrTm);
+			lectureVO.setLctrNm(lectureNm);
+			lectureVO.setSbjtId(subjectId);
+			lectureVO.setProfId(professorId);
+			lectureVO.setLctrTm(lectureTm);
+			lectureVO.setLctrEtc(lectureEtc);
 
 			adminService.insertLectureVO(lectureVO);
 
@@ -1785,7 +1762,7 @@ public class AdminController {
 		}
 		return new ResponseEntity<byte[]>(file.getFileContent(), headers, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 기업 검색
 	 * 
@@ -1796,14 +1773,15 @@ public class AdminController {
 	 */
 	@PostMapping("/company/search")
 	@ResponseBody
-	public Map<String, Object> searchCompany(HttpSession session, @RequestParam(name="cmpyNm", required = false)String cmpyNm) {
+	public Map<String, Object> searchCompany(HttpSession session,
+			@RequestParam(name = "cmpyNm", required = false) String cmpyNm) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		
+
 		List<CompanyVO> companyList = adminService.getSearchCompanyList(cmpyNm.trim());
 		session.setAttribute("searchCompanyList", companyList);
-		
+
 		response.put("companyList", companyList);
-		
+
 		return response;
 	}
 
@@ -1819,7 +1797,7 @@ public class AdminController {
 	public String insertCompany() {
 		return "admin/insert_company_popup";
 	}
-	
+
 	/**
 	 * 기업 생성
 	 * 
@@ -1831,9 +1809,10 @@ public class AdminController {
 	 */
 	@PostMapping("/company/insert")
 	@ResponseBody
-	public String companyInsert(@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs, 
-			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
-			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail", required = false)String cmpyAdrDetail) throws IOException {
+	public String companyInsert(@RequestParam(name = "file", required = false) MultipartFile file,
+			RedirectAttributes redirectAttrs, @RequestParam("cmpyNm") String cmpyNm,
+			@RequestParam("cmpyTel") String cmpyTel, @RequestParam("cmpyAdr") String cmpyAdr,
+			@RequestParam(name = "cmpyAdrDetail", required = false) String cmpyAdrDetail) throws IOException {
 
 		String fileId = null;
 		FileVO fileVO = null;
@@ -1878,7 +1857,8 @@ public class AdminController {
 	public List<CompanyVO> updateCompany(@PathVariable String cmpyId,
 			@RequestParam(name = "file", required = false) MultipartFile file, RedirectAttributes redirectAttrs,
 			@RequestParam("cmpyNm") String cmpyNm, @RequestParam("cmpyTel") String cmpyTel,
-			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name="cmpyAdrDetail")String cmpyAdrDetail) throws IOException {
+			@RequestParam("cmpyAdr") String cmpyAdr, @RequestParam(name = "cmpyAdrDetail") String cmpyAdrDetail)
+			throws IOException {
 
 		CompanyVO companyVO = adminService.getCompanyVO(cmpyId);
 		companyVO.setCmpyNm(cmpyNm);
@@ -2048,7 +2028,7 @@ public class AdminController {
 			@RequestParam String searchInput, @RequestParam String searchMngrStatus,
 			@RequestParam String searchClassId) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		
+
 		List<ManagerVO> managerList = adminService.getSearchManagerList(searchInputCategory, searchInput.trim(),
 				searchMngrStatus, searchClassId);
 		response.put("managerList", managerList);
@@ -2563,25 +2543,25 @@ public class AdminController {
 	 */
 	@GetMapping("/subsidy/list/{page}")
 	public String selectSubsidyList(HttpSession session, @PathVariable int page, Model model) {
-		//검색조건 - 교육과정
+		// 검색조건 - 교육과정
 		List<ClassVO> classList = adminService.getClassListAll();
 		model.addAttribute("classList", classList);
-		
-		//검색조건 - 지원금지급상태
+
+		// 검색조건 - 지원금지급상태
 		List<CommonCodeVO> subsidyStatusList = adminService.getCommonCodeList("GRP0000014");
 		model.addAttribute("subsidyStatusList", subsidyStatusList);
-		
-		//지원금 리스트 페이징
+
+		// 지원금 리스트 페이징
 		List<SubsidyDTO> subsidyList = adminService.getSubsidyList(page);
 		model.addAttribute("subsidyList", subsidyList);
-		
-		//지원금 전체 리스트
+
+		// 지원금 전체 리스트
 		List<SubsidyDTO> subsidyListAll = adminService.getSubsidyListAll();
 		session.setAttribute("searchSubsidyList", subsidyListAll);
-		
-		//페이징 처리
+
+		// 페이징 처리
 		session.setAttribute("page", page);
-		
+
 		int bbsCount = subsidyListAll.size();
 		model.addAttribute("subsidyCnt", bbsCount);
 		int totalPage = 0;
@@ -2604,10 +2584,10 @@ public class AdminController {
 		model.addAttribute("nowPageBlock", nowPageBlock);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
-		
+
 		return "admin/subsidy_list";
 	}
-	 
+
 	/**
 	 * 지원금 조회 검색
 	 * 
@@ -2618,23 +2598,23 @@ public class AdminController {
 	 */
 	@GetMapping("/subsidy/search")
 	@ResponseBody
-	public Map<String, Object> searchSubsidy(HttpSession session, @RequestParam(name="clssId",required = false)String clssId,
-			@RequestParam(name = "startDate", required = false)String startDate,
-			@RequestParam(name = "endDate", required = false)String endDate,
-			@RequestParam(name = "keyword", required = false)String keyword,
-			@RequestParam(name = "subsidyStatus", required = false)String subsidyStatus
-			){
+	public Map<String, Object> searchSubsidy(HttpSession session,
+			@RequestParam(name = "clssId", required = false) String clssId,
+			@RequestParam(name = "startDate", required = false) String startDate,
+			@RequestParam(name = "endDate", required = false) String endDate,
+			@RequestParam(name = "keyword", required = false) String keyword,
+			@RequestParam(name = "subsidyStatus", required = false) String subsidyStatus) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		
-		//검색 결과 리스트 받기
-		List<SubsidyDTO> subsidyList = adminService.getSearchSubsidyList(clssId, startDate, endDate, keyword.trim(), subsidyStatus);
+
+		// 검색 결과 리스트 받기
+		List<SubsidyDTO> subsidyList = adminService.getSearchSubsidyList(clssId, startDate, endDate, keyword.trim(),
+				subsidyStatus);
 		response.put("subsidyList", subsidyList);
 		session.setAttribute("searchSubsidyList", subsidyList);
-		
+
 		return response;
 	}
-	
-	
+
 	/**
 	 * 지원금 상태 수정
 	 * 
@@ -2647,11 +2627,10 @@ public class AdminController {
 	@ResponseBody
 	public String subsidyUpdate(@RequestParam("selectedSubsidyIds[]") List<String> selectedSubsidyIds,
 			@RequestParam String cmcdId) {
-		
+
 		adminService.updateSubsidyStatus(selectedSubsidyIds, cmcdId);
-		
+
 		return "success";
 	}
-
 
 }

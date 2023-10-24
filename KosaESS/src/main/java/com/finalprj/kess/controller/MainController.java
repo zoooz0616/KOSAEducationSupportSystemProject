@@ -2,6 +2,7 @@ package com.finalprj.kess.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.util.List;
 import java.util.Random;
@@ -39,7 +40,7 @@ public class MainController {
 
 	@Autowired
 	IMainService mainService;
-	
+
 	@Autowired
 	IStudentService studentService;
 
@@ -143,7 +144,7 @@ public class MainController {
 			return "redirect:/login_error";
 		}
 	}
-	
+
 	@GetMapping("/login_error")
 	public String loginError() {
 		return "login_error";
@@ -275,5 +276,65 @@ public class MainController {
 		mailService.sendCode(email, code);
 
 		return code;
+	}
+
+	// 아이디/비밀번호 찾기
+	/**
+	 * @author : dabin
+	 * @date : 2023. 10. 21.
+	 * @parameter : model
+	 * @return :
+	 */
+	@GetMapping("/student/find")
+	public String find(Model model) {
+		return "find_id_pwd";
+	}
+
+	@PostMapping("/findUserId")
+	@ResponseBody
+	public String findUserId(Model model, @RequestParam("name") String name, @RequestParam("phone") String phone) {
+		String userId = mainService.getMemberId(name, phone);
+		if (userId != null && !userId.isEmpty()) {
+			String MemberYN = mainService.checkMemberCd(userId);
+			if (MemberYN != null && !MemberYN.isEmpty()) {
+				return MemberYN;
+			}
+		}
+		return "no";
+	}
+
+	@PostMapping("/findUserPwd")
+	@ResponseBody
+	public String findUserPwd(Model model, @RequestParam("name") String name, @RequestParam("email") String email,
+			@RequestParam("phone") String phone) throws Exception {
+		String userEmail = mainService.getMemberPwd(name, email, phone);
+
+		if (userEmail != null && !userEmail.isEmpty()) {
+			String randomCode = generateRandomCode(10); // 변경 가능한 길이
+
+			mailService.sendCode(email, randomCode);
+			mainService.changePwd(email, randomCode);
+			return userEmail;
+		}
+
+		return "no";
+	}
+
+	public static String generateRandomCode(int length) {
+		if (length < 8 || length > 20) {
+			throw new IllegalArgumentException("Length should be between 8 and 20 characters.");
+		}
+
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
+		SecureRandom random = new SecureRandom();
+		StringBuilder code = new StringBuilder();
+
+		for (int i = 0; i < length; i++) {
+			int randomIndex = random.nextInt(characters.length());
+			code.append(characters.charAt(randomIndex));
+		}
+
+		return code.toString();
 	}
 }

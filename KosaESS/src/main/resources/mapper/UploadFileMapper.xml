@@ -18,9 +18,10 @@
 			file_content,
 			file_size,
 			file_type,
+			rgdt_dt
 			rgster_id
 		)
-		values(#{fileId}, #{fileSubId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, #{rgsterId})
+		values(#{fileId}, #{fileSubId}, #{fileNm}, #{fileContent}, #{fileSize}, #{fileType}, systimestamp, #{rgsterId})
 	]]>
 	</insert>
 	

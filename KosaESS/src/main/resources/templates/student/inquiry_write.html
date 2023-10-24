@@ -69,7 +69,7 @@
 								<input class="upload-name" value="선택된 첨부파일이 없습니다"
 									placeholder="선택된 첨부파일이 없습니다" readonly> <label
 									for="fileInput">파일찾기</label> <input type="file" name="file"
-									id="fileInput" class="fileInput" multiple >
+									id="fileInput" class="fileInput" multiple>
 							</div>
 						</td>
 					</tr>
@@ -101,27 +101,34 @@
 		$(".submitInquiry").click(function() {
 			var title = $('.title').val();
 			var content = $('.postContent').val();
-			var formData = new FormData();
-			var files = document.querySelector("#fileInput").files; // 파일 리스트를 가져옵니다.
 
-			for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
-				var file = files[i]; // 각 파일을 가져옵니다.
-				formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
-			}
-			formData.append("title", title);
-			formData.append("content", content);
+			if (title == "") {
+				alert("문의 제목을 작성해주세요.");
+			} else if (content == "") {
+				alert("문의 내용을 작성해주세요.");
+			} else {
+				var formData = new FormData();
+				var files = document.querySelector("#fileInput").files; // 파일 리스트를 가져옵니다.
 
-			$.ajax({
-				type : 'POST',
-				url : '/student/inquiry/write',
-				data : formData,
-				processData : false,
-				contentType : false,
-				success : function() {
-					alert("문의 작성을 완료하였습니다.");
-					window.location.href = '/student/inquiry/list';
+				for (var i = 0; i < files.length; i++) { // 파일 리스트의 길이만큼 반복합니다.
+					var file = files[i]; // 각 파일을 가져옵니다.
+					formData.append("files[]", file); // 폼 데이터에 파일을 추가합니다.
 				}
-			});
+				formData.append("title", title);
+				formData.append("content", content);
+
+				$.ajax({
+					type : 'POST',
+					url : '/student/inquiry/write',
+					data : formData,
+					processData : false,
+					contentType : false,
+					success : function() {
+						alert("문의 작성을 완료하였습니다.");
+						window.location.href = '/student/inquiry/list';
+					}
+				});
+			}
 		});
 
 		$(".updateInquiry").click(function() {

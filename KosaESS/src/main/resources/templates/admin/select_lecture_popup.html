@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/select_lecture_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>강의를 선택하세요.</h2>
+
+	<div class="select_wrap">
+		<div class="search_wrap">
+			<input class="search_input" type="text" placeholder="강사명을 입력하세요.">
+			<button class="search_btn">조회</button>
+		</div>
+		<div class="company_list_wrap">
+			<!-- 강의 관리 -->
+			<div class="professor_wrap" style="height: 50%;">
+				<!-- 총 개수 및 버튼-->
+				<div class="content_info_wrap">
+					<div style="display: flex; align-items: center; margin-left: 5px;">
+						<span>총 <span class="lecture_cnt cnt"
+							th:text="${#lists.size(lectureList)}"></span> 건
+						</span>
+					</div>
+					<div class="content_info_button_wrap">
+						<button class="insert_btn" type="button"
+							onclick="showInsertLecturePopup()" style="display: flex;">
+							<img th:src="@{/img/plus_white.png}" style="width: 20px;">
+							등록하기
+						</button>
+					</div>
+				</div>
+				<!-- 총 개수 및 버튼-->
+
+				<!-- 리스트 -->
+				<div class="table_wrap lecture_table">
+					<table>
+						<thead>
+							<tr class="content_list_th">
+								<th style="width: 5%;"><input type="checkbox"
+									name="lecture_select_all" onclick="lectureSelectAll(this)"
+									class="lecture_checkbox_all"></th>
+								<th style="width: 5%;">번호</th>
+								<th style="width: 35%;">강의명</th>
+								<th style="width: 15%;">과목명</th>
+								<th style="width: 10%;">강사명</th>
+								<th style="width: 10%;">이수시간</th>
+								<th style="width: 20%;">기타사항</th>
+							</tr>
+						</thead>
+						<tbody class="lecture_tbody">
+							<tr class="tr_lecture"
+								th:each="lecture, iterStat : ${lectureList}">
+								<td class="td_lecture_check_box"><input type="checkbox"
+									name="lecture_select" onclick="lectureCheckSelectAll()"
+									th:value="${lecture.lctrId}" class="lecture_checkbox_item">
+								</td>
+								<td class="td_lecture_num" th:text="${iterStat.index+1}"
+									onclick="selectLecture(this)"></td>
+								<td class="td_lecture_nm" onclick="selectLecture(this)"><span
+									class="lecture_span" th:text="${lecture.lctrNm}"></span></td>
+								<td class="td_lecture_subject" onclick="selectLecture(this)"><input
+									type="hidden" class="sbjt_id" th:value="${lecture.sbjtId}">
+									<span class="lecture_span" th:text="${lecture.sbjtNm}"></span></td>
+								<td class="td_lecture_professor" onclick="selectLecture(this)"><input
+									type="hidden" class="prof_id" th:value="${lecture.profId}">
+									<span class="lecture_span" th:text="${lecture.profNm}"></span></td>
+								<td class="td_lecture_tm" onclick="selectLecture(this)"><span
+									class="lecture_span" th:text="${lecture.lctrTm}"></span></td>
+								<td class="td_lecture_etc" onclick="selectLecture(this)"><span
+									class="lecture_span" th:text="${lecture.lctrEtc}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 리스트 -->
+			</div>
+			<!-- 강의 관리 -->
+		</div>
+
+		<div class="btn_wrap">
+			<button type="button" class="btn" onclick="self.close();">취소</button>
+		</div>
+	</div>
+	<script>
+	//강의 선택 이벤트
+	function selectLecture(lecture){
+		var trParent = lecture.closest('tr');
+		
+		var lctrId = trParent.querySelector(".td_lecture_check_box input[name='lecture_select']").value;
+		var lctrNm = trParent.querySelector(".td_lecture_nm span").innerHTML;
+		var sbjtNm = trParent.querySelector(".td_lecture_subject span").innerHTML;
+		var profNm = trParent.querySelector(".td_lecture_professor span").innerHTML;
+		var lctrTm = trParent.querySelector(".td_lecture_tm span").innerHTML;
+		var lctrEtc = trParent.querySelector(".td_lecture_etc span").innerHTML;
+				
+		// 값을 부모 창으로 JSON 객체로 전달
+		var values = {
+				lctrId : lctrId,
+				lctrNm : lctrNm,
+				sbjtNm : sbjtNm,
+				profNm : profNm,
+				lctrTm : lctrTm,
+				lctrEtc : lctrEtc,
+		};
+		window.opener.postMessage({
+			event : 'lectureSelected',
+			lctrId : lctrId,
+			lctrNm : lctrNm,
+			sbjtNm : sbjtNm,
+			profNm : profNm,
+			lctrTm : lctrTm,
+			lctrEtc : lctrEtc,
+		}, "*");
+		window.close(); // 팝업 창 닫기
+				
+		
+	}
+	
+	//강의 전체선택
+	function lectureSelectAll(selectAll){
+		//모든 체크박스들
+		const checkboxes = document.querySelectorAll('input[name="lecture_select"]');
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = selectAll.checked;
+		});
+	}
+	
+	//강의 개별 선택
+	function lectureCheckSelectAll(){
+		//전체선택 체크박스
+		const selectAll = document.querySelector('input[name="lecture_select_all"]');
+		//모든 체크박스
+		const checkboxes = document.querySelectorAll('input[name="lecture_select"]');
+		//선택된 체크박스
+		const checked = document.querySelectorAll('input[name="lecture_select"]:checked');
+		
+		if(checkboxes.length == checked.length){
+			selectAll.checked = true;
+		}else{
+			selectAll.checked = false;
+		}
+	}
+		
+	
+	</script>
+</body>
+</html>

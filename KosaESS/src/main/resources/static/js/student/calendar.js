@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			success: function(eventsData) {
 				var expList = eventsData.exp;
 				var IngList = eventsData.Ing;
-				console.log(eventsData);
 				var transformedEvents = [];
 				for (var i = 0; i < expList.length; i++) {
 					var event = {

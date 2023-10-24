@@ -33,7 +33,7 @@
 }
 
 .home-section .content_middle {
-	margin: 40px;
+	margin: 40px 40px 0 40px;
 	display: flex;
 	justify-content: space-between;
 	border-top: 2px solid #0E5881;
@@ -87,7 +87,7 @@
 }
 
 .home-section .content_bottom {
-	margin: 40px;
+	margin: 10px 40px 40px 40px;
 }
 
 .home-section .content_bottom .content_info_wrap {
@@ -96,6 +96,7 @@
 	font-weight: bold;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 .home-section .content_bottom .content_info_wrap .class_list_cnt {
@@ -165,7 +166,8 @@
 	color: #0E5881;
 }
 
-.student_check, .student_num, .student_name, .student_gender, .student_birthday, .student_tel, .student_job, .student_status{
+.student_check, .student_num, .student_name, .student_gender,
+	.student_birthday, .student_tel, .student_job, .student_status {
 	text-align: center;
 }
 
@@ -173,11 +175,11 @@
 	color: #0E5881;
 }
 
-.red{
+.red {
 	color: red;
 }
 
-.blue{
+.blue {
 	color: blue;
 }
 
@@ -187,7 +189,7 @@
 	color: green;
 }
 
-#excel_btn > img{
+#excel_btn>img {
 	margin-right: 5px;
 }
 
@@ -202,7 +204,7 @@
 	text-decoration: none;
 }
 
-.pagination li a{
+.pagination li a {
 	color: black;
 	font-weight: bold;
 	text-decoration: none;
@@ -214,8 +216,8 @@
 	border-radius: 5px;
 }
 
-.pagination li.active a{
-	color:white;
+.pagination li.active a {
+	color: white;
 }
 
 .pagination li:hover:not(.active) {
