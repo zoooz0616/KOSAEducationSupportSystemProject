@@ -729,10 +729,10 @@ public class AdminController {
 				curriculumDetailList.add(curriculumDetailDTO);
 			}
 		}
-		
+
 		System.out.println("##############################");
 		System.out.println(curriculumDetailList);
-		
+
 		model.addAttribute("curriculumDetailList", curriculumDetailList);
 
 		return "admin/class_form";
@@ -874,6 +874,7 @@ public class AdminController {
 						fileVO.setFileSize(file.getSize());
 						fileVO.setFileType(file.getContentType());
 						fileVO.setFileContent(file.getBytes());
+						fileVO.setRgsterId("MNGR000001");
 						fileList.add(fileVO);
 						subFileId++;
 					}
@@ -1414,6 +1415,48 @@ public class AdminController {
 	}
 
 	/**
+	 * 과목 생성 팝업 페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 25.
+	 * @parameter :
+	 * @return : String
+	 */
+	@RequestMapping("/subject/insert")
+	public String insertSubject() {
+
+		return "admin/insert_subject_popup";
+	}
+
+	/**
+	 * 과목 생성 POST
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : sbjtNm
+	 * @return : String
+	 */
+	@PostMapping("/subject/insert")
+	@ResponseBody
+	public String insertSubject(HttpSession session, @RequestParam("subjectInput") String sbjtNm) {
+		// 과목명이 중복되는지 확인 후 중복되면 return 실패보내기
+		// sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
+		Integer sbjtNmCnt = adminService.getSubjectNmCnt(sbjtNm);
+		if (sbjtNmCnt != 0) {
+			return "fail";
+		} else {
+			SubjectVO subjectVO = new SubjectVO();
+			subjectVO.setSbjtId(adminService.getMaxSubjectId());
+			subjectVO.setSbjtNm(sbjtNm);
+			subjectVO.setRgsterId((String) session.getAttribute("mngrId"));
+			adminService.insertSubjectVO(subjectVO);
+
+			// 없는 이름이면 객체 생성해서 insert하기
+			return "success";
+		}
+	}
+
+	/**
 	 * 강의 생성 - 강사 선택 팝업 페이지
 	 * 
 	 * @author : eunji
@@ -1427,6 +1470,51 @@ public class AdminController {
 		model.addAttribute("professorList", professorList);
 
 		return "admin/select_professor_popup";
+	}
+
+	/**
+	 * 강사 생성 팝업 페이지
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 10. 25.
+	 * @parameter :
+	 * @return : String
+	 */
+	@RequestMapping("/professor/insert")
+	public String insertProfessor() {
+		return "admin/insert_professor_popup";
+	}
+
+	/**
+	 * 강사 생성
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 14.
+	 * @parameter : profNm, profTel, profEmail
+	 * @return : String
+	 */
+	@PostMapping("/professor/insert")
+	@ResponseBody
+	public String insertProfessor(HttpSession session, @RequestParam("profNm") String profNm,
+			@RequestParam("profTel") String profTel, @RequestParam("profEmail") String profEmail) {
+		// 전화번호가 중복되는지 확인 후 중복되면 return 실패보내기
+		// sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
+		Integer profTelCnt = adminService.getProfTelCnt(profTel, profEmail);
+
+		if (profTelCnt != 0) {
+			return "fail";
+		} else {
+			ProfessorVO professorVO = new ProfessorVO();
+			professorVO.setProfId(adminService.getMaxProfId());
+			professorVO.setProfNm(profNm);
+			professorVO.setProfTel(profTel);
+			professorVO.setProfEmail(profEmail);
+			professorVO.setRgsterId((String)session.getAttribute("mngrId"));
+			adminService.insertProfessorVO(professorVO);
+
+			// 없는 이름이면 객체 생성해서 insert하기
+			return "success";
+		}
 	}
 
 	/**
@@ -1459,64 +1547,6 @@ public class AdminController {
 
 			adminService.insertLectureVO(lectureVO);
 
-			return "success";
-		}
-	}
-
-	/**
-	 * 과목 생성
-	 * 
-	 * @author : eunji
-	 * @date : 2023. 9. 14.
-	 * @parameter : sbjtNm
-	 * @return : String
-	 */
-	@PostMapping("/lecture/subject/insert")
-	@ResponseBody
-	public String insertSubject(@RequestParam("subjectInput") String sbjtNm) {
-		// 과목명이 중복되는지 확인 후 중복되면 return 실패보내기
-		// sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
-		Integer sbjtNmCnt = adminService.getSubjectNmCnt(sbjtNm);
-		if (sbjtNmCnt != 0) {
-			return "fail";
-		} else {
-			SubjectVO subjectVO = new SubjectVO();
-			subjectVO.setSbjtId(adminService.getMaxSubjectId());
-			subjectVO.setSbjtNm(sbjtNm);
-			adminService.insertSubjectVO(subjectVO);
-
-			// 없는 이름이면 객체 생성해서 insert하기
-			return "success";
-		}
-	}
-
-	/**
-	 * 강사 생성
-	 * 
-	 * @author : eunji
-	 * @date : 2023. 9. 14.
-	 * @parameter : profNm, profTel, profEmail
-	 * @return : String
-	 */
-	@PostMapping("/lecture/professor/insert")
-	@ResponseBody
-	public String insertProfessor(@RequestParam("profNmInput") String profNm,
-			@RequestParam("profTelInput") String profTel, @RequestParam("profEmailInput") String profEmail) {
-		// 전화번호가 중복되는지 확인 후 중복되면 return 실패보내기
-		// sql에서 대문자로 변경 후 공백 제거한 것으로 비교.
-		Integer profTelCnt = adminService.getProfTelCnt(profTel);
-
-		if (profTelCnt != 0) {
-			return "fail";
-		} else {
-			ProfessorVO professorVO = new ProfessorVO();
-			professorVO.setProfId(adminService.getMaxProfId());
-			professorVO.setProfNm(profNm);
-			professorVO.setProfTel(profTel);
-			professorVO.setProfEmail(profEmail);
-			adminService.insertProfessorVO(professorVO);
-
-			// 없는 이름이면 객체 생성해서 insert하기
 			return "success";
 		}
 	}
@@ -1579,55 +1609,71 @@ public class AdminController {
 	}
 
 	/**
-	 * 강의 리스트 불러오기
+	 * 강의 검색
 	 * 
 	 * @author : eunji
 	 * @date : 2023. 10. 5.
 	 * @parameter :
 	 * @return : LectureListDTO
 	 */
-	@GetMapping("/lecture/getlecturelist")
+	@GetMapping("/lecture/search")
 	@ResponseBody
-	public LectureListDTO getLectureList() {
+	public Map<String, Object> searchLecture(@RequestParam(name="lctrNm", required = false)String lctrNm,
+			@RequestParam(name="sbjtId", required = false)String sbjtId,
+			@RequestParam(name="profId", required = false)String profId) {
+		Map<String, Object> response = new HashMap<String, Object>();
 
-		List<LectureVO> lectureList = adminService.getLectureList();
+		List<LectureVO> lectureList = adminService.getSearchLectureList(lctrNm.trim(), sbjtId, profId);
+		response.put("lectureList", lectureList);
+
 		List<SubjectVO> subjectList = adminService.getSubjectList();
+		response.put("subjectList", subjectList);
+		
 		List<ProfessorVO> professorList = adminService.getProfessorList();
-
-		return new LectureListDTO(lectureList, subjectList, professorList);
+		response.put("professorList", professorList);
+		
+		
+		return response;
 	}
 
 	/**
-	 * 과목 리스트 불러오기
+	 * 과목 검색
 	 * 
 	 * @author : eunji
-	 * @date : 2023. 10. 5.
-	 * @parameter :
-	 * @return : List<SubjectVO>
+	 * @date : 2023. 10. 25.
+	 * @parameter : 
+	 * @return : Map<String, Object>
 	 */
-	@GetMapping("/lecture/getsubjectlist")
+	@GetMapping("/subject/search")
 	@ResponseBody
-	public List<SubjectVO> getSubjectList() {
-		List<SubjectVO> subjectList = adminService.getSubjectList();
-
-		return subjectList;
+	public Map<String, Object> searchSubject(@RequestParam(name = "sbjtNm", required = false) String sbjtNm) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<SubjectVO> subjectList = adminService.getSearchSubjectList(sbjtNm.trim());
+		response.put("subjectList", subjectList);
+		
+		return response;
 	}
-
+	
 	/**
-	 * 강사 리스트 불러오기
+	 * 강사 검색
 	 * 
 	 * @author : eunji
-	 * @date : 2023. 10. 5.
-	 * @parameter :
-	 * @return : List<ProfessorVO>
+	 * @date : 2023. 10. 25.
+	 * @parameter : 
+	 * @return : Map<String, Object>
 	 */
-	@GetMapping("/lecture/getprofessorlist")
+	@GetMapping("/professor/search")
 	@ResponseBody
-	public List<ProfessorVO> getProfessorList() {
-		List<ProfessorVO> professorList = adminService.getProfessorList();
-
-		return professorList;
+	public Map<String, Object> searchProfessor(@RequestParam(name = "keyword", required = false) String keyword) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<ProfessorVO> professorList = adminService.getSearchProfessorList(keyword.trim());
+		response.put("professorList", professorList);
+		
+		return response;
 	}
+	
 
 	/**
 	 * 강의 선택삭제

@@ -273,8 +273,8 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public Integer getProfTelCnt(String profTel) {
-		return adminRepository.getProfTelCnt(profTel);
+	public Integer getProfTelCnt(String profTel,  String profEmail) {
+		return adminRepository.getProfTelCnt(profTel, profEmail);
 	}
 
 	@Override
@@ -733,5 +733,20 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<ManagerVO> getManagerListAllByInsert() {
 		return adminRepository.getManagerListAllByInsert();
+	}
+	
+	@Override
+	public List<SubjectVO> getSearchSubjectList(String sbjtNm) {
+		return adminRepository.getSearchSubjectList(sbjtNm);
+	}
+	
+	@Override
+	public List<ProfessorVO> getSearchProfessorList(String keyword) {
+		return adminRepository.getSearchProfessorList(keyword);
+	}
+	
+	@Override
+	public List<LectureVO> getSearchLectureList(String lctrNm, String sbjtId, String profId) {
+		return adminRepository.getSearchLectureList(lctrNm, sbjtId, profId);
 	}
 }
