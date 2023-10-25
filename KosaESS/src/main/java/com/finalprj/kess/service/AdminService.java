@@ -129,8 +129,10 @@ public class AdminService implements IAdminService {
 	}
 
 	@Override
-	public List<LectureVO> getLectureList() {
-		return adminRepository.getLectureList();
+	public List<LectureVO> getLectureList(int page) {
+		int start = (page - 1) * 20 + 1;
+		
+		return adminRepository.getLectureList(start, start + 19);
 	}
 
 	@Override
@@ -748,5 +750,10 @@ public class AdminService implements IAdminService {
 	@Override
 	public List<LectureVO> getSearchLectureList(String lctrNm, String sbjtId, String profId) {
 		return adminRepository.getSearchLectureList(lctrNm, sbjtId, profId);
+	}
+	
+	@Override
+	public List<LectureVO> getLectureListAll() {
+		return adminRepository.getLectureListAll();
 	}
 }

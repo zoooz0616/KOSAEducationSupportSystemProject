@@ -50,7 +50,7 @@ public interface IAdminService {
 	String getMaxClassId();
 	List<CompanyVO> getCompanyList(int page);
 	List<ManagerVO> getManagerList(int page);
-	List<LectureVO> getLectureList();
+	List<LectureVO> getLectureList(int page);
 
 	SubjectVO getSubject(String lectureId);
 	ProfessorVO getProfessor(String lectureId);
@@ -189,4 +189,6 @@ public interface IAdminService {
 	List<SubjectVO> getSearchSubjectList(String sbjtNm);
 	List<ProfessorVO> getSearchProfessorList(String keyword);
 	List<LectureVO> getSearchLectureList(String lctrNm, String sbjtId, String profId);
+
+	List<LectureVO> getLectureListAll();
 }

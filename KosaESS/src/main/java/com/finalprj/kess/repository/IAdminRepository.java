@@ -48,7 +48,7 @@ public interface IAdminRepository {
 	String getMaxClassId();
 	List<CompanyVO> getCompanyList(@Param("start")int start, @Param("end")int end);
 	List<ManagerVO> getManagerList(@Param("start")int start, @Param("end")int end);
-	List<LectureVO> getLectureList();
+	List<LectureVO> getLectureList(@Param("start")int start, @Param("end")int end);
 	
 	SubjectVO getSubject(String lectureId);
 	ProfessorVO getProfessor(String lectureId);
@@ -180,5 +180,7 @@ public interface IAdminRepository {
 	List<SubjectVO> getSearchSubjectList(String sbjtNm);
 	List<ProfessorVO> getSearchProfessorList(String keyword);
 	List<LectureVO> getSearchLectureList(String lctrNm, String sbjtId, String profId);
+
+	List<LectureVO> getLectureListAll();
 
 }

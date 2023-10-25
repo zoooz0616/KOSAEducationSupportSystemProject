@@ -170,8 +170,6 @@ public class AdminController {
 	 */
 	@GetMapping("/notice/list/{page}")
 	public String noticeList(@PathVariable int page, HttpSession session, Model model) {
-		session.setAttribute("page", page);
-
 		// 공지사항 상태 리스트 전달
 		List<CommonCodeVO> noticeCommonCodeList = adminService.getNoticeCommonCodeList("GRP0000001");
 		model.addAttribute("noticeCommonCodeList", noticeCommonCodeList);
@@ -183,6 +181,8 @@ public class AdminController {
 		// 공지사항 모든 리스트 전달
 		List<PostVO> noticeListAll = adminService.getNoticeListAll();
 		session.setAttribute("searchNoticeList", noticeListAll);
+
+		session.setAttribute("page", page);
 
 		int bbsCount = adminService.getNoticeCnt();
 		model.addAttribute("noticeCnt", bbsCount);
@@ -779,7 +779,7 @@ public class AdminController {
 		model.addAttribute("managerList", managerList);
 
 		// 강의 리스트
-		List<LectureVO> lectureList = adminService.getLectureList();
+		List<LectureVO> lectureList = adminService.getLectureListAll();
 		model.addAttribute("lectureList", lectureList);
 
 		return "admin/class_form";
@@ -831,7 +831,7 @@ public class AdminController {
 	public String selectLectureByInsertClass(Model model) {
 		// insert때 사용가능한 강의만 보내기
 		// 강의 리스트
-		List<LectureVO> lectureList = adminService.getLectureList();
+		List<LectureVO> lectureList = adminService.getLectureListAll();
 		model.addAttribute("lectureList", lectureList);
 
 		return "admin/select_lecture_popup";
@@ -1042,7 +1042,7 @@ public class AdminController {
 		model.addAttribute("managerList", managerList);
 
 		// 강의 리스트
-		List<LectureVO> lectureList = adminService.getLectureList();
+		List<LectureVO> lectureList = adminService.getLectureListAll();
 		model.addAttribute("lectureList", lectureList);
 
 		return "admin/class_form";
@@ -1367,11 +1367,15 @@ public class AdminController {
 	 * @parameter : model, session
 	 * @return : String
 	 */
-	@RequestMapping("/lecture/list")
-	public String lecture(HttpSession session, Model model) {
-		// 강의 리스트 생성
-		List<LectureVO> lectureList = adminService.getLectureList();
+	@RequestMapping("/lecture/list/{page}")
+	public String lecture(@PathVariable int page, HttpSession session, Model model) {
+		// 강의 리스트 페이지 생성
+		List<LectureVO> lectureList = adminService.getLectureList(page);
 		model.addAttribute("lectureList", lectureList);
+
+		// 강의 all 페이지 생성
+		List<LectureVO> lectureListAll = adminService.getLectureListAll();
+		model.addAttribute("lectureListAll", lectureListAll);
 
 		// 과목 리스트 생성
 		List<SubjectVO> subjectList = adminService.getSubjectList();
@@ -1380,6 +1384,31 @@ public class AdminController {
 		// 강사 리스트 생성
 		List<ProfessorVO> professorList = adminService.getProfessorList();
 		model.addAttribute("professorList", professorList);
+
+		session.setAttribute("page", page);
+
+		int bbsCount = adminService.getNoticeCnt();
+		model.addAttribute("noticeCnt", bbsCount);
+		int totalPage = 0;
+		if (bbsCount > 0) {
+			totalPage = (int) Math.ceil(bbsCount / 20.0);
+		}
+
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 
 		return "admin/lecture_list";
 	}
@@ -1509,7 +1538,7 @@ public class AdminController {
 			professorVO.setProfNm(profNm);
 			professorVO.setProfTel(profTel);
 			professorVO.setProfEmail(profEmail);
-			professorVO.setRgsterId((String)session.getAttribute("mngrId"));
+			professorVO.setRgsterId((String) session.getAttribute("mngrId"));
 			adminService.insertProfessorVO(professorVO);
 
 			// 없는 이름이면 객체 생성해서 insert하기
@@ -1618,9 +1647,9 @@ public class AdminController {
 	 */
 	@GetMapping("/lecture/search")
 	@ResponseBody
-	public Map<String, Object> searchLecture(@RequestParam(name="lctrNm", required = false)String lctrNm,
-			@RequestParam(name="sbjtId", required = false)String sbjtId,
-			@RequestParam(name="profId", required = false)String profId) {
+	public Map<String, Object> searchLecture(@RequestParam(name = "lctrNm", required = false) String lctrNm,
+			@RequestParam(name = "sbjtId", required = false) String sbjtId,
+			@RequestParam(name = "profId", required = false) String profId) {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		List<LectureVO> lectureList = adminService.getSearchLectureList(lctrNm.trim(), sbjtId, profId);
@@ -1628,11 +1657,10 @@ public class AdminController {
 
 		List<SubjectVO> subjectList = adminService.getSubjectList();
 		response.put("subjectList", subjectList);
-		
+
 		List<ProfessorVO> professorList = adminService.getProfessorList();
 		response.put("professorList", professorList);
-		
-		
+
 		return response;
 	}
 
@@ -1641,39 +1669,38 @@ public class AdminController {
 	 * 
 	 * @author : eunji
 	 * @date : 2023. 10. 25.
-	 * @parameter : 
+	 * @parameter :
 	 * @return : Map<String, Object>
 	 */
 	@GetMapping("/subject/search")
 	@ResponseBody
 	public Map<String, Object> searchSubject(@RequestParam(name = "sbjtNm", required = false) String sbjtNm) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		
+
 		List<SubjectVO> subjectList = adminService.getSearchSubjectList(sbjtNm.trim());
 		response.put("subjectList", subjectList);
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * 강사 검색
 	 * 
 	 * @author : eunji
 	 * @date : 2023. 10. 25.
-	 * @parameter : 
+	 * @parameter :
 	 * @return : Map<String, Object>
 	 */
 	@GetMapping("/professor/search")
 	@ResponseBody
 	public Map<String, Object> searchProfessor(@RequestParam(name = "keyword", required = false) String keyword) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		
+
 		List<ProfessorVO> professorList = adminService.getSearchProfessorList(keyword.trim());
 		response.put("professorList", professorList);
-		
+
 		return response;
 	}
-	
 
 	/**
 	 * 강의 선택삭제
