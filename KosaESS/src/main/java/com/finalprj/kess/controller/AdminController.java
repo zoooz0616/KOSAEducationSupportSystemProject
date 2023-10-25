@@ -1376,6 +1376,7 @@ public class AdminController {
 		// 강의 all 페이지 생성
 		List<LectureVO> lectureListAll = adminService.getLectureListAll();
 		model.addAttribute("lectureListAll", lectureListAll);
+		session.setAttribute("searchLectureList", lectureListAll);
 
 		// 과목 리스트 생성
 		List<SubjectVO> subjectList = adminService.getSubjectList();

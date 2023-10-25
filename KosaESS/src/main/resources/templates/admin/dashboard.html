@@ -19,132 +19,85 @@
 
 		<!-- content wrap-->
 		<div class="content_wrap">
-			<!-- total content wrap -->
-			<div class="row">
-				<div class="col">
-					<div class="small-box bg-aqua">
-						<div class="inner">
-							<h3 th:text="${noticeCnt}">count</h3>
-							<p>공지사항</p>
+			<div class="content_top" style="display: flex;">
+				<!-- chart content wrap -->
+				<div class="chart_content_wrap"
+					style="width: 50%; height: 400px; background: black;">
+				</div>
+				<!-- chart content wrap -->
+
+				<!-- total content wrap -->
+				<div class="total_content_wrap"
+					style="width: 50%; height: 400px;">
+					<div class="row">
+						<div class="col">
+							<div class="small-box bg-aqua">
+								<div class="inner">
+									<h3 th:text="${noticeCnt}">count</h3>
+									<p>기업</p>
+								</div>
+								<div class="icon">
+									<i class="ion ion-bag"></i>
+								</div>
+								<a th:href="@{/admin/company/list/1}" class="small-box-footer">바로가기
+									 <i class="fa fa-arrow-circle-right"></i>
+								</a>
+							</div>
 						</div>
-						<div class="icon">
-							<i class="ion ion-bag"></i>
+
+						<div class="col">
+							<div class="small-box bg-green">
+								<div class="inner">
+									<h3 th:text="${companyCnt}">count</h3>
+									<p>강의</p>
+								</div>
+								<div class="icon">
+									<i class="ion ion-bag"></i>
+								</div>
+								<a th:href="@{/admin/lecture/list/1}" class="small-box-footer">바로가기
+									 <i class="fa fa-arrow-circle-right"></i>
+								</a>
+							</div>
 						</div>
-						<a th:href="@{/admin/notice}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<div class="small-box bg-red">
+								<div class="inner">
+									<h3 th:text="${managerCnt}">count</h3>
+									<p>교육과정</p>
+								</div>
+								<div class="icon">
+									<i class="ion ion-stats-bars"></i>
+								</div>
+								<a th:href="@{/admin/class/list/1}" class="small-box-footer">바로가기
+									<i class="fa fa-arrow-circle-right"></i>
+								</a>
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="small-box bg-yellow">
+								<div class="inner">
+									<h3 th:text="${classCnt}">count</h3>
+									<p>교육생</p>
+								</div>
+								<div class="icon">
+									<i class="ion ion-stats-bars"></i>
+								</div>
+								<a th:href="@{/admin/student/list/1}" class="small-box-footer">바로가기
+									<i class="fa fa-arrow-circle-right"></i>
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
-
-				<div class="col">
-					<div class="small-box bg-aqua">
-						<div class="inner">
-							<h3 th:text="${inquiryCnt}">count</h3>
-							<p>문의사항</p>
-						</div>
-						<div class="icon">
-							<i class="fa-solid fa-user"></i>
-						</div>
-						<a th:href="@{/admin/inquiry}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-
-
-				<div class="col">
-					<div class="small-box bg-green">
-						<div class="inner">
-							<h3 th:text="${companyCnt}">count</h3>
-							<p>기업</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-bag"></i>
-						</div>
-						<a th:href="@{/admin/company}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-				<div class="col">
-					<div class="small-box bg-yellow">
-						<div class="inner">
-							<h3 th:text="${subjectCnt}">count</h3>
-							<p>과목</p>
-						</div>
-						<div class="icon">
-							<i class="fa-solid fa-user"></i>
-						</div>
-						<a th:href="@{/admin/subject}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-				<div class="col">
-					<div class="small-box bg-red">
-						<div class="inner">
-							<h3 th:text="${professorCnt}">count</h3>
-							<p>강사</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-bag"></i>
-						</div>
-						<a th:href="@{/admin/professor}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-				<div class="col">
-					<div class="small-box bg-red">
-						<div class="inner">
-							<h3 th:text="${managerCnt}">count</h3>
-							<p>업무 담당자</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-stats-bars"></i>
-						</div>
-						<a th:href="@{/admin/manager}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-				<div class="col">
-					<div class="small-box bg-red">
-						<div class="inner">
-							<h3 th:text="${studentCnt}">count</h3>
-							<p>교육생</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-bag"></i>
-						</div>
-						<a th:href="@{/admin/student}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-				<div class="col">
-					<div class="small-box bg-yellow">
-						<div class="inner">
-							<h3 th:text="${classCnt}">count</h3>
-							<p>교육과정</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-stats-bars"></i>
-						</div>
-						<a th:href="@{/admin/class}" class="small-box-footer">More
-							info <i class="fa fa-arrow-circle-right"></i>
-						</a>
-					</div>
-				</div>
-
-
+				<!-- total content wrap -->
 			</div>
+
+
+			
 			<div class="section_wrap">
 				<section class="left_section">
 					<div class="section_content">

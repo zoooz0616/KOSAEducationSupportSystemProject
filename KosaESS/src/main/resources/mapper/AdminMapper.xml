@@ -1447,14 +1447,10 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			rgst.rgster_id,
 			rgst.updt_dt,
 			rgst.updter_id,
-			rgst.file_id,
-			flup.file_sub_id,
-			flup.file_nm,
 			clss.clss_nm,
 			c.cmcd_nm	as "rgstNm",
 			r.cmcd_nm	as "cmptNm"
 		from rgst
-		left join flup on flup.file_id = rgst.file_id
 		left join clss on clss.clss_id = rgst.clss_id
 		left join cmcd c on c.cmcd_id = clss.clss_cd
 		left join cmcd r on r.cmcd_id = rgst.cmpt_cd
