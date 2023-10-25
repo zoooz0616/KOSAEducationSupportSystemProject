@@ -565,7 +565,7 @@
 	<!-- 이수 테이블 aplyId MAX값 가져오기 -->
 	<select id="getMaxAplyId" resultType="string">
 	<![CDATA[
-		select 'APLY'||LPAD((max(cast(substr(aply_id,5) as number(6)))+1),6,'0')
+		select 'APLY'||LPAD((NVL(max(cast(substr(aply_id,5) as number(6))),0)+1),6,'0')
 		from aply
 	]]>
 	</select>
@@ -671,7 +671,7 @@
 	<!-- 수강 테이블 RegistrationId MAX값 가져오기 -->
 	<select id="getMaxRegistrationId" resultType="string">
 	<![CDATA[
-		select 'RGST'||LPAD((max(cast(substr(rgst_id,5) as number(6)))+1),6,'0')
+		select 'RGST'||LPAD((NVL(max(cast(substr(rgst_id,5) as number(6))),0)+1),6,'0')
 		from rgst
 	]]>
 	</select>
@@ -902,7 +902,7 @@
 	<!-- 출퇴근 Id MAX값 가져오기 -->
 	<select id="getMaxWlogId" resultType="string">
 	<![CDATA[
-		select 'WLOG'||LPAD((max(cast(substr(wlog_id,5) as number(6)))+1),6,'0')
+		select 'WLOG'||LPAD((NVL(max(cast(substr(wlog_id,5) as number(6))),0)+1),6,'0')
 		from wlog
 	]]>
 	</select>
@@ -1020,7 +1020,7 @@
 	<!-- 문의 사항 postId MAX값 가져오기 -->
 	<select id="getMaxPostId" resultType="string">
 	<![CDATA[
-		select 'INQY'||LPAD((max(cast(substr(post_id,5) as number(6)))+1),6,'0')
+		select 'INQY'||LPAD((NVL(max(cast(substr(post_id,5) as number(6))),0)+1),6,'0')
 		from post
 		where post_id like 'INQY%'
 	]]>
