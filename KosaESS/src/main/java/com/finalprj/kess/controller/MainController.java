@@ -53,6 +53,12 @@ public class MainController {
 	@Autowired
 	IUploadFileService uploadFileService;
 
+	@GetMapping("/")
+	public String main(){
+		return "redirect:/student";
+	}
+	
+	
 	/**
 	 * @updater : seungwoo
 	 * @update : 2023. 9. 8.

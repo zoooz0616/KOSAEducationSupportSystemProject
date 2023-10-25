@@ -49,6 +49,11 @@ button {
 	background-color: #0E5881;
 	color: white;
 	margin: 0 2%;
+	cursor: pointer;
+}
+
+label {
+	cursor: pointer;
 }
 
 th {

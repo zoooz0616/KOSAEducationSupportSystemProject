@@ -75,7 +75,7 @@
 
 	<select id="getMaxStdtId" resultType="string">
 	<![CDATA[
-	select 'STDT'||LPAD((max(cast(substr(stdt_id,5) as number(6)))+1),6,'0')
+	select 'STDT'||LPAD((NVL(max(cast(substr(stdt_id,5) as number(6))),0)+1),6,'0')
 	from STDT
 	]]>
 	</select>
