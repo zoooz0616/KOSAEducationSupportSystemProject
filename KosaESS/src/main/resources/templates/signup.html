@@ -159,7 +159,7 @@
 						<span class="signup-input"
 							style="width: 100%; margin: 10px 0px 0px 0px"> <input
 							id="signup-phone" type="text" placeholder="전화번호 입력"
-							name="stdtTel" oninput="autoHyphen(this)" maxlength='9'></input>
+							name="stdtTel" oninput="autoHyphen(this)" maxlength='13'></input>
 						</span>
 					</div>
 				</div>
@@ -498,11 +498,12 @@
 			}
 		}
 	} 
+	//전화번호 입력
 	const autoHyphen = (target) => {
-		 target.value = target.value
-		   .replace(/[^0-9]/g, '')
-		  .replace(/^(\d{0,4})(\d{0,4})$/g, "$1-$2").replace(/(\-{1,2})$/g, "");
-		}
+ target.value = target.value
+   .replace(/[^0-9]/g, '')
+  .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+}
 	</script>
 </body>
 
