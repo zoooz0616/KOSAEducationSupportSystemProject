@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>KOSA 교육지원시스템</title>
+</head>
+<head>
+<link th:href="@{/css/admin/insert_manager_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>강사 등록</h2>
+	<div class="insert_wrap">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">이름<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertProfessor()}"
+				class="input_professor_name" placeholder="이름(한글 최대 10자/영문 최대 30자)" maxlength="30"></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">연락처<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertProfessor()}"
+				class="input_professor_tel" placeholder="연락처" oninput="autoHyphen(this)" maxlength="13" 
+				></td>
+			</tr>
+			<tr class="input_wrap">
+				<th><span class="title">이메일<span class="red">*</span></span></th>
+				<td><input type="text" onkeyup="if(window.event.keyCode==13){insertProfessor()}"
+				class="input_professor_email" placeholder="이메일"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="btn_wrap">
+		<button class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertProfessor();">확인</button>
+	</div>
+	<script>	
+	
+	//강사등록
+	function insertProfessor() {
+		//input에 강사명, 전화번호, 이메일을 모두 입력했는지 확인
+		var profNm = document.querySelector(".input_professor_name").value;
+		var profTel = document.querySelector(".input_professor_tel").value;
+		var profEmail = document.querySelector(".input_professor_email").value;
+
+		// 이메일 형식 검사
+		var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		
+		//모두 입력했는지 확인		
+		if (profNm == "" || profTel == "" || profEmail == "") {
+			alert("모든 필드를 입력해주세요.");
+		} else if (!emailPattern.test(profEmail)) {
+		    alert("올바른 이메일 형식을 입력하세요.");
+		} else {
+			//3개의 값을 보내서 전화번호로 중복 확인
+			$.ajax({
+				url : '/admin/professor/insert',
+				method : 'POST',
+				data : {
+					profNm : profNm,
+					profTel : profTel,
+					profEmail : profEmail
+				},
+				success : function(response) {
+					//실패면 alert(중복)띄우기
+					if (response == "fail") {
+						alert("이미 존재하는 강사입니다.");
+					} else if (response == "success") {
+						alert("강사가 추가되었습니다.");
+						opener.location.href="/admin/lecture/select/professor";
+						self.close();//팝업창 닫기
+					}
+				}
+			});
+		}
+	}
+	
+	//전화번호 입력
+	const autoHyphen = (target) => {
+ target.value = target.value
+   .replace(/[^0-9]/g, '')
+  .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+}
+	</script>
+</body>
+</html>

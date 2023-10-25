@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+<title>KOSA 교육지원시스템</title>
+</head>
+<head>
+<link th:href="@{/css/admin/insert_manager_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body style="overflow: hidden;">
+	<h2>과목 등록</h2>
+	<div class="insert_wrap">
+		<table>
+			<tr class="input_wrap">
+				<th><span class="title">과목명<span class="red">*</span></span></th>
+				<td><input type="text"
+					onkeyup="if(window.event.keyCode==13){insertSubject()}"
+					class="input_subject_name" placeholder="과목명(한글 최대 10자/영문 최대 30자)"
+					maxlength="30"></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="btn_wrap">
+		<button class="btn" onclick="self.close();">취소</button>
+		<button class="btn" onclick="insertSubject();">확인</button>
+	</div>
+	<script>	
+	
+	//등록하기
+	//과목 등록하기
+		function insertSubject() {
+			//input에 과목명 입력했는지 확인
+			//입력 안 했으면 과목명을 입력해주세요 띄우기
+			var subjectInput = document.querySelector(".input_subject_name").value;
+			if (subjectInput === "") {
+				alert("과목명을 입력해주세요.");
+			} else {
+				//비동기로 보내서 똑같은 과목명이 있는지 여부 확인
+				$.ajax({
+					url : '/admin/subject/insert',
+					method : 'POST',
+					data : {
+						subjectInput : subjectInput
+					},
+					success : function(response) {
+						//실패면 alert(중복)띄우기
+						if (response == "fail") {
+							alert("이미 존재하는 과목입니다.");
+						} else if (response == "success") {
+							//성공하면 과목이 추가되었습니다. alert띄우고 location여기로 다시 이동
+							alert("과목이 추가되었습니다.");
+							opener.location.href="/admin/lecture/select/subject";
+							self.close();//팝업창 닫기
+						}
+					}
+				});
+			}
+		}
+	</script>
+</body>
+</html>

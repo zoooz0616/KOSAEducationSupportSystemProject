@@ -30,8 +30,6 @@ import com.finalprj.kess.model.SubjectVO;
 public interface IAdminRepository {
 	int getWaitClassCnt();
 	
-	
-
 	int getNoticeCnt();
 	int getInquiryCnt();
 	int getCompanyCnt();
@@ -78,7 +76,7 @@ public interface IAdminRepository {
 	Integer getSubjectNmCnt(String sbjtNm);
 	String getMaxSubjectId();
 	void insertSubjectVO(SubjectVO subjectVO);
-	Integer getProfTelCnt(String profTel);
+	Integer getProfTelCnt(String profTel, String profEmail);
 	String getMaxProfId();
 	void insertProfessorVO(ProfessorVO professorVO);
 	Integer getLctrNmCnt(String lctrNm);
@@ -178,5 +176,9 @@ public interface IAdminRepository {
 	List<SubsidyDTO> getSearchSubsidyList(String clssId, String startDate, String endDate, String keyword, String subsidyStatus);
 
 	List<ManagerVO> getManagerListAllByInsert();
+		
+	List<SubjectVO> getSearchSubjectList(String sbjtNm);
+	List<ProfessorVO> getSearchProfessorList(String keyword);
+	List<LectureVO> getSearchLectureList(String lctrNm, String sbjtId, String profId);
 
 }

@@ -228,3 +228,19 @@ button {
 	align-items: center;
 	justify-content: space-between;
 }
+
+.filter_box button {
+	width: 23px;
+	height: 23px;
+	background: #9FBCCD;
+	display: flex;
+	border: none;
+	border-radius: 4px;
+	margin: 0px 5px;
+	align-items: center;
+	justify-content: space-around;
+}
+
+button img {
+	width: 20px;
+}
