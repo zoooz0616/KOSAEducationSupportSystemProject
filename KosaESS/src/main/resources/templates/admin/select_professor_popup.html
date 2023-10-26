@@ -13,47 +13,48 @@
 
 	<div class="select_wrap">
 		<div class="search_wrap">
-			<input class="search_input" type="text" placeholder="강사명을 입력하세요.">
-			<button class="search_btn">조회</button>
+			<input class="search_input" type="text" placeholder="강사명/이메일을 입력하세요."
+				onkeyup="if(window.event.keyCode==13){search()}">
+			<button class="search_btn" onclick="search()">조회</button>
 		</div>
+
+		<!-- 총 개수 및 버튼-->
+		<div class="content_info_wrap">
+			<div style="margin-left: 5px;">
+				총 <span class="cnt professor_cnt"
+					th:text="${#lists.size(professorList)}"></span> 건
+			</div>
+			<div class="content_info_button_wrap">
+				<button class="insert_btn" type="button"
+					onclick="showInsertProfessorPopup()">
+					<img th:src="@{/img/plus_white.png}">등록하기
+				</button>
+
+				<button id="professor_delete_btn">
+					<img th:src="@{/img/minus_white.png}"> <span>선택삭제</span>
+				</button>
+
+				<button id="professor_update_btn" onclick="enterProfessorEditMode()">
+					<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
+				</button>
+
+				<button id="professor_cancel_btn" style="display: none;"
+					onclick="cancelProfessorEditMode()">
+					<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
+				</button>
+
+				<button id="professor_save_btn" onclick="saveProfessor()"
+					style="display: none;">
+					<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
+				</button>
+			</div>
+		</div>
+		<!-- 총 개수 및 버튼-->
+
+
 		<div class="company_list_wrap">
 			<!-- 강사 관리 -->
 			<div class="professor_wrap" style="height: 50%;">
-				<!-- 총 개수 및 버튼-->
-				<div class="content_info_wrap">
-					<div style="margin-left: 5px;">
-						총 <span class="cnt professor_cnt"
-							th:text="${#lists.size(professorList)}"></span> 건
-					</div>
-					<div class="content_info_button_wrap">
-						<button class="insert_btn" type="button"
-							onclick="insertProfessor()">
-							<img th:src="@{/img/plus_white.png}">등록하기
-						</button>
-
-						<button id="professor_delete_btn">
-							<img th:src="@{/img/minus_white.png}"> <span>선택삭제</span>
-						</button>
-
-						<button id="professor_update_btn"
-							onclick="enterProfessorEditMode()">
-							<img th:src="@{/img/update_white.png}"> <span>수정하기</span>
-						</button>
-
-						<button id="professor_cancel_btn" style="display: none;"
-							onclick="cancelProfessorEditMode()">
-							<img th:src="@{/img/x_white.png}"> <span>수정취소</span>
-						</button>
-
-						<button id="professor_save_btn" onclick="saveProfessor()"
-							style="display: none;">
-							<img th:src="@{/img/save_white.png}"> <span>저장하기</span>
-						</button>
-					</div>
-				</div>
-
-				<!-- 총 개수 및 버튼-->
-
 				<!-- 리스트 -->
 				<div class="table_wrap professor_table">
 					<table>
@@ -68,7 +69,7 @@
 								<th style="width: 35%;">이메일</th>
 							</tr>
 						</thead>
-						<tbody class="professoe_tbody">
+						<tbody class="professor_tbody">
 							<tr class="tr_professor"
 								th:each="professor, iterStat : ${professorList}">
 								<td class="td_professor_check_box"><input type="checkbox"
@@ -76,18 +77,20 @@
 									class="professor_checkbox_item" th:value="${professor.profId}">
 									<input type="hidden" class="professor_update_yn" value="N">
 								</td>
-								<td class="td_professor_num" th:text="${iterStat.index+1}" onclick="selectProfessor(this)"></td>
-								<td class="td_professor_nm"><span class="professor_span"  onclick="selectProfessor(this)"
-									th:text="${professor.profNm}"></span> <input
-									class="professor_input professor_nm"
+								<td class="td_professor_num" th:text="${iterStat.index+1}"
+									onclick="selectProfessor(this)"></td>
+								<td class="td_professor_nm"><span class="professor_span"
+									onclick="selectProfessor(this)" th:text="${professor.profNm}"></span>
+									<input class="professor_input professor_nm"
 									style="display: none; width: 100px;"
 									th:value="${professor.profNm}"></td>
-								<td class="td_professor_tel"><span class="professor_span"  onclick="selectProfessor(this)"
-									th:text="${professor.profTel}"></span> <input
-									class="professor_input professor_tel"
+								<td class="td_professor_tel"><span class="professor_span"
+									onclick="selectProfessor(this)" th:text="${professor.profTel}"></span>
+									<input class="professor_input professor_tel"
 									style="display: none; width: 100px;"
 									th:value="${professor.profTel}"></td>
-								<td class="td_professor_email"><span class="professor_span"  onclick="selectProfessor(this)"
+								<td class="td_professor_email"><span class="professor_span"
+									onclick="selectProfessor(this)"
 									th:text="${professor.profEmail}"></span> <input
 									class="professor_input professor_email"
 									style="display: none; width: 200px;"
@@ -125,6 +128,136 @@
 				profNm : profNm
 			}, "*");
 			window.close(); // 팝업 창 닫기
+		}
+		
+		//강사 검색하기
+		function search(){
+			var keyword = document.querySelector(".search_input").value;
+			
+			$.ajax({
+				url: '/admin/professor/search',
+				method: 'GET',
+				data : {
+					keyword : keyword
+				},
+				success : function(response){
+					var professorList = response.professorList;
+					
+					//tbody 비우기
+					const professorTbody = document.querySelector('.professor_tbody');
+					$('.professor_tbody').empty();
+					
+					//professor cnt 변경
+					var professorCnt = document.querySelector('.professor_cnt');
+					professorCnt.textContent = professorList.length;
+					
+					for(var i=0; i<professorList.length; i++){
+						var professor = professorList[i];
+						
+						var tr = document.createElement('tr');
+						tr.className = "tr_professor";
+						
+						var tdCheck = document.createElement('td');
+						tdCheck.className="td_professor_check_box";
+						var inputCheck = document.createElement('input');
+						inputCheck.type="checkbox";
+						inputCheck.name="professor_select";
+						inputCheck.onclick = function(){
+							professorCheckSelectAll();
+						}
+						inputCheck.className="professor_checkbox_item";
+						inputCheck.value = professor.profId;
+						var inputHidden = document.createElement('input');
+						inputHidden.type="hidden";
+						inputHidden.className ="professor_update_yn";
+						inputHidden.value ='N';
+						tdCheck.appendChild(inputCheck);
+						tdCheck.appendChild(inputHidden);
+						tr.appendChild(tdCheck);
+						
+						var tdNum = document.createElement('td');
+						tdNum.className ='td_professor_num';
+						tdNum.textContent = i+1;
+						tdNum.onClick = function(){
+							selectProfessor(this);
+						}
+						tr.appendChild(tdNum);
+						
+						var tdNm = document.createElement('td');
+						tdNm.className = 'td_professor_nm';
+						var spanNm = document.createElement('span');
+						spanNm.className = 'professor_span';
+						spanNm.onClick = function(){
+							selectProfessor(this);
+						}
+						spanNm.textContent = professor.profNm;
+						var inputNm = document.createElement('input');
+						inputNm.className ='professor_input professor_nm';
+						inputNm.style.display = 'none';
+						inputNm.style.width = '100px';
+						inputNm.value = professor.profNm;
+						tdNm.appendChild(spanNm);
+						tdNm.appendChild(inputNm);
+						tr.appendChild(tdNm);
+						
+						var tdTel = document.createElement('td');
+						tdTel.className = 'td_professor_tel';
+						var spanTel = document.createElement('span');
+						spanTel.className = 'professor_span';
+						spanTel.onClick = function(){
+							selectProfessor(this);
+						}
+						spanTel.textContent = professor.profTel;
+						var inputTel = document.createElement('input');
+						inputTel.className='professor_input professor_tel';
+						inputTel.style.display = 'none';
+						inputTel.style.width = '100px';
+						inputTel.value = professor.profTel;
+						tdTel.appendChild(spanTel);
+						tdTel.appendChild(inputTel);
+						tr.appendChild(tdTel);
+						
+						var tdEmail = document.createElement('td');
+						tdEmail.className = 'td_professor_email';
+						var spanEmail = document.createElement('span');
+						spanEmail.className = 'professor_span';
+						spanEmail.onClick = function(){
+							selectProfessor(this);
+						}
+						spanEmail.textContent = professor.profEmail;
+						var inputEmail = document.createElement('input');
+						inputEmail.className = 'professor_input professor_email';
+						inputEmail.style.display ='none';
+						inputEmail.style.width = '200px';
+						inputEmail.value = professor.profEmail;
+						tdEmail.appendChild(spanEmail);
+						tdEmail.appendChild(inputEmail);
+						tr.appendChild(tdEmail);
+							
+						professorTbody.appendChild(tr);
+					}
+					
+					//강사 input에 수정 발생시 해당 tr update_yn = Y로 변경하는 이벤트
+					var professorInputs = document.querySelectorAll(".professor_input");
+					professorInputs.forEach(function(professorInput){
+						// onchange 이벤트를 추가합니다.
+					    professorInput.addEventListener("change", function() {
+					    	const parentTr = professorInput.closest('tr');
+					    	var updateYnInput = parentTr.querySelector(".td_professor_check_box .professor_update_yn");
+					    	updateYnInput.value = "Y";
+					    });
+					});
+				}
+			});
+		}
+		
+		//강사 등록하기 버튼(팝업 띄우기)
+		var popup;
+		function showInsertProfessorPopup(){
+			popup = window.open(
+					"/admin/professor/insert", "강사 등록 팝업", 
+					"width=500, height=300, left=800, top=400"		
+			);
 		}
 		
 
@@ -248,6 +381,17 @@
 	    	professorEdit.style.display = 'none';
 	    	});
 		}
+		
+		//강사 input에 수정 발생시 해당 tr update_yn = Y로 변경
+		var professorInputs = document.querySelectorAll(".professor_input");
+		professorInputs.forEach(function(professorInput){
+			// onchange 이벤트를 추가합니다.
+		    professorInput.addEventListener("change", function() {
+		    	const parentTr = professorInput.closest('tr');
+		    	var updateYnInput = parentTr.querySelector(".td_professor_check_box .professor_update_yn");
+		    	updateYnInput.value = "Y";
+		    });
+		});
 		
 		//강사 저장하기 버튼 클릭
 		function saveProfessor(){

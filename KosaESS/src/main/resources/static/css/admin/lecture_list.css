@@ -228,3 +228,56 @@ button {
 	align-items: center;
 	justify-content: space-between;
 }
+
+.filter_box button {
+	width: 23px;
+	height: 23px;
+	background: #9FBCCD;
+	display: flex;
+	border: none;
+	border-radius: 4px;
+	margin: 0px 5px;
+	align-items: center;
+	justify-content: space-around;
+}
+
+button img {
+	width: 20px;
+}
+
+.pagination {
+	list-style: none;
+}
+
+.pagination li {
+	color: black;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+}
+
+.pagination li a{
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.pagination li.active {
+	background-color: #0E5881;
+	color: white;
+	border-radius: 5px;
+}
+
+.pagination li.active a{
+	color:white;
+}
+
+.pagination li:hover:not(.active) {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+nav {
+	display: flex;
+	justify-content: space-around;
+}

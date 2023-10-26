@@ -1,3 +1,15 @@
+var chkAll = $("#chkAllStdt");//"전체" 체크박스
+var isChecked = chkAll.prop("checked");//"전체" 체크박스의 체크 상태(true 또는 false)
+var chkList = $(".chk_stdt");//학생들 체크박스 리스트
+var allChecked = chkList.filter(":checked").length === chkList.length;
+
+function deleteRow(){
+	console.log(typeof chkAll);
+	console.log(chkList.length);
+	console.log(isChecked);
+	console.log(allChecked);
+}
+
 //인 서 트
 function insertSubsidy() {
 	//대상이 없으면 중지
@@ -124,6 +136,22 @@ function selectClassFill() {
 }
 */
 $(document).ready(
+	
+	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
+	chkAll.on("change", function() {
+		isChecked = chkAll.prop("checked");
+		chkList.prop("checked", isChecked);
+	})
+	//End
+	,
+	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
+	chkList.on("change", function() {
+		allChecked = chkList.filter(":checked").length === chkList.length;
+		chkAll.prop("checked", allChecked);
+	})
+	//End
+	,
+
 	//교육과정의 연도 select가 바뀌면
 	$('#select_year').change(
 		///*
@@ -201,7 +229,7 @@ $(document).ready(
 					newRow = $('<tr>');
 					//체크박스
 					newCell = $('<td>');
-					chkBox = $('<input type="checkbox">')
+					chkBox = $('<input type="checkbox" class="chk_stdt">')
 					chkBox.attr("value", stdtList[i].stdtId)
 					newCell.append(chkBox);
 					newCell.attr("class", "fixed_length_cell");

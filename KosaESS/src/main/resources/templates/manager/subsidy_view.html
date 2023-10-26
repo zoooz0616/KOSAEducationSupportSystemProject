@@ -89,11 +89,9 @@
 					</div>
 				</div>
 				<!-- 검색 버튼 -->
-				<div class="search_filter_btn_wrap">
-					<button class="search_reset_btn" th:id="resetButton"
-						onclick="reset()">초기화</button>
-					<button class="search_filter_btn" th:id="searchButton"
-						onclick="search()">검색</button>
+				<div class="search_btn_wrap">
+					<button id="search_reset_btn" onclick="reset()"><img th:src="@{/img/reset_white.png}"><span>초기화</span></button>
+					<button id="search_by_name_btn" onclick="search()"><img th:src="@{/img/search_white.png}"><span>조회</span></button>
 				</div>
 				<!-- End : 검색 버튼 -->
 			</div>
@@ -108,7 +106,8 @@
 				</div>
 				<div class="sbsd_button">
 					<button th:each="sbsdCodeName:${sbsdCodeNameList}" onclick="cmptUpdate(this)" th:value="${sbsdCodeName.cmcdId}" th:text="${sbsdCodeName.cmcdNm}" class="sbsd_btn"></button>
-					<button onclick="location.href='/manager/subsidy_insert'" class="sbsd_btn">등록하기</button>
+					<button onclick="location.href='/manager/subsidy_insert'" class="sbsd_insert_btn"><img src="/img/plus_white.png"><span>등록</span></button>
+					<button onclick="location.href='/manager/subsidy_insert'" class="sbsd_delete_btn"><img src="/img/minus_white.png"><span>삭제</span></button>
 				</div>
 			</div>
 			<!-- End : 테이블 조작 -->

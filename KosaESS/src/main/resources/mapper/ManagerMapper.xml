@@ -12,7 +12,8 @@
 			FROM clss c
 				JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
 			WHERE
-				mngr_id = #{mngrId}
+				c.delete_yn='N'
+				AND mngr_id = #{mngrId}
 		]]>
 		<if test='year != null'>
 		<if test='year != ""'>
@@ -184,6 +185,7 @@
 			JOIN cmcd m1 ON c.clss_cd = m1.cmcd_id
 		WHERE
 			mngr_id = #{mngrId}
+			AND c.delete_yn='N'
 			AND c.clss_cd IN 
 		]]>
 		<foreach collection="filterString" item="item" open="(" separator="," close=")">

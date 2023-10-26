@@ -136,6 +136,9 @@ button:hover{
 	font-weight: bold;
 	padding-left: 1em;
 	padding-right: 1em;
+	justify-content: space-between;
+	align-items: center;
+
 }
 
 .table_controller div{
@@ -210,4 +213,23 @@ tbody tr{
 
 select option[value=""][disabled] {
 	display: none;
+}
+.table_controller .sbsd_btn img{
+	width:1.2em;
+}
+.table_controller .sbsd_btn{
+	display: flex;
+	background: #6E9BB3;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	margin-left : 0.3em;
+	justify-content:center;
+	align-items:center;
+	width:6em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
 }

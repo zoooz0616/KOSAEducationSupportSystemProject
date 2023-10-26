@@ -12,7 +12,8 @@
 
 	<div class="select_wrap">
 		<div class="search_wrap">
-			<input type="text" placeholder="(어름/이메일)을 입력하세요.">
+			<input type="text" placeholder="(어름/이메일)을 입력하세요." onkeyup="if(window.event.keyCode==13){search()}"
+			autofocus>
 			<button class="search_btn">조회</button>
 		</div>
 		<div class="manager_list_wrap">

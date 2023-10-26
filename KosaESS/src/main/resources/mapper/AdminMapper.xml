@@ -210,15 +210,55 @@
 	]]>
 	</select>
 
-	<select id="getLectureList"
+	<select id="getLectureList" parameterType="int"
 		resultType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
 		select *
+		from (
+		select row_number() over(order by lctr_id) as row_num,
+		lctr.lctr_id,
+		lctr.sbjt_id,
+		lctr.prof_id,
+		lctr.lctr_nm,
+		lctr.lctr_tm,
+		lctr.lctr_etc,
+		lctr.rgst_dt,
+		lctr.rgster_id,
+		lctr.updt_dt,
+		lctr.updter_id,
+		lctr.delete_yn,
+		sbjt.sbjt_nm,
+		prof.prof_nm		
 		from lctr
 		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
 		join prof on prof.prof_id = lctr.prof_id
 		where lctr.delete_yn = 'N'
-		order by lctr_id
+		)
+		where row_num between #{start} and #{end}
+	]]>
+	</select>
+	
+	<select id="getLectureListAll"
+		resultType="com.finalprj.kess.model.LectureVO">
+	<![CDATA[
+		select row_number() over(order by lctr_id) as row_num,
+		lctr.lctr_id,
+		lctr.sbjt_id,
+		lctr.prof_id,
+		lctr.lctr_nm,
+		lctr.lctr_tm,
+		lctr.lctr_etc,
+		lctr.rgst_dt,
+		lctr.rgster_id,
+		lctr.updt_dt,
+		lctr.updter_id,
+		lctr.delete_yn,
+		sbjt.sbjt_nm,
+		prof.prof_nm		
+		from lctr
+		join sbjt on sbjt.sbjt_id = lctr.sbjt_id
+		join prof on prof.prof_id = lctr.prof_id
+		where lctr.delete_yn = 'N'
 	]]>
 	</select>
 
@@ -494,7 +534,7 @@
 
 	<select id="getMaxSubjectId" resultType="string">
 	<![CDATA[
-		select 'SBJT'||LPAD((max(cast(substr(sbjt_id,5) as number(6)))+1),6,'0')
+		select 'SBJT'||LPAD((nvl(max(cast(substr(sbjt_id,5) as number(6))),0)+1),6,'0')
 		from sbjt
 	]]>
 	</select>
@@ -509,7 +549,7 @@
 	values (
 		#{sbjtId}, 
 		#{sbjtNm}, 
-		'MNGR000001')
+		#{rgsterId})
 	]]>
 	</insert>
 
@@ -518,13 +558,13 @@
 	<![CDATA[
 	select count(prof_id)
 	from prof
-	where prof_tel = #{profTel}
+	where prof_tel = #{profTel} and prof_email = #{profEmail}
 	]]>
 	</select>
 
 	<select id="getMaxProfId" resultType="string">
 	<![CDATA[
-		select 'PROF'||LPAD((max(cast(substr(prof_id,5) as number(6)))+1),6,'0')
+		select 'PROF'||LPAD((nvl(max(cast(substr(prof_id,5) as number(6))),0)+1),6,'0')
 		from prof
 	]]>
 	</select>
@@ -539,7 +579,7 @@
 		prof_email,
 		rgster_id)
 	values (
-		#{profId}, #{profNm}, #{profTel}, #{profEmail},'MNGR000001')
+		#{profId}, #{profNm}, #{profTel}, #{profEmail},#{rgsterId})
 	]]>
 	</insert>
 
@@ -857,7 +897,7 @@
 
 	<select id="getMaxReplyId" resultType="string">
 	<![CDATA[
-		select 'RPLY'||LPAD((max(cast(substr(post_id,5) as number(6)))+1),6,'0')
+		select 'RPLY'||LPAD((nvl(max(cast(substr(post_id,5) as number(6))),0)+1),6,'0')
 		from post
 		where post_id like 'RPLY%'
 	]]>
@@ -894,7 +934,7 @@
 
 	<select id="getMaxManagerId" resultType="string">
 	<![CDATA[
-		select 'MNGR'||LPAD((max(cast(substr(mngr_id,5) as number(6)))+1),6,'0')
+		select 'MNGR'||LPAD((nvl(max(cast(substr(mngr_id,5) as number(6))),0)+1),6,'0')
 		from mngr
 	]]>
 	</select>
@@ -1483,6 +1523,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			sbjt_id = #{item.sbjtId},
 			prof_id = #{item.profId},
 			lctr_tm = #{item.lctrTm},
+			lctr_etc = #{item.lctrEtc},
 			updt_dt = SYSTIMESTAMP,
 			updter_id =
 			'MNGR000001'
@@ -1954,6 +1995,49 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	]]>
 	</select>
 
+	<select id="getSearchSubjectList" parameterType="string" resultType="com.finalprj.kess.model.SubjectVO">
+	<![CDATA[
+		select *
+		from sbjt
+		where delete_yn='N' 
+			and upper(sbjt_nm) like '%'||upper(#{sbjtNm})||'%'
+		order by sbjt_nm
+			
+	]]>
+	</select>
+	
+	<select id="getSearchProfessorList" parameterType="string" resultType="com.finalprj.kess.model.ProfessorVO">
+	<![CDATA[
+		select *
+		from prof
+		where delete_yn='N' 
+			and 
+			(
+				upper(prof_nm) like '%'||upper(#{keyword})||'%'
+				or
+				upper(prof_email) like '%'||upper(#{keyword})||'%'
+			)
+		order by prof_nm
+			
+	]]>
+	</select>
+	
+	<select id="getSearchLectureList" parameterType="string" resultType="com.finalprj.kess.model.LectureVO">
+		select *
+		from lctr
+		join sbjt on lctr.sbjt_id = sbjt.sbjt_id
+		join prof on lctr.prof_id = prof.prof_id
+		where lctr.delete_yn='N' 
+		and lctr.lctr_nm like '%'||#{lctrNm}||'%'
+		<if test="sbjtId != ''">
+			AND lctr.sbjt_id = #{sbjtId}
+		</if>
+		<if test="profId != ''">
+			AND lctr.prof_id = #{profId}
+		</if>
+		order by lctr.lctr_id
+	</select>
+	
 
 
 
