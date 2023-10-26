@@ -874,11 +874,7 @@ public class AdminController {
 						fileVO.setFileSize(file.getSize());
 						fileVO.setFileType(file.getContentType());
 						fileVO.setFileContent(file.getBytes());
-<<<<<<< HEAD
-						fileVO.setRgsterId((String)session.getAttribute("mngrId"));
-=======
 						fileVO.setRgsterId("MNGR000001");
->>>>>>> branch 'seungwoo' of https://github.com/zoooz0616/KOSAEducationSupportSystemProject.git
 						fileList.add(fileVO);
 						subFileId++;
 					}
