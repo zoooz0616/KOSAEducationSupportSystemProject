@@ -1,6 +1,12 @@
 @charset "UTF-8";
 
 ----------------------------------------------------------------------
+/* .checkbox_wrap div input{margin: 0} */
+.checkbox_wrap div{
+	display: flex;
+	width:100%;
+	justify-content: center;
+}
 
 input, progress {
 	accent-color: #0E5881;
@@ -95,15 +101,10 @@ input, progress {
 }
 
 .search_filter_list {
-	width: 100%;
-	list-style: none;
 	display: flex;
+	width:100%;
+	justify-content:space-between;
 	font-size: 1.1em;
-}
-
-.search_filter_list input {
-	margin-left: 0.1em;
-	margin-right: 0.8em;
 }
 
 .content_list_table tr {
