@@ -2,12 +2,27 @@
 /* class="" */
 
 /*-------------------------------------------------------*/
+
+#classId{
+	width:100%;
+}
+
+#classId_wrap{
+	width: 15%;
+}
+
 select option[value=""][disabled] {
 	display: none;
 }
 
 button:hover{
 	cursor: pointer;
+}
+
+.chk_wrap{
+/* 	display: flex; */
+	justify-content: center;
+	margin: 0.4em;
 }
 
 /* 공통 사항*/

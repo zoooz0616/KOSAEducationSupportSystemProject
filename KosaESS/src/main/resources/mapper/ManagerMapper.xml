@@ -420,8 +420,7 @@
 	<select id="getSubsidyList" resultType="com.finalprj.kess.dto.SubsidyDTO">
 		<![CDATA[
 			SELECT 
-				rowNum
-				,m.sbsd_id
+				m.sbsd_id
 				,m.clss_id
 				,clss_nm
 				,clss_subsidy
@@ -484,12 +483,14 @@
 				sbsd_Id,
 				clss_Id,
 				stdt_Id,
+				
 				sbsd_Cd,
 				payment,
 				subsidy_Dd,
 				max_Wlog_Cnt,
 				wlog_Cnt,
 				sbsd_Etc,
+				
 				rgst_Dt,
 				rgster_Id
 			)
@@ -527,12 +528,10 @@
 	<select id="getMaxId">
 		<![CDATA[
 		SELECT
-			NVL(
 			to_number(
 				substr(
-					max(${columnName}),5
+					NVL(max(${columnName}),0),5
 				)
-			)
 			)
 		FROM ${tableName}
 		]]>

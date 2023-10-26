@@ -3,86 +3,71 @@ var isChecked = chkAll.prop("checked");//"전체" 체크박스의 체크 상태(
 var chkList = $(".chk_stdt");//학생들 체크박스 리스트
 var allChecked = chkList.filter(":checked").length === chkList.length;
 
-function deleteRow(){
-	console.log(typeof chkAll);
-	console.log(chkList.length);
-	console.log(isChecked);
-	console.log(allChecked);
+function deleteRow() {
+	chkList = $(".chk_stdt");//학생들 체크박스 리스트
+
+	$('#result_count').text($('#result_count').text() - chkList.filter(":checked").length);
+	for (let i = 0; i < chkList.filter(":checked").length; i++) {
+		chkList.filter(":checked").eq(i).parent().parent().remove();
+	}
+
+	let table = $('stdt_list_table_tbody');
+	let targetTr;
+	for (let i = 0; i < table.children().length; i++) {
+		targetTr = table.children().eq(i);
+		let targetCell = targetTr.children('td[name=rowNum]');
+		targetCell.text(i + 1);
+	}
+
 }
 
 //인 서 트
 function insertSubsidy() {
 	//대상이 없으면 중지
-	if ($('#result_count').text()== 0) {
-		alertFade("등록 할 기록이 없습니다.","F9DCCB","FF333E")
+	if ($('#result_count').text() == 0) {
+		alertFade("등록 할 기록이 없습니다.", "F9DCCB", "FF333E")
 		return;
 	}
 	let subsidyVO = [];
 	let dict;
+	let table = $('stdt_list_table_tbody');
 	let targetTr;
-	for(let i = 0;i < $('#result_count').text();i++){
-		targetTr = $('#stdt_list_table_tbody tr[name=tr'+i+']');
+	for (let i = 0; i < table.children().length; i++) {
+		//for (let i = 0; i < $('#result_count').text(); i++) {
+		targetTr = table.children().eq(i);
+		//targetTr = $('#stdt_list_table_tbody tr[name=tr' + i + ']');
 		dict = {};
-		dict['clssId']=$('#select_class option:selected').val()
-		dict['stdtId']=targetTr.children('td[name="chkbox"]').children('input[type=checkbox]').val();
-		dict['sbsdCd']=targetTr.children('td[name=sbsdCd]').children("select").val();
-		dict['payment']=targetTr.children('td[name=payment]').children('input').val();
-		dict['subsidyDd']=new Date($('#select_ym_y option:selected').val(),$('#select_ym_m option:selected').val()-1); 
-		dict['maxWlogCnt']=$('#max_wlog_cnt option:selected').val();
-		dict['wlogCnt']=targetTr.children('td[name=wlogCnt]').text();
-		dict['sbsdEtc']=targetTr.children('td[name=sbsdEtc]').children('input[type=text]').val();
+		dict['clssId'] = $('#select_class option:selected').val()
+		dict['stdtId'] = targetTr.children('td[name="chkbox"]').children('input[type=checkbox]').val();
+		dict['sbsdCd'] = targetTr.children('td[name=sbsdCd]').children("select").val();
+		dict['payment'] = targetTr.children('td[name=payment]').children('input').val();
+		dict['subsidyDd'] = new Date($('#select_ym_y option:selected').val(), $('#select_ym_m option:selected').val() - 1);
+		dict['maxWlogCnt'] = $('#max_wlog_cnt option:selected').val();
+		dict['wlogCnt'] = targetTr.children('td[name=wlogCnt]').text();
+		dict['sbsdEtc'] = targetTr.children('td[name=sbsdEtc]').children('input[type=text]').val();
 		subsidyVO.push(dict);
 	}
-	
+
 	//객체 배열을 json문자열로 직렬화 하기
-	//var jsonData = JSON.stringify(subsidyVO);
-	//var jsonData = JSON.stringify(subsidyVO);
-	//console.log(jsonData);
 	$.ajax({
-		url : "/manager/subsidy/insert", // 컨트롤러 엔드포인트
-		type : "post"
-		,dataType:"json"
-		,contentType : 'application/json'
-		//,data : {subsidyList: jsonData}
-		,data : JSON.stringify(subsidyVO)
-		,success : function(response) {
-			if(response.result){
-				alert("총 "+$('#result_count').text()+"건이 등록되었습니다.");
-				location.href('/manager/subsidy');
-			} else{
-				alertFade("등록에 실패하였습니다.(asd)","F9DCCB","FF333E");
+		url: "/manager/subsidy/insert", // 컨트롤러 엔드포인트
+		type: "post"
+		, dataType: "json"
+		, contentType: 'application/json'
+		, data: JSON.stringify(subsidyVO)
+		, success: function(response) {
+			if (response.result) {
+				alert("총 " + $('#result_count').text() + "건이 등록되었습니다.");
+				//location.href('/manager/subsidy');
+			} else {
+				alertFade("등록에 실패하였습니다.(asd)", "F9DCCB", "FF333E");
 			}
 		},
-		error : function(error) {
-			console.log("Error : ",error)
-			alertFade("등록에 실패하였습니다.","F9DCCB","FF333E");
+		error: function(error) {
+			console.log("Error : ", error)
+			alertFade("등록에 실패하였습니다.", "F9DCCB", "FF333E");
 		}
 	})
-	/*
-	//비동기로 배열 전달하기
-	fetch('/admin/commoncode/update/groupcode', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: jsonData,
-	})
-	.then(response => response.json())
-	.then(data => {
-		console.log(data);
-		if (data.message === "success") {
-			alertFade(length+"건이 검색되었습니다.","CFDEE6","0E5881");
-			//그룹코드리스트 다시 불러오기
-			selectGroupCodeList();
-
-		} else {
-			alert("실패했습니다. 다시 시도해주세요.");
-		}
-	})
-	.catch(error => {
-		// 오류 처리
-	});
-		*/
 }
 
 //연, 월, TF로 월의 첫 또는 마지막 날 반환 
@@ -96,62 +81,7 @@ function getFirstDay(year, month, isFirst) {
 	}
 	return year + "-" + month + "-" + day;
 }
-
-/*
-//function selectClassFill(year) {
-function selectClassFill() {
-	let targetYear;
-	targetYear = $('#select_year').val();
-	if(year == null){
-		targetYear = $('#select_year').val();
-	}else{
-		targetYear = year;
-	}
-	//교육과정 select 내부의 option을 싹 비우고 지원금을 리셋
-	$('#select_class').empty();
-	//목록을 채우기
-	$('#select_class').append("<option value='' disabled selected>교육과정명을 선택하세요</option>");
-	$.ajax({
-		type: 'get',
-		url: '/manager/get_class_list', // 서버의 엔드포인트 URL
-		data: {
-			year: targetYear
-		},
-		success: function(response) {
-			let classList = response.classList;
-			let newOption;
-			for (let i = 0; i < classList.length; i++) {
-				newOption = $('<option/>');
-				newOption.html(classList[i].clssNm);
-				newOption.attr("value", classList[i].clssId);
-				newOption.attr("name", classList[i].clssSubsidy);
-				$('#select_class').append(newOption);
-			}
-			//총 몇 명인지 체크
-		}
-		, error: function(error) {
-			console.log(error);
-		}
-	})
-}
-*/
 $(document).ready(
-	
-	//"전체" 체크박스의 상태에 따라 나머지 체크박스의 상태를 변경
-	chkAll.on("change", function() {
-		isChecked = chkAll.prop("checked");
-		chkList.prop("checked", isChecked);
-	})
-	//End
-	,
-	//개별 체크박스가 변경될 때 "전체" 체크박스 상태 업데이트
-	chkList.on("change", function() {
-		allChecked = chkList.filter(":checked").length === chkList.length;
-		chkAll.prop("checked", allChecked);
-	})
-	//End
-	,
-
 	//교육과정의 연도 select가 바뀌면
 	$('#select_year').change(
 		///*
@@ -184,17 +114,10 @@ $(document).ready(
 				}
 			})
 		}
-		//*/
-		//selectClassFill()
 	),
 
 	//교육과정 select가 바뀌면
 	$('#select_class,#select_ym_y,#select_ym_m, #max_wlog_cnt').change(function() {
-		/*
-		console.log(typeof $('#select_class option:selected').val());
-		console.log($('#select_class option:selected').val());
-		*/
-
 		//1_ 지원금 변경하기
 		let targetSubsidy = $('#select_class option:selected').attr('name');
 		$('#subsidy_value').text(targetSubsidy);
@@ -239,6 +162,7 @@ $(document).ready(
 					newCell = $('<td>');
 					newCell.html(i + 1);
 					newCell.attr("class", "fixed_length_cell");
+					newCell.attr("name", "rowNum");
 					newRow.append(newCell);
 					//이름
 					newCell = $('<td>');
@@ -267,7 +191,7 @@ $(document).ready(
 						newRow.append(newCell);
 						if (wlogCntList[j].substr(0, 10) == 'WOK0000001') {
 							wlogCnt = wlogCntList[j].substr(10, wlogCntList[j].length);
-							newCell.attr("name",wlogCnt);
+							newCell.attr("name", wlogCnt);
 						}
 					}
 					//출석일수
@@ -315,7 +239,7 @@ $(document).ready(
 					newCell.attr("name", 'sbsdEtc');
 					newCell.append(newOption);
 					newRow.append(newCell);
-					newRow.attr("name",'tr'+i);
+					newRow.attr("name", 'tr' + i);
 
 					//행 추가
 					$('#stdt_list_table_tbody').append(newRow);
@@ -370,9 +294,4 @@ $(document).ready(
 	}),
 
 	$('#select_year option:eq(1)').attr('selected', 'selected')
-	//,selectClassFill()
 )
-
-// 등록하기 버튼을 누르면
-// HTML에 있는 정보 싹 긁어다 insert 때려넣고
-// 입력조건 창 새로고침 하기

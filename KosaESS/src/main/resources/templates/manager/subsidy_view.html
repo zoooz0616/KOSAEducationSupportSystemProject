@@ -45,7 +45,7 @@
 							<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
 						</select>
 					</div>
-					<div class="search_filter_input">
+					<div class="search_filter_input" id="classId_wrap">
 						<select id="classId">
 							<option value="" disabled selected>교육과정명을 선택하세요</option>
 							<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
@@ -79,13 +79,22 @@
 					</div>
 					<div class="search_filter_name">지급 상태</div>
 					<div class="search_filter_input">
-						<span class="chk_all_span">
-							<label th:text="전체" class="chk_all_label"></label> <input type="checkbox" checked="checked" id="chk_all_cmpt">
-						</span>
-						<span class="chk_all_span" th:each="sbsdCN:${sbsdCodeNameList}">
-							<label class="sbsd_name" th:text="${sbsdCN.cmcdNm}"></label>
-							<input class="sbsd_checkbox" type="checkbox" checked="checked" th:value="${sbsdCN.cmcdId}">
-						</span>
+						<div class="chk_wrap">
+							<div>
+								<label th:text="전체" class="chk_all_label"></label>
+							</div>
+							<div>
+								<input type="checkbox" checked="checked" id="chk_all_cmpt">
+							</div>
+						</div>
+						<div class="chk_wrap" th:each="sbsdCN:${sbsdCodeNameList}">
+							<div>
+								<label class="sbsd_name" th:text="${sbsdCN.cmcdNm}"></label>
+							</div>
+							<div>
+								<input class="sbsd_checkbox" type="checkbox" checked="checked" th:value="${sbsdCN.cmcdId}">
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- 검색 버튼 -->
@@ -102,7 +111,7 @@
 				<div class="result_count">
 					<span>총&nbsp;</span>
 					<span th:text="${resultCount}" id="result_count"></span>
-					<span>&nbsp;명</span>
+					<span>&nbsp;건</span>
 				</div>
 				<div class="sbsd_button">
 					<button th:each="sbsdCodeName:${sbsdCodeNameList}" onclick="cmptUpdate(this)" th:value="${sbsdCodeName.cmcdId}" th:text="${sbsdCodeName.cmcdNm}" class="sbsd_btn"></button>
@@ -148,7 +157,7 @@
 						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
 						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
-						<td class="fixed_length_cell etc"><img src="/img/memo_closed.png"></td>
+						<td class="fixed_length_cell etc"><img src="/img/memo_closed.png" onclick="openMemo(this)"><img src="/img/memo_open.png" style="display:none;" onclick="closeMemo(this)"></td>
 						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}" th:value="${subsidy.sbsdCd}">지급상태</td>
 					</tr>
 				</tbody>

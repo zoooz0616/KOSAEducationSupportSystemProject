@@ -62,7 +62,6 @@
 					</div>
 					<div class="insert_name">지원금</div>
 					<div class="insert_input"><span id="subsidy_value">0</span><span>&nbsp;&#8361;</span></div>
-<!-- 					<input type="button" class="batch_input" value="일괄적용" onclick="batchInput(this)"> -->
 				</div>
 				<!-- 검색 버튼 -->
 				<div class="insert_btn_wrap">
@@ -106,7 +105,7 @@
 						<td class="fixed_length_cell">
 							<input type="checkbox" name="checkedStdt" th:value="${subsidy.sbsdId}">
 						</td>
-						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
+						<td class="fixed_length_cell" th:text="${subsidyStat.count}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이수상태</td>

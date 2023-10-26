@@ -49,7 +49,7 @@
 						<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
 					</select>
 				</div>
-				<div class="search_filter_input">
+				<div class="search_filter_input" id="class_selector_wrap">
 					<select id="class_selector">
 						<option value="" selected>교육과정을 선택하세요</option>
 						<option th:each="class:${classList}" th:text="${class.clssNm}" th:value="${class}" />
@@ -75,11 +75,21 @@
 				</div>
 				<div class="search_filter_name">출석 상태</div>
 				<div class="search_filter_input">
-					<span>전체</span>
-					<input type="checkbox" id="chkAll" checked="checked">
-					<div th:each="wlogCd:${wlogCdList}">
-						<span th:text="${wlogCd.cmcdNm}"></span>
-						<input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}" checked="checked">
+					<div class="chk_wrap">
+						<div>
+							<span>전체</span>
+						</div>
+						<div>
+							<input type="checkbox" id="chkAll" checked="checked">
+						</div>
+					</div>
+					<div th:each="wlogCd:${wlogCdList}" class="chk_wrap">
+						<div>
+							<span th:text="${wlogCd.cmcdNm}"></span>
+						</div>
+						<div>
+							<input type="checkbox" class="chkWokCd" th:value="${wlogCd.cmcdId}" checked="checked">
+						</div>
 					</div>
 				</div>
 				<div class="search_filter_name">사유서</div>

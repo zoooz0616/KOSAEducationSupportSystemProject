@@ -1,5 +1,20 @@
 @charset "UTF-8";
 
+.chk_wrap div{
+	justify-content: center;
+}
+.chk_wrap{
+	margin: 0 0.3em;
+}
+
+#class_selector_wrap{
+	width:14%;
+}
+
+#class_selector{
+	width: 100%;
+}
+
 input[type="button"]:hover{
 	cursor: pointer;
 }
@@ -95,8 +110,6 @@ button{
 }
 
 .search_filter_wrap {
-/* 	display: flex; */
-/* 	justify-content: space-between; */
 	width: 100%;
 	border-collapse: collapse;
 	text-align: center;
@@ -113,7 +126,7 @@ button{
 .search_filter_table {
 	width: 100%;
 	display: flex;
-/* 	justify-content: space-between; */
+/* 	justify-content: flex-start; */
 }
 
 /*========================================================================================*/
@@ -136,8 +149,8 @@ button{
 }
 
 .search_filter_input input {
-	margin-left : 0.3em;
-	margin-right : 0.6em;
+/* 	margin-left : 0.3em; */
+/* 	margin-right : 0.6em; */
 	color: gray;
 }
 
