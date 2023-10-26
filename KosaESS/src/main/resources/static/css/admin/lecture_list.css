@@ -281,3 +281,13 @@ nav {
 	display: flex;
 	justify-content: space-around;
 }
+
+#excel_btn {
+	border: 2px solid green;
+	background: white;
+	color: green;
+}
+
+#excel_btn>img {
+	margin-right: 5px;
+}
