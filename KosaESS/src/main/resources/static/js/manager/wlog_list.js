@@ -30,7 +30,7 @@ function selectClassFill() {
 	//교육과정 select 내부의 option을 제거
 	$('#class_selector').empty();
 	//목록을 채우기
-	$('#class_selector').append('<option value="" disabled selected>교육과정을 선택하세요</option>');
+	$('#class_selector').append('<option value="" selected>교육과정을 선택하세요</option>');
 	$.ajax({
 		type: 'get',
 		url: '/manager/get_class_list', // 서버의 엔드포인트 URL
@@ -44,7 +44,7 @@ function selectClassFill() {
 			for (let i = 0; i < classList.length; i++) {
 				newOption = $('<option/>');
 				newOption.html(classList[i].clssNm);
-				newOption.attr("value", classList[i].clssId);
+				newOption.attr("value", "clssId(clssId="+classList[i].clssId+",");
 				newOption.attr("clssId", classList[i].clssId);
 				newOption.attr("startDd", classList[i].clssStartDd);
 				newOption.attr("endDd", classList[i].clssEndDd);
