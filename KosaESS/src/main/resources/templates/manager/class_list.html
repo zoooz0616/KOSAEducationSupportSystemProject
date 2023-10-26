@@ -42,18 +42,24 @@
 						</div>
 						<div id="search_by_status_wrap">
 							<label class="search_condition_name">교육과정 상태</label>
-							<ul class="search_filter_list">
-								<li>
-									<span class="chk_all_span">
+							<div class="search_filter_list">
+								<div class="checkbox_wrap">
+									<div class="chk_all_span">
 										<label th:text="전체" class="chk_all_label"></label>
+									</div>
+									<div>
 										<input type="checkbox" checked="checked" id="chkAll">
-									</span>
-								</li>
-								<li th:each="classCodeName:${classCodeNameList}">
-									<label th:text="${classCodeName.cmcdNm}"></label>
-									<input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
-								</li>
-							</ul>
+									</div>
+								</div>
+								<div th:each="classCodeName:${classCodeNameList}" class="checkbox_wrap">
+									<div>
+										<label th:text="${classCodeName.cmcdNm}"></label>
+									</div>
+									<div>
+										<input type="checkbox" checked="checked" th:value="${classCodeName.cmcdId}" name="chk">
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="search_btn_wrap">
