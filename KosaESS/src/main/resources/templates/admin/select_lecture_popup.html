@@ -12,7 +12,7 @@
 
 	<div class="select_wrap">
 		<div class="search_wrap">
-			<input class="search_input" type="text" placeholder="강사명을 입력하세요.">
+			<input class="search_input" type="text" placeholder="강의명을 입력하세요.">
 			<button class="search_btn">조회</button>
 		</div>
 		<div class="company_list_wrap">
@@ -144,7 +144,15 @@
 			selectAll.checked = false;
 		}
 	}
-		
+	
+	//강의 등록하기 버튼(팝업 띄우기)
+	var popup;
+	function showInsertLecturePopup(){
+		popup = window.open(
+				"/admin/lecture/insert", "insertlecture", 
+				"width=500, height=350, left=800, top=400"		
+		);
+	}
 	
 	</script>
 </body>
