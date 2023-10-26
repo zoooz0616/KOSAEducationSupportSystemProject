@@ -1101,6 +1101,7 @@ public class AdminController {
 						fileVO.setFileSize(file.getSize());
 						fileVO.setFileType(file.getContentType());
 						fileVO.setFileContent(file.getBytes());
+						fileVO.setRgsterId("MNGR000001");
 						fileList.add(fileVO);
 						fileSubId++;
 					}

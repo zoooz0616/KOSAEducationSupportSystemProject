@@ -899,6 +899,7 @@ public class StudentController {
 		fileVO.setFileSize(file.getSize());
 		fileVO.setFileType(file.getContentType());
 		fileVO.setFileContent(file.getBytes());
+		fileVO.setRgsterId(stdtId);
 		uploadFileService.uploadFile(fileVO);
 		subFileId++;
 

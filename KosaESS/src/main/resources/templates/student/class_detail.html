@@ -205,10 +205,11 @@
 								th:if="${class1.clssCd != 'CLS0000001' and class1.clssCd != 'CLS0000002' and class1.clssCd != 'CLS0000008'}"
 								th:text="${class1.cmcdNm}" style="color: black;"></span>
 							<h2 th:text="${class1.clssNm}"></h2>
-							<div th:if="${class1.fileNm!=null}">
-								<img th:src="@{/img/__${class1.fileNm}__}">
+							<div th:if="${class1.fileId!=null}">
+								<img
+									th:src="@{/student/file/__${class1.fileId}__/__${class1.fileSubId}__}">
 							</div>
-							<div th:if="${class1.fileNm==null}">
+							<div th:if="${class1.fileId==null}">
 								<img th:src="@{/img/logo.png}">
 							</div>
 							<a class="moveBtn"
