@@ -8,7 +8,14 @@
 <head>
 <link th:href="@{/css/admin/dashboard.css}" rel="stylesheet">
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
-
+<script th:inline="javascript">
+	var completeCnt = /*[[${completeCnt}]]*/'';
+	var uncompleteCnt = /*[[${uncompleteCnt}]]*/'';
+	var giveupCnt = /*[[${giveupCnt}]]*/'';
+	
+	var setInTmCnt = /*[[${setInTmCnt}]]*/'';
+	var unSetInTmCnt = /*[[${unSetInTmCnt}]]*/'';
+</script>
 </head>
 <body>
 
@@ -22,25 +29,44 @@
 			<div class="content_top" style="display: flex;">
 				<!-- chart content wrap -->
 				<div class="chart_content_wrap"
-					style="width: 50%; height: 400px; background: black;">
+					style="display: flex; width: 50%; height: 400px; padding: 0 20px;">
+					<div class="complete_chart" style="width: 50%;">
+						<div class="chart_title">
+							<div style="font-size: 30px; font-weight: bold;">이수율</div>
+						</div>
+
+						<!--차트가 그려질 부분-->
+						<canvas id="cmpyChart" style="width: 350px; height: 350px;">
+						</canvas>
+					</div>
+
+					<div class="complete_chart" style="width: 50%;">
+						<div class="chart_title">
+							<div style="font-size: 30px; font-weight: bold;">출석률</div>
+						</div>
+
+						<!--차트가 그려질 부분-->
+						<canvas id="wlogChart" style="width: 350px; height: 350px;">
+						</canvas>
+					</div>
+
 				</div>
 				<!-- chart content wrap -->
 
 				<!-- total content wrap -->
-				<div class="total_content_wrap"
-					style="width: 50%; height: 400px;">
+				<div class="total_content_wrap" style="width: 50%; height: 400px;">
 					<div class="row">
 						<div class="col">
 							<div class="small-box bg-aqua">
 								<div class="inner">
-									<h3 th:text="${noticeCnt}">count</h3>
+									<h3 th:text="${companyCnt}">count</h3>
 									<p>기업</p>
 								</div>
 								<div class="icon">
 									<i class="ion ion-bag"></i>
 								</div>
 								<a th:href="@{/admin/company/list/1}" class="small-box-footer">바로가기
-									 <i class="fa fa-arrow-circle-right"></i>
+									<i class="fa fa-arrow-circle-right"></i>
 								</a>
 							</div>
 						</div>
@@ -48,14 +74,14 @@
 						<div class="col">
 							<div class="small-box bg-green">
 								<div class="inner">
-									<h3 th:text="${companyCnt}">count</h3>
+									<h3 th:text="${lectureCnt}">count</h3>
 									<p>강의</p>
 								</div>
 								<div class="icon">
 									<i class="ion ion-bag"></i>
 								</div>
 								<a th:href="@{/admin/lecture/list/1}" class="small-box-footer">바로가기
-									 <i class="fa fa-arrow-circle-right"></i>
+									<i class="fa fa-arrow-circle-right"></i>
 								</a>
 							</div>
 						</div>
@@ -65,7 +91,7 @@
 						<div class="col">
 							<div class="small-box bg-red">
 								<div class="inner">
-									<h3 th:text="${managerCnt}">count</h3>
+									<h3 th:text="${classCnt}">count</h3>
 									<p>교육과정</p>
 								</div>
 								<div class="icon">
@@ -80,7 +106,7 @@
 						<div class="col">
 							<div class="small-box bg-yellow">
 								<div class="inner">
-									<h3 th:text="${classCnt}">count</h3>
+									<h3 th:text="${studentCnt}">count</h3>
 									<p>교육생</p>
 								</div>
 								<div class="icon">
@@ -96,74 +122,161 @@
 				<!-- total content wrap -->
 			</div>
 
+			<div class="content_bottom" style="display: flex;">
+				<!-- inquiry content wrap -->
+				<div class="inquiry_content_wrap"
+					style="width: 50%; height: 500px; padding: 20px;">
 
-			
-			<div class="section_wrap">
-				<section class="left_section">
-					<div class="section_content">
-						<div class="navbar navbar-inner block-header">
-							<div class="muted pull-left">Inquiry</div>
-							<div class="pull-right">
-								<span class="badge badge-info" th:text="${waitInquiryCnt}">waitInquiryCnt</span>
-							</div>
-						</div>
-						<div class="block-content collapse in">
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th>문의ID</th>
-										<th>제목</th>
-										<th>등록자</th>
-										<th>등록일시</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="inquiry : ${waitInquiryList}">
-										<td th:text="${inquiry.postId}">id</td>
-										<td><a th:href="@{/admin/inquiry/__${inquiry.postId}__}"
-											th:text="${inquiry.postTitle}">title</a></td>
-										<td th:text="${inquiry.rgsterId}">registerId</td>
-										<td th:text="${inquiry.rgstDt}">registDt</td>
-									</tr>
-								</tbody>
-							</table>
+					<div class="inquiry_title">
+						<div style="font-size: 30px; font-weight: bold;">답변대기 문의사항</div>
+						<div>
+							<!-- 더보기 버튼 -->
+							<button type="button" class="more_btn"
+								onclick="location.href='/admin/inquiry/list/1' ">
+								<img th:src="@{/img/plus_white.png}"><span>더보기</span>
+							</button>
+							<!-- 더보기 버튼 -->
 						</div>
 					</div>
-				</section>
-				<section class="right_section">
-					<div class="section_content">
-						<div class="navbar navbar-inner block-header">
-							<div class="muted pull-left">Class</div>
-							<div class="pull-right">
-								<span class="badge badge-info" th:text="${completeClassCnt}">completeClassCnt</span>
-							</div>
-						</div>
-						<div class="block-content collapse in">
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th>교육과정ID</th>
-										<th>교육과정명</th>
-										<th>업무담당자</th>
-										<th>교육과정상태</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="class : ${completeClassList}">
-										<td th:text="${class.clssId}">id</td>
-										<td><a th:href="@{/admin/class/__${class.clssId}__}"
-											th:text="${class.clssNm}">title</a></td>
-										<td th:text="${class.mngrId}">managerId</td>
-										<td th:text="${class.clssCd}">clssCd</td>
-									</tr>
-								</tbody>
-							</table>
+
+					<table class="table table-striped" style="margin-top: 20px;">
+						<thead>
+							<tr class="content_list_th">
+								<th>번호</th>
+								<th>문의사항 제목</th>
+								<th>작성자</th>
+								<th>등록일자</th>
+								<th>답변상태</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="inquiry, iterStat : ${inquiryList}">
+								<td class="td_center" th:text="${iterStat.index + 1}"></td>
+								<td><a
+									th:href="@{/admin/inquiry/view/__${inquiry.postId}__}"
+									th:text="${inquiry.postTitle}">title</a></td>
+								<td class="td_center" th:text="${inquiry.stdtNm}"></td>
+								<td class="td_center"
+									th:text="${#dates.format(inquiry.rgstDt, 'yyyy-MM-dd')}"></td>
+								<td class="td_center" th:text="${inquiry.cmcdNm}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- inquiry content wrap -->
+
+				<!-- subsidy content wrap -->
+				<div class="subsidy_content_wrap"
+					style="width: 50%; height: 500px; padding: 20px;">
+					<div class="subsidy_title">
+						<div style="font-size: 30px; font-weight: bold;">지급완료대기 지원금</div>
+						<div>
+							<!-- 더보기 버튼 -->
+							<button type="button" class="more_btn"
+								onclick="location.href='/admin/subsidy/list/1' ">
+								<img th:src="@{/img/plus_white.png}"><span>더보기</span>
+							</button>
+							<!-- 더보기 버튼 -->
 						</div>
 					</div>
-				</section>
+
+					<table class="table table-striped" style="margin-top: 20px;">
+						<thead>
+							<tr class="content_list_th">
+								<th>번호</th>
+								<th>이름</th>
+								<th>교육과정명</th>
+								<th>지원금</th>
+								<th>지급상태</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="subsidy, iterStat : ${subsidyList}">
+								<td class="td_center" th:text="${iterStat.index + 1}"></td>
+								<td class="td_center" th:text="${subsidy.stdtNm}"></td>
+								<td><a th:href="@{/admin/class/view/__${subsidy.clssId}__}"
+									th:text="${subsidy.clssNm}">title</a></td>
+								<td class="td_center"
+									th:text="${#numbers.formatDecimal(subsidy.payment,3,'COMMA',0,'POINT')}"></td>
+								<td class="td_center" th:text="${subsidy.sbsdNm}"></td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+				<!-- subsidy content wrap -->
 			</div>
-
 		</div>
 	</div>
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<script>
+		var context1 = document.getElementById('cmpyChart').getContext('2d');
+		var cmpyChart = new Chart(context1, {
+			type : 'pie', // 차트의 형태
+			data : { // 차트에 들어갈 데이터
+				labels : [
+				//x 축
+				'이수완료', '미이수', '중도포기' ],
+				datasets : [ { //데이터
+					label : 'test1', //차트 제목
+					fill : false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+					data : [ Number(completeCnt), Number(uncompleteCnt), Number(giveupCnt) //x축 label에 대응되는 데이터 값
+					],
+					backgroundColor : [
+					//색상
+					'rgba(243, 156, 18, 1)', 'rgba(0, 192, 239, 1)',
+							'rgba(221, 75, 57, 1)' ],
+					borderColor : [
+					//경계선 색상
+					'rgba(243, 156, 18, 1)', 'rgba(0, 192, 239, 1)',
+							'rgba(221, 75, 57, 1)' ],
+					borderWidth : 1
+				//경계선 굵기
+				} ]
+			},
+			options : {
+				title : {
+					display : true,
+					text : '교육완료 상태 교육과정의 이수율 통계'
+				},
+				responsive : false
+			}
+		});
+
+		var context2 = document.getElementById('wlogChart').getContext('2d');
+		var wlogChart = new Chart(context2, {
+			type : 'pie', // 차트의 형태
+			data : { // 차트에 들어갈 데이터
+				labels : [
+				//x 축
+				'출근', '미출근' ],
+				datasets : [ { //데이터
+					label : 'test1', //차트 제목
+					fill : false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+					data : [ Number(setInTmCnt), Number(unSetInTmCnt) //x축 label에 대응되는 데이터 값
+					],
+					backgroundColor : [
+					//색상
+					'rgba(0, 166, 90, 1)', 'rgba(240, 240, 240, 1)' ],
+					borderColor : [
+					//경계선 색상
+					'rgba(0, 166, 90, 1)', 'rgba(240, 240, 240, 1)' ],
+					borderWidth : 1
+				//경계선 굵기
+				} ]
+			},
+			options : {
+				title : {
+					display : true,
+					text : '교육중 상태 교육과정의 오늘 출석률 통계'
+				},
+				responsive : false
+
+			}
+		});
+	</script>
+
 </body>
 </html>

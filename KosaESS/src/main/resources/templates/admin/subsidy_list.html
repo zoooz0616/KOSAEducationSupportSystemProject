@@ -147,7 +147,7 @@
 						<td class="number_cell"
 							th:text="${#numbers.formatDecimal(__${subsidy.wlogCnt}__ * 100.0 / __${subsidy.maxWlogCnt}__, 1, 1)}">출석률</td>
 						<td class="number_cell"
-							th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
+							th:text="${#numbers.formatDecimal(subsidy.payment,3,'COMMA',0,'POINT')}">지원금</td>
 						<td class="fixed_length_cell"
 							th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>

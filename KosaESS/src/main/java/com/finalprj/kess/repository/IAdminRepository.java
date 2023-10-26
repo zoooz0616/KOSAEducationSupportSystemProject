@@ -182,5 +182,9 @@ public interface IAdminRepository {
 	List<LectureVO> getSearchLectureList(String lctrNm, String sbjtId, String profId);
 
 	List<LectureVO> getLectureListAll();
+	List<SubsidyDTO> getWaitSubsidyList();
+	int getCmptCnt(String cmcdId);
+	int getWlogCntTotal();
+	int getWlogCntSetInTm();
 
 }
