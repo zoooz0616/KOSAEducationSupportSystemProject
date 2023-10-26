@@ -2,12 +2,27 @@
 /* class="" */
 
 /*-------------------------------------------------------*/
+
+#classId{
+	width:100%;
+}
+
+#classId_wrap{
+	width: 15%;
+}
+
 select option[value=""][disabled] {
 	display: none;
 }
 
 button:hover{
 	cursor: pointer;
+}
+
+.chk_wrap{
+/* 	display: flex; */
+	justify-content: center;
+	margin: 0.4em;
 }
 
 /* 공통 사항*/
@@ -71,24 +86,6 @@ button:hover{
 .search_filter_table input:focus {
 	border-color: #0E5881;
 	border-radius: 0.3em;
-}
-
-.search_filter_btn_wrap {
-	text-align: center;
-}
-
-.search_filter_btn_wrap button {
-	background: #0E5881;
-	color: white;
-	border: none;
-	border-radius: 0.3em;
-	font-weight: bold;
-	width : 5em;
-	margin-left : 0.3em;
-	margin: 10px;
-	text-align: center;
-	font-size: 1.1em;
-	height: 2em;
 }
 
 #stdt_list_table_thead th{
@@ -211,4 +208,94 @@ button:hover{
 }
 input:hover, select:hover{
 	cursor: pointer;
+}
+
+.search_btn_wrap {
+	text-align: center;
+	display: flex;
+}
+#search_reset_btn{
+	background: #6E9BB3;
+}
+#search_by_name_btn{
+	background: #0E5881;
+}
+.search_btn_wrap img{
+	height: 1.2em;
+}
+.search_btn_wrap button{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	width : 5em;
+	margin-left : 0.3em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+
+.table_controller{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.table_controller .sbsd_btn{
+	display: flex;
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	margin-left : 0.3em;
+	justify-content:center;
+	align-items:center;
+	width:5em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+.table_controller .sbsd_delete_btn img, .table_controller .sbsd_insert_btn img{
+	width:1.2em;
+}
+.table_controller .sbsd_delete_btn{
+	display: flex;
+	background: #6E9BB3;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	margin-left : 0.3em;
+	justify-content:center;
+	align-items:center;
+	width:4em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+.table_controller .sbsd_insert_btn{
+	display: flex;
+	background: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	margin-left : 0.3em;
+	justify-content:center;
+	align-items:center;
+	width:4em;
+	margin: 10px;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
 }

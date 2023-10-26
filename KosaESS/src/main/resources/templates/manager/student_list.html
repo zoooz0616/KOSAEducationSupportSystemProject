@@ -36,53 +36,67 @@
 			<div class="search_filter_wrap">
 				<!-- 검색 필터 테이블 -->
 				<div class="search_filter_table">
-					<div class="search_filter_name">
-						교육과정<span class="star">*</span>
-					</div>
-					<div class="search_filter_input">
-						<select id="select_year">
-							<option th:text="전체" th:value=null/>
-							<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
-						</select>
-						<select id="classId">
-							<option value="" disabled selected>교육과정을 선택하세요</option>
-							<option th:each="class:${classList}" th:text="${class.clssNm}"
-								th:value="${class}" />
-						</select>
-					</div>
-					<div class="search_filter_name">
-						출결 기간<span class="star">*</span>
-					</div>
-					<div class="search_filter_input_date_wrap">
-						<div class="search_filter_input_date">
-							<input type="date" id="startDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssStartDd:null}">
-							<span> ~ </span>
-							<input type="date" id="endDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssEndDd:null}">
+					<div class="search_filter_table_row">
+						<div class="search_filter_name">
+							교육과정<span class="star">*</span>
 						</div>
-						<div class="search_filter_input_radio">
-							<span>이번 달</span><input type="radio" name="default_period" id="this_month" value="thisMonth">
-							<span>이번 주</span> <input type="radio" name="default_period" id="this_week" value="thisWeek">
-							<span>시작~종료</span> <input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
+						<div class="search_filter_input" id="classId_wrap">
+							<select id="select_year">
+								<option th:text="전체" th:value=null/>
+								<option th:each="year:${yearList}" th:text="${year}" th:value="${year}"/>
+							</select>
+							<select id="classId">
+								<option value="" disabled selected>교육과정을 선택하세요</option>
+								<option th:each="class:${classList}" th:text="${class.clssNm}"
+									th:value="${class}" />
+							</select>
+						</div>
+						<div class="search_filter_name">
+							출결 기간<span class="star">*</span>
+						</div>
+						<div class="search_filter_input_date_wrap">
+							<div class="search_filter_input_date">
+								<input type="date" id="startDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssStartDd:null}">
+								<span> ~ </span>
+								<input type="date" id="endDate" min="1980-01-01" th:value="${thisClass!=null?thisClass.clssEndDd:null}">
+							</div>
+							<div class="search_filter_input_radio">
+								<span>이번 달</span><input type="radio" name="default_period" id="this_month" value="thisMonth">
+								<span>이번 주</span> <input type="radio" name="default_period" id="this_week" value="thisWeek">
+								<span>시작~종료</span> <input type="radio" name="default_period" id="this_class_period" value="thisClassPeriod">
+							</div>
 						</div>
 					</div>
-					<div class="search_filter_name">검색어</div>
-					<div class="search_filter_input">
-						<input type="text" class="input_keyword" placeholder="이메일 또는 이름">
-					</div>
-					<div class="search_filter_name">이수 상태</div>
-					<div class="search_filter_input">
-						<span class="chk_all_span">
-						<label th:text="전체" class="chk_all_label"></label> <input type="checkbox" checked="checked" id="chk_all_cmpt">
-						</span> <span class="chk_all_span" th:each="cmptCN:${cmptCodeNameList}">
-							<label class="cmpt_name" th:text="${cmptCN.cmcdNm}"></label>
-							<input class="cmpt_checkbox" type="checkbox" checked="checked" th:value="${cmptCN.cmcdId}">
-						</span>
+					<div class="search_filter_table_row">
+						<div class="search_filter_name">검색어</div>
+						<div class="search_filter_input" id="search_filter_keyword">
+							<input type="text" class="input_keyword" placeholder="이메일 또는 이름">
+						</div>
+						<div class="search_filter_name">이수 상태</div>
+						<div class="search_filter_input" id="search_filter_cmpt">
+							<div class="chk_all_span">
+								<div>
+									<label th:text="전체" class="chk_all_label"></label>
+								</div>
+								<div>
+									<input type="checkbox" checked="checked" id="chk_all_cmpt">
+								</div>
+							</div>
+							<div class="chk_all_span" th:each="cmptCN:${cmptCodeNameList}">
+								<div>
+									<label class="cmpt_name" th:text="${cmptCN.cmcdNm}"></label>
+								</div>
+								<div>
+									<input class="cmpt_checkbox" type="checkbox" checked="checked" th:value="${cmptCN.cmcdId}">
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- 검색 버튼 -->
 				<div class="search_filter_btn_wrap">
 					<button class="search_reset_btn" th:id="resetButton" onclick="reset()"><img th:src="@{/img/reset_white.png}"><span>초기화</span></button>
-					<button class="search_filter_btn" th:id="searchButton" onclick="search()"><img th:src="@{/img/search_white.png}"><span>검색</span></button>
+					<button class="search_filter_btn" th:id="searchButton" onclick="search()"><img th:src="@{/img/search_white.png}"><span>조회</span></button>
 				</div>
 				<!-- End : 검색 버튼 -->
 			</div>

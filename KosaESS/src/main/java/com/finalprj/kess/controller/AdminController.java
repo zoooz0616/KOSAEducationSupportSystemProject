@@ -109,54 +109,50 @@ public class AdminController {
 			}
 		}
 
-		// 공지사항 개수
-		int noticeCnt = adminService.getNoticeCnt();
-		model.addAttribute("noticeCnt", noticeCnt);
-
-		// 문의사항 개수
-		int inquiryCnt = adminService.getInquiryCnt();
-		model.addAttribute("inquiryCnt", inquiryCnt);
-
 		// 기업 개수
-		int companyCnt = adminService.getCompanyCnt();
-		model.addAttribute("companyCnt", companyCnt);
+		List<CompanyVO> companyList = adminService.getCompanyListAll();
+		model.addAttribute("companyCnt", companyList.size());
 
-		// 과목 개수
-		int subjectCnt = adminService.getSubjectCnt();
-		model.addAttribute("subjectCnt", subjectCnt);
+		// 강의 개수
+		List<LectureVO> lectureList = adminService.getLectureListAll();
+		model.addAttribute("lectureCnt", lectureList.size());
 
 		// 교육생 개수
-		int studentCnt = adminService.getStudentCnt();
-		model.addAttribute("studentCnt", studentCnt);
+		List<StudentVO> studentList = adminService.getStudentListAll();
+		model.addAttribute("studentCnt", studentList.size());
 
 		// 교육과정 개수
-		int classCnt = adminService.getClassCnt();
-		model.addAttribute("classCnt", classCnt);
+		List<ClassVO> classList = adminService.getClassListAll();
+		model.addAttribute("classCnt", classList.size());
+		
+		// 답변대기 문의사항 10개 가져오기
+		List<PostVO> inquiryList = adminService.getWaitInquiryList();
+		model.addAttribute("inquiryList", inquiryList);
 
-		// 강사 개수
-		int professorCnt = adminService.getProfesserCnt();
-		model.addAttribute("professorCnt", professorCnt);
-
-		// 업무담당자 개수
-		int managerCnt = adminService.getManagerCnt();
-		model.addAttribute("managerCnt", managerCnt);
-
-		// 답변대기 문의 개수
-		int waitInquiryCnt = adminService.getWaitInquiryCnt();
-		model.addAttribute("waitInquiryCnt", waitInquiryCnt);
-
-		// 답변대기 문의List
-		List<PostVO> waitInquiryList = adminService.getWaitInquiryList();
-		model.addAttribute("waitInquiryList", waitInquiryList);
-
-		// 교육완료 개수
-		int completeClassCnt = adminService.getCompleteClassCnt();
-		model.addAttribute("completeClassCnt", completeClassCnt);
-
-		// 교육완료List
-		List<ClassVO> completeClassList = adminService.getCompleteClassList();
-		model.addAttribute("completeClassList", completeClassList);
-
+		// 지급 대기 지원금 10개 가져오기
+		List<SubsidyDTO> subsidyList = adminService.getWaitSubsidyList();
+		model.addAttribute("subsidyList", subsidyList);
+		
+		//이수완료
+		int completeCnt =  adminService.getCmptCnt("CMP0000002");
+		model.addAttribute("completeCnt", completeCnt);
+		//미이수
+		int uncompleteCnt =adminService.getCmptCnt("CMP0000001");
+		model.addAttribute("uncompleteCnt", uncompleteCnt);
+		//중도포기
+		int giveupCnt = adminService.getCmptCnt("CMP0000003");
+		model.addAttribute("giveupCnt", giveupCnt);
+		
+		//출근해야하는 교육생 수
+		int wlogCntTotal = adminService.getWlogCntTotal();
+		//출근등록한 교육생 수
+		int setInTmCnt = adminService.getWlogCntSetInTm();
+		//출근 미등록한 교육생 수
+		int unSetInTmCnt = wlogCntTotal - setInTmCnt;
+		model.addAttribute("setInTmCnt", setInTmCnt);
+		model.addAttribute("unSetInTmCnt", unSetInTmCnt);
+		
+		
 		return "admin/dashboard";
 	}
 
@@ -1389,7 +1385,7 @@ public class AdminController {
 
 		session.setAttribute("page", page);
 
-		int bbsCount = adminService.getNoticeCnt();
+		int bbsCount = lectureListAll.size();
 		model.addAttribute("noticeCnt", bbsCount);
 		int totalPage = 0;
 		if (bbsCount > 0) {
