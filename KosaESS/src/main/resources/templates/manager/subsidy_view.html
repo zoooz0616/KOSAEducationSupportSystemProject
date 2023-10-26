@@ -146,7 +146,7 @@
 						<td class="fixed_length_cell">
 							<input type="checkbox" name="checkedStdt" th:value="${subsidy.sbsdId}">
 						</td>
-						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
+						<td class="fixed_length_cell" th:text="${subsidyStat.count}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
@@ -154,7 +154,7 @@
 						<td class="number_cell" th:text="${subsidy.wlogCnt}">출석일수</td>
 						<td class="number_cell" th:text="${subsidy.maxWlogCnt}">교육일수</td>
 						<td class="number_cell" th:text="${#numbers.formatDecimal(__${subsidy.wlogCnt}__ * 100.0 / __${subsidy.maxWlogCnt}__, 1, 1)}">출석률</td>
-						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.clssSubsidy,3,'COMMA',0,'POINT')}">지원금</td>
+						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.payment,3,'COMMA',0,'POINT')}">지원금</td>
 						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
 						<td class="fixed_length_cell etc"><img src="/img/memo_closed.png" onclick="openMemo(this)"><img src="/img/memo_open.png" style="display:none;" onclick="closeMemo(this)"></td>

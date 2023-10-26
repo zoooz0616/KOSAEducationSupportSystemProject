@@ -32,10 +32,14 @@ function insertSubsidy() {
 	let dict;
 	let table = $('stdt_list_table_tbody');
 	let targetTr;
-	for (let i = 0; i < table.children().length; i++) {
-		//for (let i = 0; i < $('#result_count').text(); i++) {
+	//for (let i = 0; i < table.children().length; i++) {
+		for (let i = 0; i < $('#result_count').text(); i++) {
 		targetTr = table.children().eq(i);
-		//targetTr = $('#stdt_list_table_tbody tr[name=tr' + i + ']');
+		targetTr = $('#stdt_list_table_tbody tr[name=tr' + i + ']');
+		console.log("i >>> "+i+" / "+targetTr);
+		if(targetTr.children('td[name=payment]').children('input').val()==null){
+			continue;
+		}
 		dict = {};
 		dict['clssId'] = $('#select_class option:selected').val()
 		dict['stdtId'] = targetTr.children('td[name="chkbox"]').children('input[type=checkbox]').val();
@@ -58,7 +62,7 @@ function insertSubsidy() {
 		, success: function(response) {
 			if (response.result) {
 				alert("총 " + $('#result_count').text() + "건이 등록되었습니다.");
-				//location.href('/manager/subsidy');
+				location.href='/manager/subsidy';
 			} else {
 				alertFade("등록에 실패하였습니다.(asd)", "F9DCCB", "FF333E");
 			}
