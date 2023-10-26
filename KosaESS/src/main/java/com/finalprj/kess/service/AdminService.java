@@ -756,4 +756,24 @@ public class AdminService implements IAdminService {
 	public List<LectureVO> getLectureListAll() {
 		return adminRepository.getLectureListAll();
 	}
+	
+	@Override
+	public List<SubsidyDTO> getWaitSubsidyList() {
+		return adminRepository.getWaitSubsidyList();
+	}
+	
+	@Override
+	public int getCmptCnt(String cmcdId) {
+		return adminRepository.getCmptCnt(cmcdId);
+	}
+	
+	@Override
+	public int getWlogCntTotal() {
+		return adminRepository.getWlogCntTotal();
+	}
+	
+	@Override
+	public int getWlogCntSetInTm() {
+		return adminRepository.getWlogCntSetInTm();
+	}
 }

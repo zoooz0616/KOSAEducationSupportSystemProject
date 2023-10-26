@@ -77,11 +77,28 @@
 
 	<select id="getWaitInquiryList"
 		resultType="com.finalprj.kess.model.PostVO">
-	<![CDATA[
-		select *
-		from post
-		where post_id like 'INQY%' and post_cd = 'PST0000003'
-	]]>
+	<![CDATA[		
+	select *
+		from (
+        select row_number() over(order by post_id desc) as row_num,
+        	post_id,
+		    post_title,
+		    post_content,
+		    post_cd,
+		    post_hit,
+		    file_id,
+		    post.rgst_dt as "rgstDt",
+		    stdt_nm as "stdtNm",
+			mngr_nm as "mngrNm",
+			cmcd.cmcd_nm
+		FROM post
+		JOIN cmcd ON cmcd.cmcd_id = post.post_cd
+		LEFT JOIN stdt on stdt.stdt_id = post.RGSTER_ID
+		LEFT JOIN mngr on mngr.mngr_id = post.RGSTER_ID
+		WHERE post_id LIKE 'INQY%' AND post.delete_yn = 'N' and post_cd = 'PST0000003'
+		)
+		where row_num between 1 and 10
+		]]>
 	</select>
 
 	<select id="getCompleteClassCnt" resultType="int">
@@ -237,7 +254,7 @@
 		where row_num between #{start} and #{end}
 	]]>
 	</select>
-	
+
 	<select id="getLectureListAll"
 		resultType="com.finalprj.kess.model.LectureVO">
 	<![CDATA[
@@ -1520,7 +1537,8 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			prof_id = #{item.profId},
 			lctr_tm = #{item.lctrTm},
 			lctr_etc = #{item.lctrEtc},
-			updt_dt = SYSTIMESTAMP,
+			updt_dt =
+			SYSTIMESTAMP,
 			updter_id =
 			'MNGR000001'
 			where lctr_id = #{item.lctrId}
@@ -1957,8 +1975,10 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			]]>
 		</if>
 		<if test='keyword!=""'>
-			AND sbsd.stdt_id in (SELECT stdt_id FROM stdt WHERE ((stdt_nm like
-			'%'||#{keyword}||'%' ) OR (user_email like '%'||#{keyword}||'%')))
+			AND sbsd.stdt_id in (SELECT stdt_id FROM stdt WHERE
+			((stdt_nm like
+			'%'||#{keyword}||'%' ) OR (user_email like
+			'%'||#{keyword}||'%')))
 		</if>
 		<if test='subsidyStatus!=""'>
 			AND sbsd_cd = #{subsidyStatus}
@@ -1966,7 +1986,8 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 
 	</select>
 
-	<select id="getManagerListAllByInsert" resultType="com.finalprj.kess.model.ManagerVO">
+	<select id="getManagerListAllByInsert"
+		resultType="com.finalprj.kess.model.ManagerVO">
 	<![CDATA[
 		select 
 		mngr.mngr_id,
@@ -1991,7 +2012,8 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	]]>
 	</select>
 
-	<select id="getSearchSubjectList" parameterType="string" resultType="com.finalprj.kess.model.SubjectVO">
+	<select id="getSearchSubjectList" parameterType="string"
+		resultType="com.finalprj.kess.model.SubjectVO">
 	<![CDATA[
 		select *
 		from sbjt
@@ -2001,8 +2023,9 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			
 	]]>
 	</select>
-	
-	<select id="getSearchProfessorList" parameterType="string" resultType="com.finalprj.kess.model.ProfessorVO">
+
+	<select id="getSearchProfessorList" parameterType="string"
+		resultType="com.finalprj.kess.model.ProfessorVO">
 	<![CDATA[
 		select *
 		from prof
@@ -2017,14 +2040,17 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			
 	]]>
 	</select>
-	
-	<select id="getSearchLectureList" parameterType="string" resultType="com.finalprj.kess.model.LectureVO">
+
+	<select id="getSearchLectureList" parameterType="string"
+		resultType="com.finalprj.kess.model.LectureVO">
 		select *
 		from lctr
 		join sbjt on lctr.sbjt_id = sbjt.sbjt_id
-		join prof on lctr.prof_id = prof.prof_id
-		where lctr.delete_yn='N' 
-		and lctr.lctr_nm like '%'||#{lctrNm}||'%'
+		join prof on
+		lctr.prof_id = prof.prof_id
+		where lctr.delete_yn='N'
+		and lctr.lctr_nm
+		like '%'||#{lctrNm}||'%'
 		<if test="sbjtId != ''">
 			AND lctr.sbjt_id = #{sbjtId}
 		</if>
@@ -2033,8 +2059,75 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		</if>
 		order by lctr.lctr_id
 	</select>
-	
 
+	<select id="getWaitSubsidyList"
+		resultType="com.finalprj.kess.dto.SubsidyDTO">
+		<![CDATA[
+			select *
+		from (
+        select 
+        	row_number() over(order by s.stdt_nm) as row_num
+				,sbsd.sbsd_id
+				,sbsd.clss_id
+				,clss_nm
+				,clss_subsidy
+				,sbsd.stdt_id
+				,stdt_nm
+				,s.user_email
+				,sbsd_cd
+				,c1.cmcd_nm as sbsd_nm
+				,paid_dd
+				,payment
+				,subsidy_dd
+				,max_wlog_cnt
+				,wlog_cnt
+				,sbsd.rgst_dt
+				,sbsd.rgster_id
+				,sbsd.updt_dt
+				,sbsd.updter_id
+				,m.mngr_id
+				,m.mngr_nm
+				,sbsd_etc
+			FROM sbsd 
+				JOIN stdt s ON sbsd.stdt_id=s.stdt_id 
+				JOIN clss c ON sbsd.clss_id=c.clss_id
+				JOIN mngr m ON c.mngr_id=m.mngr_id
+				JOIN cmcd c1 ON sbsd.sbsd_cd=c1.cmcd_id
+		)
+		where row_num between 1 and 10
+		]]>
+	</select>
+
+	<select id="getCmptCnt" parameterType="string" resultType="int">
+	<![CDATA[
+	select count(rgst.stdt_id)
+from rgst
+join clss on rgst.clss_id = clss.clss_id
+where clss.clss_cd = 'CLS0000006' and rgst.cmpt_cd = #{cmcdId}
+	]]>
+	</select>
+	
+	<select id="getWlogCntTotal" resultType="int">
+	<![CDATA[
+	select count(rgst.stdt_id)
+	from rgst
+	join clss on rgst.clss_id = clss.clss_id
+	where clss.clss_cd = 'CLS0000005' and rgst.cmpt_cd = 'CMP0000001'
+	]]>
+	</select>
+	
+	<select id="getWlogCntSetInTm" resultType="int">
+	<![CDATA[
+	select count(wlog.stdt_id)
+	from wlog
+	join rgst on wlog.stdt_id = rgst.stdt_id
+	join clss on rgst.clss_id = clss.clss_id
+	where clss.clss_cd = 'CLS0000005' and rgst.cmpt_cd = 'CMP0000001'
+    and TO_CHAR(wlog.in_tm,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')
+	]]>
+	</select>
+	
+	
 
 
 
