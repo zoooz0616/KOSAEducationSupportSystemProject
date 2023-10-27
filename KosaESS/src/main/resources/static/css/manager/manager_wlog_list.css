@@ -205,15 +205,5 @@ button{
 .number_cell {
 	text-align: right;
 }
-.resn_icon {
-	width: 15px;
-	height: 15px;
-}
 
-.resn_icon:hover {
-	cursor: pointer;
-}
-
-.wlog_list_tbody_row .file_cell_active:hover {
-	cursor: pointer;
-}
+/* ============================================================================================================================================ */

@@ -392,8 +392,6 @@ function showModal(resnIcon) {
 		},
 		async: false,
 		success: function(response) {
-			//console.log(response)
-			//console.log(response.resnContent)
 
 			$('.resn_modal_wrap').css("display", 'flex');
 			$('body').css("overflow", 'hidden');
@@ -429,18 +427,31 @@ function showModal(resnIcon) {
 					resnId: thisResnId
 				}, success: function(resnFileResponse) {
 					resnFileList = resnFileResponse.resnFileList;
-					$('.resn_file_list').empty();
+					$('.resn_img_list').empty();//이미지라면 이 div에 추가함
+					$('.resn_file_list').empty();//파일의 확장자와 무관하게 다운받는 링크를 추가함
 					///*
 					for (let i = 0; i < resnFileList.length; i++) {
-						let resnFileName = $("<li>");
+						/*
+						let resnFileIcon = $('<img src="/img/file.png">');
 						let resnFileLink = $("<a>");
-						let resnFileIcon = $("<img>");
-						resnFileIcon.attr('src', "/img/file.png")
-						resnFileName.append(resnFileIcon);
-						resnFileName.append(resnFileLink);
 						resnFileLink.text(resnFileList[i].fileNm);
 						resnFileLink.attr('href', "/manager/resn/" + resnFileList[i].fileId + "/" + resnFileList[i].fileSubId);
-						$('.resn_file_list').append(resnFileName);
+						('$resn_file_list').append(resnFileLink);
+						('$resn_file_list').append(resnFileLink);
+						if(true){
+							('$resn_img_list').append(resnFileIcon);
+						}
+						*/
+						let fileLinkWrap = $('<div>');
+						let fileLink = $('<a>');
+						fileLink.attr('href','/manager/resn/' + resnFileList[i].fileId + '/' + resnFileList[i].fileSubId);
+						fileLink.attr('text',resnFileList[i].fileNm);
+						fileLinkWrap.append($('<img src="/img/file.png">'));
+						fileLinkWrap.append(fileLink);
+						$('.resn_file_list').append(fileLink);
+						if(resnFileList[i].fileType.split("/")[0]=='image'){
+							$('.resn_img_list').append($('<img src="/manager/resn/' + resnFileList[i].fileId + '/' + resnFileList[i].fileSubId+'">'));
+						}
 					}
 					//*/
 				}, error: function(error) {

@@ -444,7 +444,6 @@
 				JOIN clss c ON m.clss_id=c.clss_id
 				JOIN cmcd c1 ON m.sbsd_cd=c1.cmcd_id
 			WHERE m.clss_id in (SELECT clss_id FROM clss WHERE mngr_id = #{mngrId})
-			ORDER BY m.clss_id, stdt_nm
 		]]>
 		<if test='clssId!=""'>
 			<![CDATA[
@@ -476,7 +475,11 @@
 			</foreach>
 		</if>
 		</if>
+		<![CDATA[
+			ORDER BY m.clss_id, stdt_nm, subsidy_dd desc
+		]]>
 	</select>
+	
 	<insert id="insertSubsidy" parameterType="com.finalprj.kess.model.SubsidyVO">
 		<![CDATA[
 			INSERT INTO sbsd (

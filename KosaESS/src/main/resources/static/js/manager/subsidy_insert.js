@@ -45,7 +45,7 @@ function insertSubsidy() {
 		dict['stdtId'] = targetTr.children('td[name="chkbox"]').children('input[type=checkbox]').val();
 		dict['sbsdCd'] = targetTr.children('td[name=sbsdCd]').children("select").val();
 		dict['payment'] = targetTr.children('td[name=payment]').children('input').val();
-		dict['subsidyDd'] = new Date($('#select_ym_y option:selected').val(), $('#select_ym_m option:selected').val() - 1);
+		dict['subsidyDd'] = new Date($('#select_ym_y option:selected').val(), $('#select_ym_m option:selected').val());
 		dict['maxWlogCnt'] = $('#max_wlog_cnt option:selected').val();
 		dict['wlogCnt'] = targetTr.children('td[name=wlogCnt]').text();
 		dict['sbsdEtc'] = targetTr.children('td[name=sbsdEtc]').children('input[type=text]').val();

@@ -1,5 +1,14 @@
 @charset "UTF-8";
 
+.modal_th{
+	background-color: #E7EFF3;
+	color: #0E5881;
+}
+
+.modal_tr{
+/* 	background-color: #E7EFF3; */
+}
+
 .resn_modal_wrap{
 	position : fixed;
 	z-index: 10;
@@ -12,39 +21,35 @@
 	justify-content: center;
 	align-items: center;
 	overflow: auto;
-/* 	display : block; */
 }
+
 .resn_modal_wrap .resn_modal{
-/* 	padding : 5%; */
-	width : 70%;
+	width : 50%;
 	height : 70%;
 	margin: auto;
 	position : fixed;
-	background-color:rgba(255, 255, 255, 1);
+	background-color:white;
 }
 
 .resn_modal_wrap .resn_modal .wlog_info{
 	width: auto;
 }
 
-.resn_modal_wrap .resn_modal .wlog_info table{
+.wlog_info_table{
 	margin :0, auto;
 	border-collapse: collapse;
-	border : 1px black solid;
-/* 	border-top: 2px 0E5881 solid; */
-/* 	width: auto; */
+	border:1px solid 6E9BB3;
+	width: 100%;
+	font-size: 1.1em;
 }
 
 .resn_modal_wrap .resn_modal .resn_controller {
-	border : 1px black solid;
+/* 	border : 1px black solid; */
 	display: flex;
 	width: 50%;
 	justify-content: center;
 }
 
-.resn_file_list{
-	list-style: none;
-}
 .resn_file_list a{
 	text-decoration-line: none;
 	color: #0E5881;
@@ -55,14 +60,50 @@
 }
 
 .modal_close_wrap {
-	height : 1.4em;
+	height : 3em;
 	background-color: #0E5881;
+	color : white;
+	text-align: center;
 }
 
-.modal_close_wrap img:hover{
-	cursor: pointer;
-}
+/* .modal_close_wrap img:hover{ */
+/* 	cursor: pointer; */
+/* } */
 .modal_close_wrap img{
 	height : 100%;
 	float: right;
+}
+
+.resn_icon {
+	width: 15px;
+	height: 15px;
+}
+
+.modal_title{
+	color: white;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+.resn_icon:hover {
+	cursor: pointer;
+}
+
+.wlog_list_tbody_row .file_cell_active:hover {
+	cursor: pointer;
+}
+
+
+/* .close-icon:hover { */
+/* 	color: #f00; 닫기 아이콘에 호버 스타일 적용 (색상 변경 등) */
+/* } */
+
+
+.close_icon{
+	cursor: pointer;
+}
+
+.resn_img_list{
+	display: none;
+	width: 100%;
 }
