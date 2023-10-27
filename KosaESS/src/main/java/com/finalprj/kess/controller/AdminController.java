@@ -1320,6 +1320,8 @@ public class AdminController {
 		// 지원자 목록 생성
 		List<ApplyDetailDTO> applyDetailList = adminService.getApplyDetailDTOList(clssId);
 		model.addAttribute("applyDetailList", applyDetailList);
+		
+		session.setAttribute("searchApplyList", applyDetailList);
 
 		return "admin/applicant_list";
 	}
@@ -2622,7 +2624,7 @@ public class AdminController {
 		model.addAttribute("classList", classList);
 
 		// 검색조건 - 지원금지급상태
-		List<CommonCodeVO> subsidyStatusList = adminService.getCommonCodeList("GRP0000014");
+		List<CommonCodeVO> subsidyStatusList = adminService.getCommonCodeList("GRP0000012");
 		model.addAttribute("subsidyStatusList", subsidyStatusList);
 
 		// 지원금 리스트 페이징
