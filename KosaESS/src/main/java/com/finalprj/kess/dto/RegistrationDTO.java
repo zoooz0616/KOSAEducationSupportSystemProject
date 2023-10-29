@@ -29,4 +29,6 @@ public class RegistrationDTO {
 	private int clssTotalTm;// 교육과정 이수시간
 	private Double cmptRate;
 	private Double stdtTmSum;
+	
+	private String userEmail;
 }

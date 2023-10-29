@@ -37,6 +37,7 @@ import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.ClassInsertDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
 import com.finalprj.kess.dto.LectureListDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -682,6 +683,41 @@ public class AdminController {
 
 		return "admin/class_list";
 	}
+	
+	/**
+	 * 교육과정 조회 팝업
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 6.
+	 * @parameter : clssId, session, model
+	 * @return : String
+	 */
+	@RequestMapping("/select/class")
+	public String selectClass(Model model) {
+		List<ClassVO> classList = adminService.getClassListAll();
+		model.addAttribute("classList", classList);
+		
+		return "admin/select_class_popup";
+	}
+	
+	/**
+	 * 교육과정 팝업에서 검색
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 6.
+	 * @parameter : clssId, session, model
+	 * @return : String
+	 */
+	@GetMapping("/select/class/search")
+	@ResponseBody
+	public Map<String, Object> selectSearchClass(@RequestParam String keyword) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		List<ClassVO> classList = adminService.getSearchClassPopup(keyword.trim());
+		response.put("classList", classList);
+		
+		return response;
+	}
 
 	/**
 	 * 교육과정 상세조회
@@ -1324,6 +1360,29 @@ public class AdminController {
 		session.setAttribute("searchApplyList", applyDetailList);
 
 		return "admin/applicant_list";
+	}
+	
+	/**
+	 * 교육과정 수강자 목록조회
+	 * 
+	 * @author : eunji
+	 * @date : 2023. 9. 13.
+	 * @parameter : clssId, model, session
+	 * @return : String
+	 */
+	@GetMapping("/class/{clssId}/registant")
+	public String registant(@PathVariable String clssId, Model model, HttpSession session) {
+		// 해당 교육과정VO 생성
+		ClassVO classVO = adminService.getClass(clssId);
+		model.addAttribute("classVO", classVO);
+
+		// 수강자 목록 생성
+		List<RegistrationDTO> registList = adminService.getRegistDTOList(clssId);
+		model.addAttribute("registList", registList);
+		
+		session.setAttribute("searchRegistList", registList);
+
+		return "admin/registant_list";
 	}
 
 	/**

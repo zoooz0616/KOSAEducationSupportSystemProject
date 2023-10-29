@@ -44,11 +44,8 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육과정</div>
 					<div>
-						<select class="search_clss_nm_select">
-							<option value="all" th:text="전체">전체</option>
-							<option th:each="class: ${classList}" th:value="${class.clssId}"
-								th:text="|${class.clssNm}(${class.clssId})|"></option>
-						</select>
+						<input class="search_clss_nm_select" type="hidden" >
+						<input class="search_class_select" type="text" placeholder="교육과정을 선택하세요." onclick="showSelectClassPopup(this)" readonly>
 					</div>
 				</div>
 
@@ -263,7 +260,7 @@
 			
 			var tdNum = document.createElement("td");
 			tdNum.className = "student_num";
-			tdNum.textContent = studentList.length-i;
+			tdNum.textContent = i+1;
 			trStudent.appendChild(tdNum);
 			
 			var tdName = document.createElement("td");
@@ -402,6 +399,33 @@
   		statusNm.classList.add('red');
   	}
 	});
+	
+	//검샋 필터 - 교육과정 선택 버튼(팝업띄우기)
+	var popup2;
+	function showSelectClassPopup(input){
+		var divParent = input.closest('div');
+		
+		popup2 = window.open(
+				"/admin/select/class", "교육과정 선택 팝업", 
+				"width=750, height=750, left=900, top=500"
+		);
+		
+		window.addEventListener("message", function(event) {
+			if (event.data && event.data.event) {
+				if (event.data.event === 'classSelected') {
+					var clssId = event.data.clssId;
+					var clssNm = event.data.clssNm;
+
+					var hiddenInput = divParent
+							.querySelector("input[type='hidden']");
+
+					hiddenInput.value = clssId;
+					input.value = clssNm;
+
+				}
+			}
+		});
+	}
 	
 	</script>
 </body>

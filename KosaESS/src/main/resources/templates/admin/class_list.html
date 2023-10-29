@@ -49,8 +49,8 @@
 			<div class="title">교육과정 관리</div>
 			<!-- Route -->
 			<div class="route">
-				<a th:href="@{/admin}">대시보드</a> > <a th:href="@{/admin/class/list/1}">교육과정
-					관리</a>
+				<a th:href="@{/admin}">대시보드</a> > <a
+					th:href="@{/admin/class/list/1}">교육과정 관리</a>
 			</div>
 		</div>
 		<!-- Content Top -->
@@ -135,7 +135,8 @@
 
 		<!-- Content Bottom-->
 		<div class="content_bottom">
-			<form th:action="@{/admin/cls/delete}" method="post" onsubmit="return beforeSubmit();">
+			<form th:action="@{/admin/cls/delete}" method="post"
+				onsubmit="return beforeSubmit();">
 				<!-- 컨텐츠 개수와 버튼 wrap -->
 				<div class="content_info_wrap">
 					<div class="content_info">
@@ -175,13 +176,14 @@
 								<th style="width: 2%;">순번</th>
 								<th style="width: 5%;">ID</th>
 								<th style="width: 19%;">교육과정명</th>
-								<th style="width: 10%;">기업</th>
+								<th style="width: 5%;">기업</th>
 								<th style="width: 5%;">교육상태</th>
+								<th style="width: 5%;">수강 인원</th>
+								<th style="width: 5%;">지원 인원</th>
 								<th style="width: 15%;">지원기간</th>
 								<th style="width: 10%;">교육기간</th>
 								<th style="width: 5%;">교육시간</th>
 								<th style="width: 12%;">교육장소</th>
-								<th style="width: 5%;">수강가능인원</th>
 								<th style="width: 5%;">업무담당자</th>
 								<th style="width: 8%;">지원금(&#8361;)</th>
 							</tr>
@@ -197,6 +199,12 @@
 									th:href="@{/admin/class/view/__${class.clssId}__}"></a></td>
 								<td th:text="${class.cmpyNm} ? ${class.cmpyNm} : '-'"></td>
 								<td class="class_status" th:text="${class.cmcdNm}">status</td>
+								<td class="limit_cnt"><a
+									th:href="@{/admin/class/__${class.clssId}__/registant}"
+									th:text="${class.limitCnt}"></a></td>
+								<td class="limit_cnt"><a
+									th:href="@{/admin/class/__${class.clssId}__/applicant}"><span
+										th:text="${class.aplyCnt}"></span></a></td>
 								<td class="aply_dt"
 									th:text="|${#dates.format(class.aplyStartDt, 'yyyy-MM-dd HH:mm')} ~ 
 							${#dates.format(class.aplyEndDt, 'yyyy-MM-dd HH:mm')}|"></td>
@@ -206,9 +214,7 @@
 									th:text="|${#dates.format(class.setInTm,'HH:mm')} ~ ${#dates.format(class.setOutTm,  'HH:mm')}|"></td>
 								<td th:text="${class.clssAdr} ? ${class.clssAdr} : '-'">class
 									address</td>
-								<td class="limit_cnt"><a
-									th:href="@{/admin/class/__${class.clssId}__/applicant}"><span
-										th:text="${class.limitCnt}"></span></a></td>
+
 								<td class="manager_name"
 									th:text="${class.mngrNm} ? ${class.mngrNm} :'-'"></td>
 								<td class="class_subsidy"
@@ -426,6 +432,25 @@
 	          			
 	          			tr.appendChild(tdStatus);
 	          			
+	          			//수강 인원
+	          			var tdLimitCnt = document.createElement("td");
+	          			tdLimitCnt.className="limit_cnt";
+	          			var aLimitCnt = document.createElement("a");
+	          			aLimitCnt.href = '/admin/class/'+clss.clssId+'/registant';
+	          			aLimitCnt.textContent = clss.limitCnt;
+	          			tdLimitCnt.appendChild(aLimitCnt);
+	          			tr.appendChild(tdLimitCnt);
+	          			
+	          			//지원한 인원
+	          			var tdLimitCnt = document.createElement("td");
+	          			tdLimitCnt.className="limit_cnt";
+	          			var aLimitCnt = document.createElement("a");
+	          			aLimitCnt.href = '/admin/class/'+clss.clssId+'/applicant';
+	          			aLimitCnt.textContent = clss.aplyCnt;
+	          			tdLimitCnt.appendChild(aLimitCnt);
+	          			tr.appendChild(tdLimitCnt);
+	          			
+	          			
 	          			//지원기간
 	          			var tdAplyDt = document.createElement("td");
 	          			tdAplyDt.className ="aply_dt";
@@ -453,14 +478,7 @@
 	          			}
 	          			tr.appendChild(tdAdr);
 	          			
-	          			//수강인원
-	          			var tdLimitCnt = document.createElement("td");
-	          			tdLimitCnt.className="limit_cnt";
-	          			var aLimitCnt = document.createElement("a");
-	          			aLimitCnt.href = '/admin/class/'+clss.clssId+'/applicant';
-	          			aLimitCnt.textContent = clss.limitCnt;
-	          			tdLimitCnt.appendChild(aLimitCnt);
-	          			tr.appendChild(tdLimitCnt);
+	          			
 	          			
 	          			//업무담당자
 	          			var tdMngrNm = document.createElement("td");

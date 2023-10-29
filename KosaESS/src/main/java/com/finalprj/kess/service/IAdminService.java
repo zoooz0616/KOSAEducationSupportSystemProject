@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -197,4 +198,7 @@ public interface IAdminService {
 
 	int getWlogCntTotal();
 	int getWlogCntSetInTm();
+
+	List<ClassVO> getSearchClassPopup(String keyword);
+	List<RegistrationDTO> getRegistDTOList(String clssId);
 }

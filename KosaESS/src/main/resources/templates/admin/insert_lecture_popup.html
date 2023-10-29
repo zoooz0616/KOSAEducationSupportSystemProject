@@ -61,9 +61,9 @@
 
 			window.addEventListener("message", function(event) {
 				if (event.data && event.data.event) {
-					if (event.data.event === 'subjectSelected') {
-						var sbjtId = event.data.sbjtId;
-						var sbjtNm = event.data.sbjtNm;
+					if (event.data.event === 'classSelected') {
+						var clssId = event.data.clssId;
+						var clssNm = event.data.clssNm;
 
 						var hiddenInput = tdParent
 								.querySelector("input[type='hidden']");
