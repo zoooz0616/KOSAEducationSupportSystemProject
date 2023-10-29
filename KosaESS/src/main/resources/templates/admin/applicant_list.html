@@ -120,12 +120,13 @@
 					</div>
 					<div class="content_info_btn_wrap">
 						<!-- 엑셀 다운로드 버튼 -->
-						<button type="button" id="excel_btn">
+						<button type="button" id="excel_btn"
+						onclick="location.href='/excel/admin/applicant'">
 							<img th:src="@{/img/excel.png}"><span>엑셀</span>
 						</button>
 					
 						<!-- 합격 버튼 -->
-						<input type="submit" name="action" value="합  격">
+						<input type="submit" name="action" value="합격">
 						<!-- 불합격 버튼 -->
 						<input type="submit" name="action" value="불합격">
 					</div>
@@ -207,6 +208,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+var success= document.querySelectorAll(".td_status");
+success.forEach((s)=>{
+	if(s.textContent==='합격' || s.textContent==='수강확정'){
+		s.classList.add('blue');
+	}else if(s.textContent==='불합격'){
+		s.classList.add('red');
+	}
+})
 </script>
 </body>
 </html>

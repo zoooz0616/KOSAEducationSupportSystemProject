@@ -35,11 +35,8 @@
 				<div class="filter_box">
 					<div class="filter_box_title">교육과정명</div>
 					<div>
-						<select class="search_class_select">
-							<option value="all">전체</option>
-							<option th:each="class: ${classList}" th:value="${class.clssId}"
-								th:text="${class.clssNm}"></option>
-						</select>
+						<input class="search_class_id" type="hidden">
+						<input class="search_class_select" type="text" onclick="showSelectClassPopup(this)" readonly>
 					</div>
 				</div>
 				<!-- 교육과정-->
@@ -213,7 +210,6 @@
 	//현재 수정중인 업무담당자
 	var updatingManager = '';
 	
-	
 	//전체선택
 	function selectAll(selectAll){
 		//모든 체크박스들
@@ -305,7 +301,7 @@
 		//조회
 		function search() {
 			//교육과정 id
-			var searchClassSelect = document.querySelector(".search_class_select");
+			var searchClassSelect = document.querySelector(".search_class_id");
 			var searchClassId = searchClassSelect.value;
 			
 			//검색카테고리 값
@@ -658,6 +654,10 @@
   .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
 }
 	
+	//검샋 필터 - 교육과정 선택 버튼(팝업띄우기)
+	function showSelectClassPopup(input){
+		
+	}
 	</script>
 </body>
 </html>
