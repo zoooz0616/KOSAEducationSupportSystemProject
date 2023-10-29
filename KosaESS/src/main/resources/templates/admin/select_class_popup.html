@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/include/manager_header :: header}">
+<meta charset="UTF-8">
+</head>
+<head>
+<link th:href="@{/css/admin/select_class_popup.css}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<h2>교육과정을 선택하세요.</h2>
+
+	<div class="select_wrap">
+		<div class="search_wrap">
+			<input class="search_input" type="text" placeholder="교육과정명을 입력하세요."
+				onkeyup="if(window.event.keyCode==13){search()}">
+			<button class="search_btn" onclick="search()">조회</button>
+		</div>
+
+		<!-- 총 개수 및 버튼-->
+		<div class="content_info_wrap">
+			<div style="margin-left: 5px;">
+				총 <span class="cnt class_cnt" th:text="${#lists.size(classList)}"></span>
+				건
+			</div>
+		</div>
+		<!-- 총 개수 및 버튼-->
+
+
+		<div class="company_list_wrap">
+			<!-- 교육과정 관리 -->
+			<div class="professor_wrap" style="height: 50%;">
+				<!-- 리스트 -->
+				<div class="table_wrap professor_table">
+					<table>
+						<thead>
+							<tr class="content_list_th">
+								<th style="width: 10%;">번호</th>
+								<th style="width: 90%;">교육과정ID(교육과정명)</th>
+							</tr>
+						</thead>
+						<tbody class="class_tbody">
+							<tr class="tr_class" th:each="class, iterStat : ${classList}"
+								onclick="selectClass(this)">
+								<td class="td_class_num"><input type="hidden"
+									th:value="${class.clssId}"> <span
+									th:text="${iterStat.index+1}"></span></td>
+								<td class="td_class_nm"><span>( </span> <span
+									th:text="${class.clssId}"></span> <span> )</span> <span
+									class="clss_nm" th:text="${class.clssNm}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 리스트 -->
+			</div>
+			<!-- 교육과정 관리  -->
+		</div>
+
+		<div class="btn_wrap">
+			<button type="button" class="btn" onclick="self.close();">취소</button>
+		</div>
+	</div>
+	<script>
+		//강사 선택 이벤트
+		function selectClass(trClass) {
+			var clssId = trClass
+					.querySelector(".td_class_num input[type='hidden']").value;
+			var clssNm = trClass.querySelector('.td_class_nm .clss_nm').textContent;
+
+			// 값을 부모 창으로 JSON 객체로 전달
+			var values = {
+				clssId : clssId,
+				clssNm : clssNm
+			};
+			window.opener.postMessage({
+				event : 'classSelected',
+				clssId : clssId,
+				clssNm : clssNm
+			}, "*");
+			window.close(); // 팝업 창 닫기
+		}
+
+		//강사 검색하기
+		function search() {
+			var keyword = document.querySelector(".search_input").value;
+
+			$.ajax({
+				url : '/admin/select/class/search',
+				method : 'GET',
+				data : {
+					keyword : keyword
+				},
+				success : function(response) {
+					var classList = response.classList;
+
+					//tbody 비우기
+					const classTbody = document.querySelector('.class_tbody');
+					$('.class_tbody').empty();
+
+					//professor cnt 변경
+					var classCnt = document.querySelector('.class_cnt');
+					classCnt.textContent = classList.length;
+
+					for (var i = 0; i < classList.length; i++) {
+						var clss = classList[i];
+
+						var tr = document.createElement('tr');
+						tr.className = "tr_class";
+						tr.onclick = function() {
+							selectClass(this);
+						}
+
+						var tdNum = document.createElement('td');
+						tdNum.className = 'td_class_num';
+						var inputNum = document.createElement('input');
+						inputNum.type = "hidden";
+						inputNum.value = clss.clssId;
+						var spanNum = document.createElement('span');
+						spanNum.textContent = i + 1;
+						tdNum.appendChild(inputNum);
+						tdNum.appendChild(spanNum);
+						tr.appendChild(tdNum);
+
+						var tdNm = document.createElement('td');
+						tdNm.className = 'td_class_nm';
+						var spanLeft =document.createElement('span');
+						spanLeft.textContent='( ';
+						var spanId = document.createElement('span');
+						spanId.textContent = clss.clssId;
+						var spanRight=document.createElement('span');
+						spanRight.textContent=' ) ';
+						var spanNm = document.createElement('span');
+						spanNm.className="clss_nm";
+						spanNm.textContent = clss.clssNm;
+						
+
+						tdNm.appendChild(spanLeft);
+						tdNm.appendChild(spanId);
+						tdNm.appendChild(spanRight);
+						tdNm.appendChild(spanNm);
+						tr.appendChild(tdNm);
+
+						classTbody.appendChild(tr);
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

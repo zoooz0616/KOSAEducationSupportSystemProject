@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalprj.kess.dto.ApplyDetailDTO;
 import com.finalprj.kess.dto.CurriculumDetailDTO;
+import com.finalprj.kess.dto.RegistrationDTO;
 import com.finalprj.kess.dto.SubsidyDTO;
 import com.finalprj.kess.model.ApplyVO;
 import com.finalprj.kess.model.ClassVO;
@@ -775,5 +776,15 @@ public class AdminService implements IAdminService {
 	@Override
 	public int getWlogCntSetInTm() {
 		return adminRepository.getWlogCntSetInTm();
+	}
+	
+	@Override
+	public List<ClassVO> getSearchClassPopup(String keyword) {
+		return adminRepository.getSearchClassPopup(keyword);
+	}
+
+	@Override
+	public List<RegistrationDTO> getRegistDTOList(String clssId) {
+		return adminRepository.getRegistDTOList(clssId);
 	}
 }

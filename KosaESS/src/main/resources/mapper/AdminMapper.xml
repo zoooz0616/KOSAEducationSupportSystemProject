@@ -148,7 +148,8 @@
 		clss.clss_subsidy,
 		cmcd.cmcd_nm,
 		mngr.mngr_nm,
-		mngr.user_email		
+		mngr.user_email,
+		(select count(aply_id) from aply where clss_id = clss.clss_id) as "aplyCnt"
 		from clss
 		left join mngr on mngr.mngr_id = clss.mngr_id
 		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -1491,7 +1492,33 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 	<select id="getSearchClassList" parameterType="string"
 		resultType="com.finalprj.kess.model.ClassVO">
 	<![CDATA[
-		select *
+	select
+		clss.clss_id,
+		clss.mngr_id,
+		clss.cmpy_id,
+		cmpy.cmpy_nm,
+		clss.clss_nm,
+		clss.clss_content,
+		clss.limit_cnt,
+		clss.aply_start_dt,
+		clss.aply_end_dt,
+		clss.clss_start_dd,
+		clss.clss_end_dd,
+		clss.set_in_tm,
+		clss.set_out_tm,
+		clss.clss_adr,
+		clss.clss_total_tm,
+		clss.clss_etc,
+		clss.rgst_dt,
+		clss.rgster_id,
+		clss.updt_dt,
+		clss.updter_id,
+		clss.delete_yn,
+		clss.clss_subsidy,
+		cmcd.cmcd_nm,
+		mngr.mngr_nm,
+		mngr.user_email,
+		(select count(aply_id) from aply where clss_id = clss.clss_id) as "aplyCnt"
 		from clss
 		left join mngr on mngr.mngr_id = clss.mngr_id
 		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -1777,7 +1804,8 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		clss.clss_subsidy,
 		cmcd.cmcd_nm,
 		mngr.mngr_nm,
-		mngr.user_email		
+		mngr.user_email,
+		(select count(aply_id) from aply where clss_id = clss.clss_id) as "aplyCnt"
 		from clss
 		left join mngr on mngr.mngr_id = clss.mngr_id
 		left join cmpy on cmpy.cmpy_id = clss.cmpy_id
@@ -2128,7 +2156,36 @@ where clss.clss_cd = 'CLS0000006' and rgst.cmpt_cd = #{cmcdId}
 	]]>
 	</select>
 	
+	<select id="getSearchClassPopup" parameterType="string" resultType="com.finalprj.kess.model.ClassVO">
+	<![CDATA[
+	select 
+		clss_id,
+		clss_nm
+	from clss
+	where upper(clss_nm) like '%'||upper(#{keyword})||'%'
+	order by clss_id
+	]]>
+	</select>
 	
+	<select id="getRegistDTOList" parameterType="string" resultType="com.finalprj.kess.dto.RegistrationDTO">
+	<![CDATA[
+	select
+		rgst.rgst_id,
+		rgst.stdt_id,
+		stdt.user_email,
+		stdt.stdt_nm,
+		rgst.rgst_cd,
+		r.cmcd_nm as "rgst_nm",
+		rgst.cmpt_cd,
+		c.cmcd_nm as "cmpt_nm"
+	from rgst
+	join clss on rgst.clss_id = clss.clss_id
+	join cmcd r on r.cmcd_id = rgst.rgst_cd 
+	join cmcd c on c.cmcd_id = rgst.cmpt_cd
+	join stdt on stdt.stdt_id = rgst.stdt_id
+	where clss.clss_id = #{clssId}
+	]]>
+	</select>
 
 
 

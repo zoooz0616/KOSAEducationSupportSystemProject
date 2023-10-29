@@ -47,6 +47,7 @@ public class ClassVO {
 	private String userEmail;//업무담당자 이메일
 	private String fileNm; // 파일 이름
 	private String sSubsidy; // 금액으로 표시된 지원금
+	private int aplyCnt;//지원한 인원
 	
 	private int rowNum;
 
