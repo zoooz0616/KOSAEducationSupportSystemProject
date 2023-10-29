@@ -29,7 +29,8 @@ button{
 	border: none;
 	border-radius: 0.3em;
 	font-weight: bold;
-	width : 90%;
+/* 	width : 90%; */
+	width:5em;
 	margin-left : 0.3em;
 	margin: 10px;
 	text-align: center;
@@ -205,15 +206,41 @@ button{
 .number_cell {
 	text-align: right;
 }
-.resn_icon {
-	width: 15px;
-	height: 15px;
+
+/* ============================================================================================================================================ */
+.pagination {
+	list-style: none;
 }
 
-.resn_icon:hover {
-	cursor: pointer;
+.pagination li {
+	color: black;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
 }
 
-.wlog_list_tbody_row .file_cell_active:hover {
-	cursor: pointer;
+.pagination li a{
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.pagination li.active {
+	background-color: #0E5881;
+	color: white;
+	border-radius: 5px;
+}
+
+.pagination li.active a{
+	color:white;
+}
+
+.pagination li:hover:not(.active) {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+.page_nav{
+	display: flex;
+	justify-content: center;
+	margin: 1em 0;
 }

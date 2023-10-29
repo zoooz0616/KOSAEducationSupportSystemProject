@@ -219,6 +219,17 @@
 		]]>
 	</update>
 	
+	<update id="updateWlogTotalTime">
+		<![CDATA[
+			UPDATE wlog
+			SET
+				wlog_total_tm=9
+				,updt_dt=systimestamp
+				,updter_id=#{mngrId}
+			WHERE wlog_id = #{wlogId}
+		]]>
+	</update>
+	
 	<update id="deleteWlog">
 		<![CDATA[
 			UPDATE wlog
@@ -294,7 +305,8 @@
 	<select id="getWlogListByClssIds" resultType="com.finalprj.kess.dto.WorklogDTO">
 		<![CDATA[
 			SELECT
-				w.wlog_id
+				ROW_NUMBER() OVER(ORDER BY in_tm DESC, stdt_nm) as "rowNum"
+				,w.wlog_id
 				, s.stdt_id AS stdtid --id
 				, s.stdt_nm AS stdtNm --이름
 				, s.user_email AS userEmail --이메일
@@ -359,6 +371,67 @@
 		<![CDATA[
 			ORDER BY in_tm DESC, stdtNm
 		]]>
+		<choose>
+			<when test='page > 0'>
+				OFFSET (#{page}-1) * 50 ROWS
+				FETCH NEXT 50 ROWS ONLY
+			</when>
+		</choose>
+	</select>
+	
+	<select id="getWlogListSize" resultType="int">
+		<![CDATA[
+			SELECT
+				count(w.wlog_id)
+			FROM wlog w
+				JOIN stdt s ON w.stdt_id = s.stdt_id
+				JOIN cmcd c1 ON w.wlog_cd = c1.cmcd_id
+				JOIN clss ON w.clss_id = clss.clss_id
+				LEFT JOIN resn r ON r.wlog_id = w.wlog_id
+				LEFT JOIN cmcd c2 ON r.resn_cd = c2.cmcd_id
+			WHERE
+				w.clss_id in (select clss_id from clss WHERE mngr_id = #{mngrId})
+		]]>
+		<if test='startDate!=""'>
+			<![CDATA[
+				AND in_tm >= to_date(#{startDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='endDate!=""'>
+			<![CDATA[
+				AND out_tm <= to_date(#{endDate}, 'YYYY-MM-DD')
+			]]>
+		</if>
+		<if test='isDelete eq "false" or isDelete eq null'>
+			<![CDATA[
+				AND w.delete_yn='N'
+			]]>
+		</if>
+		<if test='resnOnly eq "true"'>
+			<![CDATA[
+				AND w.wlog_id in (SELECT wlog_id FROM resn WHERE delete_yn='N')
+			]]>
+		</if>
+		<if test='clssId!=""'>
+			<![CDATA[
+				AND w.clss_id=#{clssId}
+			]]>
+		</if>
+		<if test='keyword!=""'>
+			<![CDATA[
+				AND w.stdt_id in (SELECT stdt_id FROM stdt WHERE ((s.stdt_nm like '%'||trim(#{keyword})||'%' ) OR (s.user_email like '%'||trim(#{keyword})||'%')))
+			]]>
+		</if>
+		<if test='filterString!=null'>
+		<if test='filterString!=""'>
+			AND w.wlog_cd IN
+			<foreach collection="filterString" item="item" open="(" separator="," close=")">
+				<![CDATA[
+					 #{item}
+				]]>
+			</foreach>
+		</if>
+		</if>
 	</select>
 	
 	<select id="getStudentListByOnlyClssId" resultType="com.finalprj.kess.dto.StudentInfoDTO">
@@ -420,6 +493,7 @@
 	<select id="getSubsidyList" resultType="com.finalprj.kess.dto.SubsidyDTO">
 		<![CDATA[
 			SELECT 
+				row_number() over(order by m.clss_id, stdt_nm, subsidy_dd desc) as "rowNum",
 				m.sbsd_id
 				,m.clss_id
 				,clss_nm
@@ -443,8 +517,8 @@
 				JOIN stdt s ON m.stdt_id=s.stdt_id 
 				JOIN clss c ON m.clss_id=c.clss_id
 				JOIN cmcd c1 ON m.sbsd_cd=c1.cmcd_id
-			WHERE m.clss_id in (SELECT clss_id FROM clss WHERE mngr_id = #{mngrId})
-			ORDER BY m.clss_id, stdt_nm
+			WHERE
+				m.clss_id in (SELECT clss_id FROM clss WHERE mngr_id = #{mngrId})
 		]]>
 		<if test='clssId!=""'>
 			<![CDATA[
@@ -476,7 +550,17 @@
 			</foreach>
 		</if>
 		</if>
+		<![CDATA[
+			ORDER BY m.clss_id, stdt_nm, subsidy_dd desc
+		]]>
+		<choose>
+			<when test='page > 0'>
+				OFFSET (#{page}-1) * 50 ROWS
+				FETCH NEXT 50 ROWS ONLY
+			</when>
+		</choose>
 	</select>
+	
 	<insert id="insertSubsidy" parameterType="com.finalprj.kess.model.SubsidyVO">
 		<![CDATA[
 			INSERT INTO sbsd (

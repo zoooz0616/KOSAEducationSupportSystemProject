@@ -102,8 +102,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString) {
-		return managerRepository.getWlogListByClssIds(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
+	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString, Integer page) {
+		return managerRepository.getWlogListByClssIds(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page);
 	}
 
 	@Override
@@ -133,8 +133,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString) {
-		return managerRepository.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
+	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString, int page) {
+		return managerRepository.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, page);
 	}
 
 	@Override
@@ -160,5 +160,15 @@ public class ManagerService implements IManagerService {
 	@Override
 	public int getMaxId(String tableName, String columnName) {
 		return managerRepository.getMaxId(tableName, columnName);
+	}
+
+	@Override
+	public void updateWlogTotalTime(String wlogId, String mngrId) {
+		managerRepository.updateWlogTotalTime(wlogId, mngrId);
+	}
+
+	@Override
+	public Integer getWlogListSize(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString) {
+		return managerRepository.getWlogListSize(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
 	}
 }

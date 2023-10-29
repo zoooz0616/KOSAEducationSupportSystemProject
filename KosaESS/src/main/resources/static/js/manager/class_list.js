@@ -70,7 +70,7 @@ function fetchClassList() {
 				
 				className.setAttribute("class","variable_length_cell");
 				classAddress.setAttribute("class","variable_length_cell");
-				classClssCd.setAttribute("class","variable_length_cell");
+				//classClssCd.setAttribute("class","variable_length_cell");
 				
 				newRow.appendChild(classRowNum);
 				newRow.appendChild(className);

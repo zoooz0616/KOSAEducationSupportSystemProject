@@ -52,8 +52,8 @@ public interface IManagerService {
 
 	public double getStudentTmSumByIds(String classId, String stdtId);
 
-	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString);
-
+	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString, Integer page);
+	
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 
 	public ReasonDTO getResnDetailByResnId(String resnId);
@@ -64,7 +64,7 @@ public interface IManagerService {
 
 	public void updateManagerInfo(ManagerVO updateManager);
 
-	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString);
+	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString, int page);
 
 	public void deleteWlog(String wlogId);
 
@@ -75,4 +75,8 @@ public interface IManagerService {
 	public void insertSubsidy(SubsidyVO subsidyVO);
 
 	public int getMaxId(String tableName, String columnName);
+
+	public void updateWlogTotalTime(String wlogId, String mngrId);
+
+	public Integer getWlogListSize(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString);
 }

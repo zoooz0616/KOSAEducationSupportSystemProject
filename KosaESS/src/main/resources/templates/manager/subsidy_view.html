@@ -146,7 +146,7 @@
 						<td class="fixed_length_cell">
 							<input type="checkbox" name="checkedStdt" th:value="${subsidy.sbsdId}">
 						</td>
-						<td class="fixed_length_cell" th:text="${subsidyStat.count}">번호</td>
+						<td class="fixed_length_cell" th:text="${subsidy.rowNum}">번호</td>
 						<td class="fixed_length_cell" th:text="${subsidy.stdtNm}">이름</td>
 						<td class="variable_length_cell" th:text="${subsidy.clssNm}">교육과정</td>
 						<td class="variable_length_cell" th:text="${subsidy.userEmail}">이메일</td>
@@ -157,12 +157,27 @@
 						<td class="number_cell" th:text="${#numbers.formatDecimal(subsidy.payment,3,'COMMA',0,'POINT')}">지원금</td>
 						<td class="fixed_length_cell" th:text="${#dates.format(subsidy.subsidyDd, 'yyyy-MM')}">지급기준일</td>
 						<td class="fixed_length_cell" th:text="${subsidy.paidDd}">지급일</td>
-						<td class="fixed_length_cell etc"><img src="/img/memo_closed.png" onclick="openMemo(this)"><img src="/img/memo_open.png" style="display:none;" onclick="closeMemo(this)"></td>
+						<td class="fixed_length_cell etc"><img th:if="${subsidy.sbsdEtc!=null}" src="/img/memo_closed.png" onclick="openMemo(this)"><img src="/img/memo_open.png" style="display:none;" onclick="closeMemo(this)"></td>
 						<td class="fixed_length_cell" th:text="${subsidy.sbsdNm}" th:value="${subsidy.sbsdCd}">지급상태</td>
 					</tr>
 				</tbody>
 			</table>
 			<!-- End : table 시작-->
+			<!-- Paging -->
+			<nav class="page_nav" aria-label="Page navigation">
+				<ul class="pagination">
+					<li th:if="${nowPageBlock>1}">
+						<a th:href="@{/manager/subsidy/__${startPage-1}__}" aria-label="Previous">이전</a>
+					</li>
+					<li th:each="i: ${#numbers.sequence(startPage, endPage)}" th:classappend="${i==nowPage}?active">
+						<a th:href="@{/manager/subsidy/__${i}__}">[[${i}]]</a>
+					</li>
+					<li th:if="${nowPageBlock<totalPageBlock}">
+						<a th:href="@{/manager/subsidy/__${endPage+1}__}" aria-label="Next">다음</a>
+					</li>
+				</ul>
+			</nav>
+			<!-- Paging -->
 		</div>
 	</div>
 </body>

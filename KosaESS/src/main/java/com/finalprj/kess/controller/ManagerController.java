@@ -81,10 +81,21 @@ public class ManagerController {
 			return "redirect:/admin";
 		}
 		
-		List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), LocalDate.now().getYear());
+		String mngrId = (String) session.getAttribute("mngrId");
 		
+		List<ClassVO> classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), null);
+		List<Integer> yearList = managerService.getYearList(mngrId);
+		List<CommonCodeVO> wokList = managerService.getCodeNameList("WOK");
+		List<String> filterString = new ArrayList<String>();
+		for (CommonCodeVO vo : wokList) {
+			filterString.add(vo.getCmcdId());
+		}
+		List<WorklogDTO> latestResnList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "true", filterString, null);
+		
+		model.addAttribute("yearList", yearList);
 		model.addAttribute("title","메인");
 		model.addAttribute("classList",classList);
+		model.addAttribute("latestResnList",latestResnList);
 		
 		return "manager/manager_main";
 	}
@@ -269,7 +280,7 @@ public class ManagerController {
 		}
 
 		List<StudentInfoDTO> stdtList = managerService.getStudentListByOnlyClssId(classId);//학생 이름 목록
-		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), yearList.get(0));
+		classList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"), null);
 		
 		List<CommonCodeVO> classCodeNameList = managerService.getCodeNameList("CLS");//
 		List<CommonCodeVO> stdtCodeNameList = managerService.getCodeNameList("RST");
@@ -385,7 +396,7 @@ public class ManagerController {
 		return "manager/mypage_updateInfo";
 	}
 	
-	@GetMapping("/worklog")
+	@GetMapping(value = {"/worklog/{page}", "/worklog"})
 	public String getWlogList(Model model, HttpSession session, HttpServletRequest httpServletRequest
 			,@RequestParam(required = false) String clssId
 			,@RequestParam(required = false) String startDate
@@ -395,6 +406,7 @@ public class ManagerController {
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
 			,@RequestParam(required = false, value = "filterString[]") List<String> filterString
+			,@PathVariable(required = false) Integer page
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
@@ -408,6 +420,9 @@ public class ManagerController {
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "출퇴근 관리";
+		if(page == null) {
+			page = Integer.valueOf(1);
+		}
 		
 		//교육과정이 존재하는 연도 목록 추가
 		List<Integer> yearList = managerService.getYearList((String)session.getAttribute("mngrId"));
@@ -418,6 +433,7 @@ public class ManagerController {
 		model.addAttribute("wlogCdList", wlogCdList);
 		
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, LocalDate.now().getYear());
+		//List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
 		
 		if(clssId != null) {
 			List<String> isManagerIdList = new ArrayList<String>();
@@ -448,24 +464,49 @@ public class ManagerController {
 			keyword="";
 		}
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page);
+		int wlogCount = managerService.getWlogListSize(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
 		
 		model.addAttribute("thisClass",thisClass);
-		model.addAttribute("wlogCnt", wlogList.size());
+		model.addAttribute("wlogCnt", wlogCount);
 		model.addAttribute("classList", classList);
 		model.addAttribute("wlogList", wlogList);
 		model.addAttribute("title", title);
 		session.setAttribute("searchWorklogList", wlogList);
+		
+		session.setAttribute("page", page);
+
+		int totalPage = 0;
+		if (wlogCount > 0) {
+			totalPage = (int) Math.ceil(wlogCount / 50.0);
+		}
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		
 		return "manager/wlog_list";
 	}
 	
-	@GetMapping("/subsidy")
+	@GetMapping(value = {"/subsidy/{page}","/subsidy"})
 	public String getMoneyList(Model model, HttpSession session, HttpServletRequest httpServletRequest
 			,@RequestParam(required = false) String clssId
 			,@RequestParam(required = false) String startDate
 			,@RequestParam(required = false) String endDate
 			,@RequestParam(required = false) String keyword
 			,@RequestParam(required = false, value = "filterString[]") List<String> filterString
+			,@PathVariable(required = false) Integer page
 			) {
 		//유저 필터링
 		if(session.getAttribute("roleCd")== null) {
@@ -481,11 +522,12 @@ public class ManagerController {
 		if(startDate==null) {startDate="";}
 		if(endDate==null) {endDate="";}
 		if(keyword==null) {keyword="";}
+		if(page==null) {page=1;}
 		//End : 파라미터가 null이면 ""으로 변환
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "지원금 관리";
-		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString);
+		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, page);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
 		List<CommonCodeVO> sbsdCodeNameList = managerService.getCodeNameList("SSD");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
@@ -502,12 +544,36 @@ public class ManagerController {
 			}
 		}
 		
+		int sbsdCount = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, 0).size();
+		
 		model.addAttribute("title", title);
 		model.addAttribute("subsidyList", subsidyList);
-		model.addAttribute("resultCount", subsidyList.size());
+		model.addAttribute("resultCount", sbsdCount);
 		model.addAttribute("classList", classList);
 		model.addAttribute("sbsdCodeNameList", sbsdCodeNameList);
 		model.addAttribute("wlogCodeNameList", wlogCodeNameList);
+		
+		session.setAttribute("page", page);
+
+		int totalPage = 0;
+		if (sbsdCount > 0) {
+			totalPage = (int) Math.ceil(sbsdCount / 50.0);
+		}
+		int totalPageBlock = (int) (Math.ceil(totalPage / 10.0));
+		int nowPageBlock = (int) Math.ceil(page / 10.0);
+		int startPage = (nowPageBlock - 1) * 10 + 1;
+		int endPage = 0;
+		if (totalPage > nowPageBlock * 10) {
+			endPage = nowPageBlock * 10;
+		} else {
+			endPage = totalPage;
+		}
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageBlock", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		
 		return "manager/subsidy_view";
 	}
@@ -544,7 +610,8 @@ public class ManagerController {
 		model.addAttribute("yearList", yearList);
 		
 		//교육과정 목록 추가
-		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, yearList.get(0));
+//		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, yearList.get(0));
+		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
 //		List<String> classIdList = new ArrayList<>();
 //		List<String> classNameList = new ArrayList<>();
 //		List<Integer> classSubsidyList = new ArrayList<>();
@@ -691,7 +758,7 @@ public class ManagerController {
 		// End : 업데이트 결과 전송
 	}
 	
-	@GetMapping("/worklog/search")
+	@GetMapping(value = {"/worklog/search/{page}", "/worklog/search"})
 	@ResponseBody
 	public Map<String, Object> getWlogSearch(HttpSession session, HttpServletRequest httpServletRequest
 			,@RequestParam(required = false) String clssId
@@ -701,6 +768,7 @@ public class ManagerController {
 			,@RequestParam(required = false) String isDelete
 			,@RequestParam(required = false) String resnOnly
 			,@RequestParam("filterString[]") List<String> filterString
+			,@PathVariable(required = false) Integer page
 			) {
 		
 		//유저 필터링
@@ -711,22 +779,12 @@ public class ManagerController {
 		}
 		//End : 유저 필터링
 		
-		/*
-		//classId != null 일 경우, 자기가 담당한 교육에 대한 요청인지 확인
-		if(clssId != null) {
-			List<ClassVO> isManagerChkList = managerService.getClassListByMngrId((String) session.getAttribute("mngrId"),"", "");
-			List<String> isManagerIdList = new ArrayList<String>();
-			for (ClassVO vo : isManagerChkList) {
-				isManagerIdList.add(vo.getClssId());
-			}
-			if(!isManagerIdList.contains(clssId)) {
-				//탈출
-				return null;//<<<이 부분 에러 페이지 이동으로 수정하기
-			}
-		}
-		*/
+//		if(page==null) {page = Integer.valueOf(1);}
+		if(page==null) {page = 1;}
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate((String)session.getAttribute("mngrId"), clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
+		String mngrId = (String)session.getAttribute("mngrId");
+		
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page);
 		
 		for (WorklogDTO dto : wlogList) {
 			dto.setStrInTmDd(dto.getInTmAsString());
@@ -735,6 +793,7 @@ public class ManagerController {
 		session.setAttribute("searchWorklogList", wlogList);
 		Map<String, Object> wlogListResponse = new HashMap<>();
 		wlogListResponse.put("wlogList", wlogList);
+		wlogListResponse.put("wlogCnt", Integer.valueOf(managerService.getWlogListSize(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString)));
 		return wlogListResponse;
 	}
 	@GetMapping("/worklog/getPeriod")
@@ -891,6 +950,9 @@ public class ManagerController {
 		
 		//업데이트
 		for (String wlogId : wlogList) {
+			if(wlogCd.equals("WOK0000001")) {
+				managerService.updateWlogTotalTime(wlogId, (String)session.getAttribute("mngrId"));
+			}
 			managerService.updateWlogCd(wlogId, wlogCd, (String)session.getAttribute("mngrId"));
 			result.add(wlogCd+" : OK");
 		}

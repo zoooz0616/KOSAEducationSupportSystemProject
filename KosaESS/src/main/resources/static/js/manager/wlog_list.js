@@ -30,7 +30,7 @@ function selectClassFill() {
 	//교육과정 select 내부의 option을 제거
 	$('#class_selector').empty();
 	//목록을 채우기
-	$('#class_selector').append('<option value="" disabled selected>교육과정을 선택하세요</option>');
+	$('#class_selector').append('<option value="" selected>교육과정을 선택하세요</option>');
 	$.ajax({
 		type: 'get',
 		url: '/manager/get_class_list', // 서버의 엔드포인트 URL
@@ -44,7 +44,7 @@ function selectClassFill() {
 			for (let i = 0; i < classList.length; i++) {
 				newOption = $('<option/>');
 				newOption.html(classList[i].clssNm);
-				newOption.attr("value", classList[i].clssId);
+				newOption.attr("value", "clssId(clssId="+classList[i].clssId+",");
 				newOption.attr("clssId", classList[i].clssId);
 				newOption.attr("startDd", classList[i].clssStartDd);
 				newOption.attr("endDd", classList[i].clssEndDd);
@@ -299,7 +299,7 @@ $(document).ready(
 
 	//교육과정의 연도가 바뀌면 교육과정 목록을 다시 채우기
 	$('#select_year').on("change",function(){
-		selectClassFill()
+		selectClassFill();
 	}),
 
 	//modal 외부를 클릭 시 닫히는 이벤트
@@ -363,6 +363,7 @@ $(document).ready(
 
 // 모달창 외부를 클릭 시 모달창을 제거
 function closeModal() {
+	$('.resn_img_list').css("display","none");
 	if (isResnChanged) {
 		reload();
 	}else{
@@ -392,8 +393,6 @@ function showModal(resnIcon) {
 		},
 		async: false,
 		success: function(response) {
-			//console.log(response)
-			//console.log(response.resnContent)
 
 			$('.resn_modal_wrap').css("display", 'flex');
 			$('body').css("overflow", 'hidden');
@@ -429,20 +428,20 @@ function showModal(resnIcon) {
 					resnId: thisResnId
 				}, success: function(resnFileResponse) {
 					resnFileList = resnFileResponse.resnFileList;
-					$('.resn_file_list').empty();
-					///*
+					$('.resn_img_list').empty();//이미지라면 이 div에 추가함
+					$('.resn_file_list').empty();//파일의 확장자와 무관하게 다운받는 링크를 추가함
 					for (let i = 0; i < resnFileList.length; i++) {
-						let resnFileName = $("<li>");
-						let resnFileLink = $("<a>");
-						let resnFileIcon = $("<img>");
-						resnFileIcon.attr('src', "/img/file.png")
-						resnFileName.append(resnFileIcon);
-						resnFileName.append(resnFileLink);
-						resnFileLink.text(resnFileList[i].fileNm);
-						resnFileLink.attr('href', "/manager/resn/" + resnFileList[i].fileId + "/" + resnFileList[i].fileSubId);
-						$('.resn_file_list').append(resnFileName);
+						let fileLinkWrap = $('<div>');
+						let fileLink = $('<a>'+resnFileList[i].fileNm+'<a>');
+						fileLink.attr('href','/manager/resn/' + resnFileList[i].fileId + '/' + resnFileList[i].fileSubId);
+						fileLinkWrap.append($('<img src="/img/file.png">'));
+						fileLinkWrap.append(fileLink);
+						$('.resn_file_list').append(fileLinkWrap);
+						if(resnFileList[i].fileType.split("/")[0]=='image'){
+							$('.resn_img_list').css("display","inline-block");
+							$('.resn_img_list').append($('<img src="/manager/resn/' + resnFileList[i].fileId + '/' + resnFileList[i].fileSubId+'">'));
+						}
 					}
-					//*/
 				}, error: function(error) {
 					console.log("error: ", error);
 				}
@@ -512,13 +511,14 @@ function search() {
 		success: function(wlogListResponse) {
 			var wlogList = wlogListResponse.wlogList;
 
-			alertFade(wlogList.length + "건이 검색되었습니다.", "9FBCCD", "0E5881");
+			console.log(wlogListResponse.wlogCnt);
+			alertFade(wlogListResponse.wlogCnt + "건이 검색되었습니다.", "9FBCCD", "0E5881");
 
 			// 테이블 초기화
 			clearTable();
 
 			//인원 수 입력
-			document.getElementById("wlogCnt").innerHTML = wlogList.length;
+			document.getElementById("wlogCnt").innerHTML = wlogListResponse.wlogCnt;
 			//End
 
 			//입력 시작
