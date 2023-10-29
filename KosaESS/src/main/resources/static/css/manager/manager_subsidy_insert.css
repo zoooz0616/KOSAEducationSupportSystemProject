@@ -57,7 +57,10 @@ button:hover{
 .insert_name{
 	font-weight: bold;
 	font-size:1.1em;
-	margin: 20px; 
+	margin: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center; 
 }
 
 .insert_table input {
@@ -232,4 +235,9 @@ select option[value=""][disabled] {
 	text-align: center;
 	font-size: 1.1em;
 	height: 2em;
+}
+.subsidy_won{
+	font-size: 1.1em;
+	font-weight: bold;
+	color:#0E5881;
 }

@@ -5,16 +5,18 @@ var allChecked = chkList.filter(":checked").length === chkList.length;
 
 function deleteRow() {
 	chkList = $(".chk_stdt");//학생들 체크박스 리스트
-
+	//console.log("deleted");
 	$('#result_count').text($('#result_count').text() - chkList.filter(":checked").length);
 	for (let i = 0; i < chkList.filter(":checked").length; i++) {
 		chkList.filter(":checked").eq(i).parent().parent().remove();
+		
 	}
 
 	let table = $('stdt_list_table_tbody');
 	let targetTr;
 	for (let i = 0; i < table.children().length; i++) {
 		targetTr = table.children().eq(i);
+		console.log(targetTr);
 		let targetCell = targetTr.children('td[name=rowNum]');
 		targetCell.text(i + 1);
 	}
@@ -124,7 +126,9 @@ $(document).ready(
 	$('#select_class,#select_ym_y,#select_ym_m, #max_wlog_cnt').change(function() {
 		//1_ 지원금 변경하기
 		let targetSubsidy = $('#select_class option:selected').attr('name');
-		$('#subsidy_value').text(targetSubsidy);
+		//$('#subsidy_value').text(targetSubsidy);
+		$('#subsidy_value').text(function () {return String(targetSubsidy).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')});
+		
 		//2_ 테이블을 싹 비우고
 		$('#stdt_list_table_tbody').empty();
 		//3_ 학생을 채우기
@@ -297,5 +301,5 @@ $(document).ready(
 		}
 	}),
 
-	$('#select_year option:eq(1)').attr('selected', 'selected')
+	//$('#select_year option:eq(1)').attr('selected', 'selected')
 )

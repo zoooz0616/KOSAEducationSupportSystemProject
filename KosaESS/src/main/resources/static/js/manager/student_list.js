@@ -166,6 +166,7 @@ function changeTargetClassId() {
 			if (iterId == thisClassId) {
 				//document.getElementById('classId').selectedIndex = i;
 				$('#classId option:eq(' + i + ')').prop("selected", true);
+				$("input:radio[name=default_period]").prop('checked', true);
 			}
 		}
 	}
@@ -220,7 +221,7 @@ function reset() {
 // 1. 체크박스 컨트롤
 $(document).ready(
 
-	$('#select_year option:eq(1)').attr('selected', 'selected'),
+	//$('#select_year option:eq(1)').attr('selected', 'selected'),
 	//교육과정의 연도가 바뀌면 교육과정 목록을 다시 채우기
 	$('#select_year').on("change",function(){
 		selectClassFill()
@@ -240,14 +241,8 @@ $(document).ready(
 	selectClassId.change(function() {
 		let targetClassStartDate = ((String)($("#classId").val().split(",")[10])).split("=")[1]
 		let targetClassEndDate = ((String)($("#classId").val().split(",")[11])).split("=")[1]
-		console.log("start DD >>> "+targetClassStartDate);
-		console.log("end DD >>> "+targetClassEndDate);
-		if (!targetClassStartDate) {
-			targetClassStartDate = $("#classId option:checked").attr("startdd");
-		}
-		if (!targetClassEndDate) {
-			targetClassEndDate = $("#classId option:checked").attr("enddd");
-		}
+		if (!targetClassStartDate) {targetClassStartDate = $("#classId option:checked").attr("startdd");}//answer
+		if (!targetClassEndDate) {targetClassEndDate = $("#classId option:checked").attr("enddd");}//answer
 		$("#start_date_save").val(targetClassStartDate);
 		$("#end_date_save").val(targetClassEndDate);
 		$("input:radio[name=default_period]").prop('checked', false)
@@ -291,19 +286,19 @@ $(document).ready(
 
 	//주소의 classId Param이 null 아니라면, 해당 id에 해당하는 이름으로 select 박스 값으로 선택하고 검색 결과 출력
 	changeTargetClassId(),
-	search(),
+	//search(),
 	//End
 
 	//주소의 classId param이 null이 아니라면 hidden select 박스의 값을 param의 id와 같은 것으로 변경
-	changeSelectBox(),
+	//changeSelectBox(),
 	//End
 
 	//classId!=null ? date = start & end date : null 
-	initStartDate(),
+	//initStartDate(),
 	//End
 
 	//classId != null ? this_class_period.checked = true : false
-	checkClassPeriod(),
+	//checkClassPeriod(),
 	//End
 
 	//교육과정을 선택했을 경우, date가 null이라면 시작~종료를 default로 지정해주기

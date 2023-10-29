@@ -288,6 +288,6 @@
 	margin: 10px 0;
 }
 
-input[type="checkbox"]:hover, select:hover, button:hover {
+input[type="checkbox"]:hover, button:hover {
 	cursor: pointer;
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class WorklogDTO {
+	private String rowNum;//출퇴근 id
 	private String wlogId;//출퇴근 id
 	private String stdtId;//교육생id
 	private String stdtNm;//교육생 이름

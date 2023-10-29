@@ -1,10 +1,6 @@
-.area_test {
-	border:1px black solid;
-}
-
 .content_wrap {
 	margin: 18px;
-	border:1px black solid;
+	border: 1px black solid;
 	display: flex;
 }
 
@@ -13,5 +9,55 @@
 	color: #333333;
 	font-size: 30px;
 	font-weight: bold;
-	margin : 40px;
+	margin: 40px;
+}
+
+button:hover{
+	cursor: pointer;
+}
+
+.select_class_btn{
+/* 조회 버튼 div*/
+/* 	width: 20%; */
+	display: flex;
+	justify-content: center;
+}
+.select_class_btn button{
+/* 조회버튼 */
+ 	width: 4em;
+/*  	width: auto; */
+/* 	flex:1 0 item; */
+	background-color: #0E5881;
+	color: white;
+	border: none;
+	border-radius: 0.3em;
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.1em;
+	height: 2em;
+}
+
+#select_year{
+/* 연도 선택 select */
+	width: auto;
+/* 	width:300px; */
+}
+
+#select_class{
+	width: 100%;
+}
+.chart_controller select{
+	font-size: 1.1em;
+}
+.chart_controller{
+	display: flex;
+	width: 100%;
+}
+
+.file_icon{
+	height: 1.1em;
+}
+
+.latest_resn_table_wrap{
+	width: 100%;
 }

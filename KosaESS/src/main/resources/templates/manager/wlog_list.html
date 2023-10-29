@@ -146,7 +146,7 @@
 			<tbody id="wlog_list_tbody">
 				<tr th:each="wlog:${wlogList}" class="wlog_list_tbody_row">
 					<td class="fixed_length_cell"> <input type="checkbox" class="chk_wlog" th:value="${wlog.wlogId}"> </td>
-					<td class="fixed_length_cell" th:text="${wlogStat.count}">번호</td>
+					<td class="fixed_length_cell" th:text="${wlog.rowNum}">번호</td>
 					<td class="fixed_length_cell" th:text="${wlog.stdtNm}">이름</td>
 					<td class="variable_length_cell" th:text="${wlog.userEmail}">이메일</td>
 					<td class="variable_length_cell" th:text="${wlog.clssNm}">교육과정</td>
@@ -161,6 +161,23 @@
 		</table>
 		<!-- End : table 시작-->
 	</div>
+	
+	<!-- Paging -->
+	<nav class="page_nav" aria-label="Page navigation">
+		<ul class="pagination">
+			<li th:if="${nowPageBlock>1}">
+				<a th:href="@{/manager/worklog/__${startPage-1}__}" aria-label="Previous">이전</a>
+			</li>
+			<li th:each="i: ${#numbers.sequence(startPage, endPage)}" th:classappend="${i==nowPage}?active">
+				<a th:href="@{/manager/worklog/__${i}__}">[[${i}]]</a>
+			</li>
+			<li th:if="${nowPageBlock<totalPageBlock}">
+				<a th:href="@{/manager/worklog/__${endPage+1}__}" aria-label="Next">다음</a>
+			</li>
+		</ul>
+	</nav>
+	<!-- Paging -->
+	
 </div>
 <!-- 사유서 조회 모달 -->
 <div class="resn_modal_wrap">
@@ -205,6 +222,7 @@
 	</div>
 </div>
 <!-- End : 사유서 조회 모달 -->
+
 
 
 </body>
