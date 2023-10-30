@@ -90,8 +90,8 @@ public class ManagerController {
 		for (CommonCodeVO vo : wokList) {
 			filterString.add(vo.getCmcdId());
 		}
-		List<WorklogDTO> latestResnList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "true", filterString, 1, 15);
-		List<WorklogDTO> latestWlogList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "", filterString, 1, 30);
+		List<WorklogDTO> latestResnList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "true", filterString, 1, 10);
+		List<WorklogDTO> latestWlogList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "", filterString, 1, 20);
 		
 		model.addAttribute("yearList", yearList);
 		model.addAttribute("title","메인");

@@ -2,19 +2,21 @@ table {
 	font-size: 1.1em;
 	width: 100%;
 	table-layout: fixed;
+	border-collapse: collapse;
 }
 
-.file_icon:hover{
+.file_icon:hover {
 	cursor: pointer;
 }
 
-.select_class_btn img{
+.select_class_btn img {
 	height: 1.1em;
 }
 
 .content_wrap {
-	margin: 18px;
+	margin: 15px 40px;
 	display: flex;
+	justify-content: space-between;
 }
 
 .home-section .title {
@@ -25,22 +27,23 @@ table {
 	margin: 40px;
 }
 
-button:hover{
+button:hover {
 	cursor: pointer;
 }
 
-.select_class_btn{
-/* 조회 버튼 div*/
-/* 	width: 20%; */
+.select_class_btn {
+	/* 조회 버튼 div*/
+	/* 	width: 20%; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-.select_class_btn button{
-/* 조회버튼 */
- 	width: 4em;
-/*  	width: auto; */
-/* 	flex:1 0 item; */
+
+.select_class_btn button {
+	/* 조회버튼 */
+	width: 4em;
+	/*  	width: auto; */
+	/* 	flex:1 0 item; */
 	background-color: #0E5881;
 	color: white;
 	border: none;
@@ -52,68 +55,82 @@ button:hover{
 	text-align: center;
 }
 
-#select_year{
-/* 연도 선택 select */
+#select_year {
+	/* 연도 선택 select */
 	width: auto;
-/* 	width:300px; */
+	/* 	width:300px; */
 }
 
-#select_class{
+#select_class {
 	width: 100%;
-/* 	width: 50%; */
+	/* 	width: 50%; */
 }
-.chart_controller select{
+
+.chart_controller select {
 	font-size: 1.1em;
 }
-.chart_controller{
+
+.chart_controller {
 	display: flex;
 	width: 100%;
 }
 
-.file_icon{
+.file_icon {
 	height: 1.1em;
 }
 
-.latest_resn_table_wrap{
+.latest_resn_table_wrap {
 	width: 100%;
 }
 
-.chart_wrap, .table_wrap{
-	width: 50%;
+.chart_wrap {
+	width: 40%;
 }
 
-.pie_chart_wrap{
-	height:100%;
+.table_wrap {
+	width: 57%;
 }
 
-.table_name{
+.pie_chart_wrap {
+	height: 100%;
+}
+
+.table_name {
 	background-color: #0E5881;
 	color: white;
 	text-align: center;
 	font-size: 1.3em;
-	font-weight: bold; 
+	font-weight: bold;
+	padding: 1.3%;
+	border-radius: 0.3em;
 }
 
-.latest_resn_table_wrap, .latest_wlog_table_wrap{
+.latest_resn_table_wrap, .latest_wlog_table_wrap {
 	font-size: 1.1em;
 	text-align: center;
-/* 	border: 1px solid #E7EFF3; */
+	/* 	border: 1px solid #E7EFF3; */
 	border: 2px solid #9FBCCD;
 }
 
-.latest_resn_table td, .latest_wlog_table td{
+.latest_resn_table td, .latest_wlog_table td {
 	border: 1px solid 6E9BB3;
-	padding: 0 0.4em;
+	padding: 0.5em 0.4em;
 }
 
-.latest_resn_table th, .latest_wlog_table th{
+.latest_resn_table tr, .latest_wlog_table tr {
+	border: 1px solid #9FBCCD !important;
+}
+
+.latest_resn_table th, .latest_wlog_table th {
 	background-color: #E7EFF3;
-/* 	border: 1px solid #CFDEE6; */
-/* 	border-collapse:collapse; */
+	/* 	border: 1px solid #CFDEE6; */
+	/* 	border-collapse:collapse; */
 	border: 1px solid 6E9BB3;
 	color: #0E5881;
+	padding: 0.5% 0;
 }
-.variable_length_cell{
+
+.variable_length_cell {
 	text-align: left;
 	width: 300px;
 	padding: 0 0.4em;
