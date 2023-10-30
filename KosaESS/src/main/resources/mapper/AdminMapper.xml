@@ -1876,7 +1876,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			select *
 		from (
         select 
-        	row_number() over(order by s.stdt_nm) as row_num
+        	row_number() over(order by subsidy_dd desc, sbsd.clss_id) as row_num
 				,sbsd.sbsd_id
 				,sbsd.clss_id
 				,clss_nm
@@ -1912,7 +1912,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 		resultType="com.finalprj.kess.dto.SubsidyDTO">
 	<![CDATA[
 		select 
-        	row_number() over(order by s.stdt_nm) as row_num
+        	row_number() over(order by subsidy_dd desc, sbsd.clss_id) as row_num
 				,sbsd.sbsd_id
 				,sbsd.clss_id
 				,clss_nm
@@ -2095,7 +2095,7 @@ left join cmcd c on c.cmcd_id = stdt.job_cd
 			select *
 		from (
         select 
-        	row_number() over(order by s.stdt_nm) as row_num
+        	row_number() over(order by subsidy_dd desc, sbsd.clss_id) as row_num
 				,sbsd.sbsd_id
 				,sbsd.clss_id
 				,clss_nm
