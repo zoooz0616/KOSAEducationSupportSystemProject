@@ -42,16 +42,16 @@
 				<div class="pie_chart_wrap">
 					<canvas class="pie_chart" id="myChart"
 						style="width: auto; height: auto;"></canvas>
-					<div class="table_name">최근 등록 된 사유서</div>
+					<div class="table_name" style="margin-top: 3%;">최근 등록 된 사유서</div>
 					<div class="latest_resn_table_wrap">
 						<table class="latest_resn_table">
 							<tr class="latest_resn_th">
-								<th>번호</th>
-								<th>이름</th>
-								<th>교육과정</th>
-								<th>신청 날짜</th>
-								<th>사유서</th>
-								<th>처리상태</th>
+								<th style="width: 8%;">번호</th>
+								<th style="width: 10%;">이름</th>
+								<th style="width: 42%;">교육과정</th>
+								<th style="width: 20%;">신청 날짜</th>
+								<th style="width: 10%;">사유서</th>
+								<th style="width: 10%;">처리상태</th>
 							</tr>
 							<tr class="latest_resn" th:each="resn:${latestResnList}">
 								<td th:text="${resn.rowNum}"></td>
@@ -60,7 +60,10 @@
 								<td th:text="${#dates.format(resn.inTm,'yyyy-MM-dd')}"></td>
 								<td><img class="file_icon" src="/img/file.png"
 									onclick="showModal(this)" th:value="${resn.resnId}"></td>
-								<td th:text="${resn.prcsCd}"></td>
+								<td th:if="${resn.prcsCd} == '보류'" style="color:#F1A77E;" th:text="${resn.prcsCd}">상태</td>
+								<td th:if="${resn.prcsCd} == '승인'" th:text="${resn.prcsCd}">상태</td>
+								<td th:if="${resn.prcsCd} == '미확인'" style="color:red;" th:text="${resn.prcsCd}">상태</td>
+								<td th:if="${resn.prcsCd} == '기각'" style="color:gray;" th:text="${resn.prcsCd}">상태</td>
 							</tr>
 						</table>
 					</div>
@@ -73,12 +76,12 @@
 				<div class="latest_wlog_table_wrap">
 					<table class="latest_wlog_table">
 						<tr>
-							<th>번호</th>
-							<th>이름</th>
-							<th>교육과정</th>
-							<th>출근 시간</th>
-							<th>퇴근 시간</th>
-							<th>상태</th>
+							<th style="width: 8%;">번호</th>
+							<th style="width: 10%;">이름</th>
+							<th style="width: 32%;">교육과정</th>
+							<th style="width: 20%;">출근 시간</th>
+							<th style="width: 20%;">퇴근 시간</th>
+							<th style="width: 10%;">상태</th>
 						</tr>
 						<tr class="" th:each="wlog:${latestWlogList}">
 							<td th:text="${wlog.rowNum}">번호</td>
@@ -90,7 +93,11 @@
 							<td class="fixed_length_cell"
 								th:text="${wlog.outTm!=null?#dates.format(wlog.outTm,'yyyy-MM-dd HH:mm:ss'):'-'}">퇴근
 								기록</td>
-							<td th:text="${wlog.wlogCd}">상태</td>
+							<td th:if="${wlog.wlogCd} == '결근'" style="color:red;" th:text="${wlog.wlogCd}">상태</td>
+							<td th:if="${wlog.wlogCd} == '조퇴'" style="color:#F1A77E;" th:text="${wlog.wlogCd}">상태</td>
+							<td th:if="${wlog.wlogCd} == '지각'" style="color:#F1A77E;" th:text="${wlog.wlogCd}">상태</td>
+							<td th:if="${wlog.wlogCd} == '휴가'" style="color:green;" th:text="${wlog.wlogCd}">상태</td>
+							<td th:if="${wlog.wlogCd} == '정상'"  th:text="${wlog.wlogCd}">상태</td>
 						</tr>
 					</table>
 				</div>
