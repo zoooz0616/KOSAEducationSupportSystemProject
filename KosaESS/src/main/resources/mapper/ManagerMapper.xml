@@ -373,8 +373,8 @@
 		]]>
 		<choose>
 			<when test='page > 0'>
-				OFFSET (#{page}-1) * 50 ROWS
-				FETCH NEXT 50 ROWS ONLY
+				OFFSET (#{page}-1) * #{size} ROWS
+				FETCH NEXT #{size} ROWS ONLY
 			</when>
 		</choose>
 	</select>
@@ -555,8 +555,8 @@
 		]]>
 		<choose>
 			<when test='page > 0'>
-				OFFSET (#{page}-1) * 50 ROWS
-				FETCH NEXT 50 ROWS ONLY
+				OFFSET (#{page}-1) * #{size} ROWS
+				FETCH NEXT #{size} ROWS ONLY
 			</when>
 		</choose>
 	</select>

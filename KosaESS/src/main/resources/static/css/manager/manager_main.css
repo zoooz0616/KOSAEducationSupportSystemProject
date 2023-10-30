@@ -1,6 +1,17 @@
+table {
+	font-size: 1.1em;
+}
+
+.file_icon:hover{
+	cursor: pointer;
+}
+
+.select_class_btn img{
+	height: 1.1em;
+}
+
 .content_wrap {
 	margin: 18px;
-	border: 1px black solid;
 	display: flex;
 }
 
@@ -21,6 +32,7 @@ button:hover{
 /* 	width: 20%; */
 	display: flex;
 	justify-content: center;
+	align-items: center;
 }
 .select_class_btn button{
 /* 조회버튼 */
@@ -35,6 +47,7 @@ button:hover{
 	text-align: center;
 	font-size: 1.1em;
 	height: 2em;
+	text-align: center;
 }
 
 #select_year{
@@ -45,6 +58,7 @@ button:hover{
 
 #select_class{
 	width: 100%;
+/* 	width: 50%; */
 }
 .chart_controller select{
 	font-size: 1.1em;
@@ -60,4 +74,42 @@ button:hover{
 
 .latest_resn_table_wrap{
 	width: 100%;
+}
+.pie_chart_wrap{
+	height:100%;
+}
+
+.table_name{
+	background-color: #0E5881;
+	color: white;
+	text-align: center;
+	font-size: 1.3em;
+	font-weight: bold; 
+}
+
+.table_wrap{
+	width: 100%;
+}
+
+.latest_resn_table_wrap, .latest_wlog_table_wrap{
+	font-size: 1.1em;
+	text-align: center;
+/* 	border: 1px solid #E7EFF3; */
+	border: 2px solid #9FBCCD;
+}
+
+.latest_resn_table td, .latest_wlog_table td{
+	border: 1px solid 6E9BB3;
+	padding: 0 0.4em;
+}
+
+.latest_resn_table th, .latest_wlog_table th{
+	background-color: #E7EFF3;
+/* 	border: 1px solid #CFDEE6; */
+/* 	border-collapse:collapse; */
+	border: 1px solid 6E9BB3;
+	color: #0E5881;
+}
+.variable_length_cell{
+	text-align: left;
 }

@@ -21,6 +21,7 @@
 		</div>
 		<!-- content wrap-->
 		<div class="content_wrap">
+
 			<div class="chart_wrap">
 				<div class="chart_controller">
 					<select id="select_year">
@@ -32,90 +33,103 @@
 							th:value="${class.clssId}" />
 					</select>
 					<div class="select_class_btn">
-						<button>조회</button>
+						<button>
+							<img src="/img/search_white.png">조회
+						</button>
 					</div>
 				</div>
 				<!-- 파이 차트 -->
-				<canvas class="area_test" id="myChart" style="width: auto; height: auto;"></canvas>
+				<div class="pie_chart_wrap">
+					<canvas class="pie_chart" id="myChart"
+						style="width: auto; height: auto;"></canvas>
+					<div class="table_name">최근 등록 된 사유서</div>
+					<div class="latest_resn_table_wrap">
+						<table class="latest_resn_table">
+							<tr class="latest_resn_th">
+								<th>번호</th>
+								<th>이름</th>
+								<th>교육과정</th>
+								<th>신청 날짜</th>
+								<th>사유서</th>
+								<th>처리상태</th>
+							</tr>
+							<tr class="latest_resn" th:each="resn:${latestResnList}">
+								<td th:text="${resn.rowNum}"></td>
+								<td th:text="${resn.stdtNm}"></td>
+								<td class="variable_length_cell" th:text="${resn.clssNm}"></td>
+								<td th:text="${#dates.format(resn.inTm,'yyyy-MM-dd')}"></td>
+								<td><img class="file_icon" src="/img/file.png"
+									onclick="showModal(this)" th:value="${resn.resnId}"></td>
+								<td th:text="${resn.prcsCd}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
 			</div>
-			<div>
-				<div class="latest_resn_table_wrap">
-					<table class="latest_resn_table">
-						<tr class="latest_resn_th">
+
+			<!-- ======================================================= 여기서 가로 2분할 =======================================================-->
+			<div class="table_wrap">
+				<div class="table_name">최근 출퇴근 기록</div>
+				<div class="latest_wlog_table_wrap">
+					<table class="latest_wlog_table">
+						<tr>
 							<th>번호</th>
 							<th>이름</th>
 							<th>교육과정</th>
-							<th>신청 날짜</th>
-							<th>사유서</th>
-							<th>처리상태</th>
-						</tr>
-						<tr class="latest_resn" th:each="resn:${latestResnList}">
-							<td th:text="${resn.rowNum}"></td>
-							<td th:text="${resn.stdtNm}"></td>
-							<td th:text="${resn.clssNm}"></td>
-							<td th:text="${#dates.format(resn.inTm,'yyyy-MM-dd')}"></td>
-							<td><img class="file_icon" src="/img/file.png"></td>
-							<td th:text="${resn.prcsCd}"></td>
-						</tr>
-					</table>
-				</div>
-				<div>
-					<table>
-						<tr>
-							<th>이름</th>
-							<th>교육과정</th>
-							<th>출퇴</th>
 							<th>출근 시간</th>
 							<th>퇴근 시간</th>
 							<th>상태</th>
 						</tr>
-						<tr class="area_test" th:each="wlog:${wlogList}">
-							<td th:text="${}">이름</td>
-							<td th:text="${}">교육과정 이름</td>
-							<td th:text="${}">출퇴</td>
-							<td th:text="${}">출근 시간</td>
-							<td th:text="${}">퇴근 시간</td>
-							<td th:text="${}">상태</td>
+						<tr class="" th:each="wlog:${latestWlogList}">
+							<td th:text="${wlog.rowNum}">번호</td>
+							<td th:text="${wlog.stdtNm}">이름</td>
+							<td class="variable_length_cell" th:text="${wlog.clssNm}">교육과정</td>
+							<td class="fixed_length_cell"
+								th:text="${wlog.inTm!=null?#dates.format(wlog.inTm,'yyyy-MM-dd HH:mm:ss'):'-'}">출근
+								기록</td>
+							<td class="fixed_length_cell"
+								th:text="${wlog.outTm!=null?#dates.format(wlog.outTm,'yyyy-MM-dd HH:mm:ss'):'-'}">퇴근
+								기록</td>
+							<td th:text="${wlog.wlogCd}">상태</td>
 						</tr>
 					</table>
 				</div>
 			</div>
+
 		</div>
 	</div>
 
 	<!-- 사유서 조회 모달 -->
 	<div class="resn_modal_wrap">
 		<div class="resn_modal">
+			<div class="modal_close_wrap">
+				<span class="modal_title">사유서</span><img src="/img/x_white.png"
+					class="close_icon" onclick="closeModal()">
+			</div>
 			<div class="wlog_info">
-				<table>
-					<tr>
-						<th>이름</th>
+				<table class="wlog_info_table">
+					<tr class="modal_tr">
+						<th class="modal_th">이름</th>
 						<td id="modal_name">이름</td>
-						<th>이메일</th>
+						<th class="modal_th">이메일</th>
 						<td id="modal_email">이메일</td>
-						<th>사유서 처리 상태</th>
+						<th class="modal_th">사유서 처리 상태</th>
 						<td id="modal_prcs_name">사유서 처리 상태</td>
 					</tr>
-					<tr>
-						<th>출근</th>
+					<tr class="modal_tr">
+						<th class="modal_th">출근</th>
 						<td id="modal_in_time">출근</td>
-						<th>퇴근</th>
+						<th class="modal_th">퇴근</th>
 						<td id="modal_out_time">퇴근</td>
-						<th>출석 상태</th>
+						<th class="modal_th">출석 상태</th>
 						<td id="modal_wlog_cd">출석 상태</td>
 					</tr>
 				</table>
 			</div>
 
 			<div class="resn_content">
-				<div class="resn_file_list_wrap">
-					<table class="resn_file_list">
-						<tr>
-							<th>파일 목록</th>
-							<td>파일 링크</td>
-						</tr>
-					</table>
-				</div>
+				<div class="resn_img_list"></div>
+				<div class="resn_file_list"></div>
 				<div class="resn_text">사유서 내용</div>
 			</div>
 
@@ -132,4 +146,5 @@
 <script src="/js/manager/alert_box.js"></script>
 <script src="/js/manager/manager_main.js"></script>
 <script src="/js/manager/manager_main_chart.js"></script>
+<script src="/js/manager/wlog_list.js"></script>
 </html>

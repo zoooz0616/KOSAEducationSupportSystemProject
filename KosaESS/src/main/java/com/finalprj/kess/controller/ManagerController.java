@@ -90,12 +90,14 @@ public class ManagerController {
 		for (CommonCodeVO vo : wokList) {
 			filterString.add(vo.getCmcdId());
 		}
-		List<WorklogDTO> latestResnList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "true", filterString, null);
+		List<WorklogDTO> latestResnList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "true", filterString, 1, 15);
+		List<WorklogDTO> latestWlogList = managerService.getWlogListByClssIdDate(mngrId, "", "", "", "", "false", "", filterString, 1, 30);
 		
 		model.addAttribute("yearList", yearList);
 		model.addAttribute("title","메인");
 		model.addAttribute("classList",classList);
 		model.addAttribute("latestResnList",latestResnList);
+		model.addAttribute("latestWlogList",latestWlogList);
 		
 		return "manager/manager_main";
 	}
@@ -464,7 +466,7 @@ public class ManagerController {
 			keyword="";
 		}
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page);
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page, 50);
 		int wlogCount = managerService.getWlogListSize(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString);
 		
 		model.addAttribute("thisClass",thisClass);
@@ -527,7 +529,7 @@ public class ManagerController {
 		
 		String mngrId = (String) session.getAttribute("mngrId");
 		String title = "지원금 관리";
-		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, page);
+		List<SubsidyDTO> subsidyList = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, page, 50);
 		List<ClassVO> classList = managerService.getClassListByMngrId(mngrId, null);
 		List<CommonCodeVO> sbsdCodeNameList = managerService.getCodeNameList("SSD");
 		List<CommonCodeVO> wlogCodeNameList = managerService.getCodeNameList("WOK");
@@ -544,7 +546,7 @@ public class ManagerController {
 			}
 		}
 		
-		int sbsdCount = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, 0).size();
+		int sbsdCount = managerService.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, 0, 2).size();
 		
 		model.addAttribute("title", title);
 		model.addAttribute("subsidyList", subsidyList);
@@ -784,7 +786,7 @@ public class ManagerController {
 		
 		String mngrId = (String)session.getAttribute("mngrId");
 		
-		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page);
+		List<WorklogDTO> wlogList = managerService.getWlogListByClssIdDate(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page, 50);
 		
 		for (WorklogDTO dto : wlogList) {
 			dto.setStrInTmDd(dto.getInTmAsString());
