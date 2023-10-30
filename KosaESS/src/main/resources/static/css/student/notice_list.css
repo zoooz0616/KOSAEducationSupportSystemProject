@@ -64,6 +64,7 @@ table td {
 	display: flex;
 	flex-direction: column;
 	border-style: none;
+	background: white;
 }
 
 .notice-table tbody td {

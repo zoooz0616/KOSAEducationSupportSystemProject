@@ -52,8 +52,8 @@ public class MainService implements IMainService {
 	}
 
 	@Override
-	public String getMember(String email) {
-		return mainRepository.getMember(email);
+	public String getMember(String email,String pwd) {
+		return mainRepository.getMember(email, pwd);
 	}
 
 	@Override

@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				var transformedEvents = [];
 				for (var i = 0; i < expList.length; i++) {
 					var event = {
-						backgroundColor: '#F1A77E',
-						borderColor: '#F1A77E',
 						title: expList[i].clssNm,
 						start: expList[i].aplyStartDt,
 						end: expList[i].aplyEndDt,
@@ -46,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				for (var i = 0; i < IngList.length; i++) {
 					var event = {
+						backgroundColor: '#F1A77E',
+						borderColor: '#F1A77E',
 						title: IngList[i].clssNm,
 						start: IngList[i].aplyStartDt,
 						end: IngList[i].aplyEndDt,

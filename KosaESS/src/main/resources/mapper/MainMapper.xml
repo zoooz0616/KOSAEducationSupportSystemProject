@@ -17,7 +17,7 @@
 	select
 		count(user_email)
 	from lgin
-	where user_email=#{email} and (user_cd ='USR0000001' or user_cd ='USR0000002')
+	where user_email=#{email}and user_pwd =#{pwd} and (user_cd ='USR0000001' or user_cd ='USR0000002')
 	]]>
 	</select>
 

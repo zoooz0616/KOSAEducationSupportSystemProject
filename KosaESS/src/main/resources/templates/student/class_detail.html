@@ -148,8 +148,8 @@
 									th:src="@{/student/file/__${FileVO.fileId}__/__${FileVO.fileSubId}__}"><br>
 							</a></li>
 						</ul>
-						<h5 th:if="${classDetail.clssEtc != null}">기타사항</h5>
-						<h5 th:text="${classDetail.clssEtc}"></h5>
+						<h4 th:if="${classDetail.clssEtc != null}">기타사항</h4>
+						<h4 th:text="${classDetail.clssEtc}"></h4>
 						<div class="btn" style="width: 100%;">
 							<button class="openModalBtn1" style="padding: 1.3%; width: 20%;">지원하기</button>
 						</div>
@@ -291,7 +291,17 @@
 				alert("지원서 파일을 첨부해주세요.");
 				event.preventDefault();
 			} else {
-				alert("제출이 완료되었습니다.");
+				var selectedFile = x.files[0];
+				var fileName = selectedFile.name;
+				console.log(fileName);
+				var fileExtension = fileName.split('.').pop().toLowerCase();
+
+				if (fileExtension !== 'pdf') {
+					alert('PDF 파일만 업로드할 수 있습니다.');
+					event.preventDefault();
+				} else {
+					alert("제출이 완료되었습니다.");
+				}
 			}
 		});
 		$("#fileInput").on('change', function() {

@@ -358,24 +358,34 @@ $(document).ready(function() {
 			alert("지원서 파일을 첨부해주세요.");
 			event.preventDefault();
 		} else {
-			let formData = new FormData();
-			let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
-			formData.append("file", file); // FormData에 파일 추가
-			console.log(clssId);
-			console.log(file);
-			console.log(formData);
-			$.ajax({
-				type: 'POST',
-				url: '/student/upload/' + clssId,
-				data: formData, // FormData 사용
-				processData: false,
-				contentType: false,
-				success: function() {
-					modal.style.display = 'none'; // 모달을 숨기기 위해 hide() 메서드 사용
-					alert("제출이 완료되었습니다.");
-					window.location.href = '/student/class/list';
-				}
-			});
+			var selectedFile = x.files[0];
+			var fileName = selectedFile.name;
+			console.log(fileName);
+			var fileExtension = fileName.split('.').pop().toLowerCase();
+
+			if (fileExtension !== 'pdf') {
+				alert('PDF 파일만 업로드할 수 있습니다.');
+				event.preventDefault();
+			} else {
+				let formData = new FormData();
+				let file = document.querySelector("#fileInput").files[0]; // 파일 인풋 필드에서 파일을 가져옴
+				formData.append("file", file); // FormData에 파일 추가
+				console.log(clssId);
+				console.log(file);
+				console.log(formData);
+				$.ajax({
+					type: 'POST',
+					url: '/student/upload/' + clssId,
+					data: formData, // FormData 사용
+					processData: false,
+					contentType: false,
+					success: function() {
+						modal.style.display = 'none'; // 모달을 숨기기 위해 hide() 메서드 사용
+						alert("제출이 완료되었습니다.");
+						window.location.href = '/student/class/list';
+					}
+				});
+			}
 		}
 	});
 	var closeModalBtn = document.querySelector('.closeModalBtn');

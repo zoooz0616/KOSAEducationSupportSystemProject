@@ -185,6 +185,7 @@ table {
 	border-collapse: collapse;
 	text-align: center;
 	line-height: 1.5;
+	background: white;
 }
 
 table thead th {
@@ -252,7 +253,8 @@ table td {
 	background-color: #0E5881;
 	color: white;
 }
-#quit{
+
+#quit {
 	background-color: #F1A77E;
 }
 
@@ -349,12 +351,15 @@ td button {
 .rgstTable td:nth-child(6) {
 	width: 8%;
 }
+
 .rgstTable td:nth-child(7) {
 	width: 8%;
 }
+
 .rgstTable td:nth-child(8) {
 	width: 8%;
 }
+
 .rgstTable td:nth-child(9) {
 	width: 7%;
 }
