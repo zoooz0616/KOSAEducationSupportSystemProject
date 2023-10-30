@@ -73,6 +73,29 @@ document.addEventListener('DOMContentLoaded', function() {
 		}, 10000);
 	}
 
+	$.ajax({
+		type: 'POST',
+		url: '/crawling/news',
+		success: function(data) {
+			console.log(data); // 받은 데이터를 콘솔에 출력
+
+			if (typeof data === 'object') { // 받은 데이터가 객체인지 확인
+				const newsItem = data;
+
+				// 여기에 원하는 데이터 속성을 접근하여 출력하는 로직을 작성해보세요.
+				console.log('사진 링크:', newsItem.imageUrl);
+				console.log('제목:', newsItem.title);
+				console.log('뉴스 링크:', newsItem.newsLink);
+				console.log('요약:', newsItem.summary);
+			} else {
+				console.error('뉴스 데이터가 객체 형태가 아닙니다.');
+			}
+		},
+		error: function() {
+			console.error('뉴스 데이터를 불러오는 동안 오류가 발생했습니다.');
+		}
+	});
+
 });
 
 const rgstList = document.querySelector('.rgstList');

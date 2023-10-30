@@ -72,15 +72,15 @@ public class CertificateGenerationService {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PdfWriter.getInstance(document, os);
 
-		String imageUrl = "src/main/resources/static/img/logo.png";
+		String imageUrl = "src/main/resources/static/img/logo2.png";
 
 		// 이미지 객체 생성
 		Image image = Image.getInstance(imageUrl);
 
-		image.scaleAbsolute(300f, 80f);
+		image.scaleAbsolute(300f, 100f);
 
 		// 이미지 삽입 위치 설정 (x, y 좌표)
-		image.setAbsolutePosition(150f, 50f);
+		image.setAbsolutePosition(150f, 35f);
 
 		document.open();
 		Paragraph TitlePr = new Paragraph("이수증", TitleFont);

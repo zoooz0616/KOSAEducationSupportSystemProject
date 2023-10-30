@@ -97,7 +97,7 @@ public class MainController {
 		String pwd = request.getParameter("pwd");
 
 		// login 테이블에 회원이 있는지 확인하기
-		String memberYN = mainService.getMember(email);
+		String memberYN = mainService.getMember(email,pwd);
 		if (memberYN.equals("1")) {
 			LoginVO role = mainService.getRole(email, pwd);
 			System.out.println(role);

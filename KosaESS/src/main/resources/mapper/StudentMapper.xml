@@ -758,14 +758,10 @@
 			cmpt_cd,
 			(select cmcd_nm from cmcd where cmcd.cmcd_id = rgst.rgst_cd) as "rgstNm",
 			(select cmcd_nm from cmcd where cmcd.cmcd_id = rgst.cmpt_cd) as "cmptNm",
-			flup.file_id,
-			flup.file_sub_id,
-			flup.file_nm,
             rgst.rgst_dt,
 			rgst.rgst_dt as "rgstDd"
 			FROM rgst
 			JOIN clss on clss.clss_id = rgst.clss_id
-			LEFT JOIN flup on flup.file_id = rgst.file_id
 			WHERE stdt_id=#{stdtId}
 			ORDER BY rgst.rgst_dt DESC
 	]]>

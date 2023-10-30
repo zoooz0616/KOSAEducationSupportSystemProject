@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var countPerPage5 = 5; // 페이지당 데이터 건수
+	var countPerPage5 = 10; // 페이지당 데이터 건수
 	var showPageCnt = 5;
 	let todoData5 = [];
 

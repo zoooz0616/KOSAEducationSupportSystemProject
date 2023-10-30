@@ -65,6 +65,7 @@ input::placeholder {
 	padding: 1%;
 	margin-bottom: 3%;
 	margin-right: 2.14%;
+	background: white;
 }
 
 tfoot td {
@@ -144,6 +145,7 @@ tfoot td {
 	display: flex;
 	flex-direction: column;
 	border-style: none;
+	background: white;
 }
 
 .list-style td {
