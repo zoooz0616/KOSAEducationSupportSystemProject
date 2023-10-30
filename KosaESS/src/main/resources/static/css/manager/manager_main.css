@@ -1,5 +1,7 @@
 table {
 	font-size: 1.1em;
+	width: 100%;
+	table-layout: fixed;
 }
 
 .file_icon:hover{
@@ -75,6 +77,11 @@ button:hover{
 .latest_resn_table_wrap{
 	width: 100%;
 }
+
+.chart_wrap, .table_wrap{
+	width: 50%;
+}
+
 .pie_chart_wrap{
 	height:100%;
 }
@@ -85,10 +92,6 @@ button:hover{
 	text-align: center;
 	font-size: 1.3em;
 	font-weight: bold; 
-}
-
-.table_wrap{
-	width: 100%;
 }
 
 .latest_resn_table_wrap, .latest_wlog_table_wrap{
@@ -112,4 +115,9 @@ button:hover{
 }
 .variable_length_cell{
 	text-align: left;
+	width: 300px;
+	padding: 0 0.4em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
