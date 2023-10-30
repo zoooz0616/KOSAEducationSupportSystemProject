@@ -109,7 +109,6 @@ public class AdminController {
 				}
 			}
 		}
-
 		// 기업 개수
 		List<CompanyVO> companyList = adminService.getCompanyListAll();
 		model.addAttribute("companyCnt", companyList.size());
