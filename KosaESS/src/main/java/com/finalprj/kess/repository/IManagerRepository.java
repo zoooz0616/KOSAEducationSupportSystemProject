@@ -57,7 +57,7 @@ public interface IManagerRepository {
 
 	public double getStudentTmSumByIds(@Param("classId") String classId, @Param("stdtId") String stdtId);
 
-	public List<WorklogDTO> getWlogListByClssIds(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly, @Param("filterString") List<String> filterString, Integer page);
+	public List<WorklogDTO> getWlogListByClssIds(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("isDelete") String isDelete, @Param("resnOnly") String resnOnly, @Param("filterString") List<String> filterString, @Param("page") Integer page, @Param("size") Integer size);
 
 	public List<StudentInfoDTO> getStudentListByOnlyClssId(String classId);
 
@@ -71,7 +71,7 @@ public interface IManagerRepository {
 
 	public void updateManagerLoginInfo(ManagerVO updateManager);
 
-	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString, @Param("page") int page);
+	public List<SubsidyDTO> getSubsidyList(@Param("mngrId") String mngrId, @Param("clssId") String clssId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("keyword") String keyword, @Param("filterString") List<String> filterString, @Param("page") int page, @Param("size") Integer size);
 
 	public void insertSubsidy(SubsidyVO subsidyVO);
 

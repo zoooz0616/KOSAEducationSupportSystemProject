@@ -510,17 +510,12 @@ function search() {
 		async: false,
 		success: function(wlogListResponse) {
 			var wlogList = wlogListResponse.wlogList;
-
-			console.log(wlogListResponse.wlogCnt);
 			alertFade(wlogListResponse.wlogCnt + "건이 검색되었습니다.", "9FBCCD", "0E5881");
-
 			// 테이블 초기화
 			clearTable();
-
 			//인원 수 입력
 			document.getElementById("wlogCnt").innerHTML = wlogListResponse.wlogCnt;
 			//End
-
 			//입력 시작
 			for (let i = 0; i < wlogList.length; i++) {
 				// 새 행 생성
@@ -604,20 +599,22 @@ function search() {
 			//End
 
 			//이수상태 변경이 영향을 받지 않도록 검색 조건 저장
-			//히든 셀렉트 박스 값에 classId 값을 hidden에 저장
-			let classId = null;
-			if ($('#class_selector').val() != null) {
-				classId = $('#class_selector').val().match(/clssId=([A-Z0-9]+)/)[1];
-			}
-			$('#class_id_save').val(classId);
 			//히든 start/endDate 상자에 날짜를 저장
 			$('#start_date_save').val($('#startDate').val());
 			$('#end_date_save').val($('#endDate').val());
 			//히든 검색어에 검색어 저장
 			$('#keyword_save').val($('#search_keyword').val());
 			//히든 이수상태 체크박스에 이수상태 저장
-			$('.resn_only_save').prop('checked', $('#fileContainedOnly').prop('checked'))
-			$('.contain_delete_save').prop('checked', $('#isDelete').prop('checked'))
+			//$('.resn_only_save').prop('checked', $('#fileContainedOnly').prop('checked'))
+			console.log($('#fileContainedOnly').prop("checked"));
+			console.log($('.resn_only_save').prop("checked"));
+			$('.resn_only_save').prop("checked", $('#fileContainedOnly').prop("checked"))
+			//히든 셀렉트 박스 값에 classId 값을 hidden에 저장
+			let classId = null;
+			if ($('#class_selector').val() != null) {
+				classId = $('#class_selector').val().match(/clssId=([A-Z0-9]+)/)[1];
+			}
+			$('#class_id_save').val(classId);
 			///*
 			$("input[class=chkWokCd]").each(
 				function(i, o) {

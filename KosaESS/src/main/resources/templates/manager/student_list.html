@@ -107,7 +107,7 @@
 			<div class="result_count">
 				<span>총&nbsp;</span>
 				<span th:text="${stdtCnt}" id="stdtCnt"></span>
-				<span>&nbsp;명</span>
+				<span>&nbsp;건</span>
 			</div>
 			<div class="cmpt_button">
 				<button th:each="cmptCodeName:${cmptCodeNameList}" onclick="cmptUpdate(this)" th:value="${cmptCodeName.cmcdId}" th:text="${cmptCodeName.cmcdNm}" class="cmpt_btn" th:classappend="${cmptCodeNameStat.count}"></button>

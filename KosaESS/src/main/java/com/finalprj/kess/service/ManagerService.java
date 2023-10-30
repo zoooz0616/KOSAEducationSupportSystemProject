@@ -102,8 +102,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString, Integer page) {
-		return managerRepository.getWlogListByClssIds(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page);
+	public List<WorklogDTO> getWlogListByClssIdDate(String mngrId, String clssId, String startDate, String endDate, String keyword, String isDelete, String resnOnly, List<String> filterString, Integer page, Integer size) {
+		return managerRepository.getWlogListByClssIds(mngrId, clssId, startDate, endDate, keyword, isDelete, resnOnly, filterString, page, size);
 	}
 
 	@Override
@@ -133,8 +133,8 @@ public class ManagerService implements IManagerService {
 	}
 
 	@Override
-	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString, int page) {
-		return managerRepository.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, page);
+	public List<SubsidyDTO> getSubsidyList(String mngrId, String clssId, String startDate, String endDate, String keyword, List<String> filterString, Integer page, Integer size) {
+		return managerRepository.getSubsidyList(mngrId, clssId, startDate, endDate, keyword, filterString, page, size);
 	}
 
 	@Override
