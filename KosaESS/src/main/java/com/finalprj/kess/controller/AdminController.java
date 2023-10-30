@@ -1320,16 +1320,6 @@ public class AdminController {
 			@RequestParam(name = "clssEndDd", required = false) String clssEndDd,
 			@RequestParam(name = "cmpyId", required = false) String cmpyId) {
 
-		System.out.println("##########################");
-		System.out.println(clssNm);
-		System.out.println(clssCd);
-		System.out.println(aplyStartDt);
-		System.out.println(aplyEndDt);
-		System.out.println(clssStartDd);
-		System.out.println(clssEndDd);
-		System.out.println(cmpyId);
-		System.out.println("##########################");
-
 		// 검색 결과통해서 교육과정 리스트 객체 생성
 		List<ClassVO> classList = adminService.getSearchClassList(clssNm, clssCd, aplyStartDt, aplyEndDt, clssStartDd,
 				clssEndDd, cmpyId);
