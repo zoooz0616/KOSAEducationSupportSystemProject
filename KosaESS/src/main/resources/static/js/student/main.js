@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}, 10000);
 	}
 
-	$.ajax({
+	/*$.ajax({
 		type: 'POST',
 		url: '/crawling/news',
 		success: function(data) {
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		error: function() {
 			console.error('뉴스 데이터를 불러오는 동안 오류가 발생했습니다.');
 		}
-	});
+	});*/
 
 });
 

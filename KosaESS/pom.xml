@@ -121,20 +121,6 @@
 			<version>2.14.0</version>
 		</dependency>
 
-		<!-- crawling -->
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.14.1</version>
-		</dependency>
-
-		<!-- JSON 처리를 위한 org.json 의존성 -->
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20211205</version> <!-- 현재의 최신 버전으로 대체할 수 있습니다 -->
-		</dependency>
-
 	</dependencies>
 
 	<build>
