@@ -1,5 +1,17 @@
 @charset "UTF-8";
 
+.modal_th{
+/* 	border-top: 2px solid #0E5881; */
+	color: #0E5881;
+	border : 1px solid #CFDEE6;
+	background-color:#E7EFF3;
+}
+
+.modal_tr td{
+	border : 1px solid #CFDEE6;
+	font-size: 1.1em;
+}
+
 .resn_modal_wrap{
 	position : fixed;
 	z-index: 10;
@@ -12,57 +24,139 @@
 	justify-content: center;
 	align-items: center;
 	overflow: auto;
-/* 	display : block; */
 }
-.resn_modal_wrap .resn_modal{
-/* 	padding : 5%; */
-	width : 70%;
-	height : 70%;
+
+.resn_modal{
+	width : 50%;
+	height : 80%;
 	margin: auto;
 	position : fixed;
-	background-color:rgba(255, 255, 255, 1);
+	background-color:white;
+	display: inline-block;
 }
 
 .resn_modal_wrap .resn_modal .wlog_info{
 	width: auto;
 }
 
-.resn_modal_wrap .resn_modal .wlog_info table{
+.wlog_info_table{
 	margin :0, auto;
 	border-collapse: collapse;
-	border : 1px black solid;
-/* 	border-top: 2px 0E5881 solid; */
-/* 	width: auto; */
+	width: 100%;
+	font-size: 1.1em;
+	border-bottom: 2px solid #0E5881;
 }
 
-.resn_modal_wrap .resn_modal .resn_controller {
-	border : 1px black solid;
+.resn_controller input{
+	width : 5em;
+}
+
+.resn_controller {
+/* 	border : 1px black solid; */
 	display: flex;
-	width: 50%;
+	width: 100%;
 	justify-content: center;
 }
 
-.resn_file_list{
-	list-style: none;
-}
 .resn_file_list a{
 	text-decoration-line: none;
 	color: #0E5881;
 	font-size: 1.1em;
 }
+
+/* 다운로드 아이콘 크기 조절 */
 .resn_file_list img{
 	height : 1.1em;
 }
 
 .modal_close_wrap {
-	height : 1.4em;
+	height : 3em;
 	background-color: #0E5881;
+	color : white;
+	text-align: center;
 }
 
-.modal_close_wrap img:hover{
-	cursor: pointer;
-}
 .modal_close_wrap img{
 	height : 100%;
 	float: right;
+}
+
+.resn_icon {
+	width: 15px;
+	height: 15px;
+}
+
+.modal_title{
+	color: white;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+.resn_icon:hover {
+	cursor: pointer;
+}
+
+.wlog_list_tbody_row .file_cell_active:hover {
+	cursor: pointer;
+}
+
+.close_icon{
+	cursor: pointer;
+}
+
+.resn_img_list img{
+	width: 80%;
+	margin: 1em;
+}
+.resn_img_list{
+	display: none;
+	height:70%;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	overflow: auto;
+	text-align: center;
+/* 	padding-top: 1em; */
+/* 	bottom: 0; */
+/* 	position: absolute; */
+/* 	z-index: 51; */
+	
+/* 	width: 100%; */
+/* 	justify-content: center; */
+/* 	align-items: center; */
+/* 	flex-direction: column; */
+/* 	overflow: auto; */
+}
+
+.resn_content{
+	height: 80%;
+	overflow: hidden;
+}
+.resn_text{
+	width: 100%;
+	height:20%;
+	display: flex;
+	overflow: auto;
+	padding: 2em;
+	font-size: 1.1em;
+}
+
+.resn_file_list{
+	width: 100%;
+	height:10%;
+	display: flex;
+	overflow: auto;
+/* 	padding: 2em; */
+	border : 1px solid #CFDEE6;
+	background-color:#E7EFF3;
+}
+
+.resn_file_list >div{
+	margin: 0.3em 0.5em;
+	align-items: center;
+	display: flex;
+}
+a:hover{
+	font-weight: bold;
 }

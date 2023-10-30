@@ -147,7 +147,7 @@
 							th:text="${#strings.substring(#strings.setSplit(stdt.wlogCnt,',')[wlogCodeNameStat.count-1],10,)}">?</td>
 						<td class="number_cell"
 							th:text="${#numbers.formatDecimal(stdt.cmptRate, 1, 1)}"></td>
-						<td class="fixed_length_cell" th:text="${stdt.cmptCd}">이수여부</td>
+						<td class="fixed_length_cell" th:text="${stdt.cmptNm}">이수여부</td>
 					</tr>
 				</tbody>
 			</table>

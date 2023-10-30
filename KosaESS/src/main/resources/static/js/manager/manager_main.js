@@ -30,5 +30,38 @@ function loadWorklog(){
 
 $(document).ready(
 	loadWorklog(),
-	setInterval(loadWorklog, 3000)
+	setInterval(loadWorklog, 3000),
+	
+	//교육과정의 연도 select가 바뀌면
+	$('#select_year').change(
+		function() {
+			//교육과정 select 내부의 option을 싹 비우고 지원금을 리셋
+			$('#select_class').empty();
+			$('#subsidy_value').text(0);
+			//목록을 채우기
+			$('#select_class').append("<option value='' selected>교육과정명을 선택하세요</option>");
+			$.ajax({
+				type: 'get',
+				url: '/manager/get_class_list', // 서버의 엔드포인트 URL
+				data: {
+					year: $('#select_year').val()
+				},
+				success: function(response) {
+					let classList = response.classList;
+					let newOption;
+					for (let i = 0; i < classList.length; i++) {
+						newOption = $('<option/>');
+						newOption.html(classList[i].clssNm);
+						newOption.attr("value", classList[i].clssId);
+						newOption.attr("name", classList[i].clssSubsidy);
+						$('#select_class').append(newOption);
+					}
+					//총 몇 명인지 체크
+				}
+				, error: function(error) {
+					console.log(error);
+				}
+			})
+		}
+	)
 );
