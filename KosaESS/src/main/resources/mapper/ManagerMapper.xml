@@ -551,7 +551,7 @@
 		</if>
 		</if>
 		<![CDATA[
-			ORDER BY m.clss_id, stdt_nm, subsidy_dd desc
+			ORDER BY subsidy_dd desc, m.clss_id, stdt_nm
 		]]>
 		<choose>
 			<when test='page > 0'>
